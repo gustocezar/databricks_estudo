@@ -30,8 +30,10 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 - **Conferência:** varredura antes do envio: 0 tokens (`dapi`, `gho_`, `sk-`, `AKIA`, chave privada) e 0 senhas nos 325
   arquivos. Achados mostrados ao usuário, que decidiu publicar tudo: o e-mail do autor (1 linha do README do DQX Studio e
   390 vezes em 2 JSON de backup das regras), amostras de clientes sintéticos (dbldatagen) em 3 JSON de resultados do DQX,
-  um caminho local num log e o endereço do workspace em 11 arquivos de configuração. O resultado do envio está no fim
-  desta entrada.
+  um caminho local num log e o endereço do workspace em 11 arquivos de configuração. Depois do envio: commit `6c3d766`
+  no `main` remoto, 321 arquivos no GitHub (= 321 no commit local), nenhum caminho de `.venv`, cache, `.databricks/` ou
+  esquema baixado, `git status` limpo. Autor dos commits com o e-mail `noreply` do GitHub (o Git desta máquina não tinha
+  identidade global; a configuração ficou só neste repositório).
 - **Docs atualizadas:** trilha (fase 21) · playbook (M1) · lições (L70) · README da raiz (novo) · situação no
   `docs/README.md`
 
