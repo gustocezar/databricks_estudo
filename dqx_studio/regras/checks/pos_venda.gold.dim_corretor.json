@@ -1,0 +1,111 @@
+[
+  {
+    "name": "pk_unica_corretor_sk",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "corretor_sk"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "pk_unica_corretor_id",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "corretor_id"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "corretor_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "corretor_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "corretor_id_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "corretor_id"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "corretor_nome_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "corretor_nome"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "comissao_entre_0_e_30_por_cento",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_range",
+      "arguments": {
+        "column": "corretor_comissao_pct",
+        "min_limit": 0,
+        "max_limit": 0.3
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "status_corretor_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "corretor_status",
+        "allowed": [
+          "'ATIVO'",
+          "'INATIVO'",
+          "'SUSPENSO'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

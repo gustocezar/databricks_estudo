@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v11_clusteredcolumnchart",
+  "position": {
+    "x": 640.0,
+    "y": 692,
+    "width": 620.0,
+    "height": 232,
+    "z": 10000,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "Status de cobrança"
+                }
+              },
+              "queryRef": "Carteira diária.Status de cobrança",
+              "nativeQueryRef": "Status de cobrança"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "Saldo em aberto"
+                }
+              },
+              "queryRef": "Carteira diária.Saldo em aberto",
+              "nativeQueryRef": "Saldo em aberto",
+              "displayName": "Saldo em aberto"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Saldo por status de cobrança (hoje)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

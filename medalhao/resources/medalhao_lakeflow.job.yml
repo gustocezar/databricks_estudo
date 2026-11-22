@@ -1,0 +1,20 @@
+resources:
+  jobs:
+    medalhao_ldp_job:
+      name: pos_venda_medalhao_lakeflow_job
+      description: "Dispara o pipeline Lakeflow pos_venda_medalhao_lakeflow. E por aqui que o pipeline ganha agenda."
+      tags:
+        dominio: pos_venda
+        abordagem: lakeflow
+        aidevkit_project: ai-dev-kit
+      performance_target: STANDARD
+      max_concurrent_runs: 1
+      schedule:
+        quartz_cron_expression: "0 30 6 * * ?"   # todo dia as 06:30 (30 min depois do job SQL)
+        timezone_id: America/Sao_Paulo
+        pause_status: ${var.ldp_schedule_status}
+      tasks:
+        - task_key: pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.medalhao_ldp.id}
+            full_refresh: false

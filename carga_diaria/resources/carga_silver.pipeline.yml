@@ -1,0 +1,12 @@
+resources:
+  pipelines:
+    silver_lakeflow:
+      name: pos_venda_carga_silver_lakeflow
+      catalog: pos_venda
+      schema: silver
+      serverless: true
+      continuous: false           # triggered: so processa quando o job de carga (ou voce) inicia uma atualizacao
+      libraries:
+        - glob:
+            include: ../src/pipeline/transformations/**
+      root_path: ../src/pipeline

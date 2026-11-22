@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "c5e3d3355f544e4d",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "c5e3d3355f544e4d",
+    "source_table_fqn": "pos_venda.gold.dim_apolice",
+    "total_rows": 10000,
+    "valid_rows": 10000,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}

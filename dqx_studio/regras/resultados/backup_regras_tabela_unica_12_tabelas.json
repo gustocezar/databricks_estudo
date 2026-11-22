@@ -1,0 +1,5945 @@
+[
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "evento_unico_por_dia_pendencia_tipo",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "pendencia_id",
+       "data_extracao",
+       "tipo_evento"
+      ]
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "4a21f4b7aad14cc7",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:53:51.729437+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:53:53.782270+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "foto_nao_anterior_a_entrada",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "foto anterior a entrada da pendencia",
+      "name": "foto_nao_anterior_a_entrada",
+      "expression": "data_referencia_sk >= data_entrada_pendencia_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "acf52c53bd4b44c5",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:26.268895+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:28.120130+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "entrada_depois_do_vencimento",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "pendencia entra antes do vencimento",
+      "name": "entrada_depois_do_vencimento",
+      "expression": "data_entrada_pendencia_sk > data_vencimento_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1af922d9ad8847af",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:23.333266+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:25.235868+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "multa_e_2_por_cento_da_parcela",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "multa diferente de 2% da parcela",
+      "name": "multa_e_2_por_cento_da_parcela",
+      "expression": "abs(valor_multa - round(valor_parcela * 0.02, 2)) < 0.01"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "5fdcd3fa99f1477d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:20.449571+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:22.387630+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "valor_total_igual_parcela_multa_juros",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "valor_total_pendente difere de parcela + multa + juros",
+      "name": "valor_total_igual_parcela_multa_juros",
+      "expression": "abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ce8f98d8f8fa4e3d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:17.505872+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:19.430107+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "qtd_pendencias_igual_1",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "grao da fato: qtd_pendencias deve ser 1",
+      "name": "qtd_pendencias_igual_1",
+      "expression": "qtd_pendencias = 1"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "512d87427a0d43c1",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:14.624680+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:16.553907+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "canal_contato_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "canal_ultimo_contato",
+      "allowed": [
+       "'SMS'",
+       "'EMAIL'",
+       "'WHATSAPP'",
+       "'TELEFONE'",
+       "'CARTA'",
+       "'NENHUM'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "5f280aa3f0b04dc4",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:10.880330+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:13.681218+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "tentativas_entre_1_e_10",
+    "check": {
+     "function": "is_in_range",
+     "arguments": {
+      "column": "tentativas_cobranca",
+      "max_limit": 10,
+      "min_limit": 1
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "882db1c2b4eb4514",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:07.804694+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:09.780526+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "dias_atraso_minimo_1",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 1,
+      "column": "dias_atraso"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "349de9be07704a5a",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:04.701723+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:06.769445+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "valor_parcela_positivo",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 0.01,
+      "column": "valor_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3b85db0fd51f4566",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:50:01.807761+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:03.745312+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_data_vencimento_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "data_vencimento_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_data",
+      "ref_columns": [
+       "data_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a593a6bbca924163",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:58.921727+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:50:00.879816+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_data_referencia_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "data_referencia_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_data",
+      "ref_columns": [
+       "data_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "67d13b41e06946be",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:55.988721+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:57.953760+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_faixa_atraso_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "faixa_atraso_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_faixa_atraso",
+      "ref_columns": [
+       "faixa_atraso_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e2561f9432e04e04",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:53.185054+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:55.067652+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_motivo_pendencia_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "motivo_pendencia_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_motivo_pendencia",
+      "ref_columns": [
+       "motivo_pendencia_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "2aea3aae20944480",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:50.245732+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:52.260665+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_status_cobranca_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "status_cobranca_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_status_cobranca",
+      "ref_columns": [
+       "status_cobranca_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b652bfdeb9654a84",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:47.367853+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:49.284235+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_forma_pagamento_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "forma_pagamento_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_forma_pagamento",
+      "ref_columns": [
+       "forma_pagamento_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a7ca4c997f594ee0",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:44.502210+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:46.431941+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_periodicidade_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "periodicidade_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_periodicidade",
+      "ref_columns": [
+       "periodicidade_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "2ae46793e2864122",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:41.636972+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:43.568622+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_ponto_venda_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "ponto_venda_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_ponto_venda",
+      "ref_columns": [
+       "ponto_venda_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a583bc1631fd4f6e",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:38.679327+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:40.702657+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_corretor_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "corretor_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_corretor",
+      "ref_columns": [
+       "corretor_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "fb6402ac5610488b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:35.827742+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:37.736025+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_produto_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "produto_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_produto",
+      "ref_columns": [
+       "produto_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1ddbbb882b9949e5",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:32.976372+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:34.882974+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_apolice_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "apolice_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_apolice",
+      "ref_columns": [
+       "apolice_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b5ed3c610f63465f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:30.207430+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:32.064845+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "fk_cliente_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "cliente_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_cliente",
+      "ref_columns": [
+       "cliente_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6994abc8aa95472d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:27.281252+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:29.252767+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "data_vencimento_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_vencimento_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "643c05b88e404e6d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:24.361773+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:26.309204+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "faixa_atraso_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "faixa_atraso_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "43bed13e97024079",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:21.574222+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:23.433239+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "motivo_pendencia_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "motivo_pendencia_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "067907b0d7564dda",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:18.712074+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:20.631911+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "status_cobranca_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "status_cobranca_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "9812be353faf486f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:15.829455+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:17.788040+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "forma_pagamento_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "forma_pagamento_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "f8de35ad06d144c2",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:12.842355+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:14.826088+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "periodicidade_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "periodicidade_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "91c2fcead5724e6d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:09.742116+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:11.865195+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "ponto_venda_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "ponto_venda_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ede3470110254679",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:06.680533+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:08.695935+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "corretor_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "corretor_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "4dfa16a14aeb4642",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:03.854122+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:05.762292+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "produto_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "produto_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3ca87c88f1e44eac",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:49:01.075802+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:02.928902+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "apolice_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "apolice_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a7f8ae767be74390",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:58.178944+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:49:00.146674+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "cliente_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d7a8e72ae723407f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:55.362255+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:57.248781+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "pendencia_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "pendencia_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e01f4786805342f8",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:52.428143+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:54.408011+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "data_referencia_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_referencia_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1b8fc49d30d04c6c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:49.684890+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:51.492323+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_fato_snapshot_janela",
+  "display_name": "pos_venda.dq.v_fato_snapshot_janela",
+  "checks": [
+   {
+    "name": "pk_unica_data_referencia_sk_pendencia_id",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "data_referencia_sk",
+       "pendencia_id"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e62234a91d1645ae",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:46.833653+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:48.742664+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "canal_corretor_tem_corretor",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "venda pelo canal CORRETOR sem corretor",
+      "name": "canal_corretor_tem_corretor",
+      "expression": "canal_venda <> 'CORRETOR' OR corretor_id IS NOT NULL"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "2fc9dcd8ee054e44",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:44.055581+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:45.896424+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "motivo_pendencia_cadastrado",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "motivo_pendencia",
+      "allowed": [
+       "'SALDO_INSUFICIENTE'",
+       "'LIMITE_INSUFICIENTE'",
+       "'CARTAO_RECUSADO'",
+       "'BOLETO_NAO_PAGO'",
+       "'DADOS_BANCARIOS_INVALIDOS'",
+       "'CONTA_ENCERRADA'",
+       "'CARTAO_EXPIRADO'",
+       "'AUTORIZACAO_DEBITO_CANCELADA'",
+       "'AUTORIZACAO_PIX_REVOGADA'",
+       "'BOLETO_NAO_RECEBIDO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "eb66aa0869d84b97",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:41.240194+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:43.111127+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "forma_pagamento_cadastrada",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "forma_pagamento",
+      "allowed": [
+       "'DEBITO_CONTA'",
+       "'BOLETO'",
+       "'CARTAO_CREDITO'",
+       "'PIX_AUTOMATICO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "aaf626c04e9a4860",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:38.336223+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:40.279256+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "rg_preenchido",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_rg"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a89395f03a4e44da",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:35.489103+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:37.415101+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "email_preenchido",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "410460e789dc4415",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:32.545756+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:34.529480+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "email_valido",
+    "check": {
+     "function": "is_valid_email",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "7eae3da3ebe34516",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:29.714922+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:31.603881+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "rg_formato",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{8}[0-9X]$",
+      "column": "cliente_rg"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6aa5075f4aa346d8",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:26.801737+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:28.772754+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "telefone_fixo_10_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{10}$",
+      "column": "cliente_telefone_fixo"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a19e33e66a694bc1",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:23.827289+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:25.845065+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "celular_11_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{11}$",
+      "column": "cliente_celular"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "9f740cc901524820",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:20.873938+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:22.834545+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "cep_8_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{8}$",
+      "column": "cliente_cep"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "719ff92a8b144bbf",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:17.925403+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:19.897657+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "cpf_valido",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "CPF com digito verificador invalido",
+      "name": "cpf_valido",
+      "expression": "NOT dq_cpf_invalido"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "63272841bc0e42a7",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:14.945214+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:16.950852+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "cliente_maior_de_idade",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "cliente menor de 18 anos",
+      "name": "cliente_maior_de_idade",
+      "expression": "cliente_idade >= 18"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3f2340654c8d4f4c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:11.916749+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:13.960012+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "paga_tem_data_baixa",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "status PAGA e data_baixa nao batem",
+      "name": "paga_tem_data_baixa",
+      "expression": "(status_cobranca = 'PAGA') = (data_baixa IS NOT NULL)"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ba2aa9e48dcc4b58",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:08.821011+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:10.972661+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "vencimento_ate_extracao",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "vencimento depois da data de extracao",
+      "name": "vencimento_ate_extracao",
+      "expression": "data_vencimento <= data_extracao"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "f94e422118df4dc1",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:05.732143+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:07.792145+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "valor_total_igual_parcela_multa_juros",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "valor_total_pendente difere de parcela + multa + juros",
+      "name": "valor_total_igual_parcela_multa_juros",
+      "expression": "abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b4bdc70e05564a5d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:48:02.300827+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:04.280886+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "tentativas_entre_1_e_10",
+    "check": {
+     "function": "is_in_range",
+     "arguments": {
+      "column": "tentativas_cobranca",
+      "max_limit": 10,
+      "min_limit": 1
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "056ce672946b4663",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:59.381720+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:48:01.306810+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "valor_parcela_positivo",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 0.01,
+      "column": "valor_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6ffd017064464549",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:55.440438+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:58.442721+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "uf_valida",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "cliente_uf",
+      "allowed": [
+       "'AC'",
+       "'AL'",
+       "'AP'",
+       "'AM'",
+       "'BA'",
+       "'CE'",
+       "'DF'",
+       "'ES'",
+       "'GO'",
+       "'MA'",
+       "'MT'",
+       "'MS'",
+       "'MG'",
+       "'PA'",
+       "'PB'",
+       "'PR'",
+       "'PE'",
+       "'PI'",
+       "'RJ'",
+       "'RN'",
+       "'RS'",
+       "'RO'",
+       "'RR'",
+       "'SC'",
+       "'SP'",
+       "'SE'",
+       "'TO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e8ed000480f14987",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:52.484202+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:54.432998+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "faixa_atraso_valida",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "faixa_atraso",
+      "allowed": [
+       "'01_1_A_15'",
+       "'02_16_A_30'",
+       "'03_31_A_60'",
+       "'04_61_A_90'",
+       "'05_91_A_120'",
+       "'06_ACIMA_120'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3dfaa3c416024ad9",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:49.570466+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:51.540260+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "status_cobranca_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "status_cobranca",
+      "allowed": [
+       "'PENDENTE'",
+       "'EM_COBRANCA'",
+       "'PROMESSA_PAGAMENTO'",
+       "'NEGOCIADO'",
+       "'COBRANCA_EXTERNA'",
+       "'PAGA'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3a09156339464c7f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:46.613135+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:48.567165+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "valor_parcela_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "valor_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "8b01f81524e940ed",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:43.684448+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:45.672802+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "status_cobranca_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "status_cobranca"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "608b24644a1342f6",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:40.729685+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:42.709628+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "data_vencimento_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_vencimento"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "5f54626adb6f4003",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:37.953251+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:39.815232+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "numero_parcela_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "numero_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b6b60f0053734c64",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:34.917447+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:36.891654+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "numero_apolice_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "numero_apolice"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "cfa2ecf3d4ff46ea",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:32.167898+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:33.998538+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "cliente_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b82cf6e2776a4773",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:29.406321+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:31.253313+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "display_name": "pos_venda.dq.v_silver_eventos_aptos_janela",
+  "checks": [
+   {
+    "name": "pendencia_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "pendencia_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a2ab7e6cda764c0c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:25.324714+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:28.440085+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "canal_corretor_tem_corretor",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "venda pelo canal CORRETOR sem corretor",
+      "name": "canal_corretor_tem_corretor",
+      "expression": "canal_venda <> 'CORRETOR' OR corretor_id IS NOT NULL"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6c1795d399be4812",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:19.527339+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:21.472670+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "motivo_pendencia_cadastrado",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "motivo_pendencia",
+      "allowed": [
+       "'SALDO_INSUFICIENTE'",
+       "'LIMITE_INSUFICIENTE'",
+       "'CARTAO_RECUSADO'",
+       "'BOLETO_NAO_PAGO'",
+       "'DADOS_BANCARIOS_INVALIDOS'",
+       "'CONTA_ENCERRADA'",
+       "'CARTAO_EXPIRADO'",
+       "'AUTORIZACAO_DEBITO_CANCELADA'",
+       "'AUTORIZACAO_PIX_REVOGADA'",
+       "'BOLETO_NAO_RECEBIDO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "aeddc8e73667470f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:16.442206+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:18.501984+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "forma_pagamento_cadastrada",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "forma_pagamento",
+      "allowed": [
+       "'DEBITO_CONTA'",
+       "'BOLETO'",
+       "'CARTAO_CREDITO'",
+       "'PIX_AUTOMATICO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "304924eaadaf4cbc",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:12.489099+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:14.478170+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "cliente_maior_de_idade",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "cliente menor de 18 anos",
+      "name": "cliente_maior_de_idade",
+      "expression": "cliente_idade >= 18"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "218dd4a03874436c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:09.116279+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:11.390882+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "uf_em_maiusculas",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[A-Z]{2}$",
+      "column": "cliente_uf"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "db9ca955c6434411",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:05.732376+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:07.898612+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "uf_valida",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "cliente_uf",
+      "allowed": [
+       "'AC'",
+       "'AL'",
+       "'AP'",
+       "'AM'",
+       "'BA'",
+       "'CE'",
+       "'DF'",
+       "'ES'",
+       "'GO'",
+       "'MA'",
+       "'MT'",
+       "'MS'",
+       "'MG'",
+       "'PA'",
+       "'PB'",
+       "'PR'",
+       "'PE'",
+       "'PI'",
+       "'RJ'",
+       "'RN'",
+       "'RS'",
+       "'RO'",
+       "'RR'",
+       "'SC'",
+       "'SP'",
+       "'SE'",
+       "'TO'"
+      ],
+      "case_sensitive": false
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "af4015764a464c10",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:47:02.789171+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:04.745944+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "atraso_confere_com_as_datas",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "dias_atraso difere de data_extracao - data_vencimento",
+      "name": "atraso_confere_com_as_datas",
+      "expression": "dias_atraso = datediff(data_extracao, data_vencimento)"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ad9e68c925494d85",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:59.874537+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:47:01.853050+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "evento_unico_por_dia_pendencia_tipo",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "pendencia_id",
+       "data_extracao",
+       "tipo_evento"
+      ]
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "33dd3b09d20049f7",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:56.922906+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:58.917537+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "email_preenchido",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "2d78fb2f3b714cf7",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:53.978599+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:55.938514+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "email_valido",
+    "check": {
+     "function": "is_valid_email",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "8b3774372c404701",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:50.808879+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:52.749699+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "cpf_formato_com_ou_sem_mascara",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^([0-9]{11}|[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2})$",
+      "column": "cliente_cpf"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a083e3db8abb43a2",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:47.927979+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:49.851671+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "vencimento_ate_data_do_evento",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "vencimento nao e anterior ao dia do evento",
+      "name": "vencimento_ate_data_do_evento",
+      "expression": "data_vencimento < data_extracao"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b4add45c56424c3a",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:44.900880+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:46.965781+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "baixa_tem_data_e_valor_pago",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "evento BAIXA sem data_baixa ou valor_pago",
+      "name": "baixa_tem_data_e_valor_pago",
+      "expression": "tipo_evento <> 'BAIXA' OR (data_baixa IS NOT NULL AND valor_pago IS NOT NULL)"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "37a71f3c799a460d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:41.991608+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:43.910133+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "valor_total_igual_parcela_multa_juros",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "valor_total_pendente difere de parcela + multa + juros",
+      "name": "valor_total_igual_parcela_multa_juros",
+      "expression": "abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "19fdb0d5a77c40d9",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:38.398363+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:41.007156+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "dias_atraso_minimo_1",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 1,
+      "column": "dias_atraso"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "625a5183589a44e7",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:34.928039+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:37.455554+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "valor_parcela_positivo",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 0.01,
+      "column": "valor_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "8d940310ce87438c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:32.090247+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:33.978888+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "status_cobranca_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "status_cobranca",
+      "allowed": [
+       "'PENDENTE'",
+       "'EM_COBRANCA'",
+       "'PROMESSA_PAGAMENTO'",
+       "'NEGOCIADO'",
+       "'COBRANCA_EXTERNA'",
+       "'PAGA'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "fd7814a32485493c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:29.257197+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:31.153985+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "tipo_evento_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "tipo_evento",
+      "allowed": [
+       "'NOVA'",
+       "'ATUALIZACAO'",
+       "'BAIXA'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a089bf5845114e9b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:26.333624+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:28.292751+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "data_vencimento_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_vencimento"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e213fa90eba74ff4",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:23.412785+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:25.397541+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "cliente_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "78c9599104154d6c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:20.460233+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:22.363296+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "numero_parcela_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "numero_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "5a380d25ea16411f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:17.654212+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:19.530400+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "numero_apolice_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "numero_apolice"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "498b5d4634c44ad9",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:14.826037+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:16.728554+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "tipo_evento_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "tipo_evento"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ad24a41956ce4eee",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:11.997911+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:13.890263+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "data_extracao_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_extracao"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d57e4e2ec4d840b4",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:09.050542+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:11.026631+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.dq.v_bronze_eventos_janela",
+  "display_name": "pos_venda.dq.v_bronze_eventos_janela",
+  "checks": [
+   {
+    "name": "pendencia_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "pendencia_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "bronze",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ecdb6c032565471d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T05:46:06.083749+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T05:46:08.079141+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "email_preenchido",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "bcbfa94a1f674922",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T04:00:40.898426+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T04:00:42.926840+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "email_preenchido",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "98d45fc087014777",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T04:00:37.866829+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T04:00:39.842465+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+  "display_name": "pos_venda.gold.bridge_apolice_cobertura",
+  "checks": [
+   {
+    "name": "fk_cobertura_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "cobertura_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_cobertura",
+      "ref_columns": [
+       "cobertura_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "c4171932c1914dd1",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:58:02.788981+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:58:04.864307+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+  "display_name": "pos_venda.gold.bridge_apolice_cobertura",
+  "checks": [
+   {
+    "name": "fk_apolice_sk",
+    "check": {
+     "function": "foreign_key",
+     "arguments": {
+      "columns": [
+       "apolice_sk"
+      ],
+      "ref_table": "pos_venda.gold.dim_apolice",
+      "ref_columns": [
+       "apolice_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6d20501b295b43bb",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:59.822153+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:58:01.800027+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+  "display_name": "pos_venda.gold.bridge_apolice_cobertura",
+  "checks": [
+   {
+    "name": "papel_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "papel_cobertura",
+      "allowed": [
+       "'PRINCIPAL'",
+       "'ADICIONAL'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "10905449f9414c19",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:56.774567+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:58.806267+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+  "display_name": "pos_venda.gold.bridge_apolice_cobertura",
+  "checks": [
+   {
+    "name": "papel_cobertura_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "papel_cobertura"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "2290726f99ee4b37",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:53.484459+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:55.448992+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+  "display_name": "pos_venda.gold.bridge_apolice_cobertura",
+  "checks": [
+   {
+    "name": "cobertura_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cobertura_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "28885a8068f74e90",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:50.411037+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:52.472682+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+  "display_name": "pos_venda.gold.bridge_apolice_cobertura",
+  "checks": [
+   {
+    "name": "apolice_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "apolice_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "73ed03a4eacc4358",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:47.550437+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:49.463705+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+  "display_name": "pos_venda.gold.bridge_apolice_cobertura",
+  "checks": [
+   {
+    "name": "pk_unica_apolice_sk_cobertura_sk",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "apolice_sk",
+       "cobertura_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "45d0035b6d254a72",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:44.476578+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:46.528618+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_data",
+  "display_name": "pos_venda.gold.dim_data",
+  "checks": [
+   {
+    "name": "data_sk_igual_a_data",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "data_sk nao corresponde a data",
+      "name": "data_sk_igual_a_data",
+      "expression": "data_sk = CAST(date_format(data, 'yyyyMMdd') AS INT)"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "17904e8a7217492d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:41.453855+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:43.513505+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_data",
+  "display_name": "pos_venda.gold.dim_data",
+  "checks": [
+   {
+    "name": "pk_unica_data",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "data"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d2d02f86d3f54fa6",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:38.485634+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:40.466320+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_data",
+  "display_name": "pos_venda.gold.dim_data",
+  "checks": [
+   {
+    "name": "pk_unica_data_sk",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "data_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "62765c45b4414e7c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:35.559072+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:37.514550+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_produto",
+  "display_name": "pos_venda.gold.dim_produto",
+  "checks": [
+   {
+    "name": "cobertura_principal_codigo_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cobertura_principal_codigo"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "8607f7ce517b42e3",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:32.639731+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:34.575516+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_produto",
+  "display_name": "pos_venda.gold.dim_produto",
+  "checks": [
+   {
+    "name": "categoria_produto_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "categoria_produto"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "bd1425c19a654f8e",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:29.666782+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:31.674934+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_produto",
+  "display_name": "pos_venda.gold.dim_produto",
+  "checks": [
+   {
+    "name": "produto_nome_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "produto_nome"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3c6070d884104c45",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:26.547061+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:28.592149+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_produto",
+  "display_name": "pos_venda.gold.dim_produto",
+  "checks": [
+   {
+    "name": "produto_codigo_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "produto_codigo"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e9018aa821f241ab",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:23.561513+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:25.515273+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_produto",
+  "display_name": "pos_venda.gold.dim_produto",
+  "checks": [
+   {
+    "name": "produto_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "produto_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d3eabebdda464d2e",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:20.474843+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:22.514350+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_produto",
+  "display_name": "pos_venda.gold.dim_produto",
+  "checks": [
+   {
+    "name": "pk_unica_produto_codigo",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "produto_codigo"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1294be101ad54873",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:17.484503+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:19.489712+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_produto",
+  "display_name": "pos_venda.gold.dim_produto",
+  "checks": [
+   {
+    "name": "pk_unica_produto_sk",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "produto_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "0b982112c8704114",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:14.445774+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:16.502738+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "tipo_coerente_com_canal",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "tipo do ponto de venda incompativel com o canal",
+      "name": "tipo_coerente_com_canal",
+      "expression": "(canal_venda = 'CORRETOR' AND ponto_venda_tipo = 'ESCRITORIO_CORRETOR') OR (canal_venda = 'BANCASSURANCE' AND ponto_venda_tipo = 'AGENCIA_BANCARIA') OR (canal_venda = 'DIGITAL' AND ponto_venda_tipo = 'PLATAFORMA_DIGITAL') OR (canal_venda = 'TELEVENDAS' AND ponto_venda_tipo = 'CENTRAL_TELEVENDAS')"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "cd509049963246b8",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:11.408170+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:13.430176+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "canal_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "canal_venda",
+      "allowed": [
+       "'CORRETOR'",
+       "'BANCASSURANCE'",
+       "'DIGITAL'",
+       "'TELEVENDAS'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "c6b5c17b763640af",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:08.407200+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:10.379352+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "tipo_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "ponto_venda_tipo",
+      "allowed": [
+       "'ESCRITORIO_CORRETOR'",
+       "'AGENCIA_BANCARIA'",
+       "'PLATAFORMA_DIGITAL'",
+       "'CENTRAL_TELEVENDAS'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "437ed772181c4f53",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:05.444922+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:07.437666+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "ponto_venda_nome_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "ponto_venda_nome"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "54b935316458471d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:57:02.516596+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:04.446906+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "ponto_venda_codigo_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "ponto_venda_codigo"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "aa3b37fb724049fd",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:59.516153+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:57:01.521254+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "ponto_venda_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "ponto_venda_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "f8c2bbe443fe4ee0",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:56.423309+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:58.422102+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "pk_unica_ponto_venda_codigo",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "ponto_venda_codigo"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "5dfe291cc7d64e3a",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:53.066925+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:55.165783+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_ponto_venda",
+  "display_name": "pos_venda.gold.dim_ponto_venda",
+  "checks": [
+   {
+    "name": "pk_unica_ponto_venda_sk",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "ponto_venda_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6e135221223b4cdd",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:49.976905+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:52.056873+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_corretor",
+  "display_name": "pos_venda.gold.dim_corretor",
+  "checks": [
+   {
+    "name": "status_corretor_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "corretor_status",
+      "allowed": [
+       "'ATIVO'",
+       "'INATIVO'",
+       "'SUSPENSO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "430ca2c50b9542bc",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:46.901653+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:48.958596+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_corretor",
+  "display_name": "pos_venda.gold.dim_corretor",
+  "checks": [
+   {
+    "name": "comissao_entre_0_e_30_por_cento",
+    "check": {
+     "function": "is_in_range",
+     "arguments": {
+      "column": "corretor_comissao_pct",
+      "max_limit": 0.3,
+      "min_limit": 0
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "c7fcb1ae4ec640cd",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:43.974704+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:45.927747+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_corretor",
+  "display_name": "pos_venda.gold.dim_corretor",
+  "checks": [
+   {
+    "name": "corretor_nome_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "corretor_nome"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "9c7adeaef0b64dbe",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:41.069667+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:43.010559+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_corretor",
+  "display_name": "pos_venda.gold.dim_corretor",
+  "checks": [
+   {
+    "name": "corretor_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "corretor_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "267b1964c426436b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:38.091247+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:40.078046+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_corretor",
+  "display_name": "pos_venda.gold.dim_corretor",
+  "checks": [
+   {
+    "name": "corretor_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "corretor_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "f897241625694d91",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:35.221148+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:37.141172+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_corretor",
+  "display_name": "pos_venda.gold.dim_corretor",
+  "checks": [
+   {
+    "name": "pk_unica_corretor_id",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "corretor_id"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a9d7a0cf4410469f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:32.371503+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:34.250873+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_corretor",
+  "display_name": "pos_venda.gold.dim_corretor",
+  "checks": [
+   {
+    "name": "pk_unica_corretor_sk",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "corretor_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ff1acbaa26a9467a",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:29.521723+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:31.415505+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "endosso_tem_numero",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "apolice com endosso sem numero do ultimo endosso",
+      "name": "endosso_tem_numero",
+      "expression": "qtd_endossos = 0 OR numero_ultimo_endosso IS NOT NULL"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1692f8701fc94277",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:26.659868+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:28.565964+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "capital_total_maior_ou_igual_ao_principal",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "capital total menor que o capital principal",
+      "name": "capital_total_maior_ou_igual_ao_principal",
+      "expression": "capital_segurado_total >= capital_segurado_principal"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "2b7c5b878ada4e91",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:23.673141+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:25.698167+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "fim_vigencia_depois_do_inicio",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "fim de vigencia nao e posterior ao inicio",
+      "name": "fim_vigencia_depois_do_inicio",
+      "expression": "data_fim_vigencia_atual > data_inicio_vigencia"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "fd2229511b4b4e72",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:20.767563+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:22.735991+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "beneficiarios_entre_1_e_4",
+    "check": {
+     "function": "is_in_range",
+     "arguments": {
+      "column": "qtd_beneficiarios",
+      "max_limit": 4,
+      "min_limit": 1
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d4507e3325cb4044",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:17.930322+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:19.833561+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "ao_menos_uma_cobertura",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 1,
+      "column": "qtd_coberturas"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b183c69bb4904a53",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:15.032201+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:16.984790+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "premio_positivo",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 0.01,
+      "column": "valor_premio_periodico"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "8e36e1e3125a473e",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:12.147529+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:14.062400+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "dia_vencimento_entre_1_e_28",
+    "check": {
+     "function": "is_in_range",
+     "arguments": {
+      "column": "dia_vencimento",
+      "max_limit": 28,
+      "min_limit": 1
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "c843959f650242ca",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:09.156233+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:11.179927+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "status_apolice_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "status_apolice",
+      "allowed": [
+       "'ATIVA'",
+       "'SUSPENSA'",
+       "'REDUZIDA'",
+       "'CANCELADA_INADIMPLENCIA'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "760c51c8991641d3",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:06.121692+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:08.149149+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "data_fim_vigencia_atual_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_fim_vigencia_atual"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1728e62edd444cc4",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:03.053816+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:05.072231+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "data_inicio_vigencia_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_inicio_vigencia"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3b09742337704317",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:56:00.060776+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:56:02.033930+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "data_emissao_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_emissao"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "461ef5be72e94603",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:56.512470+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:59.076343+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "status_apolice_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "status_apolice"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "526f7b4cb52c478b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:53.662032+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:55.554463+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "numero_apolice_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "numero_apolice"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "df92c921bb0c43e7",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:50.706155+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:52.687059+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "apolice_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "apolice_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "36188eaa2ae64f83",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:47.779810+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:49.737208+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "pk_unica_numero_apolice",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "numero_apolice"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a43ec273510c423b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:44.845251+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:46.813190+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_apolice",
+  "display_name": "pos_venda.gold.dim_apolice",
+  "checks": [
+   {
+    "name": "pk_unica_apolice_sk",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "apolice_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "cd8a403f3d514333",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:41.934836+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:43.882364+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "rg_preenchido",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_rg"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "072c108fa9c04abb",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:38.976332+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:40.898781+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "email_valido",
+    "check": {
+     "function": "is_valid_email",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "519290021c4d45c9",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:35.851524+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:37.799296+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "celular_11_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{11}$",
+      "column": "cliente_celular"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "39b9cef0ff0b49e8",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:32.878898+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:34.807803+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cep_8_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{8}$",
+      "column": "cliente_cep"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6f4911c3e33d4a73",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:29.974815+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:31.914064+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cpf_11_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{11}$",
+      "column": "cliente_cpf"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "57557b04f3c4411b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:27.059777+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:29.007313+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cpf_valido",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "CPF com digito verificador invalido",
+      "name": "cpf_valido",
+      "expression": "cliente_cpf_valido"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "9b249dede4244c79",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:22.461842+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:24.555480+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "rg_emitido_depois_do_nascimento",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "RG emitido antes do nascimento",
+      "name": "rg_emitido_depois_do_nascimento",
+      "expression": "cliente_rg_data_emissao IS NULL OR cliente_rg_data_emissao >= cliente_data_nascimento"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3de0fda5a65241c5",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:18.426274+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:21.438175+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cliente_maior_de_idade",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "cliente menor de 18 anos",
+      "name": "cliente_maior_de_idade",
+      "expression": "cliente_idade >= 18"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d3f1fddd54d6466c",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:14.131276+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:17.389732+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "uf_valida",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "cliente_uf",
+      "allowed": [
+       "'AC'",
+       "'AL'",
+       "'AP'",
+       "'AM'",
+       "'BA'",
+       "'CE'",
+       "'DF'",
+       "'ES'",
+       "'GO'",
+       "'MA'",
+       "'MT'",
+       "'MS'",
+       "'MG'",
+       "'PA'",
+       "'PB'",
+       "'PR'",
+       "'PE'",
+       "'PI'",
+       "'RJ'",
+       "'RN'",
+       "'RS'",
+       "'RO'",
+       "'RR'",
+       "'SC'",
+       "'SP'",
+       "'SE'",
+       "'TO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "0880076dbf044517",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:10.693162+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:12.750260+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "renda_faixa_valida",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "cliente_renda_faixa",
+      "allowed": [
+       "'ATE_3_SM'",
+       "'3_A_6_SM'",
+       "'6_A_10_SM'",
+       "'10_A_20_SM'",
+       "'ACIMA_20_SM'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "233073aacda44bc8",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:07.464169+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:09.633184+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "estado_civil_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "cliente_estado_civil",
+      "allowed": [
+       "'SOLTEIRO'",
+       "'CASADO'",
+       "'UNIAO_ESTAVEL'",
+       "'DIVORCIADO'",
+       "'VIUVO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "95349f5feafe403f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:04.237887+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:06.376769+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "sexo_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "cliente_sexo",
+      "allowed": [
+       "'F'",
+       "'M'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "3e0e6d0d58f543bb",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:55:01.092309+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:03.236085+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cliente_data_nascimento_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_data_nascimento"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "9fdd517f5e734586",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:54:58.017450+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:55:00.088512+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cliente_cpf_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_cpf"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "ba58fdcb22224803",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:54:54.965619+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:54:56.908409+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cliente_nome_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_nome"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1a86842ada864417",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:54:51.984955+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:54:54.001423+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cliente_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "c67a2fac2c75447d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:54:49.063687+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:54:51.003966+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "cliente_sk_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_sk"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a1b4a3646b9b4aac",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:54:46.050862+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:54:48.081753+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "pk_unica_cliente_id",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "cliente_id"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "720947c2b2b94834",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:54:43.074000+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:54:45.071583+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.gold.dim_cliente",
+  "display_name": "pos_venda.gold.dim_cliente",
+  "checks": [
+   {
+    "name": "pk_unica_cliente_sk",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "cliente_sk"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "gold",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "7cf72ce1cafb4b44",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:54:40.071121+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:54:42.116737+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "versao_paga_e_a_corrente",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "versao PAGA deveria ser a ultima (corrente)",
+      "name": "versao_paga_e_a_corrente",
+      "expression": "status_cobranca <> 'PAGA' OR __END_AT IS NULL"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "10b405c4fda34846",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:48.457796+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:50.347206+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "vigencia_fim_depois_do_inicio",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "fim de vigencia nao e posterior ao inicio",
+      "name": "vigencia_fim_depois_do_inicio",
+      "expression": "__END_AT IS NULL OR __END_AT > __START_AT"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "852cc24ed0b24acf",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:45.366282+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:47.515516+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "tipo_evento_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "tipo_evento",
+      "allowed": [
+       "'NOVA'",
+       "'ATUALIZACAO'",
+       "'BAIXA'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "db078c1790d0410a",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:42.398726+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:44.335327+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "status_cobranca_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "status_cobranca",
+      "allowed": [
+       "'PENDENTE'",
+       "'EM_COBRANCA'",
+       "'PROMESSA_PAGAMENTO'",
+       "'NEGOCIADO'",
+       "'COBRANCA_EXTERNA'",
+       "'PAGA'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "439f0322fdd348d5",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:39.613466+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:41.485374+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "tipo_evento_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "tipo_evento"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "38e4dfe182194733",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:36.703518+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:38.646735+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "status_cobranca_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "status_cobranca"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "009ca4a0356f404f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:33.576311+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:35.604886+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "__START_AT_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "__START_AT"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "b9c9b4e17c3a4853",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:30.726278+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:32.537821+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "pendencia_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "pendencia_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "119bafcb1cb44567",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:27.979982+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:29.818823+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "uma_versao_corrente_por_pendencia",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "pendencia_id"
+      ]
+     }
+    },
+    "filter": "__END_AT IS NULL",
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "fcb73eed90dd4a7f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:25.110288+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:27.056207+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_hist",
+  "display_name": "pos_venda.silver.pendencia_hist",
+  "checks": [
+   {
+    "name": "pk_unica_pendencia_id_inicio_vigencia",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "pendencia_id",
+       "__START_AT"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "0e3bb89096c04a6e",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:22.054585+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:24.137981+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "canal_corretor_tem_corretor",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "venda pelo canal CORRETOR sem corretor",
+      "name": "canal_corretor_tem_corretor",
+      "expression": "canal_venda <> 'CORRETOR' OR corretor_id IS NOT NULL"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a5b452d63d954f2d",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:19.129950+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:21.088570+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "motivo_pendencia_cadastrado",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "motivo_pendencia",
+      "allowed": [
+       "'SALDO_INSUFICIENTE'",
+       "'LIMITE_INSUFICIENTE'",
+       "'CARTAO_RECUSADO'",
+       "'BOLETO_NAO_PAGO'",
+       "'DADOS_BANCARIOS_INVALIDOS'",
+       "'CONTA_ENCERRADA'",
+       "'CARTAO_EXPIRADO'",
+       "'AUTORIZACAO_DEBITO_CANCELADA'",
+       "'AUTORIZACAO_PIX_REVOGADA'",
+       "'BOLETO_NAO_RECEBIDO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "239e1f1fd0424a68",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:16.140898+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:18.139751+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "forma_pagamento_cadastrada",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "forma_pagamento",
+      "allowed": [
+       "'DEBITO_CONTA'",
+       "'BOLETO'",
+       "'CARTAO_CREDITO'",
+       "'PIX_AUTOMATICO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "1dee528190774b85",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:13.240319+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:15.156444+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "rg_preenchido",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_rg"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "71db0278b8944745",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:10.051461+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:12.157460+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "email_valido",
+    "check": {
+     "function": "is_valid_email",
+     "arguments": {
+      "column": "cliente_email"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "52e1d5c9cb39440f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:07.035214+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:09.038753+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "rg_formato",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{8}[0-9X]$",
+      "column": "cliente_rg"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "be4ed8c296b14fd5",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:03.847087+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:06.038964+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "telefone_fixo_10_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{10}$",
+      "column": "cliente_telefone_fixo"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "891caf7ba5c24717",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:52:00.571173+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:52:02.644940+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "celular_11_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{11}$",
+      "column": "cliente_celular"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "50a41ca6ce8c4240",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:57.370231+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:59.518723+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "cep_8_digitos",
+    "check": {
+     "function": "regex_match",
+     "arguments": {
+      "regex": "^[0-9]{8}$",
+      "column": "cliente_cep"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d62a57291f6e4421",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:54.400059+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:56.419191+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "cpf_valido",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "CPF com digito verificador invalido",
+      "name": "cpf_valido",
+      "expression": "NOT dq_cpf_invalido"
+     }
+    },
+    "criticality": "warn",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "575427de74694804",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:50.788094+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:53.160965+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "cliente_maior_de_idade",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "cliente menor de 18 anos",
+      "name": "cliente_maior_de_idade",
+      "expression": "cliente_idade >= 18"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "662d965290ab4ef0",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:47.180588+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:49.420068+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "paga_tem_data_baixa",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "status PAGA e data_baixa nao batem",
+      "name": "paga_tem_data_baixa",
+      "expression": "(status_cobranca = 'PAGA') = (data_baixa IS NOT NULL)"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "238ff234db184d41",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:44.216572+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:46.183553+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "vencimento_ate_extracao",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "vencimento depois da data de extracao",
+      "name": "vencimento_ate_extracao",
+      "expression": "data_vencimento <= data_extracao"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "16006fc5ffb64a84",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:41.066857+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:43.221643+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "valor_total_igual_parcela_multa_juros",
+    "check": {
+     "function": "sql_expression",
+     "arguments": {
+      "msg": "valor_total_pendente difere de parcela + multa + juros",
+      "name": "valor_total_igual_parcela_multa_juros",
+      "expression": "abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "6fa4e14b19d64c9f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:37.562300+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:39.959667+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "tentativas_entre_1_e_10",
+    "check": {
+     "function": "is_in_range",
+     "arguments": {
+      "column": "tentativas_cobranca",
+      "max_limit": 10,
+      "min_limit": 1
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "5143c569b10942e8",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:34.185361+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:36.333532+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "valor_parcela_positivo",
+    "check": {
+     "function": "is_not_less_than",
+     "arguments": {
+      "limit": 0.01,
+      "column": "valor_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "37d24aa524934c99",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:31.104431+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:33.108630+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "uf_valida",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "cliente_uf",
+      "allowed": [
+       "'AC'",
+       "'AL'",
+       "'AP'",
+       "'AM'",
+       "'BA'",
+       "'CE'",
+       "'DF'",
+       "'ES'",
+       "'GO'",
+       "'MA'",
+       "'MT'",
+       "'MS'",
+       "'MG'",
+       "'PA'",
+       "'PB'",
+       "'PR'",
+       "'PE'",
+       "'PI'",
+       "'RJ'",
+       "'RN'",
+       "'RS'",
+       "'RO'",
+       "'RR'",
+       "'SC'",
+       "'SP'",
+       "'SE'",
+       "'TO'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e76798fdba1e47d6",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:28.066629+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:30.106747+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "faixa_atraso_valida",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "faixa_atraso",
+      "allowed": [
+       "'01_1_A_15'",
+       "'02_16_A_30'",
+       "'03_31_A_60'",
+       "'04_61_A_90'",
+       "'05_91_A_120'",
+       "'06_ACIMA_120'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e4c3df78b6b4448f",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:24.584733+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:27.003365+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "status_cobranca_valido",
+    "check": {
+     "function": "is_in_list",
+     "arguments": {
+      "column": "status_cobranca",
+      "allowed": [
+       "'PENDENTE'",
+       "'EM_COBRANCA'",
+       "'PROMESSA_PAGAMENTO'",
+       "'NEGOCIADO'",
+       "'COBRANCA_EXTERNA'",
+       "'PAGA'"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "310be0095b9e440b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:21.043247+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:23.329644+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "valor_parcela_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "valor_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "86968e4ed160420a",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:17.803322+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:19.875676+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "status_cobranca_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "status_cobranca"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "9486e19685e340d6",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:14.796435+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:16.808870+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "data_vencimento_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "data_vencimento"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "7a1e410a97cf4c25",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:11.490749+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:13.828526+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "numero_parcela_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "numero_parcela"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "e832d06044c24617",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:07.956913+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:10.283956+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "numero_apolice_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "numero_apolice"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "104d5474a72341c2",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:04.609860+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:06.806783+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "cliente_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "cliente_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "7f5d7517d5e945e9",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:51:01.521393+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:03.593443+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "pendencia_id_nao_nulo",
+    "check": {
+     "function": "is_not_null",
+     "arguments": {
+      "column": "pendencia_id"
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "a7870f2c6a154ab8",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:50:58.259368+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:51:00.542071+00:00"
+ },
+ {
+  "table_fqn": "pos_venda.silver.pendencia_atual",
+  "display_name": "pos_venda.silver.pendencia_atual",
+  "checks": [
+   {
+    "name": "pk_unica_pendencia_id",
+    "check": {
+     "function": "is_unique",
+     "arguments": {
+      "columns": [
+       "pendencia_id"
+      ]
+     }
+    },
+    "criticality": "error",
+    "user_metadata": {
+     "camada": "silver",
+     "dominio": "pos_venda"
+    }
+   }
+  ],
+  "version": 1,
+  "status": "approved",
+  "source": "import",
+  "rule_id": "d31c18267a95471b",
+  "created_by": "gustocezar@gmail.com",
+  "created_at": "2026-11-19T02:50:54.439645+00:00",
+  "updated_by": "gustocezar@gmail.com",
+  "updated_at": "2026-11-19T02:50:57.133175+00:00"
+ }
+]

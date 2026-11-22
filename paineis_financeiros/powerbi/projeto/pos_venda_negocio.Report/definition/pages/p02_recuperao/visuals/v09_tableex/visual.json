@@ -1,0 +1,156 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v09_tableex",
+  "position": {
+    "x": 12.0,
+    "y": 732,
+    "width": 1248.0,
+    "height": 232,
+    "z": 8000,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Calendário"
+                    }
+                  },
+                  "Property": "Mês"
+                }
+              },
+              "queryRef": "Calendário.Mês",
+              "nativeQueryRef": "Mês",
+              "displayName": "Mês da baixa"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Recuperação"
+                    }
+                  },
+                  "Property": "Mês completo"
+                }
+              },
+              "queryRef": "Recuperação.Mês completo",
+              "nativeQueryRef": "Mês completo",
+              "displayName": "Mês completo"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Recuperação"
+                    }
+                  },
+                  "Property": "Valor recuperado"
+                }
+              },
+              "queryRef": "Recuperação.Valor recuperado",
+              "nativeQueryRef": "Valor recuperado",
+              "displayName": "Valor recuperado"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Recuperação"
+                    }
+                  },
+                  "Property": "Recuperado no mês anterior"
+                }
+              },
+              "queryRef": "Recuperação.Recuperado no mês anterior",
+              "nativeQueryRef": "Recuperado no mês anterior",
+              "displayName": "Mês anterior"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Recuperação"
+                    }
+                  },
+                  "Property": "Variação mensal do recuperado"
+                }
+              },
+              "queryRef": "Recuperação.Variação mensal do recuperado",
+              "nativeQueryRef": "Variação mensal do recuperado",
+              "displayName": "Variação mensal"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Recuperação"
+                    }
+                  },
+                  "Property": "Recuperado acumulado no ano"
+                }
+              },
+              "queryRef": "Recuperação.Recuperado acumulado no ano",
+              "nativeQueryRef": "Recuperado acumulado no ano",
+              "displayName": "Acumulado no ano"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Recuperação mês a mês e acumulado no ano'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'O mês corrente está incompleto: compare a variação mensal só entre meses completos'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

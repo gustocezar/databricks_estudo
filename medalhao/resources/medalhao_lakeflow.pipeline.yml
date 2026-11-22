@@ -1,0 +1,12 @@
+resources:
+  pipelines:
+    medalhao_ldp:
+      name: pos_venda_medalhao_lakeflow
+      catalog: pos_venda
+      schema: bronze_ldp          # schema padrao; os demais datasets usam nome completo (silver_ldp, gold_ldp)
+      serverless: true
+      continuous: false           # triggered: so roda quando alguem (ou um job) inicia uma atualizacao
+      libraries:
+        - glob:
+            include: ../src/ldp/transformations/**
+      root_path: ../src/ldp

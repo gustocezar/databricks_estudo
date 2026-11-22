@@ -1,0 +1,642 @@
+{
+  "v_bronze_eventos_janela": [
+    {
+      "ciclo": 1,
+      "semana": "20–26/11",
+      "run_id": "e144ccdc3a7f4b8b",
+      "linhas": 59756,
+      "erro": 0,
+      "aviso": 2558,
+      "regras": [
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1458
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 606
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 540
+        }
+      ]
+    },
+    {
+      "ciclo": 2,
+      "semana": "27/11–03/12",
+      "run_id": "d83b4543a59545c7",
+      "linhas": 52374,
+      "erro": 0,
+      "aviso": 7963,
+      "regras": [
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 5465
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 2294
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 536
+        }
+      ]
+    },
+    {
+      "ciclo": 3,
+      "semana": "04–10/12",
+      "run_id": "b7632f048e6a4faa",
+      "linhas": 55616,
+      "erro": 1349,
+      "aviso": 2362,
+      "regras": [
+        {
+          "regra": "valor_total_igual_parcela_multa_juros",
+          "erro": 520,
+          "aviso": 0
+        },
+        {
+          "regra": "valor_parcela_positivo",
+          "erro": 509,
+          "aviso": 0
+        },
+        {
+          "regra": "status_cobranca_valido",
+          "erro": 234,
+          "aviso": 0
+        },
+        {
+          "regra": "pendencia_id_nao_nulo",
+          "erro": 96,
+          "aviso": 0
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1337
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 565
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 494
+        }
+      ]
+    },
+    {
+      "ciclo": 4,
+      "semana": "11–17/12",
+      "run_id": "d516f25fb52e4b34",
+      "linhas": 59053,
+      "erro": 2275,
+      "aviso": 3460,
+      "regras": [
+        {
+          "regra": "forma_pagamento_cadastrada",
+          "erro": 740,
+          "aviso": 0
+        },
+        {
+          "regra": "atraso_confere_com_as_datas",
+          "erro": 611,
+          "aviso": 0
+        },
+        {
+          "regra": "uf_valida",
+          "erro": 472,
+          "aviso": 0
+        },
+        {
+          "regra": "vencimento_ate_data_do_evento",
+          "erro": 291,
+          "aviso": 0
+        },
+        {
+          "regra": "cliente_maior_de_idade",
+          "erro": 273,
+          "aviso": 0
+        },
+        {
+          "regra": "baixa_tem_data_e_valor_pago",
+          "erro": 217,
+          "aviso": 0
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1522
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 819
+        },
+        {
+          "regra": "canal_corretor_tem_corretor",
+          "erro": 0,
+          "aviso": 622
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 586
+        }
+      ]
+    },
+    {
+      "ciclo": 5,
+      "semana": "18–24/12",
+      "run_id": "738bdb53cafa48ac",
+      "linhas": 59828,
+      "erro": 292,
+      "aviso": 2630,
+      "regras": [
+        {
+          "regra": "forma_pagamento_cadastrada",
+          "erro": 148,
+          "aviso": 0
+        },
+        {
+          "regra": "uf_valida",
+          "erro": 67,
+          "aviso": 0
+        },
+        {
+          "regra": "valor_parcela_positivo",
+          "erro": 60,
+          "aviso": 0
+        },
+        {
+          "regra": "status_cobranca_valido",
+          "erro": 17,
+          "aviso": 0
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1440
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 613
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 608
+        }
+      ]
+    }
+  ],
+  "v_quarentena_janela": [
+    {
+      "ciclo": 1,
+      "semana": "20–26/11",
+      "run_id": "da1242ee04c24210",
+      "linhas": 0,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 2,
+      "semana": "27/11–03/12",
+      "run_id": "05536caa2ea9401a",
+      "linhas": 0,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 3,
+      "semana": "04–10/12",
+      "run_id": "311dd3482ec44797",
+      "linhas": 1349,
+      "erro": 1349,
+      "aviso": 47,
+      "regras": [
+        {
+          "regra": "valor_total_igual_parcela_multa_juros",
+          "erro": 520,
+          "aviso": 0
+        },
+        {
+          "regra": "valor_parcela_positivo",
+          "erro": 509,
+          "aviso": 0
+        },
+        {
+          "regra": "status_cobranca_valido",
+          "erro": 234,
+          "aviso": 0
+        },
+        {
+          "regra": "pendencia_id_nao_nulo",
+          "erro": 96,
+          "aviso": 0
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 25
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 16
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 8
+        }
+      ]
+    },
+    {
+      "ciclo": 4,
+      "semana": "11–17/12",
+      "run_id": "24069efec3cd4272",
+      "linhas": 1556,
+      "erro": 1556,
+      "aviso": 312,
+      "regras": [
+        {
+          "regra": "atraso_confere_com_as_datas",
+          "erro": 611,
+          "aviso": 0
+        },
+        {
+          "regra": "uf_valida",
+          "erro": 472,
+          "aviso": 0
+        },
+        {
+          "regra": "vencimento_ate_data_do_evento",
+          "erro": 291,
+          "aviso": 0
+        },
+        {
+          "regra": "cliente_maior_de_idade",
+          "erro": 273,
+          "aviso": 0
+        },
+        {
+          "regra": "baixa_tem_data_e_valor_pago",
+          "erro": 217,
+          "aviso": 0
+        },
+        {
+          "regra": "forma_pagamento_cadastrada",
+          "erro": 21,
+          "aviso": 0
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 253
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 41
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 14
+        },
+        {
+          "regra": "canal_corretor_tem_corretor",
+          "erro": 0,
+          "aviso": 14
+        }
+      ]
+    },
+    {
+      "ciclo": 5,
+      "semana": "18–24/12",
+      "run_id": "cf2e07741e074405",
+      "linhas": 144,
+      "erro": 144,
+      "aviso": 44,
+      "regras": [
+        {
+          "regra": "uf_valida",
+          "erro": 67,
+          "aviso": 0
+        },
+        {
+          "regra": "valor_parcela_positivo",
+          "erro": 60,
+          "aviso": 0
+        },
+        {
+          "regra": "status_cobranca_valido",
+          "erro": 17,
+          "aviso": 0
+        },
+        {
+          "regra": "uf_em_maiusculas",
+          "erro": 0,
+          "aviso": 38
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 8
+        }
+      ]
+    }
+  ],
+  "v_silver_eventos_aptos_janela": [
+    {
+      "ciclo": 1,
+      "semana": "20–26/11",
+      "run_id": "c280c1c6d836423e",
+      "linhas": 59756,
+      "erro": 0,
+      "aviso": 5710,
+      "regras": [
+        {
+          "regra": "rg_preenchido",
+          "erro": 0,
+          "aviso": 2976
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1458
+        },
+        {
+          "regra": "cpf_valido",
+          "erro": 0,
+          "aviso": 937
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 540
+        }
+      ]
+    },
+    {
+      "ciclo": 2,
+      "semana": "27/11–03/12",
+      "run_id": "f79b6eb439404676",
+      "linhas": 52374,
+      "erro": 0,
+      "aviso": 12167,
+      "regras": [
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 5465
+        },
+        {
+          "regra": "cpf_valido",
+          "erro": 0,
+          "aviso": 3191
+        },
+        {
+          "regra": "rg_preenchido",
+          "erro": 0,
+          "aviso": 2554
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 2294
+        }
+      ]
+    },
+    {
+      "ciclo": 3,
+      "semana": "04–10/12",
+      "run_id": "9d2c16d1d03a4e3d",
+      "linhas": 54267,
+      "erro": 0,
+      "aviso": 5221,
+      "regras": [
+        {
+          "regra": "rg_preenchido",
+          "erro": 0,
+          "aviso": 2695
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1312
+        },
+        {
+          "regra": "cpf_valido",
+          "erro": 0,
+          "aviso": 889
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 486
+        }
+      ]
+    },
+    {
+      "ciclo": 4,
+      "semana": "11–17/12",
+      "run_id": "c9c8f78081824bc4",
+      "linhas": 57497,
+      "erro": 719,
+      "aviso": 8801,
+      "regras": [
+        {
+          "regra": "forma_pagamento_cadastrada",
+          "erro": 719,
+          "aviso": 0
+        },
+        {
+          "regra": "cep_8_digitos",
+          "erro": 0,
+          "aviso": 2955
+        },
+        {
+          "regra": "rg_preenchido",
+          "erro": 0,
+          "aviso": 2880
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1481
+        },
+        {
+          "regra": "cpf_valido",
+          "erro": 0,
+          "aviso": 878
+        },
+        {
+          "regra": "canal_corretor_tem_corretor",
+          "erro": 0,
+          "aviso": 608
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 572
+        }
+      ]
+    },
+    {
+      "ciclo": 5,
+      "semana": "18–24/12",
+      "run_id": "50ec16abc0d44788",
+      "linhas": 59684,
+      "erro": 148,
+      "aviso": 6054,
+      "regras": [
+        {
+          "regra": "forma_pagamento_cadastrada",
+          "erro": 148,
+          "aviso": 0
+        },
+        {
+          "regra": "rg_preenchido",
+          "erro": 0,
+          "aviso": 2981
+        },
+        {
+          "regra": "email_preenchido",
+          "erro": 0,
+          "aviso": 1432
+        },
+        {
+          "regra": "cpf_valido",
+          "erro": 0,
+          "aviso": 1261
+        },
+        {
+          "regra": "evento_unico_por_dia_pendencia_tipo",
+          "erro": 0,
+          "aviso": 608
+        }
+      ]
+    }
+  ],
+  "v_silver_hist_janela": [
+    {
+      "ciclo": 1,
+      "semana": "20–26/11",
+      "run_id": "4c48315abb704690",
+      "linhas": 59486,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 2,
+      "semana": "27/11–03/12",
+      "run_id": "0a4230c2702f42de",
+      "linhas": 51227,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 3,
+      "semana": "04–10/12",
+      "run_id": "fa08682f22d6459b",
+      "linhas": 54024,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 4,
+      "semana": "11–17/12",
+      "run_id": "6667ac882cd64d63",
+      "linhas": 57211,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 5,
+      "semana": "18–24/12",
+      "run_id": "3fdf8522e99f46ab",
+      "linhas": 59380,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    }
+  ],
+  "v_fato_snapshot_janela": [
+    {
+      "ciclo": 1,
+      "semana": "20–26/11",
+      "run_id": "e9787ae9e3044e97",
+      "linhas": 1535030,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 2,
+      "semana": "27/11–03/12",
+      "run_id": "d643b15f726c462e",
+      "linhas": 1574102,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 3,
+      "semana": "04–10/12",
+      "run_id": "e6e4d371992b4b59",
+      "linhas": 1616408,
+      "erro": 0,
+      "aviso": 0,
+      "regras": []
+    },
+    {
+      "ciclo": 4,
+      "semana": "11–17/12",
+      "run_id": "f8c5cd0a93d74297",
+      "linhas": 1678586,
+      "erro": 1439,
+      "aviso": 0,
+      "regras": [
+        {
+          "regra": "fk_forma_pagamento_sk",
+          "erro": 1439,
+          "aviso": 0
+        }
+      ]
+    },
+    {
+      "ciclo": 5,
+      "semana": "18–24/12",
+      "run_id": "1bd1bd603cda4f77",
+      "linhas": 1743052,
+      "erro": 2603,
+      "aviso": 0,
+      "regras": [
+        {
+          "regra": "fk_forma_pagamento_sk",
+          "erro": 2603,
+          "aviso": 0
+        }
+      ]
+    }
+  ]
+}

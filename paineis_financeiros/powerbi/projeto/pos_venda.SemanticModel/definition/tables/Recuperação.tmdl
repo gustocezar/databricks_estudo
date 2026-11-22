@@ -1,0 +1,152 @@
+/// Baixas (pagamentos) por dia da baixa. Aditiva no tempo.
+table 'Recuperação'
+	lineageTag: 102ac8e5-a2bb-5336-be07-803e35be81be
+
+	/// Valor pago nas baixas.
+	measure 'Valor recuperado' = SUM ( 'Recuperação'[valor_recuperado] )
+		formatString: R$ #,0.00
+		displayFolder: Recuperação
+		lineageTag: 23312376-b0b7-5323-a6a0-f573e4d940f0
+
+	/// Quantidade de baixas.
+	measure 'Pendências pagas' = SUM ( 'Recuperação'[pendencias_pagas] )
+		formatString: #,0
+		displayFolder: Recuperação
+		lineageTag: f0bb7eb7-e426-5f85-932e-d64256afc54b
+
+	measure 'Multa e juros recebidos' = SUM ( 'Recuperação'[multa_juros_recebidos] )
+		formatString: R$ #,0.00
+		displayFolder: Recuperação
+		lineageTag: 768081df-d028-573e-9fba-7e5e8d184810
+
+	measure 'Ticket médio recuperado' = DIVIDE ( [Valor recuperado], [Pendências pagas] )
+		formatString: R$ #,0.00
+		displayFolder: Recuperação
+		lineageTag: aa5ffa38-8e90-59b2-b813-bfcdb2fcc7c8
+
+	/// Use agrupado por Calendário[Mês].
+	measure 'Recuperado no mês anterior' = CALCULATE ( [Valor recuperado], DATEADD ( 'Calendário'[Data], -1, MONTH ) )
+		formatString: R$ #,0.00
+		displayFolder: Recuperação · mês
+		lineageTag: a2b498a9-5e7b-5afa-8a78-18e70c3dcad0
+
+	/// Use agrupado por Calendário[Mês] (MoM).
+	measure 'Variação mensal do recuperado' = DIVIDE ( [Valor recuperado] - [Recuperado no mês anterior], [Recuperado no mês anterior] )
+		formatString: 0.0%
+		displayFolder: Recuperação · mês
+		lineageTag: 5cd75e0e-1bcf-50a9-9b3f-86a12f40fb4d
+
+	/// De 1º de janeiro até o fim do período (YTD).
+	measure 'Recuperado acumulado no ano' = TOTALYTD ( [Valor recuperado], 'Calendário'[Data] )
+		formatString: R$ #,0.00
+		displayFolder: Recuperação · mês
+		lineageTag: b31662ac-cdd2-5c19-9c0f-c7846177340a
+
+	/// Último mês completo vs. o mês anterior.
+	measure 'Variação mensal do recuperado (último mês completo)' =
+			VAR _ultima = CALCULATE ( MAX ( 'Recuperação'[Data da baixa] ), ALL ( 'Recuperação' ) )
+			VAR _fim = IF ( _ultima = EOMONTH ( _ultima, 0 ), _ultima, EOMONTH ( _ultima, -1 ) )
+			RETURN
+			    CALCULATE (
+			        [Variação mensal do recuperado],
+			        REMOVEFILTERS ( 'Calendário' ),
+			        DATESBETWEEN ( 'Calendário'[Data], EOMONTH ( _fim, -1 ) + 1, _fim )
+			    )
+		formatString: 0.0%
+		displayFolder: Recuperação · mês
+		lineageTag: 20562ac1-7350-50c5-bb65-8f2303fd2abc
+
+	/// Sim quando o mês já terminou na data da última baixa.
+	measure 'Mês completo' =
+			VAR _ultima = CALCULATE ( MAX ( 'Recuperação'[Data da baixa] ), ALL ( 'Recuperação' ) )
+			RETURN
+			    IF ( NOT ISBLANK ( [Valor recuperado] ), IF ( MAX ( 'Calendário'[Data] ) <= _ultima, "Sim", "Não" ) )
+		displayFolder: Recuperação · mês
+		lineageTag: 25e8c525-a289-5b50-acb2-9968998e77a0
+
+	column 'Data da baixa'
+		dataType: dateTime
+		isHidden
+		lineageTag: bb9dbf1e-10bc-5c8c-b4dc-c8a835526f1f
+		summarizeBy: none
+		sourceColumn: data_baixa
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		isHidden
+		lineageTag: 4de549f7-e4a4-5c53-a1ba-3372ca11064d
+		summarizeBy: none
+		sourceColumn: produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Canal de venda'
+		dataType: string
+		isHidden
+		lineageTag: 14d2dcd2-370b-5bc8-9190-3dc91103c385
+		summarizeBy: none
+		sourceColumn: canal_venda
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Forma de pagamento'
+		dataType: string
+		isHidden
+		lineageTag: 17351395-36d4-5af5-b10c-f278d42859a4
+		summarizeBy: none
+		sourceColumn: forma_pagamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Faixa de atraso na baixa'
+		dataType: string
+		lineageTag: b66cc36b-bf2f-5d3c-8bc7-6cd6a8d70d91
+		summarizeBy: none
+		sourceColumn: faixa_atraso_na_baixa
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor_recuperado
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: 347f375c-e06e-5d99-8398-77960162bec5
+		summarizeBy: none
+		sourceColumn: valor_recuperado
+
+		annotation SummarizationSetBy = Automatic
+
+	column pendencias_pagas
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 59a0a23d-34b1-52bf-9fbd-6e8a59c90e52
+		summarizeBy: none
+		sourceColumn: pendencias_pagas
+
+		annotation SummarizationSetBy = Automatic
+
+	column multa_juros_recebidos
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: b31015e1-4ad7-546c-9a13-4ed5078a56a0
+		summarizeBy: none
+		sourceColumn: multa_juros_recebidos
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Recuperação' = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "recuperacao_diaria"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

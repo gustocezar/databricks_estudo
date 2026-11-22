@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v07_clusteredcolumnchart",
+  "position": {
+    "x": 640.0,
+    "y": 212,
+    "width": 620.0,
+    "height": 232,
+    "z": 6000,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "Status de cobrança"
+                }
+              },
+              "queryRef": "Carteira diária.Status de cobrança",
+              "nativeQueryRef": "Status de cobrança"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "Saldo em aberto"
+                }
+              },
+              "queryRef": "Carteira diária.Saldo em aberto",
+              "nativeQueryRef": "Saldo em aberto",
+              "displayName": "Saldo em aberto"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Saldo por status de cobrança'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

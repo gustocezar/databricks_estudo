@@ -1,0 +1,248 @@
+[
+  {
+    "name": "pk_unica_apolice_sk",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "apolice_sk"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "pk_unica_numero_apolice",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "numero_apolice"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "apolice_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "apolice_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "numero_apolice_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "numero_apolice"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "status_apolice_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "status_apolice"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "data_emissao_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "data_emissao"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "data_inicio_vigencia_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "data_inicio_vigencia"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "data_fim_vigencia_atual_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "data_fim_vigencia_atual"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "status_apolice_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "status_apolice",
+        "allowed": [
+          "'ATIVA'",
+          "'SUSPENSA'",
+          "'REDUZIDA'",
+          "'CANCELADA_INADIMPLENCIA'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "dia_vencimento_entre_1_e_28",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_range",
+      "arguments": {
+        "column": "dia_vencimento",
+        "min_limit": 1,
+        "max_limit": 28
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "premio_positivo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_less_than",
+      "arguments": {
+        "column": "valor_premio_periodico",
+        "limit": 0.01
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "ao_menos_uma_cobertura",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_less_than",
+      "arguments": {
+        "column": "qtd_coberturas",
+        "limit": 1
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "beneficiarios_entre_1_e_4",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_range",
+      "arguments": {
+        "column": "qtd_beneficiarios",
+        "min_limit": 1,
+        "max_limit": 4
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fim_vigencia_depois_do_inicio",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "data_fim_vigencia_atual > data_inicio_vigencia",
+        "msg": "fim de vigencia nao e posterior ao inicio",
+        "name": "fim_vigencia_depois_do_inicio"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "capital_total_maior_ou_igual_ao_principal",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "capital_segurado_total >= capital_segurado_principal",
+        "msg": "capital total menor que o capital principal",
+        "name": "capital_total_maior_ou_igual_ao_principal"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "endosso_tem_numero",
+    "criticality": "warn",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "qtd_endossos = 0 OR numero_ultimo_endosso IS NOT NULL",
+        "msg": "apolice com endosso sem numero do ultimo endosso",
+        "name": "endosso_tem_numero"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

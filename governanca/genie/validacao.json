@@ -1,0 +1,703 @@
+{
+ "ex:simulacao_valor_pendente": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "faixa_atraso": "03_31_A_60",
+    "multa": "5.00",
+    "juros": "3.75",
+    "total_pendente": "258.75"
+   }
+  ]
+ },
+ "ex:carteira_atual_por_dimensao": {
+  "ok": true,
+  "erro": "",
+  "linhas": 4,
+  "amostra": [
+   {
+    "Data de referência": "2026-12-24",
+    "Fase da cobrança": "INTERNA",
+    "saldo": "18310972.57",
+    "pendencias": "146342"
+   },
+   {
+    "Data de referência": "2026-12-24",
+    "Fase da cobrança": "NEGOCIACAO",
+    "saldo": "8094260.50",
+    "pendencias": "64246"
+   },
+   {
+    "Data de referência": "2026-12-24",
+    "Fase da cobrança": "EXTERNA",
+    "saldo": "3541798.82",
+    "pendencias": "27394"
+   }
+  ]
+ },
+ "ex:evolucao_fim_de_mes": {
+  "ok": true,
+  "erro": "",
+  "linhas": 32,
+  "amostra": [
+   {
+    "Mês de referência": "2026-05-01",
+    "Grupo do motivo": "AUTORIZACAO",
+    "saldo_fechamento": "173073.61"
+   },
+   {
+    "Mês de referência": "2026-05-01",
+    "Grupo do motivo": "CADASTRAL",
+    "saldo_fechamento": "558021.32"
+   },
+   {
+    "Mês de referência": "2026-05-01",
+    "Grupo do motivo": "FINANCEIRO",
+    "saldo_fechamento": "1974446.87"
+   }
+  ]
+ },
+ "ex:variacao_mensal_saldo": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Mês de referência": "2026-05-01",
+    "saldo_fechamento": "2804185.51",
+    "mes_anterior": null,
+    "variacao": null
+   },
+   {
+    "Mês de referência": "2026-06-01",
+    "saldo_fechamento": "8361177.76",
+    "mes_anterior": "2804185.51",
+    "variacao": "1.9816778277269"
+   },
+   {
+    "Mês de referência": "2026-07-01",
+    "saldo_fechamento": "12259496.58",
+    "mes_anterior": "8361177.76",
+    "variacao": "0.4662403948221"
+   }
+  ]
+ },
+ "ex:variacao_entre_fechamentos": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "Mês de referência": "2026-09-01",
+    "fechamento_anterior": "16167826.08",
+    "fechamento": "20325175.54",
+    "variacao": "0.2571371957757"
+   }
+  ]
+ },
+ "ex:recuperado_acumulado_ano": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Mês da baixa": "2026-05-01",
+    "recuperado": "792586.79",
+    "acumulado_ano": "792586.79"
+   },
+   {
+    "Mês da baixa": "2026-06-01",
+    "recuperado": "4090029.36",
+    "acumulado_ano": "4882616.15"
+   },
+   {
+    "Mês da baixa": "2026-07-01",
+    "recuperado": "6275491.17",
+    "acumulado_ano": "11158107.32"
+   }
+  ]
+ },
+ "ex:ranking_recuperacao": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Produto": "Vida Completo",
+    "recuperado": "1017484.52",
+    "posicao": "1"
+   },
+   {
+    "Produto": "Vida Essencial",
+    "recuperado": "1014614.38",
+    "posicao": "2"
+   },
+   {
+    "Produto": "Vida Inteira",
+    "recuperado": "900119.55",
+    "posicao": "3"
+   }
+  ]
+ },
+ "ex:comparar_duas_datas": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "Data de referência": "2026-10-31",
+    "pendencias": "38280"
+   },
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "Data de referência": "2026-11-30",
+    "pendencias": "44840"
+   },
+   {
+    "Canal de venda": "CORRETOR",
+    "Data de referência": "2026-10-31",
+    "pendencias": "111361"
+   }
+  ]
+ },
+ "ex:ranking_top_n": {
+  "ok": true,
+  "erro": "",
+  "linhas": 5,
+  "amostra": [
+   {
+    "Regional": "SUL",
+    "pct_acima_60": "0.62503761114963"
+   },
+   {
+    "Regional": "CENTRO-OESTE",
+    "pct_acima_60": "0.62445727623260"
+   },
+   {
+    "Regional": "NORDESTE",
+    "pct_acima_60": "0.62430327506457"
+   }
+  ]
+ },
+ "ex:recuperacao_mensal": {
+  "ok": true,
+  "erro": "",
+  "linhas": 56,
+  "amostra": [
+   {
+    "Mês da baixa": "2026-05-01",
+    "Categoria do produto": "DOENCAS_GRAVES",
+    "recuperado": "81159.73",
+    "pagas": "520"
+   },
+   {
+    "Mês da baixa": "2026-05-01",
+    "Categoria do produto": "FAMILIAR",
+    "recuperado": "114213.41",
+    "pagas": "889"
+   },
+   {
+    "Mês da baixa": "2026-05-01",
+    "Categoria do produto": "PREMIUM",
+    "recuperado": "66682.92",
+    "pagas": "465"
+   }
+  ]
+ },
+ "ex:taxa_por_safra": {
+  "ok": true,
+  "erro": "",
+  "linhas": 32,
+  "amostra": [
+   {
+    "Safra de entrada": "2026-05-01",
+    "Periodicidade": "ANUAL",
+    "taxa": "0.6712328767123288"
+   },
+   {
+    "Safra de entrada": "2026-05-01",
+    "Periodicidade": "MENSAL",
+    "taxa": "0.6521573251942286"
+   },
+   {
+    "Safra de entrada": "2026-05-01",
+    "Periodicidade": "SEMESTRAL",
+    "taxa": "0.65"
+   }
+  ]
+ },
+ "ex:qualidade_semanal": {
+  "ok": true,
+  "erro": "",
+  "linhas": 6,
+  "amostra": [
+   {
+    "Semana": "2026-10-26",
+    "taxa": "0.02339986235375086"
+   },
+   {
+    "Semana": "2026-11-02",
+    "taxa": "0.024602026049204053"
+   },
+   {
+    "Semana": "2026-11-09",
+    "taxa": "0.025614083439556276"
+   }
+  ]
+ },
+ "ex:detalhe_pendencias": {
+  "ok": true,
+  "erro": "",
+  "linhas": 7,
+  "amostra": [
+   {
+    "pendencia_id": "PD000289125030",
+    "numero_parcela": "30",
+    "status_cobranca": "PAGA",
+    "data_vencimento": "2026-05-20",
+    "data_baixa": "2026-06-01",
+    "valor_parcela": "82.02",
+    "valor_pago": "83.99"
+   },
+   {
+    "pendencia_id": "PD000289125031",
+    "numero_parcela": "31",
+    "status_cobranca": "PAGA",
+    "data_vencimento": "2026-06-20",
+    "data_baixa": "2026-07-04",
+    "valor_parcela": "82.02",
+    "valor_pago": "84.04"
+   },
+   {
+    "pendencia_id": "PD000289125032",
+    "numero_parcela": "32",
+    "status_cobranca": "EM_COBRANCA",
+    "data_vencimento": "2026-07-20",
+    "data_baixa": null,
+    "valor_parcela": "82.02",
+    "valor_pago": null
+   }
+  ]
+ },
+ "bm:saldo_hoje": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "saldo": "31608028.29"
+   }
+  ]
+ },
+ "bm:aging_hoje": {
+  "ok": true,
+  "erro": "",
+  "linhas": 6,
+  "amostra": [
+   {
+    "Faixa de atraso": "01_1_A_15",
+    "saldo": "4305159.34"
+   },
+   {
+    "Faixa de atraso": "02_16_A_30",
+    "saldo": "2933802.99"
+   },
+   {
+    "Faixa de atraso": "03_31_A_60",
+    "saldo": "4662651.39"
+   }
+  ]
+ },
+ "bm:top3_produtos_60d": {
+  "ok": true,
+  "erro": "",
+  "linhas": 3,
+  "amostra": [
+   {
+    "Produto": "Vida Completo",
+    "saldo": "3777621.30"
+   },
+   {
+    "Produto": "Vida Essencial",
+    "saldo": "3706421.26"
+   },
+   {
+    "Produto": "Vida Inteira",
+    "saldo": "3288823.17"
+   }
+  ]
+ },
+ "bm:saldo_canal_3011": {
+  "ok": true,
+  "erro": "",
+  "linhas": 4,
+  "amostra": [
+   {
+    "Canal de venda": "CORRETOR",
+    "saldo": "16446545.78"
+   },
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "saldo": "5691799.83"
+   },
+   {
+    "Canal de venda": "DIGITAL",
+    "saldo": "4007664.12"
+   }
+  ]
+ },
+ "bm:recuperado_dez_forma": {
+  "ok": true,
+  "erro": "",
+  "linhas": 7,
+  "amostra": [
+   {
+    "Forma de pagamento": "DEBITO_CONTA",
+    "recuperado": "2124852.87"
+   },
+   {
+    "Forma de pagamento": "CARTAO_CREDITO",
+    "recuperado": "1424173.41"
+   },
+   {
+    "Forma de pagamento": "BOLETO",
+    "recuperado": "1359079.91"
+   }
+  ]
+ },
+ "bm:ticket_recuperado_nov": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "ticket": "122.4172012410399059"
+   }
+  ]
+ },
+ "bm:taxa_safras_set_nov": {
+  "ok": true,
+  "erro": "",
+  "linhas": 3,
+  "amostra": [
+   {
+    "Safra de entrada": "2026-09-01",
+    "taxa": "0.649245444024922"
+   },
+   {
+    "Safra de entrada": "2026-10-01",
+    "taxa": "0.6478508662382779"
+   },
+   {
+    "Safra de entrada": "2026-11-01",
+    "taxa": "0.522702465482125"
+   }
+  ]
+ },
+ "bm:entradas_out": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "entradas": "88082"
+   }
+  ]
+ },
+ "bm:grupo_motivo_hoje": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "Grupo do motivo": "FINANCEIRO",
+    "saldo": "22014202.13"
+   }
+  ]
+ },
+ "bm:atraso_medio_status": {
+  "ok": true,
+  "erro": "",
+  "linhas": 5,
+  "amostra": [
+   {
+    "Status de cobrança": "COBRANCA_EXTERNA",
+    "atraso": "145.70121194422137"
+   },
+   {
+    "Status de cobrança": "NEGOCIADO",
+    "atraso": "107.40301891480573"
+   },
+   {
+    "Status de cobrança": "PROMESSA_PAGAMENTO",
+    "atraso": "106.78183406658555"
+   }
+  ]
+ },
+ "bm:barrados_dez_motivo": {
+  "ok": true,
+  "erro": "",
+  "linhas": 9,
+  "amostra": [
+   {
+    "motivo_rejeicao": "valor_parcela_nao_positivo",
+    "eventos": "563"
+   },
+   {
+    "motivo_rejeicao": "uf_invalida",
+    "eventos": "532"
+   },
+   {
+    "motivo_rejeicao": "valor_total_inconsistente",
+    "eventos": "517"
+   }
+  ]
+ },
+ "bm:top10_pagas_dez": {
+  "ok": true,
+  "erro": "",
+  "linhas": 10,
+  "amostra": [
+   {
+    "pendencia_id": "PD000133123001",
+    "numero_apolice": "VID000133123",
+    "data_baixa": "2026-12-17",
+    "valor_pago": "10339.97"
+   },
+   {
+    "pendencia_id": "PD000081643003",
+    "numero_apolice": "VID000081643",
+    "data_baixa": "2026-12-22",
+    "valor_pago": "8004.39"
+   },
+   {
+    "pendencia_id": "PD000115306009",
+    "numero_apolice": "VID000115306",
+    "data_baixa": "2026-12-24",
+    "valor_pago": "7680.38"
+   }
+  ]
+ },
+ "bm:saldo_fim_mes": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Mês de referência": "2026-05-01",
+    "saldo_fechamento": "2804185.51"
+   },
+   {
+    "Mês de referência": "2026-06-01",
+    "saldo_fechamento": "8361177.76"
+   },
+   {
+    "Mês de referência": "2026-07-01",
+    "saldo_fechamento": "12259496.58"
+   }
+  ]
+ },
+ "bm:pct60_hoje": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "pct": "0.62346231752250"
+   }
+  ]
+ },
+ "bm:pct60_2411": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "pct": "0.55683637173904"
+   }
+  ]
+ },
+ "bm:recuperado_mes": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Mês da baixa": "2026-05-01",
+    "recuperado": "792586.79"
+   },
+   {
+    "Mês da baixa": "2026-06-01",
+    "recuperado": "4090029.36"
+   },
+   {
+    "Mês da baixa": "2026-07-01",
+    "recuperado": "6275491.17"
+   }
+  ]
+ },
+ "bm:taxa_safra": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Safra de entrada": "2026-05-01",
+    "taxa": "0.6521164894670805"
+   },
+   {
+    "Safra de entrada": "2026-06-01",
+    "taxa": "0.651514573720271"
+   },
+   {
+    "Safra de entrada": "2026-07-01",
+    "taxa": "0.6507079492945217"
+   }
+  ]
+ },
+ "bm:cobranca_externa_produto": {
+  "ok": true,
+  "erro": "",
+  "linhas": 8,
+  "amostra": [
+   {
+    "Produto": "Vida Completo",
+    "saldo": "687025.68"
+   },
+   {
+    "Produto": "Vida Essencial",
+    "saldo": "665000.36"
+   },
+   {
+    "Produto": "Vida Inteira",
+    "saldo": "574094.86"
+   }
+  ]
+ },
+ "bm:saldo_medio_dez": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "saldo_medio": "29924055.6445833333333333"
+   }
+  ]
+ },
+ "bm:barrados_semana_dez": {
+  "ok": true,
+  "erro": "",
+  "linhas": 4,
+  "amostra": [
+   {
+    "Semana": "2026-11-30",
+    "taxa": "0.008177095098260673"
+   },
+   {
+    "Semana": "2026-12-07",
+    "taxa": "0.030918851087562742"
+   },
+   {
+    "Semana": "2026-12-14",
+    "taxa": "0.015304658893407354"
+   }
+  ]
+ },
+ "bm:pendencias_clientes_hoje": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "pendencias": "252749",
+    "clientes": "90764"
+   }
+  ]
+ },
+ "bm:variacao_out_nov": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "Mês de referência": "2026-11-01",
+    "fechamento_outubro": "24320361.97",
+    "fechamento_novembro": "28435794.06",
+    "variacao": "0.1692175509179"
+   }
+  ]
+ },
+ "bm:vazamento_dez": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "eventos": "867"
+   }
+  ]
+ },
+ "bm:mom_saldo_nov": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "variacao": "0.1692175509179"
+   }
+  ]
+ },
+ "bm:recuperado_ytd_nov": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "acumulado": "38682731.19"
+   }
+  ]
+ },
+ "bm:ranking_recuperacao_canal": {
+  "ok": true,
+  "erro": "",
+  "linhas": 4,
+  "amostra": [
+   {
+    "Canal de venda": "CORRETOR",
+    "posicao": "1"
+   },
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "posicao": "2"
+   },
+   {
+    "Canal de venda": "DIGITAL",
+    "posicao": "3"
+   }
+  ]
+ },
+ "bm:simulacao_faixa_total_120d": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "faixa_atraso": "05_91_A_120",
+    "total_pendente": "1060.00"
+   }
+  ]
+ },
+ "bm:simulacao_juros_90d": {
+  "ok": true,
+  "erro": "",
+  "linhas": 1,
+  "amostra": [
+   {
+    "juros": "15.00"
+   }
+  ]
+ }
+}

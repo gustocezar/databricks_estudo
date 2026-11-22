@@ -1,0 +1,61 @@
+--- a/app/databricks.yml
++++ b/app/databricks.yml
+@@ -38,6 +38,9 @@
+   app_name:
+     description: "Databricks App name (unique per workspace)"
+     default: "dqx-studio"
++  sql_warehouse_id:
++    description: "ID de um SQL warehouse EXISTENTE (Free Edition permite 1 so). Substitui o warehouse que o bundle criaria."
++    default: "5f010b8396e591fb"
+   sql_warehouse_name:
+     description: "Name of the bundle-managed SQL warehouse the app queries through."
+     default: "dqx-studio-sql-warehouse"
+@@ -203,7 +206,7 @@
+         - name: "dqx-sql-warehouse"
+           description: "SQL Warehouse for DQX Studio queries"
+           sql_warehouse:
+-            id: ${resources.sql_warehouses.dqx_sql_warehouse.id}
++            id: ${var.sql_warehouse_id}
+             permission: "CAN_MANAGE"
+         - name: "dqx-task-runner-job"
+           description: "Job for async profiler and dry-run tasks"
+@@ -234,30 +237,6 @@
+         - group_name: ${var.admin_group}
+           level: "CAN_USE"
+ 
+-  # Bundle-managed SQL warehouse. The app queries it (app SP via the binding above)
+-  # and the configured audience's OBO dry-run/preview queries run through it.
+-  sql_warehouses:
+-    dqx_sql_warehouse:
+-      name: ${var.sql_warehouse_name}
+-      tags:
+-        custom_tags:
+-          - key: app
+-            value: dqx-studio
+-      cluster_size: ${var.sql_warehouse_size}
+-      max_num_clusters: 1
+-      auto_stop_mins: 10
+-      enable_serverless_compute: true
+-      warehouse_type: PRO
+-      # List the app SP explicitly: with ``permissions`` set, the app's warehouse
+-      # binding would otherwise override them and drop its access.
+-      permissions:
+-        - level: CAN_MANAGE
+-          service_principal_name: ${resources.apps.dqx-studio.service_principal_client_id}
+-        - level: CAN_USE
+-          group_name: ${var.studio_user_group}
+-        - level: CAN_USE
+-          group_name: ${var.admin_group}
+-
+   # Stateful storage. ``lifecycle.prevent_destroy: true`` makes ``bundle destroy``
+   # (or a replacing deploy) fail fast instead of dropping data; to tear down, drop
+   # the flag, ``bundle deployment unbind <key>``, then destroy.
+@@ -461,7 +440,7 @@
+     dqx_quality_overview:
+       display_name: "[${bundle.target}] DQX Quality Overview"
+       file_path: ./dashboards/dqx_quality_overview.lvdash.json
+-      warehouse_id: ${resources.sql_warehouses.dqx_sql_warehouse.id}
++      warehouse_id: ${var.sql_warehouse_id}
+       dataset_catalog: ${var.catalog_name}
+       dataset_schema: ${var.schema_name}
+       embed_credentials: true

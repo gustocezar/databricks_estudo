@@ -1,0 +1,10 @@
+=== TABELAS INTEIRAS (silver atual + dimensoes) ===
+  [studio] ciclo inteiras: 8 execucoes concluidas, 0 pendentes
+     dim_cliente                    SUCCESS  total=107199 erro=0 aviso=11400  rg_preenchido=5367; email_preenchido=3276; cpf_valido=2288
+     dim_apolice                    SUCCESS  total=159277 erro=0 aviso=0  
+     dim_corretor                   SUCCESS  total=2501 erro=0 aviso=0  
+     dim_ponto_venda                SUCCESS  total=1157 erro=0 aviso=0  
+     pendencia_atual                SUCCESS  total=608622 erro=486 aviso=58125  rg_preenchido=30172; email_preenchido=17273; cpf_valido=10938
+     dim_produto                    SUCCESS  total=8 erro=0 aviso=0  
+     dim_data                       SUCCESS  total=5844 erro=0 aviso=0  
+     bridge_apolice_cobertura       SUCCESS  total=422036 erro=0 aviso=0  

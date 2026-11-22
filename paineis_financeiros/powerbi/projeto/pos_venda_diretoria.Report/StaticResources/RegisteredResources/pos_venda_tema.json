@@ -1,0 +1,15 @@
+{
+  "name": "pos_venda",
+  "dataColors": [
+    "#003F5C",
+    "#2F6B9A",
+    "#7A5195",
+    "#BC5090",
+    "#EF5675",
+    "#FFA600",
+    "#58B09C"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#11171C",
+  "tableAccent": "#2272B4"
+}

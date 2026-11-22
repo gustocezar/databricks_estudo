@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "pos_venda · KPIs financeiros · Diretoria"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "20beab09-6557-5c05-a169-c6e87db2ad2d"
+  }
+}

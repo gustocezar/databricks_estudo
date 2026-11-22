@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v01_textbox",
+  "position": {
+    "x": 12.0,
+    "y": 12,
+    "width": 1248.0,
+    "height": 72,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Carteira em aberto",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Posição diária das pendências em aberto: risco (atraso acima de 60 dias), crescimento e fechamento de cada mês. O saldo é uma posição diária: aparece por dia ou na foto mais recente e nunca se soma entre dias. O mês corrente ainda não fechou: nele vale a foto mais recente. Dados sintéticos.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

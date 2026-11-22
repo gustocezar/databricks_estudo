@@ -1,0 +1,136 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v08_tableex",
+  "position": {
+    "x": 12.0,
+    "y": 452,
+    "width": 1248.0,
+    "height": 272,
+    "z": 7000,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Safra de entrada"
+                }
+              },
+              "queryRef": "Safras.Safra de entrada",
+              "nativeQueryRef": "Safra de entrada",
+              "displayName": "Safra"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Produto"
+                    }
+                  },
+                  "Property": "Produto"
+                }
+              },
+              "queryRef": "Produto.Produto",
+              "nativeQueryRef": "Produto",
+              "displayName": "Produto"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Pendências que entraram"
+                }
+              },
+              "queryRef": "Safras.Pendências que entraram",
+              "nativeQueryRef": "Pendências que entraram",
+              "displayName": "Entraram"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Pendências pagas da safra"
+                }
+              },
+              "queryRef": "Safras.Pendências pagas da safra",
+              "nativeQueryRef": "Pendências pagas da safra",
+              "displayName": "Pagas"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Taxa de recuperação"
+                }
+              },
+              "queryRef": "Safras.Taxa de recuperação",
+              "nativeQueryRef": "Taxa de recuperação",
+              "displayName": "Taxa"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Valor recuperado da safra"
+                }
+              },
+              "queryRef": "Safras.Valor recuperado da safra",
+              "nativeQueryRef": "Valor recuperado da safra",
+              "displayName": "Valor recuperado"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Safras por produto'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

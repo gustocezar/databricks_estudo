@@ -1,0 +1,55 @@
+/// Calendário contínuo (tabela de datas).
+table 'Calendário'
+	lineageTag: d9c40ac5-dc08-5dc3-94bc-75a3c8e36a74
+	dataCategory: Time
+
+	column Data
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		isKey
+		lineageTag: 67f01451-26ec-572a-bc38-ffb35dd9b2c3
+		summarizeBy: none
+		sourceColumn: data
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês'
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 087adfae-8126-53ba-be07-684f5151b7ac
+		summarizeBy: none
+		sourceColumn: mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: 5eb2010f-3301-59c9-9045-409cd0db801e
+		summarizeBy: none
+		sourceColumn: ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mês (número)'
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 37c04033-3af5-55a5-82e8-8a0a4c0fce6b
+		summarizeBy: none
+		sourceColumn: mes_do_ano
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Calendário' = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "calendario"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

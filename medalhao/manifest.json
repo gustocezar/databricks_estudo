@@ -1,0 +1,69 @@
+{
+  "colunas_one_table": 91,
+  "datasets": [
+    {
+      "layer": "bronze",
+      "name": "pagamentos_pendentes"
+    },
+    {
+      "layer": "silver",
+      "name": "pagamento_pendente"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_cliente"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_apolice"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_produto"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_cobertura"
+    },
+    {
+      "layer": "gold",
+      "name": "bridge_apolice_cobertura"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_corretor"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_ponto_venda"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_periodicidade"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_forma_pagamento"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_status_cobranca"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_motivo_pendencia"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_faixa_atraso"
+    },
+    {
+      "layer": "gold",
+      "name": "dim_data"
+    },
+    {
+      "layer": "gold",
+      "name": "fact_pagamento_pendente"
+    }
+  ]
+}

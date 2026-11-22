@@ -1,0 +1,104 @@
+[
+  {
+    "name": "pk_unica_produto_sk",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "produto_sk"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "pk_unica_produto_codigo",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "produto_codigo"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "produto_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "produto_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "produto_codigo_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "produto_codigo"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "produto_nome_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "produto_nome"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "categoria_produto_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "categoria_produto"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cobertura_principal_codigo_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cobertura_principal_codigo"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

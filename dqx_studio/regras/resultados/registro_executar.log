@@ -1,0 +1,13 @@
+dq.v_bronze_eventos_janela             SUCCESS  linhas=59828 erro=292 aviso=2630
+dq.v_silver_eventos_aptos_janela       SUCCESS  linhas=59684 erro=148 aviso=6054
+silver.pendencia_atual                 SUCCESS  linhas=608622 erro=486 aviso=58125
+silver.pendencia_hist                  SUCCESS  linhas=1588170 erro=0 aviso=0
+dq.v_fato_snapshot_janela              SUCCESS  linhas=1743052 erro=2603 aviso=0
+gold.bridge_apolice_cobertura          SUCCESS  linhas=422036 erro=0 aviso=0
+gold.dim_cliente                       SUCCESS  linhas=107199 erro=0 aviso=11400
+gold.dim_apolice                       SUCCESS  linhas=159277 erro=0 aviso=0
+gold.dim_corretor                      SUCCESS  linhas=2501 erro=0 aviso=0
+gold.dim_ponto_venda                   SUCCESS  linhas=1157 erro=0 aviso=0
+gold.dim_data                          SUCCESS  linhas=5844 erro=0 aviso=0
+gold.dim_produto                       SUCCESS  linhas=8 erro=0 aviso=0
+pendentes: []

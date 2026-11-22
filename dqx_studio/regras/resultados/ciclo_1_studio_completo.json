@@ -1,0 +1,86 @@
+{
+  "pos_venda.dq.v_bronze_eventos_janela": {
+    "run_id": "e144ccdc3a7f4b8b",
+    "estado": "SUCCESS",
+    "total": 59756,
+    "erro": 0,
+    "aviso": 2558,
+    "regras_violadas": [
+      {
+        "regra": "email_preenchido",
+        "linhas": 1458,
+        "erro": 0,
+        "aviso": 1458
+      },
+      {
+        "regra": "uf_em_maiusculas",
+        "linhas": 606,
+        "erro": 0,
+        "aviso": 606
+      },
+      {
+        "regra": "evento_unico_por_dia_pendencia_tipo",
+        "linhas": 540,
+        "erro": 0,
+        "aviso": 540
+      }
+    ]
+  },
+  "pos_venda.dq.v_quarentena_janela": {
+    "run_id": "da1242ee04c24210",
+    "estado": "SUCCESS",
+    "total": 0,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.dq.v_silver_eventos_aptos_janela": {
+    "run_id": "d1823b3f2b094d8c",
+    "estado": "SUCCESS",
+    "total": 59756,
+    "erro": 22147,
+    "aviso": 5220,
+    "regras_violadas": [
+      {
+        "regra": "pk_unica_pendencia_id",
+        "linhas": 22147,
+        "erro": 22147,
+        "aviso": 0
+      },
+      {
+        "regra": "rg_preenchido",
+        "linhas": 2976,
+        "erro": 0,
+        "aviso": 2976
+      },
+      {
+        "regra": "email_preenchido",
+        "linhas": 1458,
+        "erro": 0,
+        "aviso": 1458
+      },
+      {
+        "regra": "cpf_valido",
+        "linhas": 937,
+        "erro": 0,
+        "aviso": 937
+      }
+    ]
+  },
+  "pos_venda.dq.v_silver_hist_janela": {
+    "run_id": "4c48315abb704690",
+    "estado": "SUCCESS",
+    "total": 59486,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.dq.v_fato_snapshot_janela": {
+    "run_id": "e9787ae9e3044e97",
+    "estado": "SUCCESS",
+    "total": 1535030,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  }
+}

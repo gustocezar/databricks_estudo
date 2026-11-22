@@ -1,0 +1,141 @@
+{
+  "pos_venda.dq.v_bronze_eventos_7d": {
+    "run_id": "43cb3b9ab94a434e",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 1177,
+    "regras_violadas": [
+      {
+        "regra": "email_preenchido",
+        "linhas": 1089,
+        "erro": 0,
+        "aviso": 1089
+      },
+      {
+        "regra": "uf_em_maiusculas",
+        "linhas": 103,
+        "erro": 0,
+        "aviso": 103
+      }
+    ]
+  },
+  "pos_venda.dq.v_silver_pendencia_hist_7d": {
+    "run_id": "0f68c763b1074d71",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.dq.v_silver_pendencia_atual_7d": {
+    "run_id": "0a5b11610bbe440a",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 2005,
+    "regras_violadas": [
+      {
+        "regra": "email_preenchido",
+        "linhas": 1042,
+        "erro": 0,
+        "aviso": 1042
+      },
+      {
+        "regra": "cpf_valido",
+        "linhas": 626,
+        "erro": 0,
+        "aviso": 626
+      },
+      {
+        "regra": "rg_preenchido",
+        "linhas": 503,
+        "erro": 0,
+        "aviso": 503
+      }
+    ]
+  },
+  "pos_venda.gold.dim_cliente": {
+    "run_id": "2245c7687d0f4c00",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 1319,
+    "regras_violadas": [
+      {
+        "regra": "rg_preenchido",
+        "linhas": 543,
+        "erro": 0,
+        "aviso": 543
+      },
+      {
+        "regra": "email_preenchido",
+        "linhas": 537,
+        "erro": 0,
+        "aviso": 537
+      },
+      {
+        "regra": "cpf_valido",
+        "linhas": 306,
+        "erro": 0,
+        "aviso": 306
+      }
+    ]
+  },
+  "pos_venda.dq.v_fato_snapshot_7d": {
+    "run_id": "c63a2428dd9f4ea0",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_apolice": {
+    "run_id": "3507b7bf221f4693",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_ponto_venda": {
+    "run_id": "915480fea81c4b62",
+    "estado": "SUCCESS",
+    "total": 1157,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.bridge_apolice_cobertura": {
+    "run_id": "02af8a40cdd64173",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_corretor": {
+    "run_id": "3e6d7146c7e7422c",
+    "estado": "SUCCESS",
+    "total": 2501,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_produto": {
+    "run_id": "c6908e1a36b04eb9",
+    "estado": "SUCCESS",
+    "total": 8,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_data": {
+    "run_id": "9a6c32e278de48f4",
+    "estado": "SUCCESS",
+    "total": 5844,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  }
+}

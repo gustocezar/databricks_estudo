@@ -1,0 +1,10 @@
+resources:
+  dashboards:
+    painel_qualidade:
+      display_name: "pos_venda · Qualidade de dados"
+      file_path: ../src/pos_venda_qualidade.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      # as consultas usam nomes simples de view; catálogo e schema vêm daqui
+      dataset_catalog: pos_venda
+      dataset_schema: dq
+      embed_credentials: true

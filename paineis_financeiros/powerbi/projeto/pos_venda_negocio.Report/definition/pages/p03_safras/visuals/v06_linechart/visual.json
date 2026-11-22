@@ -1,0 +1,115 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v06_linechart",
+  "position": {
+    "x": 12.0,
+    "y": 212,
+    "width": 620.0,
+    "height": 232,
+    "z": 5000,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Safra de entrada"
+                }
+              },
+              "queryRef": "Safras.Safra de entrada",
+              "nativeQueryRef": "Safra de entrada"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Taxa de recuperação"
+                }
+              },
+              "queryRef": "Safras.Taxa de recuperação",
+              "nativeQueryRef": "Taxa de recuperação",
+              "displayName": "Taxa de recuperação"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Canal de venda"
+                    }
+                  },
+                  "Property": "Canal de venda"
+                }
+              },
+              "queryRef": "Canal de venda.Canal de venda",
+              "nativeQueryRef": "Canal de venda"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Safras"
+                  }
+                },
+                "Property": "Safra de entrada"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Taxa de recuperação por safra e canal'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

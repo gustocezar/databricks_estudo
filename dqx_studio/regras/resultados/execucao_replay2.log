@@ -1,0 +1,92 @@
+=== REPLAY CICLO 1: janela 2026-11-20 -> 2026-11-26 (todas as linhas) ===
+  [studio] ciclo 1: 1 execucoes concluidas, 0 pendentes
+     v_silver_eventos_aptos_janela  SUCCESS  total=59756 erro=0 aviso=5710  rg_preenchido=2976; email_preenchido=1458; cpf_valido=937
+=== REPLAY CICLO 2: janela 2026-11-27 -> 2026-12-03 (todas as linhas) ===
+  [studio] ciclo 2: 1 execucoes concluidas, 0 pendentes
+     v_silver_eventos_aptos_janela  SUCCESS  total=52374 erro=0 aviso=12167  email_preenchido=5465; cpf_valido=3191; rg_preenchido=2554
+janela devolvida aos ultimos 7 dias carregados
+=== REPLAY CICLO 3: janela 2026-12-04 -> 2026-12-10 (todas as linhas) ===
+  [studio] ciclo 3: 5 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_janela        SUCCESS  total=55616 erro=1349 aviso=2362  email_preenchido=1337; uf_em_maiusculas=565; valor_total_igual_parcela_multa_juros=520
+     v_silver_eventos_aptos_janela  SUCCESS  total=54267 erro=0 aviso=5221  rg_preenchido=2695; email_preenchido=1312; cpf_valido=889
+     v_quarentena_janela            SUCCESS  total=1349 erro=1349 aviso=47  valor_total_igual_parcela_multa_juros=520; valor_parcela_positivo=509; status_cobranca_valido=234
+     v_silver_hist_janela           SUCCESS  total=54024 erro=0 aviso=0  
+     v_fato_snapshot_janela         SUCCESS  total=1616408 erro=0 aviso=0  
+=== REPLAY CICLO 4: janela 2026-12-11 -> 2026-12-17 (todas as linhas) ===
+  [studio] ciclo 4: 5 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_janela        SUCCESS  total=59053 erro=2275 aviso=3460  email_preenchido=1522; uf_em_maiusculas=819; forma_pagamento_cadastrada=740
+     v_silver_eventos_aptos_janela  SUCCESS  total=57497 erro=719 aviso=8801  cep_8_digitos=2955; rg_preenchido=2880; email_preenchido=1481
+     v_quarentena_janela            SUCCESS  total=1556 erro=1556 aviso=312  atraso_confere_com_as_datas=611; uf_valida=472; vencimento_ate_data_do_evento=291
+     v_silver_hist_janela           SUCCESS  total=57211 erro=0 aviso=0  
+     v_fato_snapshot_janela         SUCCESS  total=1678586 erro=1439 aviso=0  fk_forma_pagamento_sk=1439
+=== REPLAY CICLO 5: janela 2026-12-18 -> 2026-12-24 (todas as linhas) ===
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1320, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1386, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1432, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1381, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1141, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1085, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1520, in connect
+    super().connect()
+    ~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 1051, in connect
+    self.sock = self._create_connection(
+                ~~~~~~~~~~~~~~~~~~~~~~~^
+        (self.host,self.port), self.timeout, self.source_address)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 850, in create_connection
+    for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+               ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 989, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/augustosilva/Library/Application Support/Claude/scratch-workspaces/3a6da6c4-83f5-4190-9b16-b5aeccfa8165/e4928533-c7b6-45d2-bb7d-5bea0942a9a2/scratch-2026-11-18-c6f80e/pos_venda/dqx_studio/regras/rodar_ciclos.py", line 144, in <module>
+    executar_studio(n, alvos, amostra=0, arquivo="studio_completo" + ("_" + "_".join(so) if so else ""), espera=3600)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/augustosilva/Library/Application Support/Claude/scratch-workspaces/3a6da6c4-83f5-4190-9b16-b5aeccfa8165/e4928533-c7b6-45d2-bb7d-5bea0942a9a2/scratch-2026-11-18-c6f80e/pos_venda/dqx_studio/regras/rodar_ciclos.py", line 96, in executar_studio
+    st, s = cr.api("GET", f"/api/v1/dryrun/runs/{rid}/status")
+            ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/augustosilva/Library/Application Support/Claude/scratch-workspaces/3a6da6c4-83f5-4190-9b16-b5aeccfa8165/e4928533-c7b6-45d2-bb7d-5bea0942a9a2/scratch-2026-11-18-c6f80e/pos_venda/dqx_studio/regras/carregar_regras.py", line 39, in api
+    st, r = _api(metodo, caminho, corpo, timeout)
+            ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/augustosilva/Library/Application Support/Claude/scratch-workspaces/3a6da6c4-83f5-4190-9b16-b5aeccfa8165/e4928533-c7b6-45d2-bb7d-5bea0942a9a2/scratch-2026-11-18-c6f80e/pos_venda/dqx_studio/regras/carregar_regras.py", line 54, in _api
+    with urllib.request.urlopen(req, timeout=timeout, context=CTX) as r:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1368, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        context=self._context)
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 1323, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [Errno 8] nodename nor servname provided, or not known>

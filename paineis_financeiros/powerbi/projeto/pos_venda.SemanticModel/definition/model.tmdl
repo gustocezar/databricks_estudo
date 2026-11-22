@@ -1,0 +1,20 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Host", "HttpPath", "Calendário", "Produto", "Canal de venda", "Forma de pagamento", "Carteira diária", "Recuperação", "Safras", "Qualidade"]
+
+ref table 'Calendário'
+ref table Produto
+ref table 'Canal de venda'
+ref table 'Forma de pagamento'
+ref table 'Carteira diária'
+ref table 'Recuperação'
+ref table Safras
+ref table Qualidade
+

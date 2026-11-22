@@ -1,0 +1,48 @@
+relationship 4050fd21-3691-5f06-8da2-930ff4820ab0
+	fromColumn: 'Carteira diária'.Produto
+	toColumn: Produto.Produto
+
+relationship d37c64e0-79c1-51e8-b787-9a3090c8d32e
+	fromColumn: 'Carteira diária'.'Canal de venda'
+	toColumn: 'Canal de venda'.'Canal de venda'
+
+relationship 9ae6713b-aaa7-53a2-94f4-ddd86635cf34
+	fromColumn: 'Carteira diária'.'Forma de pagamento'
+	toColumn: 'Forma de pagamento'.'Forma de pagamento'
+
+relationship 64ea85dd-1ade-511f-a9ba-a21528ffc4a4
+	fromColumn: 'Recuperação'.Produto
+	toColumn: Produto.Produto
+
+relationship a99a2136-b0fc-5fed-a6a9-145746efb594
+	fromColumn: 'Recuperação'.'Canal de venda'
+	toColumn: 'Canal de venda'.'Canal de venda'
+
+relationship 4b629472-9c53-55e9-a1ab-b4af215c5a92
+	fromColumn: 'Recuperação'.'Forma de pagamento'
+	toColumn: 'Forma de pagamento'.'Forma de pagamento'
+
+relationship 50d96d7f-f079-50da-8f5d-f209568545d8
+	fromColumn: Safras.Produto
+	toColumn: Produto.Produto
+
+relationship 6ecf9154-eaef-5fff-a4be-2a2903594c4e
+	fromColumn: Safras.'Canal de venda'
+	toColumn: 'Canal de venda'.'Canal de venda'
+
+relationship 5a955f09-8303-5fe1-a35e-bd750b4ad59f
+	fromColumn: Safras.'Forma de pagamento'
+	toColumn: 'Forma de pagamento'.'Forma de pagamento'
+
+relationship b3070b8a-1f43-5610-adb6-f6f2c24d7506
+	fromColumn: 'Carteira diária'.Data
+	toColumn: 'Calendário'.Data
+
+relationship 85957513-fd4f-521d-953e-f36a843a9f7e
+	fromColumn: 'Recuperação'.'Data da baixa'
+	toColumn: 'Calendário'.Data
+
+relationship 69eed053-c097-5e26-97b6-4a439a684846
+	fromColumn: Qualidade.Dia
+	toColumn: 'Calendário'.Data
+

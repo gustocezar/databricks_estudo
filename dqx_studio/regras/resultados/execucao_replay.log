@@ -1,0 +1,8 @@
+=== REPLAY CICLO 1: janela 2026-11-20 -> 2026-11-26 (todas as linhas) ===
+  [studio] ciclo 1: 5 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_janela        SUCCESS  total=59756 erro=0 aviso=2558  email_preenchido=1458; uf_em_maiusculas=606; evento_unico_por_dia_pendencia_tipo=540
+     v_quarentena_janela            SUCCESS  total=0 erro=0 aviso=0  
+     v_silver_eventos_aptos_janela  SUCCESS  total=59756 erro=22147 aviso=5220  pk_unica_pendencia_id=22147; rg_preenchido=2976; email_preenchido=1458
+     v_silver_hist_janela           SUCCESS  total=59486 erro=0 aviso=0  
+     v_fato_snapshot_janela         SUCCESS  total=1535030 erro=0 aviso=0  
+=== REPLAY CICLO 2: janela 2026-11-27 -> 2026-12-03 (todas as linhas) ===

@@ -1,0 +1,14 @@
+=== CICLO 5: 2026-12-18 -> 2026-12-24 ===
+  [pipeline] ciclo 5: 59828 eventos recebidos, 144 barrados (0.24%) | motivos: uf_invalida=67, valor_parcela_nao_positivo=60, status_cobranca_invalido=17
+  [studio] ciclo 5: 11 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_7d            SUCCESS  total=10000 erro=57 aviso=424  email_preenchido=241; uf_em_maiusculas=103; evento_unico_por_dia_pendencia_tipo=84
+     v_silver_pendencia_atual_7d    SUCCESS  total=10000 erro=24 aviso=925  rg_preenchido=488; email_preenchido=255; cpf_valido=213
+     v_silver_pendencia_hist_7d     SUCCESS  total=10000 erro=0 aviso=0  
+     dim_cliente                    SUCCESS  total=10000 erro=0 aviso=1120  rg_preenchido=545; email_preenchido=318; cpf_valido=199
+     v_fato_snapshot_7d             SUCCESS  total=10000 erro=0 aviso=0  
+     dim_apolice                    SUCCESS  total=10000 erro=0 aviso=0  
+     dim_corretor                   SUCCESS  total=2501 erro=0 aviso=0  
+     dim_ponto_venda                SUCCESS  total=1157 erro=0 aviso=0  
+     bridge_apolice_cobertura       SUCCESS  total=10000 erro=0 aviso=0  
+     dim_produto                    SUCCESS  total=8 erro=0 aviso=0  
+     dim_data                       SUCCESS  total=5844 erro=0 aviso=0  

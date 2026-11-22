@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v07_clusteredcolumnchart",
+  "position": {
+    "x": 12.0,
+    "y": 452,
+    "width": 620.0,
+    "height": 232,
+    "z": 6000,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Canal de venda"
+                    }
+                  },
+                  "Property": "Canal de venda"
+                }
+              },
+              "queryRef": "Canal de venda.Canal de venda",
+              "nativeQueryRef": "Canal de venda"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Safras"
+                    }
+                  },
+                  "Property": "Taxa de recuperação"
+                }
+              },
+              "queryRef": "Safras.Taxa de recuperação",
+              "nativeQueryRef": "Taxa de recuperação",
+              "displayName": "Taxa de recuperação"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Taxa de recuperação por canal de venda'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

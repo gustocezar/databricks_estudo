@@ -1,0 +1,50 @@
+[
+  {
+    "name": "pk_unica_data_sk",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "data_sk"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "pk_unica_data",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "data"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "data_sk_igual_a_data",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "data_sk = CAST(date_format(data, 'yyyyMMdd') AS INT)",
+        "msg": "data_sk nao corresponde a data",
+        "name": "data_sk_igual_a_data"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

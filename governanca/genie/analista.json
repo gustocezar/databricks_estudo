@@ -1,0 +1,531 @@
+{
+ "version": 2,
+ "config": {
+  "sample_questions": [
+   {
+    "id": "1f0d59ab52915b3f9c0fe3cef7853c33",
+    "question": [
+     "Quanto recuperamos em dezembro por forma de pagamento e qual o ticket médio?"
+    ]
+   },
+   {
+    "id": "879f7fb2f5f75937a7ce33e6a16bd394",
+    "question": [
+     "Qual a taxa de recuperação das safras de setembro a novembro?"
+    ]
+   },
+   {
+    "id": "a33e033a94c45207956ef156606efff6",
+    "question": [
+     "Quais motivos de pendência mais cresceram no último mês?"
+    ]
+   },
+   {
+    "id": "d1edd5f0f8de52d38e7a5e97fb02418b",
+    "question": [
+     "Quais produtos e canais concentram o saldo acima de 60 dias?"
+    ]
+   },
+   {
+    "id": "e8b99b1fcc435538aa811c667af2c6ad",
+    "question": [
+     "Qual o saldo em aberto hoje por faixa de atraso?"
+    ]
+   }
+  ]
+ },
+ "data_sources": {
+  "metric_views": [
+   {
+    "identifier": "pos_venda.ontologia.mv_carteira_em_aberto",
+    "column_configs": [
+     {
+      "column_name": "Canal de venda",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Categoria do produto",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Faixa de atraso",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Fase da cobrança",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Forma de pagamento",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Grupo da forma de pagamento",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Grupo do motivo",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Motivo da pendência",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Periodicidade",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Produto",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Regional",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Status da apólice",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Status de cobrança",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "UF do ponto de venda",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     }
+    ]
+   },
+   {
+    "identifier": "pos_venda.ontologia.mv_qualidade_dados"
+   },
+   {
+    "identifier": "pos_venda.ontologia.mv_recuperacao",
+    "column_configs": [
+     {
+      "column_name": "Canal de venda",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Categoria do produto",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Faixa de atraso na baixa",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Forma de pagamento",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Motivo da pendência",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Produto",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     }
+    ]
+   },
+   {
+    "identifier": "pos_venda.ontologia.mv_safra_recuperacao",
+    "column_configs": [
+     {
+      "column_name": "Canal de venda",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Forma de pagamento",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Motivo da pendência",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Periodicidade",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Produto",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "Status atual",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     }
+    ]
+   }
+  ],
+  "tables": [
+   {
+    "identifier": "pos_venda.gold.dq_barrados_por_motivo_dia"
+   },
+   {
+    "identifier": "pos_venda.ontologia.pendencia",
+    "column_configs": [
+     {
+      "column_name": "canal_venda",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "forma_pagamento",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "motivo_pendencia",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "periodicidade_pagamento",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "produto_nome",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     },
+     {
+      "column_name": "status_cobranca",
+      "enable_format_assistance": true,
+      "enable_entity_matching": true
+     }
+    ]
+   }
+  ]
+ },
+ "instructions": {
+  "text_instructions": [
+   {
+    "id": "e7ee5c78c8db5724afb2ceea7961701f",
+    "content": [
+     "## PURPOSE\n- Analistas financeiros do Pós-venda (seguro de vida): saldo, aging, cobrança, recuperação e dados não aptos.\n- Detalhe por pendência na view pendencia (sem dados pessoais).\n\n## DISAMBIGUATION\n- \"hoje\", \"atual\" ou sem data: `Foto mais recente` = true na mv_carteira_em_aberto; diga a data.\n- \"fechamento\" ou \"fim do mês\": `Saldo de fechamento` por `Mês de referência`.\n- \"mês a mês\", \"MoM\" ou variação entre fins de mês: `Variação mensal do saldo` ou `Variação mensal do valor recuperado`, com o mês (`Mês de referência`, `Mês da baixa`), não a data do dia.\n- Variação entre duas datas: `Saldo em aberto` em cada data; `Variação do saldo no período` só por mês.\n- \"acumulado no ano\" ou \"YTD\": `Valor recuperado acumulado no ano` com o mês da baixa.\n- \"ranking\" ou \"posição\": `Posição no ranking...`, sem medidas de fechamento, início, mês anterior ou acumulado na mesma consulta.\n- \"recuperado\", \"pago\", \"baixas\": mv_recuperacao (data da baixa).\n- \"taxa de recuperação\": mv_safra_recuperacao por `Safra de entrada`.\n- Outros períodos (ex.: \"em outubro\", \"semanas de dezembro\"): filtre pela data do dia (`Dia`, `Data de referência`, `Data da baixa`, `Data de entrada`), nunca pela dimensão truncada (`Semana`, `Mês`, `Safra de entrada`).\n- Só quebre por dia, semana ou mês se pedido; senão, um total do período.\n\n## DATA QUALITY NOTES\n- Dados sintéticos de 19/05/2026 a 24/12/2026 (foto mais recente: 24/12/2026).\n- Forma de pagamento NAO_CADASTRADA (dez/2026) é dado que vazou da barreira de qualidade.\n- Safras recentes tiveram menos tempo para pagar (taxa menor).\n\n## CONSTRAINTS\n- Saldo é semiaditivo: nunca some datas diferentes; para um período use `Saldo de fechamento`, `Saldo no início do período` ou `Saldo médio diário`.\n- Nunca mostre nome, CPF, RG, e-mail, telefone ou endereço de clientes ou corretores.\n\n## Instructions you must follow when providing summaries\n- R$ e percentuais com 2 casas decimais.\n- Sempre diga a data de referência ou o período usado."
+    ]
+   }
+  ],
+  "example_question_sqls": [
+   {
+    "id": "0276313546b25db3a8fb4de530dc1754",
+    "question": [
+     "Quanto foi recuperado por mês e por categoria do produto?"
+    ],
+    "sql": [
+     "SELECT mv_recuperacao.`Mês da baixa`, mv_recuperacao.`Categoria do produto`, MEASURE(mv_recuperacao.`Valor recuperado`) AS recuperado, MEASURE(mv_recuperacao.`Pendências pagas`) AS pagas FROM pos_venda.ontologia.mv_recuperacao GROUP BY ALL ORDER BY ALL"
+    ]
+   },
+   {
+    "id": "0fa25dbb9b595550a675126189eb42b0",
+    "question": [
+     "Liste as pendências da apólice VID000289125 com status e valores."
+    ],
+    "sql": [
+     "SELECT pendencia.pendencia_id, pendencia.numero_parcela, pendencia.status_cobranca, pendencia.data_vencimento, pendencia.data_baixa, pendencia.valor_parcela, pendencia.valor_pago FROM pos_venda.ontologia.pendencia WHERE pendencia.numero_apolice = 'VID000289125' ORDER BY pendencia.numero_parcela"
+    ]
+   },
+   {
+    "id": "1a2d8896b52b5c4fb2b662a8cd24decd",
+    "question": [
+     "Qual o saldo em aberto atual por fase da cobrança?"
+    ],
+    "sql": [
+     "SELECT mv_carteira_em_aberto.`Data de referência`, mv_carteira_em_aberto.`Fase da cobrança`, MEASURE(mv_carteira_em_aberto.`Saldo em aberto`) AS saldo, MEASURE(mv_carteira_em_aberto.`Pendências em aberto`) AS pendencias FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE mv_carteira_em_aberto.`Foto mais recente` = true GROUP BY ALL ORDER BY saldo DESC"
+    ]
+   },
+   {
+    "id": "1d1cf804a42055e0b8c290c081437112",
+    "question": [
+     "Qual a posição de cada produto no ranking de valor recuperado em dezembro de 2026?"
+    ],
+    "sql": [
+     "SELECT mv_recuperacao.`Produto`, MEASURE(mv_recuperacao.`Valor recuperado`) AS recuperado, MEASURE(mv_recuperacao.`Posição no ranking de recuperação`) AS posicao FROM pos_venda.ontologia.mv_recuperacao WHERE mv_recuperacao.`Mês da baixa` = DATE'2026-12-01' GROUP BY ALL ORDER BY posicao"
+    ]
+   },
+   {
+    "id": "661684e9fc1753428d1c8eb6371127a0",
+    "question": [
+     "Qual a taxa de recuperação por safra de entrada e periodicidade?"
+    ],
+    "sql": [
+     "SELECT mv_safra_recuperacao.`Safra de entrada`, mv_safra_recuperacao.`Periodicidade`, MEASURE(mv_safra_recuperacao.`Taxa de recuperação`) AS taxa FROM pos_venda.ontologia.mv_safra_recuperacao GROUP BY ALL ORDER BY ALL"
+    ]
+   },
+   {
+    "id": "6f48fa00618052e69815318f35ddfaad",
+    "question": [
+     "Quanto fica uma parcela de R$ 250,00 com 45 dias de atraso: faixa, multa, juros e total pendente?"
+    ],
+    "sql": [
+     "SELECT pos_venda.regras.faixa_atraso(45) AS faixa_atraso, pos_venda.regras.valor_multa(CAST(250.00 AS DECIMAL(14,2))) AS multa, pos_venda.regras.valor_juros(CAST(250.00 AS DECIMAL(14,2)), 45) AS juros, pos_venda.regras.valor_total_pendente(CAST(250.00 AS DECIMAL(14,2)), 45) AS total_pendente"
+    ]
+   },
+   {
+    "id": "8447d110d6045577a6a22679a69adecf",
+    "question": [
+     "Compare a quantidade de pendências em aberto em 31/10/2026 e 30/11/2026 por canal de venda."
+    ],
+    "sql": [
+     "SELECT mv_carteira_em_aberto.`Canal de venda`, mv_carteira_em_aberto.`Data de referência`, MEASURE(mv_carteira_em_aberto.`Pendências em aberto`) AS pendencias FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE mv_carteira_em_aberto.`Data de referência` IN (DATE'2026-10-31', DATE'2026-11-30') GROUP BY ALL ORDER BY ALL"
+    ]
+   },
+   {
+    "id": "e36b7c93a1af5c7db757f1a787b372f3",
+    "question": [
+     "Quais 5 regionais têm o maior percentual do saldo acima de 60 dias na posição atual?"
+    ],
+    "sql": [
+     "SELECT mv_carteira_em_aberto.`Regional`, MEASURE(mv_carteira_em_aberto.`Percentual do saldo acima de 60 dias`) AS pct_acima_60 FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE mv_carteira_em_aberto.`Foto mais recente` = true GROUP BY ALL ORDER BY pct_acima_60 DESC LIMIT 5"
+    ]
+   }
+  ],
+  "sql_functions": [
+   {
+    "id": "3baaf183070b59a9adb2399ea0eff8ff",
+    "identifier": "pos_venda.regras.faixa_atraso"
+   },
+   {
+    "id": "86d88d36ea715cc8b6d5a5f81c446063",
+    "identifier": "pos_venda.regras.valor_multa"
+   },
+   {
+    "id": "b6632eccf79c5bc79b8e05cc2332a36d",
+    "identifier": "pos_venda.regras.valor_juros"
+   },
+   {
+    "id": "b88fc99b74ed5803b88a4257397fb986",
+    "identifier": "pos_venda.regras.valor_total_pendente"
+   }
+  ]
+ },
+ "benchmarks": {
+  "questions": [
+   {
+    "id": "22448a97b07d52749703321956895383",
+    "question": [
+     "Quantas pendências entraram em outubro de 2026?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT MEASURE(`Pendências que entraram`) AS entradas FROM pos_venda.ontologia.mv_safra_recuperacao WHERE `Safra de entrada` = DATE'2026-10-01'"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "2e4b303daba152e1a8158a35cf3ac757",
+    "question": [
+     "Qual a taxa de recuperação das safras de setembro, outubro e novembro de 2026?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Safra de entrada`, MEASURE(`Taxa de recuperação`) AS taxa FROM pos_venda.ontologia.mv_safra_recuperacao WHERE `Safra de entrada` BETWEEN DATE'2026-09-01' AND DATE'2026-11-01' GROUP BY ALL ORDER BY ALL"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "2ee3b238b60b5fe1a1fb00ece39c3b9a",
+    "question": [
+     "Qual a posição de cada canal de venda no ranking de valor recuperado em novembro de 2026?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Canal de venda`, MEASURE(`Posição no ranking de recuperação`) AS posicao FROM pos_venda.ontologia.mv_recuperacao WHERE `Mês da baixa` = DATE'2026-11-01' GROUP BY ALL ORDER BY posicao"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "3ae15828b008541abf9d5a90cd02ffdb",
+    "question": [
+     "Qual foi o ticket médio recuperado em novembro de 2026?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT MEASURE(`Ticket médio recuperado`) AS ticket FROM pos_venda.ontologia.mv_recuperacao WHERE `Mês da baixa` = DATE'2026-11-01'"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "4e990bcf3ee753d5883882eb19de7e33",
+    "question": [
+     "Quantos eventos foram barrados em dezembro de 2026 por motivo da rejeição?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT motivo_rejeicao, sum(eventos) AS eventos FROM pos_venda.gold.dq_barrados_por_motivo_dia WHERE dia BETWEEN DATE'2026-12-01' AND DATE'2026-12-31' GROUP BY motivo_rejeicao ORDER BY eventos DESC"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "592430f47e905cdcbf93af4ae817746e",
+    "question": [
+     "Quais os 3 produtos com maior saldo acima de 60 dias hoje?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Produto`, MEASURE(`Saldo acima de 60 dias`) AS saldo FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Foto mais recente` = true GROUP BY ALL ORDER BY saldo DESC LIMIT 3"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "5b29613bf0685aeab5d67cabc79352f3",
+    "question": [
+     "Qual o atraso médio em dias das pendências em aberto hoje por status de cobrança?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Status de cobrança`, MEASURE(`Atraso médio em dias`) AS atraso FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Foto mais recente` = true GROUP BY ALL ORDER BY atraso DESC"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "b68ead957fa35d378f15d006af8e824d",
+    "question": [
+     "Qual era o saldo em aberto em 30/11/2026 por canal de venda?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Canal de venda`, MEASURE(`Saldo em aberto`) AS saldo FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Data de referência` = DATE'2026-11-30' GROUP BY ALL ORDER BY saldo DESC"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "be3db5cd56be5c0c8dfb266227a7984b",
+    "question": [
+     "Qual o saldo em aberto hoje?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT MEASURE(`Saldo em aberto`) AS saldo FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Foto mais recente` = true"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "ca2f843535205ed7ac6f958881b322dc",
+    "question": [
+     "Qual o saldo em aberto por faixa de atraso na posição atual?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Faixa de atraso`, MEASURE(`Saldo em aberto`) AS saldo FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Foto mais recente` = true GROUP BY ALL ORDER BY ALL"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "d34fda83413c579786ca2875e40a74b4",
+    "question": [
+     "Quais as 10 pendências pagas em dezembro de 2026 com maior valor pago?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT pendencia_id, numero_apolice, data_baixa, valor_pago FROM pos_venda.ontologia.pendencia WHERE data_baixa BETWEEN DATE'2026-12-01' AND DATE'2026-12-31' ORDER BY valor_pago DESC LIMIT 10"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e1bafcc467cf574588b1181cc5baf1fe",
+    "question": [
+     "Em que faixa de atraso fica uma parcela de R$ 1.000,00 com 120 dias de atraso e qual o total pendente dela?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT pos_venda.regras.faixa_atraso(120) AS faixa_atraso, pos_venda.regras.valor_total_pendente(CAST(1000.00 AS DECIMAL(14,2)), 120) AS total_pendente"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "e7a4a2aaf8d159eea2d1ec775ce1a1d5",
+    "question": [
+     "Qual grupo de motivo concentra o maior saldo em aberto hoje?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Grupo do motivo`, MEASURE(`Saldo em aberto`) AS saldo FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Foto mais recente` = true GROUP BY ALL ORDER BY saldo DESC LIMIT 1"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fb656fc1d8e05213b1729812e06eb7a3",
+    "question": [
+     "Quanto foi recuperado em dezembro de 2026 por forma de pagamento?"
+    ],
+    "answer": [
+     {
+      "format": "SQL",
+      "content": [
+       "SELECT `Forma de pagamento`, MEASURE(`Valor recuperado`) AS recuperado FROM pos_venda.ontologia.mv_recuperacao WHERE `Mês da baixa` = DATE'2026-12-01' GROUP BY ALL ORDER BY recuperado DESC"
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

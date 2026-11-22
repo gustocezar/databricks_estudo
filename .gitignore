@@ -1,0 +1,20 @@
+# Ambientes e caches locais: recriados pelos comandos do README de cada pasta
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Estado local do Databricks CLI (bundles): cada pasta .databricks/ já se ignora
+.databricks/
+
+# Esquemas oficiais do Power BI, baixados por gerar_powerbi.py na primeira execução
+paineis_financeiros/powerbi/.esquemas/
+
+# Arquivos locais do Power BI Desktop
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Sistema operacional e editores
+.DS_Store
+.vscode/
+.idea/

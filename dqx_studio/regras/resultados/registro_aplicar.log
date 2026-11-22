@@ -1,0 +1,14 @@
+Registro: 69 modelos criados, 0 reaproveitados, 0 falhas
+   status dos modelos: Counter({'approved': 69})
+dq.v_bronze_eventos_janela             19 modelos /  25 checagens | aplicar 200 | submeter 200 | aprovar 200
+dq.v_silver_eventos_aptos_janela       21 modelos /  28 checagens | aplicar 200 | submeter 200 | aprovar 200
+dq.v_fato_snapshot_janela              22 modelos /  35 checagens | aplicar 200 | submeter 200 | aprovar 200
+silver.pendencia_atual                 21 modelos /  28 checagens | aplicar 200 | submeter 200 | aprovar 200
+silver.pendencia_hist                   7 modelos /  10 checagens | aplicar 200 | submeter 200 | aprovar 200
+gold.dim_cliente                       14 modelos /  20 checagens | aplicar 200 | submeter 200 | aprovar 200
+gold.dim_apolice                       10 modelos /  16 checagens | aplicar 200 | submeter 200 | aprovar 200
+gold.dim_corretor                       4 modelos /   7 checagens | aplicar 200 | submeter 200 | aprovar 200
+gold.dim_ponto_venda                    5 modelos /   8 checagens | aplicar 200 | submeter 200 | aprovar 200
+gold.dim_produto                        2 modelos /   7 checagens | aplicar 200 | submeter 200 | aprovar 200
+gold.dim_data                           2 modelos /   3 checagens | aplicar 200 | submeter 200 | aprovar 200
+gold.bridge_apolice_cobertura           5 modelos /   7 checagens | aplicar 200 | submeter 200 | aprovar 200

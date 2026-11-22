@@ -1,0 +1,58 @@
+=== CICLO 2: 2026-11-27 -> 2026-12-03 ===
+  [job] carga 2026-11-27 -> 2026-12-03 ...
+  [job] OK em 781s
+  [pipeline] ciclo 2: 52374 eventos recebidos, 0 barrados (0.00%) | motivos: 
+  [studio] ciclo 2: 11 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_7d            SUCCESS  total=10000 erro=0 aviso=1177  email_preenchido=1089; uf_em_maiusculas=103
+     v_silver_pendencia_hist_7d     SUCCESS  total=10000 erro=0 aviso=0  
+     v_silver_pendencia_atual_7d    SUCCESS  total=10000 erro=0 aviso=2005  email_preenchido=1042; cpf_valido=626; rg_preenchido=503
+     dim_cliente                    SUCCESS  total=10000 erro=0 aviso=1319  rg_preenchido=543; email_preenchido=537; cpf_valido=306
+     v_fato_snapshot_7d             SUCCESS  total=10000 erro=0 aviso=0  
+     dim_apolice                    SUCCESS  total=10000 erro=0 aviso=0  
+     dim_ponto_venda                SUCCESS  total=1157 erro=0 aviso=0  
+     bridge_apolice_cobertura       SUCCESS  total=10000 erro=0 aviso=0  
+     dim_corretor                   SUCCESS  total=2501 erro=0 aviso=0  
+     dim_produto                    SUCCESS  total=8 erro=0 aviso=0  
+     dim_data                       SUCCESS  total=5844 erro=0 aviso=0  
+=== CICLO 3: 2026-12-04 -> 2026-12-10 ===
+  [job] carga 2026-12-04 -> 2026-12-10 ...
+  [job] OK em 794s
+  [pipeline] ciclo 3: 55616 eventos recebidos, 1349 barrados (2.43%) | motivos: valor_total_inconsistente=517, valor_parcela_nao_positivo=503, status_cobranca_invalido=233, pendencia_id_nulo=96
+  [studio] ciclo 3: 11 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_7d            SUCCESS  total=10000 erro=252 aviso=368  email_preenchido=249; uf_em_maiusculas=123; valor_parcela_positivo=96
+     v_silver_pendencia_atual_7d    SUCCESS  total=10000 erro=0 aviso=843  rg_preenchido=498; email_preenchido=235; cpf_valido=137
+     v_silver_pendencia_hist_7d     SUCCESS  total=10000 erro=0 aviso=0  
+     dim_cliente                    SUCCESS  total=10000 erro=0 aviso=1136  rg_preenchido=544; email_preenchido=407; cpf_valido=233
+     v_fato_snapshot_7d             SUCCESS  total=10000 erro=0 aviso=0  
+     dim_apolice                    SUCCESS  total=10000 erro=0 aviso=0  
+     dim_produto                    SUCCESS  total=8 erro=0 aviso=0  
+     dim_data                       SUCCESS  total=5844 erro=0 aviso=0  
+     dim_corretor                   SUCCESS  total=2501 erro=0 aviso=0  
+     dim_ponto_venda                SUCCESS  total=1157 erro=0 aviso=0  
+     bridge_apolice_cobertura       SUCCESS  total=10000 erro=0 aviso=0  
+=== CICLO 4: 2026-12-11 -> 2026-12-17 ===
+  [job] carga 2026-12-11 -> 2026-12-17 ...
+  [job] OK em 899s
+  [pipeline] ciclo 4: 59053 eventos recebidos, 1556 barrados (2.63%) | motivos: uf_invalida=465, atraso_nao_confere_com_as_datas=320, vencimento_nao_anterior_ao_evento=291, cliente_menor_de_idade=264, baixa_sem_data_ou_valor_pago=216
+  [studio] ciclo 4: 5 execucoes concluidas, 6 pendentes
+     v_silver_pendencia_hist_7d     SUCCESS  total=10000 erro=0 aviso=0  
+     v_bronze_eventos_7d            SUCCESS  total=10000 erro=350 aviso=480  email_preenchido=258; forma_pagamento_cadastrada=130; uf_em_maiusculas=122
+     v_silver_pendencia_atual_7d    SUCCESS  total=10000 erro=125 aviso=1406  cep_8_digitos=517; rg_preenchido=471; email_preenchido=239
+     v_fato_snapshot_7d             SUCCESS  total=10000 erro=0 aviso=0  
+     dim_cliente                    SUCCESS  total=10000 erro=0 aviso=1253  rg_preenchido=544; email_preenchido=362; cep_8_digitos=201
+=== CICLO 5: 2026-12-18 -> 2026-12-24 ===
+  [job] carga 2026-12-18 -> 2026-12-24 ...
+  [job] OK em 961s
+  [pipeline] ciclo 5: 59828 eventos recebidos, 144 barrados (0.24%) | motivos: uf_invalida=67, valor_parcela_nao_positivo=60, status_cobranca_invalido=17
+  [erro submeter] pos_venda.dq.v_bronze_eventos_7d: HTTP 401 {}
+  [erro submeter] pos_venda.dq.v_silver_pendencia_atual_7d: HTTP 401 {}
+  [erro submeter] pos_venda.dq.v_silver_pendencia_hist_7d: HTTP 401 {}
+  [erro submeter] pos_venda.dq.v_fato_snapshot_7d: HTTP 401 {}
+  [erro submeter] pos_venda.gold.dim_cliente: HTTP 401 {}
+  [erro submeter] pos_venda.gold.dim_apolice: HTTP 401 {}
+  [erro submeter] pos_venda.gold.dim_corretor: HTTP 401 {}
+  [erro submeter] pos_venda.gold.dim_ponto_venda: HTTP 401 {}
+  [erro submeter] pos_venda.gold.dim_produto: HTTP 401 {}
+  [erro submeter] pos_venda.gold.dim_data: HTTP 401 {}
+  [erro submeter] pos_venda.gold.bridge_apolice_cobertura: HTTP 401 {}
+  [studio] ciclo 5: 0 execucoes concluidas, 0 pendentes

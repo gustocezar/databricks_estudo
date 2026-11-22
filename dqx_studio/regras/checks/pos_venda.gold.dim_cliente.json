@@ -1,0 +1,342 @@
+[
+  {
+    "name": "pk_unica_cliente_sk",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "cliente_sk"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "pk_unica_cliente_id",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "cliente_id"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cliente_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cliente_id_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_id"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cliente_nome_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_nome"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cliente_cpf_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_cpf"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cliente_data_nascimento_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_data_nascimento"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "sexo_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "cliente_sexo",
+        "allowed": [
+          "'F'",
+          "'M'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "estado_civil_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "cliente_estado_civil",
+        "allowed": [
+          "'SOLTEIRO'",
+          "'CASADO'",
+          "'UNIAO_ESTAVEL'",
+          "'DIVORCIADO'",
+          "'VIUVO'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "renda_faixa_valida",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "cliente_renda_faixa",
+        "allowed": [
+          "'ATE_3_SM'",
+          "'3_A_6_SM'",
+          "'6_A_10_SM'",
+          "'10_A_20_SM'",
+          "'ACIMA_20_SM'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "uf_valida",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "cliente_uf",
+        "allowed": [
+          "'AC'",
+          "'AL'",
+          "'AP'",
+          "'AM'",
+          "'BA'",
+          "'CE'",
+          "'DF'",
+          "'ES'",
+          "'GO'",
+          "'MA'",
+          "'MT'",
+          "'MS'",
+          "'MG'",
+          "'PA'",
+          "'PB'",
+          "'PR'",
+          "'PE'",
+          "'PI'",
+          "'RJ'",
+          "'RN'",
+          "'RS'",
+          "'RO'",
+          "'RR'",
+          "'SC'",
+          "'SP'",
+          "'SE'",
+          "'TO'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cliente_maior_de_idade",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "cliente_idade >= 18",
+        "msg": "cliente menor de 18 anos",
+        "name": "cliente_maior_de_idade"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "rg_emitido_depois_do_nascimento",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "cliente_rg_data_emissao IS NULL OR cliente_rg_data_emissao >= cliente_data_nascimento",
+        "msg": "RG emitido antes do nascimento",
+        "name": "rg_emitido_depois_do_nascimento"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cpf_valido",
+    "criticality": "warn",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "cliente_cpf_valido",
+        "msg": "CPF com digito verificador invalido",
+        "name": "cpf_valido"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cpf_11_digitos",
+    "criticality": "warn",
+    "check": {
+      "function": "regex_match",
+      "arguments": {
+        "column": "cliente_cpf",
+        "regex": "^[0-9]{11}$"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cep_8_digitos",
+    "criticality": "warn",
+    "check": {
+      "function": "regex_match",
+      "arguments": {
+        "column": "cliente_cep",
+        "regex": "^[0-9]{8}$"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "celular_11_digitos",
+    "criticality": "warn",
+    "check": {
+      "function": "regex_match",
+      "arguments": {
+        "column": "cliente_celular",
+        "regex": "^[0-9]{11}$"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "email_valido",
+    "criticality": "warn",
+    "check": {
+      "function": "is_valid_email",
+      "arguments": {
+        "column": "cliente_email"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "email_preenchido",
+    "criticality": "warn",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_email"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "rg_preenchido",
+    "criticality": "warn",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_rg"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

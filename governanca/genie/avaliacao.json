@@ -1,0 +1,1214 @@
+[
+ {
+  "espaco": "analista",
+  "pergunta": "Qual o saldo em aberto hoje?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Data de referência`, MEASURE(`Saldo em aberto`) AS saldo FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Foto mais recente` = true GROUP BY ALL ORDER BY saldo DESC",
+  "esperado": [
+   {
+    "saldo": "31739721.64"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-12-25",
+    "saldo": "31739721.64"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Qual o saldo em aberto por faixa de atraso na posição atual?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_carteira_em_aberto.`Data de referência`, mv_carteira_em_aberto.`Faixa de atraso`, MEASURE(mv_carteira_em_aberto.`Saldo em aberto`) AS saldo FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE mv_carteira_em_aberto.`Foto mais recente` = true AND mv_carteira_em_aberto.`Faixa de atraso` IS NOT NULL GROUP BY ALL ORDER BY saldo DESC",
+  "esperado": [
+   {
+    "Faixa de atraso": "01_1_A_15",
+    "saldo": "4287172.34"
+   },
+   {
+    "Faixa de atraso": "02_16_A_30",
+    "saldo": "2946689.64"
+   },
+   {
+    "Faixa de atraso": "03_31_A_60",
+    "saldo": "4646867.04"
+   },
+   {
+    "Faixa de atraso": "04_61_A_90",
+    "saldo": "4006753.92"
+   },
+   {
+    "Faixa de atraso": "05_91_A_120",
+    "saldo": "3672159.01"
+   },
+   {
+    "Faixa de atraso": "06_ACIMA_120",
+    "saldo": "12180079.69"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-12-25",
+    "Faixa de atraso": "06_ACIMA_120",
+    "saldo": "12180079.69"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Faixa de atraso": "03_31_A_60",
+    "saldo": "4646867.04"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Faixa de atraso": "01_1_A_15",
+    "saldo": "4287172.34"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Faixa de atraso": "04_61_A_90",
+    "saldo": "4006753.92"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Faixa de atraso": "05_91_A_120",
+    "saldo": "3672159.01"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Faixa de atraso": "02_16_A_30",
+    "saldo": "2946689.64"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Quais os 3 produtos com maior saldo acima de 60 dias hoje?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "WITH ranked AS (\n  SELECT \n    mv_carteira_em_aberto.`Produto`,\n    MEASURE(mv_carteira_em_aberto.`Saldo acima de 60 dias`) AS saldo_acima_60,\n    RANK() OVER (ORDER BY MEASURE(mv_carteira_em_aberto.`Saldo acima de 60 dias`) DESC) AS rank\n  FROM pos_venda.ontologia.mv_carteira_em_aberto\n  WHERE mv_carteira_em_aberto.`Foto mais recente` = true\n  GROUP BY ALL\n)\nSELECT `Produto`, saldo_acima_60\nFROM ranked\nWHERE rank <= 3\nORDER BY saldo_acima_60 DESC",
+  "esperado": [
+   {
+    "Produto": "Vida Completo",
+    "saldo": "3811167.42"
+   },
+   {
+    "Produto": "Vida Essencial",
+    "saldo": "3732528.24"
+   },
+   {
+    "Produto": "Vida Inteira",
+    "saldo": "3311289.14"
+   }
+  ],
+  "obtido": [
+   {
+    "Produto": "Vida Completo",
+    "saldo_acima_60": "3811167.42"
+   },
+   {
+    "Produto": "Vida Essencial",
+    "saldo_acima_60": "3732528.24"
+   },
+   {
+    "Produto": "Vida Inteira",
+    "saldo_acima_60": "3311289.14"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Qual era o saldo em aberto em 30/11/2026 por canal de venda?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Canal de venda`, `Data de referência`, MEASURE(`Saldo em aberto`) AS saldo_em_aberto\nFROM pos_venda.ontologia.mv_carteira_em_aberto\nWHERE `Data de referência` = DATE'2026-11-30'\nGROUP BY ALL\nORDER BY ALL",
+  "esperado": [
+   {
+    "Canal de venda": "CORRETOR",
+    "saldo": "16446545.78"
+   },
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "saldo": "5691799.83"
+   },
+   {
+    "Canal de venda": "DIGITAL",
+    "saldo": "4007664.12"
+   },
+   {
+    "Canal de venda": "TELEVENDAS",
+    "saldo": "2289784.33"
+   }
+  ],
+  "obtido": [
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "Data de referência": "2026-11-30",
+    "saldo_em_aberto": "5691799.83"
+   },
+   {
+    "Canal de venda": "CORRETOR",
+    "Data de referência": "2026-11-30",
+    "saldo_em_aberto": "16446545.78"
+   },
+   {
+    "Canal de venda": "DIGITAL",
+    "Data de referência": "2026-11-30",
+    "saldo_em_aberto": "4007664.12"
+   },
+   {
+    "Canal de venda": "TELEVENDAS",
+    "Data de referência": "2026-11-30",
+    "saldo_em_aberto": "2289784.33"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Quanto foi recuperado em dezembro de 2026 por forma de pagamento?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_recuperacao.`Forma de pagamento`, mv_recuperacao.`Mês da baixa`, MEASURE(mv_recuperacao.`Valor recuperado`) AS recuperado\nFROM pos_venda.ontologia.mv_recuperacao\nWHERE mv_recuperacao.`Mês da baixa` = DATE'2026-12-01'\nGROUP BY ALL\nORDER BY recuperado DESC",
+  "esperado": [
+   {
+    "Forma de pagamento": "DEBITO_CONTA",
+    "recuperado": "2216090.59"
+   },
+   {
+    "Forma de pagamento": "CARTAO_CREDITO",
+    "recuperado": "1484956.91"
+   },
+   {
+    "Forma de pagamento": "BOLETO",
+    "recuperado": "1416372.79"
+   },
+   {
+    "Forma de pagamento": "PIX_AUTOMATICO",
+    "recuperado": "452838.22"
+   },
+   {
+    "Forma de pagamento": "VALE_REFEICAO",
+    "recuperado": "9053.55"
+   },
+   {
+    "Forma de pagamento": "TRANSFERENCIA_INTERNACIONAL",
+    "recuperado": "7316.12"
+   },
+   {
+    "Forma de pagamento": "CRIPTOMOEDA",
+    "recuperado": "5485.09"
+   }
+  ],
+  "obtido": [
+   {
+    "Forma de pagamento": "DEBITO_CONTA",
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "2216090.59"
+   },
+   {
+    "Forma de pagamento": "CARTAO_CREDITO",
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "1484956.91"
+   },
+   {
+    "Forma de pagamento": "BOLETO",
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "1416372.79"
+   },
+   {
+    "Forma de pagamento": "PIX_AUTOMATICO",
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "452838.22"
+   },
+   {
+    "Forma de pagamento": "VALE_REFEICAO",
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "9053.55"
+   },
+   {
+    "Forma de pagamento": "TRANSFERENCIA_INTERNACIONAL",
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "7316.12"
+   },
+   {
+    "Forma de pagamento": "CRIPTOMOEDA",
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "5485.09"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Qual foi o ticket médio recuperado em novembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_recuperacao.`Mês da baixa`, MEASURE(mv_recuperacao.`Ticket médio recuperado`) AS ticket_medio_recuperado\nFROM pos_venda.ontologia.mv_recuperacao\nWHERE mv_recuperacao.`Mês da baixa` = DATE'2026-11-01'\nGROUP BY ALL",
+  "esperado": [
+   {
+    "ticket": "122.4172012410399059"
+   }
+  ],
+  "obtido": [
+   {
+    "Mês da baixa": "2026-11-01",
+    "ticket_medio_recuperado": "122.4172012410399059"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Qual a taxa de recuperação das safras de setembro, outubro e novembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Safra de entrada`, MEASURE(`Taxa de recuperação`) AS `taxa_recuperacao` FROM pos_venda.ontologia.mv_safra_recuperacao WHERE `Safra de entrada` IN (DATE'2026-09-01', DATE'2026-10-01', DATE'2026-11-01') GROUP BY ALL ORDER BY `Safra de entrada` ASC",
+  "esperado": [
+   {
+    "Safra de entrada": "2026-09-01",
+    "taxa": "0.649245444024922"
+   },
+   {
+    "Safra de entrada": "2026-10-01",
+    "taxa": "0.6481573987874935"
+   },
+   {
+    "Safra de entrada": "2026-11-01",
+    "taxa": "0.5297467001249058"
+   }
+  ],
+  "obtido": [
+   {
+    "Safra de entrada": "2026-09-01",
+    "taxa_recuperacao": "0.649245444024922"
+   },
+   {
+    "Safra de entrada": "2026-10-01",
+    "taxa_recuperacao": "0.6481573987874935"
+   },
+   {
+    "Safra de entrada": "2026-11-01",
+    "taxa_recuperacao": "0.5297467001249058"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Quantas pendências entraram em outubro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT MEASURE(`Pendências que entraram`) AS pendencias_entradas\nFROM pos_venda.ontologia.mv_safra_recuperacao\nWHERE `Data de entrada` >= DATE'2026-10-01' AND `Data de entrada` <= DATE'2026-10-31'\nGROUP BY ALL",
+  "esperado": [
+   {
+    "entradas": "88082"
+   }
+  ],
+  "obtido": [
+   {
+    "pendencias_entradas": "88082"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Qual grupo de motivo concentra o maior saldo em aberto hoje?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "WITH ranked AS (\n  SELECT \n    mv_carteira_em_aberto.`Data de referência`,\n    mv_carteira_em_aberto.`Grupo do motivo`,\n    MEASURE(mv_carteira_em_aberto.`Saldo em aberto`) AS saldo,\n    RANK() OVER (ORDER BY MEASURE(mv_carteira_em_aberto.`Saldo em aberto`) DESC) AS rank\n  FROM pos_venda.ontologia.mv_carteira_em_aberto\n  WHERE mv_carteira_em_aberto.`Foto mais recente` = true\n    AND mv_carteira_em_aberto.`Grupo do motivo` IS NOT NULL\n  GROUP BY ALL\n)\nSELECT `Data de referência`, `Grupo do motivo`, saldo\nFROM ranked\nWHERE rank = 1",
+  "esperado": [
+   {
+    "Grupo do motivo": "FINANCEIRO",
+    "saldo": "22099140.83"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-12-25",
+    "Grupo do motivo": "FINANCEIRO",
+    "saldo": "22099140.83"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Qual o atraso médio em dias das pendências em aberto hoje por status de cobrança?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_carteira_em_aberto.`Status de cobrança`, mv_carteira_em_aberto.`Data de referência`, MEASURE(mv_carteira_em_aberto.`Atraso médio em dias`) AS atraso_medio FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE mv_carteira_em_aberto.`Foto mais recente` = true AND mv_carteira_em_aberto.`Status de cobrança` IS NOT NULL GROUP BY ALL ORDER BY atraso_medio DESC",
+  "esperado": [
+   {
+    "Status de cobrança": "COBRANCA_EXTERNA",
+    "atraso": "146.12657540199913"
+   },
+   {
+    "Status de cobrança": "NEGOCIADO",
+    "atraso": "107.79450277949351"
+   },
+   {
+    "Status de cobrança": "PROMESSA_PAGAMENTO",
+    "atraso": "107.26374957299463"
+   },
+   {
+    "Status de cobrança": "EM_COBRANCA",
+    "atraso": "85.53806306000081"
+   },
+   {
+    "Status de cobrança": "PENDENTE",
+    "atraso": "4.245503658619982"
+   }
+  ],
+  "obtido": [
+   {
+    "Status de cobrança": "COBRANCA_EXTERNA",
+    "Data de referência": "2026-12-25",
+    "atraso_medio": "146.12657540199913"
+   },
+   {
+    "Status de cobrança": "NEGOCIADO",
+    "Data de referência": "2026-12-25",
+    "atraso_medio": "107.79450277949351"
+   },
+   {
+    "Status de cobrança": "PROMESSA_PAGAMENTO",
+    "Data de referência": "2026-12-25",
+    "atraso_medio": "107.26374957299463"
+   },
+   {
+    "Status de cobrança": "EM_COBRANCA",
+    "Data de referência": "2026-12-25",
+    "atraso_medio": "85.53806306000081"
+   },
+   {
+    "Status de cobrança": "PENDENTE",
+    "Data de referência": "2026-12-25",
+    "atraso_medio": "4.245503658619982"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Quantos eventos foram barrados em dezembro de 2026 por motivo da rejeição?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `motivo_rejeicao`, SUM(`eventos`) AS eventos_barrados\nFROM `pos_venda`.`gold`.`dq_barrados_por_motivo_dia`\nWHERE `dia` >= DATE'2026-12-01' AND `dia` < DATE'2027-01-01' AND `motivo_rejeicao` IS NOT NULL\nGROUP BY `motivo_rejeicao`\nORDER BY eventos_barrados DESC",
+  "esperado": [
+   {
+    "motivo_rejeicao": "valor_parcela_nao_positivo",
+    "eventos": "563"
+   },
+   {
+    "motivo_rejeicao": "uf_invalida",
+    "eventos": "532"
+   },
+   {
+    "motivo_rejeicao": "valor_total_inconsistente",
+    "eventos": "517"
+   },
+   {
+    "motivo_rejeicao": "atraso_nao_confere_com_as_datas",
+    "eventos": "320"
+   },
+   {
+    "motivo_rejeicao": "vencimento_nao_anterior_ao_evento",
+    "eventos": "291"
+   },
+   {
+    "motivo_rejeicao": "cliente_menor_de_idade",
+    "eventos": "264"
+   },
+   {
+    "motivo_rejeicao": "status_cobranca_invalido",
+    "eventos": "250"
+   },
+   {
+    "motivo_rejeicao": "baixa_sem_data_ou_valor_pago",
+    "eventos": "216"
+   },
+   {
+    "motivo_rejeicao": "pendencia_id_nulo",
+    "eventos": "96"
+   }
+  ],
+  "obtido": [
+   {
+    "motivo_rejeicao": "valor_parcela_nao_positivo",
+    "eventos_barrados": "563"
+   },
+   {
+    "motivo_rejeicao": "uf_invalida",
+    "eventos_barrados": "532"
+   },
+   {
+    "motivo_rejeicao": "valor_total_inconsistente",
+    "eventos_barrados": "517"
+   },
+   {
+    "motivo_rejeicao": "atraso_nao_confere_com_as_datas",
+    "eventos_barrados": "320"
+   },
+   {
+    "motivo_rejeicao": "vencimento_nao_anterior_ao_evento",
+    "eventos_barrados": "291"
+   },
+   {
+    "motivo_rejeicao": "cliente_menor_de_idade",
+    "eventos_barrados": "264"
+   },
+   {
+    "motivo_rejeicao": "status_cobranca_invalido",
+    "eventos_barrados": "250"
+   },
+   {
+    "motivo_rejeicao": "baixa_sem_data_ou_valor_pago",
+    "eventos_barrados": "216"
+   },
+   {
+    "motivo_rejeicao": "pendencia_id_nulo",
+    "eventos_barrados": "96"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Quais as 10 pendências pagas em dezembro de 2026 com maior valor pago?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "WITH ranked AS (\n  SELECT \n    pendencia.pendencia_id,\n    pendencia.numero_apolice,\n    pendencia.numero_parcela,\n    pendencia.data_baixa,\n    pendencia.valor_pago,\n    RANK() OVER (ORDER BY pendencia.valor_pago DESC) AS rank\n  FROM pos_venda.ontologia.pendencia\n  WHERE pendencia.data_baixa BETWEEN DATE'2026-12-01' AND DATE'2026-12-31'\n    AND pendencia.valor_pago IS NOT NULL\n)\nSELECT pendencia_id, numero_apolice, numero_parcela, data_baixa, valor_pago\nFROM ranked\nWHERE rank <= 10\nORDER BY valor_pago DESC",
+  "esperado": [
+   {
+    "pendencia_id": "PD000133123001",
+    "numero_apolice": "VID000133123",
+    "data_baixa": "2026-12-17",
+    "valor_pago": "10339.97"
+   },
+   {
+    "pendencia_id": "PD000081643003",
+    "numero_apolice": "VID000081643",
+    "data_baixa": "2026-12-22",
+    "valor_pago": "8004.39"
+   },
+   {
+    "pendencia_id": "PD000115306009",
+    "numero_apolice": "VID000115306",
+    "data_baixa": "2026-12-24",
+    "valor_pago": "7680.38"
+   },
+   {
+    "pendencia_id": "PD000012559005",
+    "numero_apolice": "VID000012559",
+    "data_baixa": "2026-12-20",
+    "valor_pago": "7466.99"
+   },
+   {
+    "pendencia_id": "PD000148601004",
+    "numero_apolice": "VID000148601",
+    "data_baixa": "2026-12-14",
+    "valor_pago": "6491.96"
+   },
+   {
+    "pendencia_id": "PD000175561007",
+    "numero_apolice": "VID000175561",
+    "data_baixa": "2026-12-04",
+    "valor_pago": "6247.98"
+   },
+   {
+    "pendencia_id": "PD000216174006",
+    "numero_apolice": "VID000216174",
+    "data_baixa": "2026-12-11",
+    "valor_pago": "5693.07"
+   },
+   {
+    "pendencia_id": "PD000042401002",
+    "numero_apolice": "VID000042401",
+    "data_baixa": "2026-12-10",
+    "valor_pago": "5344.62"
+   },
+   {
+    "pendencia_id": "PD000124085002",
+    "numero_apolice": "VID000124085",
+    "data_baixa": "2026-12-11",
+    "valor_pago": "5077.12"
+   },
+   {
+    "pendencia_id": "PD000178140003",
+    "numero_apolice": "VID000178140",
+    "data_baixa": "2026-12-11",
+    "valor_pago": "5067.82"
+   }
+  ],
+  "obtido": [
+   {
+    "pendencia_id": "PD000133123001",
+    "numero_apolice": "VID000133123",
+    "numero_parcela": "1",
+    "data_baixa": "2026-12-17",
+    "valor_pago": "10339.97"
+   },
+   {
+    "pendencia_id": "PD000081643003",
+    "numero_apolice": "VID000081643",
+    "numero_parcela": "3",
+    "data_baixa": "2026-12-22",
+    "valor_pago": "8004.39"
+   },
+   {
+    "pendencia_id": "PD000115306009",
+    "numero_apolice": "VID000115306",
+    "numero_parcela": "9",
+    "data_baixa": "2026-12-24",
+    "valor_pago": "7680.38"
+   },
+   {
+    "pendencia_id": "PD000012559005",
+    "numero_apolice": "VID000012559",
+    "numero_parcela": "5",
+    "data_baixa": "2026-12-20",
+    "valor_pago": "7466.99"
+   },
+   {
+    "pendencia_id": "PD000148601004",
+    "numero_apolice": "VID000148601",
+    "numero_parcela": "4",
+    "data_baixa": "2026-12-14",
+    "valor_pago": "6491.96"
+   },
+   {
+    "pendencia_id": "PD000175561007",
+    "numero_apolice": "VID000175561",
+    "numero_parcela": "7",
+    "data_baixa": "2026-12-04",
+    "valor_pago": "6247.98"
+   },
+   {
+    "pendencia_id": "PD000216174006",
+    "numero_apolice": "VID000216174",
+    "numero_parcela": "6",
+    "data_baixa": "2026-12-11",
+    "valor_pago": "5693.07"
+   },
+   {
+    "pendencia_id": "PD000042401002",
+    "numero_apolice": "VID000042401",
+    "numero_parcela": "2",
+    "data_baixa": "2026-12-10",
+    "valor_pago": "5344.62"
+   },
+   {
+    "pendencia_id": "PD000124085002",
+    "numero_apolice": "VID000124085",
+    "numero_parcela": "2",
+    "data_baixa": "2026-12-11",
+    "valor_pago": "5077.12"
+   },
+   {
+    "pendencia_id": "PD000178140003",
+    "numero_apolice": "VID000178140",
+    "numero_parcela": "3",
+    "data_baixa": "2026-12-11",
+    "valor_pago": "5067.82"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Qual a posição de cada canal de venda no ranking de valor recuperado em novembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_recuperacao.`Canal de venda`, MEASURE(mv_recuperacao.`Valor recuperado`) AS recuperado, MEASURE(mv_recuperacao.`Posição no ranking de recuperação`) AS posicao FROM pos_venda.ontologia.mv_recuperacao WHERE mv_recuperacao.`Mês da baixa` = DATE'2026-11-01' GROUP BY ALL ORDER BY posicao",
+  "esperado": [
+   {
+    "Canal de venda": "CORRETOR",
+    "posicao": "1"
+   },
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "posicao": "2"
+   },
+   {
+    "Canal de venda": "DIGITAL",
+    "posicao": "3"
+   },
+   {
+    "Canal de venda": "TELEVENDAS",
+    "posicao": "4"
+   }
+  ],
+  "obtido": [
+   {
+    "Canal de venda": "CORRETOR",
+    "recuperado": "4017359.35",
+    "posicao": "1"
+   },
+   {
+    "Canal de venda": "BANCASSURANCE",
+    "recuperado": "1358315.10",
+    "posicao": "2"
+   },
+   {
+    "Canal de venda": "DIGITAL",
+    "recuperado": "957372.31",
+    "posicao": "3"
+   },
+   {
+    "Canal de venda": "TELEVENDAS",
+    "recuperado": "532354.72",
+    "posicao": "4"
+   }
+  ]
+ },
+ {
+  "espaco": "analista",
+  "pergunta": "Em que faixa de atraso fica uma parcela de R$ 1.000,00 com 120 dias de atraso e qual o total pendente dela?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT pos_venda.regras.faixa_atraso(120) AS faixa_atraso, pos_venda.regras.valor_total_pendente(CAST(1000.00 AS DECIMAL(14,2)), 120) AS total_pendente",
+  "esperado": [
+   {
+    "faixa_atraso": "05_91_A_120",
+    "total_pendente": "1060.00"
+   }
+  ],
+  "obtido": [
+   {
+    "faixa_atraso": "05_91_A_120",
+    "total_pendente": "1060.00"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Como evoluiu o saldo em aberto no fim de cada mês?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_carteira_em_aberto.`Mês de referência`, MEASURE(mv_carteira_em_aberto.`Saldo de fechamento`) AS saldo_fechamento\nFROM pos_venda.ontologia.mv_carteira_em_aberto\nGROUP BY ALL\nORDER BY mv_carteira_em_aberto.`Mês de referência` ASC",
+  "esperado": [
+   {
+    "Mês de referência": "2026-05-01",
+    "saldo_fechamento": "2804185.51"
+   },
+   {
+    "Mês de referência": "2026-06-01",
+    "saldo_fechamento": "8361177.76"
+   },
+   {
+    "Mês de referência": "2026-07-01",
+    "saldo_fechamento": "12259496.58"
+   },
+   {
+    "Mês de referência": "2026-08-01",
+    "saldo_fechamento": "16167826.08"
+   },
+   {
+    "Mês de referência": "2026-09-01",
+    "saldo_fechamento": "20325175.54"
+   },
+   {
+    "Mês de referência": "2026-10-01",
+    "saldo_fechamento": "24320361.97"
+   },
+   {
+    "Mês de referência": "2026-11-01",
+    "saldo_fechamento": "28435794.06"
+   },
+   {
+    "Mês de referência": "2026-12-01",
+    "saldo_fechamento": "31739721.64"
+   }
+  ],
+  "obtido": [
+   {
+    "Mês de referência": "2026-05-01",
+    "saldo_fechamento": "2804185.51"
+   },
+   {
+    "Mês de referência": "2026-06-01",
+    "saldo_fechamento": "8361177.76"
+   },
+   {
+    "Mês de referência": "2026-07-01",
+    "saldo_fechamento": "12259496.58"
+   },
+   {
+    "Mês de referência": "2026-08-01",
+    "saldo_fechamento": "16167826.08"
+   },
+   {
+    "Mês de referência": "2026-09-01",
+    "saldo_fechamento": "20325175.54"
+   },
+   {
+    "Mês de referência": "2026-10-01",
+    "saldo_fechamento": "24320361.97"
+   },
+   {
+    "Mês de referência": "2026-11-01",
+    "saldo_fechamento": "28435794.06"
+   },
+   {
+    "Mês de referência": "2026-12-01",
+    "saldo_fechamento": "31739721.64"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual o percentual do saldo acima de 60 dias hoje?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Data de referência`, MEASURE(`Percentual do saldo acima de 60 dias`) AS percentual_acima_60_dias\nFROM pos_venda.ontologia.mv_carteira_em_aberto\nWHERE `Foto mais recente` = true\nGROUP BY ALL",
+  "esperado": [
+   {
+    "pct": "0.62568263342841"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-12-25",
+    "percentual_acima_60_dias": "0.62568263342841"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual era o percentual do saldo acima de 60 dias em 24/11/2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_carteira_em_aberto.`Data de referência`, MEASURE(mv_carteira_em_aberto.`Percentual do saldo acima de 60 dias`) AS percentual FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE mv_carteira_em_aberto.`Data de referência` = DATE'2026-11-24' GROUP BY ALL",
+  "esperado": [
+   {
+    "pct": "0.55683637173904"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-11-24",
+    "percentual": "0.55683637173904"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Quanto recuperamos por mês em 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Mês da baixa`, MEASURE(`Valor recuperado`) AS recuperado FROM `pos_venda`.`ontologia`.`mv_recuperacao` WHERE `Mês da baixa` >= DATE'2026-01-01' AND `Mês da baixa` <= DATE'2026-12-31' GROUP BY ALL ORDER BY ALL",
+  "esperado": [
+   {
+    "Mês da baixa": "2026-05-01",
+    "recuperado": "792586.79"
+   },
+   {
+    "Mês da baixa": "2026-06-01",
+    "recuperado": "4090029.36"
+   },
+   {
+    "Mês da baixa": "2026-07-01",
+    "recuperado": "6275491.17"
+   },
+   {
+    "Mês da baixa": "2026-08-01",
+    "recuperado": "6711688.06"
+   },
+   {
+    "Mês da baixa": "2026-09-01",
+    "recuperado": "6640897.45"
+   },
+   {
+    "Mês da baixa": "2026-10-01",
+    "recuperado": "7306636.88"
+   },
+   {
+    "Mês da baixa": "2026-11-01",
+    "recuperado": "6865401.48"
+   },
+   {
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "5592113.27"
+   }
+  ],
+  "obtido": [
+   {
+    "Mês da baixa": "2026-05-01",
+    "recuperado": "792586.79"
+   },
+   {
+    "Mês da baixa": "2026-06-01",
+    "recuperado": "4090029.36"
+   },
+   {
+    "Mês da baixa": "2026-07-01",
+    "recuperado": "6275491.17"
+   },
+   {
+    "Mês da baixa": "2026-08-01",
+    "recuperado": "6711688.06"
+   },
+   {
+    "Mês da baixa": "2026-09-01",
+    "recuperado": "6640897.45"
+   },
+   {
+    "Mês da baixa": "2026-10-01",
+    "recuperado": "7306636.88"
+   },
+   {
+    "Mês da baixa": "2026-11-01",
+    "recuperado": "6865401.48"
+   },
+   {
+    "Mês da baixa": "2026-12-01",
+    "recuperado": "5592113.27"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual a taxa de recuperação por safra de entrada?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Safra de entrada`, MEASURE(`Taxa de recuperação`) AS taxa\nFROM pos_venda.ontologia.mv_safra_recuperacao\nGROUP BY ALL\nORDER BY ALL",
+  "esperado": [
+   {
+    "Safra de entrada": "2026-05-01",
+    "taxa": "0.6521164894670805"
+   },
+   {
+    "Safra de entrada": "2026-06-01",
+    "taxa": "0.651514573720271"
+   },
+   {
+    "Safra de entrada": "2026-07-01",
+    "taxa": "0.6507079492945217"
+   },
+   {
+    "Safra de entrada": "2026-08-01",
+    "taxa": "0.6504831148952454"
+   },
+   {
+    "Safra de entrada": "2026-09-01",
+    "taxa": "0.649245444024922"
+   },
+   {
+    "Safra de entrada": "2026-10-01",
+    "taxa": "0.6481573987874935"
+   },
+   {
+    "Safra de entrada": "2026-11-01",
+    "taxa": "0.5297467001249058"
+   },
+   {
+    "Safra de entrada": "2026-12-01",
+    "taxa": "0.26473773176271725"
+   }
+  ],
+  "obtido": [
+   {
+    "Safra de entrada": "2026-05-01",
+    "taxa": "0.6521164894670805"
+   },
+   {
+    "Safra de entrada": "2026-06-01",
+    "taxa": "0.651514573720271"
+   },
+   {
+    "Safra de entrada": "2026-07-01",
+    "taxa": "0.6507079492945217"
+   },
+   {
+    "Safra de entrada": "2026-08-01",
+    "taxa": "0.6504831148952454"
+   },
+   {
+    "Safra de entrada": "2026-09-01",
+    "taxa": "0.649245444024922"
+   },
+   {
+    "Safra de entrada": "2026-10-01",
+    "taxa": "0.6481573987874935"
+   },
+   {
+    "Safra de entrada": "2026-11-01",
+    "taxa": "0.5297467001249058"
+   },
+   {
+    "Safra de entrada": "2026-12-01",
+    "taxa": "0.26473773176271725"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual o saldo em cobrança externa por produto hoje?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Data de referência`, `Produto`, MEASURE(`Saldo em cobrança externa`) AS `saldo_cobranca_externa` FROM `pos_venda`.`ontologia`.`mv_carteira_em_aberto` WHERE `Foto mais recente` = true GROUP BY ALL ORDER BY ALL",
+  "esperado": [
+   {
+    "Produto": "Vida Completo",
+    "saldo": "692726.44"
+   },
+   {
+    "Produto": "Vida Essencial",
+    "saldo": "672797.41"
+   },
+   {
+    "Produto": "Vida Inteira",
+    "saldo": "578649.77"
+   },
+   {
+    "Produto": "Vida Familia",
+    "saldo": "533419.02"
+   },
+   {
+    "Produto": "Vida Doencas Graves",
+    "saldo": "352267.08"
+   },
+   {
+    "Produto": "Vida Resgatavel",
+    "saldo": "276785.76"
+   },
+   {
+    "Produto": "Vida Premium",
+    "saldo": "273397.67"
+   },
+   {
+    "Produto": "Vida Renda Protegida",
+    "saldo": "196620.57"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Completo",
+    "saldo_cobranca_externa": "692726.44"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Doencas Graves",
+    "saldo_cobranca_externa": "352267.08"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Essencial",
+    "saldo_cobranca_externa": "672797.41"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Familia",
+    "saldo_cobranca_externa": "533419.02"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Inteira",
+    "saldo_cobranca_externa": "578649.77"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Premium",
+    "saldo_cobranca_externa": "273397.67"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Renda Protegida",
+    "saldo_cobranca_externa": "196620.57"
+   },
+   {
+    "Data de referência": "2026-12-25",
+    "Produto": "Vida Resgatavel",
+    "saldo_cobranca_externa": "276785.76"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual foi o saldo médio diário em dezembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT MEASURE(`Saldo médio diário`) AS saldo_medio_diario FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Data de referência` BETWEEN DATE'2026-12-01' AND DATE'2026-12-31' GROUP BY ALL",
+  "esperado": [
+   {
+    "saldo_medio": "29996682.2844000000000000"
+   }
+  ],
+  "obtido": [
+   {
+    "saldo_medio_diario": "29996682.2844000000000000"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual foi a taxa de eventos barrados em cada semana de dezembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Semana`, MEASURE(`Taxa de barrados`) AS taxa FROM `pos_venda`.`ontologia`.`mv_qualidade_dados` WHERE `Dia` BETWEEN DATE'2026-12-01' AND DATE'2026-12-31' GROUP BY ALL ORDER BY ALL",
+  "esperado": [
+   {
+    "Semana": "2026-11-30",
+    "taxa": "0.008177095098260673"
+   },
+   {
+    "Semana": "2026-12-07",
+    "taxa": "0.030918851087562742"
+   },
+   {
+    "Semana": "2026-12-14",
+    "taxa": "0.015304658893407354"
+   },
+   {
+    "Semana": "2026-12-21",
+    "taxa": "1.3995801259622114E-4"
+   }
+  ],
+  "obtido": [
+   {
+    "Semana": "2026-11-30",
+    "taxa": "0.008177095098260673"
+   },
+   {
+    "Semana": "2026-12-07",
+    "taxa": "0.030918851087562742"
+   },
+   {
+    "Semana": "2026-12-14",
+    "taxa": "0.015304658893407354"
+   },
+   {
+    "Semana": "2026-12-21",
+    "taxa": "1.3995801259622114E-4"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Quantas pendências e quantos clientes estão em aberto hoje?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Data de referência`, MEASURE(`Pendências em aberto`) AS pendencias, MEASURE(`Clientes com pendência`) AS clientes\nFROM pos_venda.ontologia.mv_carteira_em_aberto\nWHERE `Foto mais recente` = true\nGROUP BY ALL",
+  "esperado": [
+   {
+    "pendencias": "253914",
+    "clientes": "90857"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-12-25",
+    "pendencias": "253914",
+    "clientes": "90857"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual a variação do saldo em aberto entre o fim de outubro e o fim de novembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_carteira_em_aberto.`Mês de referência`, MEASURE(mv_carteira_em_aberto.`Saldo de fechamento do mês anterior`) AS fechamento_anterior, MEASURE(mv_carteira_em_aberto.`Saldo de fechamento`) AS fechamento, MEASURE(mv_carteira_em_aberto.`Variação mensal do saldo`) AS variacao FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE mv_carteira_em_aberto.`Mês de referência` = DATE'2026-11-01' GROUP BY ALL",
+  "esperado": [
+   {
+    "Mês de referência": "2026-11-01",
+    "fechamento_outubro": "24320361.97",
+    "fechamento_novembro": "28435794.06",
+    "variacao": "0.1692175509179"
+   }
+  ],
+  "obtido": [
+   {
+    "Mês de referência": "2026-11-01",
+    "fechamento_anterior": "24320361.97",
+    "fechamento": "28435794.06",
+    "variacao": "0.1692175509179"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Quantos eventos com forma de pagamento não cadastrada entraram em dezembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT MEASURE(`Forma de pagamento não cadastrada`) AS eventos_nao_cadastrada\nFROM `pos_venda`.`ontologia`.`mv_qualidade_dados`\nWHERE `Dia` BETWEEN DATE'2026-12-01' AND DATE'2026-12-31'\nGROUP BY ALL",
+  "esperado": [
+   {
+    "eventos": "867"
+   }
+  ],
+  "obtido": [
+   {
+    "eventos_nao_cadastrada": "867"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Qual o saldo em aberto hoje?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Data de referência`, MEASURE(`Saldo em aberto`) AS saldo_em_aberto FROM pos_venda.ontologia.mv_carteira_em_aberto WHERE `Foto mais recente` = true GROUP BY ALL",
+  "esperado": [
+   {
+    "saldo": "31739721.64"
+   }
+  ],
+  "obtido": [
+   {
+    "Data de referência": "2026-12-25",
+    "saldo_em_aberto": "31739721.64"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Quanto o saldo de fechamento de novembro de 2026 variou em relação ao fechamento de outubro, em percentual?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT `Mês de referência`, MEASURE(`Saldo de fechamento`) AS saldo_fechamento, MEASURE(`Saldo de fechamento do mês anterior`) AS saldo_fechamento_anterior, MEASURE(`Variação mensal do saldo`) AS variacao_percentual\nFROM pos_venda.ontologia.mv_carteira_em_aberto\nWHERE `Mês de referência` = DATE'2026-11-01'\nGROUP BY ALL",
+  "esperado": [
+   {
+    "variacao": "0.1692175509179"
+   }
+  ],
+  "obtido": [
+   {
+    "Mês de referência": "2026-11-01",
+    "saldo_fechamento": "28435794.06",
+    "saldo_fechamento_anterior": "24320361.97",
+    "variacao_percentual": "0.1692175509179"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Quanto recuperamos no acumulado do ano até novembro de 2026?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT mv_recuperacao.`Mês da baixa`, MEASURE(mv_recuperacao.`Valor recuperado acumulado no ano`) AS acumulado_ano FROM pos_venda.ontologia.mv_recuperacao WHERE mv_recuperacao.`Mês da baixa` = DATE'2026-11-01' GROUP BY ALL ORDER BY ALL",
+  "esperado": [
+   {
+    "acumulado": "38682731.19"
+   }
+  ],
+  "obtido": [
+   {
+    "Mês da baixa": "2026-11-01",
+    "acumulado_ano": "38682731.19"
+   }
+  ]
+ },
+ {
+  "espaco": "diretor",
+  "pergunta": "Quanto de juros uma parcela de R$ 500,00 acumula com 90 dias de atraso?",
+  "status": "COMPLETED",
+  "acertou": true,
+  "sql_genie": "SELECT pos_venda.regras.valor_juros(CAST(500.00 AS DECIMAL(14,2)), 90) AS juros_acumulados",
+  "esperado": [
+   {
+    "juros": "15.00"
+   }
+  ],
+  "obtido": [
+   {
+    "juros_acumulados": "15.00"
+   }
+  ]
+ }
+]

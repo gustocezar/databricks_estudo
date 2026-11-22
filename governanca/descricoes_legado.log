@@ -1,0 +1,3 @@
+coluna    pos_venda.bronze_ldp.pagamentos_pendentes                    95/95 (MATERIALIZED_VIEW)
+lote      pos_venda.bronze_sql.pagamentos_pendentes                    95 colunas
+coluna    pos_venda.gold_ldp.bridge_apolice_cobertura                  4/4 (MATERIALIZED_VIEW)

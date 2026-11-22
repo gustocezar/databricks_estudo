@@ -1,0 +1,201 @@
+{
+  "pos_venda.dq.v_silver_pendencia_hist_7d": {
+    "run_id": "293bc92d151a46bf",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.dq.v_bronze_eventos_7d": {
+    "run_id": "2315f00f6ba741b2",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 350,
+    "aviso": 480,
+    "regras_violadas": [
+      {
+        "regra": "email_preenchido",
+        "linhas": 258,
+        "erro": 0,
+        "aviso": 258
+      },
+      {
+        "regra": "forma_pagamento_cadastrada",
+        "linhas": 130,
+        "erro": 130,
+        "aviso": 0
+      },
+      {
+        "regra": "uf_em_maiusculas",
+        "linhas": 122,
+        "erro": 0,
+        "aviso": 122
+      },
+      {
+        "regra": "canal_corretor_tem_corretor",
+        "linhas": 110,
+        "erro": 0,
+        "aviso": 110
+      },
+      {
+        "regra": "atraso_confere_com_as_datas",
+        "linhas": 102,
+        "erro": 102,
+        "aviso": 0
+      },
+      {
+        "regra": "uf_valida",
+        "linhas": 70,
+        "erro": 70,
+        "aviso": 0
+      },
+      {
+        "regra": "cliente_maior_de_idade",
+        "linhas": 52,
+        "erro": 52,
+        "aviso": 0
+      },
+      {
+        "regra": "vencimento_ate_data_do_evento",
+        "linhas": 46,
+        "erro": 46,
+        "aviso": 0
+      }
+    ]
+  },
+  "pos_venda.dq.v_silver_pendencia_atual_7d": {
+    "run_id": "6aae84f0d25a4e94",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 125,
+    "aviso": 1406,
+    "regras_violadas": [
+      {
+        "regra": "cep_8_digitos",
+        "linhas": 517,
+        "erro": 0,
+        "aviso": 517
+      },
+      {
+        "regra": "rg_preenchido",
+        "linhas": 471,
+        "erro": 0,
+        "aviso": 471
+      },
+      {
+        "regra": "email_preenchido",
+        "linhas": 239,
+        "erro": 0,
+        "aviso": 239
+      },
+      {
+        "regra": "cpf_valido",
+        "linhas": 138,
+        "erro": 0,
+        "aviso": 138
+      },
+      {
+        "regra": "forma_pagamento_cadastrada",
+        "linhas": 125,
+        "erro": 125,
+        "aviso": 0
+      },
+      {
+        "regra": "canal_corretor_tem_corretor",
+        "linhas": 104,
+        "erro": 0,
+        "aviso": 104
+      }
+    ]
+  },
+  "pos_venda.dq.v_fato_snapshot_7d": {
+    "run_id": "4af018c37e894384",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_cliente": {
+    "run_id": "28de67bab173490a",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 1253,
+    "regras_violadas": [
+      {
+        "regra": "rg_preenchido",
+        "linhas": 544,
+        "erro": 0,
+        "aviso": 544
+      },
+      {
+        "regra": "email_preenchido",
+        "linhas": 362,
+        "erro": 0,
+        "aviso": 362
+      },
+      {
+        "regra": "cep_8_digitos",
+        "linhas": 201,
+        "erro": 0,
+        "aviso": 201
+      },
+      {
+        "regra": "cpf_valido",
+        "linhas": 200,
+        "erro": 0,
+        "aviso": 200
+      }
+    ]
+  },
+  "pos_venda.gold.dim_produto": {
+    "run_id": "ae8b2e45900744a4",
+    "estado": "SUCCESS",
+    "total": 8,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_apolice": {
+    "run_id": "215e440ce6154c69",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_corretor": {
+    "run_id": "1d5da5904fad4393",
+    "estado": "SUCCESS",
+    "total": 2501,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.bridge_apolice_cobertura": {
+    "run_id": "240049c85d3443e6",
+    "estado": "SUCCESS",
+    "total": 10000,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_ponto_venda": {
+    "run_id": "f6eb58bf021b4456",
+    "estado": "SUCCESS",
+    "total": 1157,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.gold.dim_data": {
+    "run_id": "594945cce873418b",
+    "estado": "SUCCESS",
+    "total": 5844,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  }
+}

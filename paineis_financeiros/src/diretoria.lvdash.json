@@ -1,0 +1,2942 @@
+{
+  "datasets": [
+    {
+      "name": "ds_carteira_dia",
+      "displayName": "Carteira em aberto por dia (comparação com 30 dias antes)",
+      "queryLines": [
+        "WITH d AS (\n",
+        "  SELECT `Data de referência` AS data, `Fim de mês` AS fim_mes, `Foto mais recente` AS atual,\n",
+        "         MEASURE(`Saldo em aberto`) AS saldo, MEASURE(`Pendências em aberto`) AS pendencias,\n",
+        "         MEASURE(`Saldo acima de 60 dias`) AS saldo_60, MEASURE(`Saldo em cobrança externa`) AS saldo_externo,\n",
+        "         MEASURE(`Multa e juros em aberto`) AS encargos, MEASURE(`Clientes com pendência`) AS clientes\n",
+        "  FROM mv_carteira_em_aberto GROUP BY ALL\n",
+        ")\n",
+        "SELECT d.*, saldo_60 / saldo AS pct_60, saldo / pendencias AS ticket,\n",
+        "       lag(saldo, 30) OVER (ORDER BY data) AS saldo_30d, lag(saldo_60 / saldo, 30) OVER (ORDER BY data) AS pct_60_30d,\n",
+        "       lag(pendencias, 30) OVER (ORDER BY data) AS pendencias_30d, lag(saldo / pendencias, 30) OVER (ORDER BY data) AS ticket_30d,\n",
+        "       lag(encargos, 30) OVER (ORDER BY data) AS encargos_30d\n",
+        "FROM d ORDER BY data"
+      ]
+    },
+    {
+      "name": "ds_carteira_atual",
+      "displayName": "Carteira na foto mais recente, por produto, canal, faixa, status, motivo e forma",
+      "queryLines": [
+        "SELECT `Data de referência` AS data, `Produto` AS produto, `Canal de venda` AS canal, `Faixa de atraso` AS faixa_atraso,\n",
+        "       `Status de cobrança` AS status, `Grupo do motivo` AS grupo_motivo, `Forma de pagamento` AS forma_pagamento,\n",
+        "       MEASURE(`Saldo em aberto`) AS saldo, MEASURE(`Pendências em aberto`) AS pendencias,\n",
+        "       MEASURE(`Saldo acima de 60 dias`) AS saldo_60, MEASURE(`Saldo em cobrança externa`) AS saldo_externo,\n",
+        "       MEASURE(`Multa e juros em aberto`) AS encargos\n",
+        "FROM mv_carteira_em_aberto WHERE `Foto mais recente` = true GROUP BY ALL"
+      ],
+      "columns": [
+        {
+          "displayName": "Percentual acima de 60 dias",
+          "description": "Saldo acima de 60 dias / saldo em aberto",
+          "expression": "SUM(`saldo_60`) / SUM(`saldo`)"
+        },
+        {
+          "displayName": "Ticket médio",
+          "description": "Saldo em aberto / pendências em aberto",
+          "expression": "SUM(`saldo`) / SUM(`pendencias`)"
+        }
+      ]
+    },
+    {
+      "name": "ds_recuperacao",
+      "displayName": "Recuperação (baixas) por mês, produto, canal, forma e faixa",
+      "queryLines": [
+        "SELECT `Mês da baixa` AS mes, `Produto` AS produto, `Canal de venda` AS canal,\n",
+        "       CASE WHEN `Forma de pagamento` IN ('DEBITO_CONTA', 'BOLETO', 'CARTAO_CREDITO', 'PIX_AUTOMATICO') THEN `Forma de pagamento` ELSE 'NAO_CADASTRADA' END AS forma_pagamento,\n",
+        "       `Faixa de atraso na baixa` AS faixa_baixa,\n",
+        "       MEASURE(`Valor recuperado`) AS recuperado, MEASURE(`Pendências pagas`) AS pagas,\n",
+        "       MEASURE(`Multa e juros recebidos`) AS encargos_recebidos\n",
+        "FROM mv_recuperacao GROUP BY ALL"
+      ],
+      "columns": [
+        {
+          "displayName": "Ticket médio recuperado",
+          "description": "Valor recuperado / pendências pagas",
+          "expression": "SUM(`recuperado`) / SUM(`pagas`)"
+        }
+      ]
+    },
+    {
+      "name": "ds_safra",
+      "displayName": "Safras de entrada e recuperação",
+      "queryLines": [
+        "SELECT `Safra de entrada` AS safra, `Produto` AS produto, `Canal de venda` AS canal,\n",
+        "       CASE WHEN `Forma de pagamento` IN ('DEBITO_CONTA', 'BOLETO', 'CARTAO_CREDITO', 'PIX_AUTOMATICO') THEN `Forma de pagamento` ELSE 'NAO_CADASTRADA' END AS forma_pagamento,\n",
+        "       MEASURE(`Pendências que entraram`) AS entradas, MEASURE(`Pendências pagas da safra`) AS pagas,\n",
+        "       MEASURE(`Valor das parcelas que entraram`) AS valor_entrada, MEASURE(`Valor recuperado da safra`) AS valor_recuperado\n",
+        "FROM mv_safra_recuperacao GROUP BY ALL"
+      ],
+      "columns": [
+        {
+          "displayName": "Taxa de recuperação",
+          "description": "Pendências pagas / pendências que entraram",
+          "expression": "SUM(`pagas`) / SUM(`entradas`)"
+        }
+      ]
+    },
+    {
+      "name": "ds_qualidade",
+      "displayName": "Qualidade dos dados por dia",
+      "queryLines": [
+        "SELECT `Dia` AS dia, MEASURE(`Eventos recebidos`) AS recebidos, MEASURE(`Eventos aptos`) AS aptos,\n",
+        "       MEASURE(`Eventos barrados`) AS barrados, MEASURE(`Eventos duplicados`) AS duplicados,\n",
+        "       MEASURE(`E-mail ausente`) AS email_ausente, MEASURE(`CPF inválido`) AS cpf_invalido,\n",
+        "       MEASURE(`CEP malformado`) AS cep_malformado, MEASURE(`Forma de pagamento não cadastrada`) AS vazamento\n",
+        "FROM mv_qualidade_dados GROUP BY ALL ORDER BY dia"
+      ],
+      "columns": [
+        {
+          "displayName": "Taxa de barrados",
+          "description": "Eventos barrados / eventos recebidos",
+          "expression": "SUM(`barrados`) / SUM(`recebidos`)"
+        }
+      ]
+    },
+    {
+      "name": "ds_carteira_mes",
+      "displayName": "Fechamento mensal da carteira por produto e canal",
+      "queryLines": [
+        "WITH m AS (\n",
+        "  SELECT `Mês de referência` AS mes, `Produto` AS produto, `Canal de venda` AS canal,\n",
+        "         MEASURE(`Saldo no início do período`) AS saldo_inicio, MEASURE(`Saldo de fechamento`) AS saldo_fechamento,\n",
+        "         MEASURE(`Saldo de fechamento do mês anterior`) AS saldo_mes_anterior,\n",
+        "         MEASURE(`Pendências em aberto no fechamento`) AS pendencias_fechamento\n",
+        "  FROM mv_carteira_em_aberto GROUP BY ALL\n",
+        ")\n",
+        "SELECT m.*, mes = MAX(mes) OVER () AS mes_atual FROM m"
+      ],
+      "columns": [
+        {
+          "displayName": "Variação mensal do saldo",
+          "description": "Fechamento sobre o fechamento do mês anterior (MoM)",
+          "expression": "(SUM(`saldo_fechamento`) - SUM(`saldo_mes_anterior`)) / SUM(`saldo_mes_anterior`)"
+        },
+        {
+          "displayName": "Variação do saldo no mês",
+          "description": "Fechamento menos o saldo do primeiro dia do mês",
+          "expression": "SUM(`saldo_fechamento`) - SUM(`saldo_inicio`)"
+        }
+      ]
+    },
+    {
+      "name": "ds_recuperacao_mes",
+      "displayName": "Recuperação mês a mês e acumulado no ano por produto, canal e forma",
+      "queryLines": [
+        "WITH m AS (\n",
+        "  SELECT `Mês da baixa` AS mes, `Produto` AS produto, `Canal de venda` AS canal,\n",
+        "         CASE WHEN `Forma de pagamento` IN ('DEBITO_CONTA', 'BOLETO', 'CARTAO_CREDITO', 'PIX_AUTOMATICO') THEN `Forma de pagamento` ELSE 'NAO_CADASTRADA' END AS forma_pagamento,\n",
+        "         MEASURE(`Valor recuperado`) AS recuperado, MEASURE(`Valor recuperado no mês anterior`) AS recuperado_mes_anterior,\n",
+        "         MEASURE(`Valor recuperado acumulado no ano`) AS acumulado_ano\n",
+        "  FROM mv_recuperacao GROUP BY ALL\n",
+        "), c AS (\n",
+        "  SELECT m.*, last_day(mes) <= (SELECT max(data_baixa) FROM pagamento) AS mes_completo FROM m\n",
+        ")\n",
+        "SELECT c.*, mes = MAX(mes) OVER () AS mes_atual,\n",
+        "       mes = MAX(CASE WHEN mes_completo THEN mes END) OVER () AS ultimo_mes_completo\n",
+        "FROM c"
+      ],
+      "columns": [
+        {
+          "displayName": "Variação mensal do recuperado",
+          "description": "Recuperado no mês sobre o mês anterior (MoM)",
+          "expression": "(SUM(`recuperado`) - SUM(`recuperado_mes_anterior`)) / SUM(`recuperado_mes_anterior`)"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "diretoria",
+      "displayName": "Visão executiva",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cab_dir",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Pós-venda · KPIs financeiros da diretoria\n",
+                "\n",
+                "Carteira de parcelas de seguro de vida em atraso. Esta página resume os quatro fatos; cada um tem a sua página (carteira em aberto, recuperação, safras e qualidade dos dados). A primeira linha compara a foto mais recente com 30 dias antes; a segunda, o mês corrente com o fechamento do mês anterior. O saldo é uma posição diária: aparece por dia ou na **foto mais recente** e nunca se soma entre dias. O mês corrente ainda não fechou: nele vale a foto mais recente. Dados sintéticos. Use **Ask Genie** para perguntas fora do painel."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_saldo",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "saldo",
+                      "expression": "`saldo`"
+                    },
+                    {
+                      "name": "saldo_30d",
+                      "expression": "`saldo_30d`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "filters": [
+                    {
+                      "expression": "`atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "saldo",
+                  "displayName": "Saldo em aberto",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "saldo_30d",
+                  "displayName": "30 dias antes",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Saldo em aberto",
+                "showDescription": true,
+                "description": "Foto mais recente vs. 30 dias antes"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_pct60",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "pct_60",
+                      "expression": "`pct_60`"
+                    },
+                    {
+                      "name": "pct_60_30d",
+                      "expression": "`pct_60_30d`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "filters": [
+                    {
+                      "expression": "`atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "pct_60",
+                  "displayName": "% do saldo acima de 60 dias",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "pct_60_30d",
+                  "displayName": "30 dias antes",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "% do saldo acima de 60 dias",
+                "showDescription": true,
+                "description": "Risco: atraso longo"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_pendencias",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "pendencias",
+                      "expression": "`pendencias`"
+                    },
+                    {
+                      "name": "pendencias_30d",
+                      "expression": "`pendencias_30d`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "filters": [
+                    {
+                      "expression": "`atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "pendencias",
+                  "displayName": "Pendências em aberto",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "pendencias_30d",
+                  "displayName": "30 dias antes",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Pendências em aberto",
+                "showDescription": true,
+                "description": "Parcelas em atraso, vs. 30 dias antes"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_taxa",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "measure(Taxa de recuperação)",
+                      "expression": "MEASURE(`Taxa de recuperação`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Taxa de recuperação)",
+                  "displayName": "Taxa de recuperação",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de recuperação",
+                "showDescription": true,
+                "description": "Pendências pagas / que entraram (todas as safras)"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_mom_saldo",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_mes",
+                  "fields": [
+                    {
+                      "name": "measure(Variação mensal do saldo)",
+                      "expression": "MEASURE(`Variação mensal do saldo`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "filters": [
+                    {
+                      "expression": "`mes_atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Variação mensal do saldo)",
+                  "displayName": "Variação mensal do saldo",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Variação mensal do saldo",
+                "showDescription": true,
+                "description": "Mês corrente (foto mais recente) vs. fechamento do mês anterior"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_var_mes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_mes",
+                  "fields": [
+                    {
+                      "name": "measure(Variação do saldo no mês)",
+                      "expression": "MEASURE(`Variação do saldo no mês`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "filters": [
+                    {
+                      "expression": "`mes_atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Variação do saldo no mês)",
+                  "displayName": "Crescimento da carteira no mês",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Crescimento da carteira no mês",
+                "showDescription": true,
+                "description": "Foto mais recente menos o saldo do dia 1º do mês"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 6,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_ytd",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao_mes",
+                  "fields": [
+                    {
+                      "name": "sum(acumulado_ano)",
+                      "expression": "SUM(`acumulado_ano`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "filters": [
+                    {
+                      "expression": "`mes_atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(acumulado_ano)",
+                  "displayName": "Recuperado no ano",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Recuperado no ano",
+                "showDescription": true,
+                "description": "Acumulado do ano até a foto mais recente"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 6,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_mom_recup",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao_mes",
+                  "fields": [
+                    {
+                      "name": "measure(Variação mensal do recuperado)",
+                      "expression": "MEASURE(`Variação mensal do recuperado`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "filters": [
+                    {
+                      "expression": "`ultimo_mes_completo` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Variação mensal do recuperado)",
+                  "displayName": "Variação mensal do recuperado",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Variação mensal do recuperado",
+                "showDescription": true,
+                "description": "Último mês completo vs. o mês anterior"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 6,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "saldo_diario",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "data",
+                      "expression": "`data`"
+                    },
+                    {
+                      "name": "sum(saldo)",
+                      "expression": "SUM(`saldo`)"
+                    },
+                    {
+                      "name": "sum(saldo_60)",
+                      "expression": "SUM(`saldo_60`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "data",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Data de referência"
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "sum(saldo)",
+                      "displayName": "Saldo em aberto"
+                    },
+                    {
+                      "fieldName": "sum(saldo_60)",
+                      "displayName": "Acima de 60 dias"
+                    }
+                  ],
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Evolução diária do saldo em aberto",
+                "showDescription": true,
+                "description": "Posição de cada dia (sem somar dias)"
+              },
+              "annotations": [
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "2026-12-13T00:00:00.000",
+                      "dataType": "DATETIME"
+                    },
+                    "label": {
+                      "value": "Vazamento de dados (forma de pagamento)"
+                    },
+                    "color": {
+                      "value": {
+                        "hex": "#FFA600"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "recuperado_mes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao",
+                  "fields": [
+                    {
+                      "name": "mes",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "name": "sum(recuperado)",
+                      "expression": "SUM(`recuperado`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "mes",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Mês da baixa"
+                },
+                "y": {
+                  "fieldName": "sum(recuperado)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Valor recuperado",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Valor recuperado por mês",
+                "showDescription": true,
+                "description": "Baixas (parcela + multa + juros pagos); o mês corrente está incompleto"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "taxa_safra",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "safra",
+                      "expression": "`safra`"
+                    },
+                    {
+                      "name": "measure(Taxa de recuperação)",
+                      "expression": "MEASURE(`Taxa de recuperação`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "safra",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Safra de entrada"
+                },
+                "y": {
+                  "fieldName": "measure(Taxa de recuperação)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Taxa de recuperação",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de recuperação por safra",
+                "showDescription": true,
+                "description": "Safras recentes tiveram menos tempo para pagar"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "barrados_dia",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_qualidade",
+                  "fields": [
+                    {
+                      "name": "dia",
+                      "expression": "`dia`"
+                    },
+                    {
+                      "name": "measure(Taxa de barrados)",
+                      "expression": "MEASURE(`Taxa de barrados`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "dia",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Dia"
+                },
+                "y": {
+                  "fieldName": "measure(Taxa de barrados)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Taxa de barrados",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Confiabilidade dos dados: taxa de eventos barrados",
+                "showDescription": true,
+                "description": "Eventos que não entraram nos números por violar regras de qualidade"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 15,
+            "width": 6,
+            "height": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "dir_carteira",
+      "displayName": "Carteira em aberto",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cab_dir_carteira",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Carteira em aberto\n",
+                "\n",
+                "Posição diária das pendências em aberto: risco (atraso acima de 60 dias), crescimento e fechamento de cada mês. O saldo é uma posição diária: aparece por dia ou na **foto mais recente** e nunca se soma entre dias. O mês corrente ainda não fechou: nele vale a foto mais recente. Dados sintéticos."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_saldo",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "saldo",
+                      "expression": "`saldo`"
+                    },
+                    {
+                      "name": "saldo_30d",
+                      "expression": "`saldo_30d`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "filters": [
+                    {
+                      "expression": "`atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "saldo",
+                  "displayName": "Saldo em aberto",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "saldo_30d",
+                  "displayName": "30 dias antes",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Saldo em aberto",
+                "showDescription": true,
+                "description": "Foto mais recente vs. 30 dias antes"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_pct60",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "pct_60",
+                      "expression": "`pct_60`"
+                    },
+                    {
+                      "name": "pct_60_30d",
+                      "expression": "`pct_60_30d`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "filters": [
+                    {
+                      "expression": "`atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "pct_60",
+                  "displayName": "% do saldo acima de 60 dias",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "pct_60_30d",
+                  "displayName": "30 dias antes",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "% do saldo acima de 60 dias",
+                "showDescription": true,
+                "description": "Risco: atraso longo"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_pend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "pendencias",
+                      "expression": "`pendencias`"
+                    },
+                    {
+                      "name": "pendencias_30d",
+                      "expression": "`pendencias_30d`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "filters": [
+                    {
+                      "expression": "`atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "pendencias",
+                  "displayName": "Pendências em aberto",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "pendencias_30d",
+                  "displayName": "30 dias antes",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Pendências em aberto",
+                "showDescription": true,
+                "description": "Parcelas em atraso, vs. 30 dias antes"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_mom",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_mes",
+                  "fields": [
+                    {
+                      "name": "measure(Variação mensal do saldo)",
+                      "expression": "MEASURE(`Variação mensal do saldo`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "filters": [
+                    {
+                      "expression": "`mes_atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Variação mensal do saldo)",
+                  "displayName": "Variação mensal do saldo",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Variação mensal do saldo",
+                "showDescription": true,
+                "description": "Mês corrente (foto mais recente) vs. fechamento do mês anterior"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_saldo_diario",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_dia",
+                  "fields": [
+                    {
+                      "name": "data",
+                      "expression": "`data`"
+                    },
+                    {
+                      "name": "sum(saldo)",
+                      "expression": "SUM(`saldo`)"
+                    },
+                    {
+                      "name": "sum(saldo_60)",
+                      "expression": "SUM(`saldo_60`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "data",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Data de referência"
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "sum(saldo)",
+                      "displayName": "Saldo em aberto"
+                    },
+                    {
+                      "fieldName": "sum(saldo_60)",
+                      "displayName": "Acima de 60 dias"
+                    }
+                  ],
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Evolução diária do saldo em aberto",
+                "showDescription": true,
+                "description": "Posição de cada dia (sem somar dias)"
+              },
+              "annotations": [
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "2026-12-13T00:00:00.000",
+                      "dataType": "DATETIME"
+                    },
+                    "label": {
+                      "value": "Vazamento de dados (forma de pagamento)"
+                    },
+                    "color": {
+                      "value": {
+                        "hex": "#FFA600"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 8,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_aging",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_atual",
+                  "fields": [
+                    {
+                      "name": "faixa_atraso",
+                      "expression": "`faixa_atraso`"
+                    },
+                    {
+                      "name": "sum(saldo)",
+                      "expression": "SUM(`saldo`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "faixa_atraso",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Faixa de atraso"
+                },
+                "y": {
+                  "fieldName": "sum(saldo)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Saldo em aberto",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Aging da carteira hoje",
+                "showDescription": true,
+                "description": "Saldo por faixa de atraso na foto mais recente"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 5,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_fechamento",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_mes",
+                  "fields": [
+                    {
+                      "name": "mes",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "name": "sum(saldo_fechamento)",
+                      "expression": "SUM(`saldo_fechamento`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "mes",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Mês de referência"
+                },
+                "y": {
+                  "fieldName": "sum(saldo_fechamento)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Saldo de fechamento",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Saldo de fechamento por mês",
+                "showDescription": true,
+                "description": "Último dia de cada mês; mês corrente = foto mais recente"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_mom_mes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_mes",
+                  "fields": [
+                    {
+                      "name": "mes",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "name": "measure(Variação mensal do saldo)",
+                      "expression": "MEASURE(`Variação mensal do saldo`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "mes",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Mês de referência"
+                },
+                "y": {
+                  "fieldName": "measure(Variação mensal do saldo)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Variação mensal do saldo",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Variação mensal do saldo de fechamento",
+                "showDescription": true,
+                "description": "Crescimento mês a mês; a carteira sintética não baixa pendências por perda"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 11,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_externa",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_atual",
+                  "fields": [
+                    {
+                      "name": "produto",
+                      "expression": "`produto`"
+                    },
+                    {
+                      "name": "sum(saldo_externo)",
+                      "expression": "SUM(`saldo_externo`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "produto",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Produto"
+                },
+                "y": {
+                  "fieldName": "sum(saldo_externo)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Saldo em cobrança externa",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Saldo em cobrança externa por produto (hoje)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 17,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dc_status",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_carteira_atual",
+                  "fields": [
+                    {
+                      "name": "status",
+                      "expression": "`status`"
+                    },
+                    {
+                      "name": "sum(saldo)",
+                      "expression": "SUM(`saldo`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "status",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Status"
+                },
+                "y": {
+                  "fieldName": "sum(saldo)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Saldo em aberto",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Saldo por status de cobrança (hoje)"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 17,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ]
+    },
+    {
+      "name": "dir_recuperacao",
+      "displayName": "Recuperação",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cab_dir_recup",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Recuperação\n",
+                "\n",
+                "Pagamentos (baixas) das pendências: valor recuperado por mês, acumulado no ano e variação sobre o mês anterior. A variação mensal compara só meses completos."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "dr_ytd",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao_mes",
+                  "fields": [
+                    {
+                      "name": "sum(acumulado_ano)",
+                      "expression": "SUM(`acumulado_ano`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "filters": [
+                    {
+                      "expression": "`mes_atual` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(acumulado_ano)",
+                  "displayName": "Recuperado no ano",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Recuperado no ano",
+                "showDescription": true,
+                "description": "Acumulado do ano até a foto mais recente"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dr_mom",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao_mes",
+                  "fields": [
+                    {
+                      "name": "measure(Variação mensal do recuperado)",
+                      "expression": "MEASURE(`Variação mensal do recuperado`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "filters": [
+                    {
+                      "expression": "`ultimo_mes_completo` = true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Variação mensal do recuperado)",
+                  "displayName": "Variação mensal do recuperado",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Variação mensal do recuperado",
+                "showDescription": true,
+                "description": "Último mês completo vs. o mês anterior"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dr_ticket",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao",
+                  "fields": [
+                    {
+                      "name": "measure(Ticket médio recuperado)",
+                      "expression": "MEASURE(`Ticket médio recuperado`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Ticket médio recuperado)",
+                  "displayName": "Ticket médio recuperado",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Ticket médio recuperado",
+                "showDescription": true,
+                "description": "Valor recuperado / pendências pagas"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dr_encargos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao",
+                  "fields": [
+                    {
+                      "name": "sum(encargos_recebidos)",
+                      "expression": "SUM(`encargos_recebidos`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(encargos_recebidos)",
+                  "displayName": "Multa e juros recebidos",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Multa e juros recebidos",
+                "showDescription": true,
+                "description": "Todas as baixas"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dr_recup_mes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao",
+                  "fields": [
+                    {
+                      "name": "mes",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "name": "sum(recuperado)",
+                      "expression": "SUM(`recuperado`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "mes",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Mês da baixa"
+                },
+                "y": {
+                  "fieldName": "sum(recuperado)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Valor recuperado",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Valor recuperado por mês",
+                "showDescription": true,
+                "description": "Baixas (parcela + multa + juros pagos); o mês corrente está incompleto"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dr_ytd_linha",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao_mes",
+                  "fields": [
+                    {
+                      "name": "mes",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "name": "sum(acumulado_ano)",
+                      "expression": "SUM(`acumulado_ano`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "mes",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Mês da baixa"
+                },
+                "y": {
+                  "fieldName": "sum(acumulado_ano)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Acumulado no ano",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Valor recuperado acumulado no ano",
+                "showDescription": true,
+                "description": "Soma das baixas desde 1º de janeiro (dados desde 19/05/2026)"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dr_recup_forma",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_recuperacao",
+                  "fields": [
+                    {
+                      "name": "mes",
+                      "expression": "`mes`"
+                    },
+                    {
+                      "name": "sum(recuperado)",
+                      "expression": "SUM(`recuperado`)"
+                    },
+                    {
+                      "name": "forma_pagamento",
+                      "expression": "`forma_pagamento`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "mes",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Mês da baixa"
+                },
+                "y": {
+                  "fieldName": "sum(recuperado)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Valor recuperado",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "color": {
+                  "fieldName": "forma_pagamento",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "DEBITO_CONTA",
+                        "color": "#003F5C"
+                      },
+                      {
+                        "value": "CARTAO_CREDITO",
+                        "color": "#7A5195"
+                      },
+                      {
+                        "value": "BOLETO",
+                        "color": "#2F6B9A"
+                      },
+                      {
+                        "value": "PIX_AUTOMATICO",
+                        "color": "#58B09C"
+                      },
+                      {
+                        "value": "NAO_CADASTRADA",
+                        "color": "#EF5675"
+                      }
+                    ]
+                  },
+                  "displayName": "Forma de pagamento"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Valor recuperado por mês e forma de pagamento"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ]
+    },
+    {
+      "name": "dir_safras",
+      "displayName": "Safras",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cab_dir_safras",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Safras\n",
+                "\n",
+                "Safra = mês em que a pendência entrou na carteira. A taxa de recuperação é a parte da safra que já foi paga; compare safras de mesma idade (as recentes tiveram menos tempo)."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "sf_taxa",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "measure(Taxa de recuperação)",
+                      "expression": "MEASURE(`Taxa de recuperação`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Taxa de recuperação)",
+                  "displayName": "Taxa de recuperação",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de recuperação",
+                "showDescription": true,
+                "description": "Pendências pagas / que entraram (todas as safras)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "sf_entradas",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "sum(entradas)",
+                      "expression": "SUM(`entradas`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(entradas)",
+                  "displayName": "Pendências que entraram",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Pendências que entraram",
+                "showDescription": true,
+                "description": "Todas as safras"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "sf_pagas",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "sum(pagas)",
+                      "expression": "SUM(`pagas`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(pagas)",
+                  "displayName": "Pendências pagas",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Pendências pagas",
+                "showDescription": true,
+                "description": "Todas as safras"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "sf_valor",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "sum(valor_recuperado)",
+                      "expression": "SUM(`valor_recuperado`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(valor_recuperado)",
+                  "displayName": "Valor recuperado das safras",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Valor recuperado das safras",
+                "showDescription": true,
+                "description": "Pago pelas pendências das safras"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "sf_taxa_safra",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "safra",
+                      "expression": "`safra`"
+                    },
+                    {
+                      "name": "measure(Taxa de recuperação)",
+                      "expression": "MEASURE(`Taxa de recuperação`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "safra",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Safra de entrada"
+                },
+                "y": {
+                  "fieldName": "measure(Taxa de recuperação)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Taxa de recuperação",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de recuperação por safra",
+                "showDescription": true,
+                "description": "Safras recentes tiveram menos tempo para pagar"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "sf_taxa_canal",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "canal",
+                      "expression": "`canal`"
+                    },
+                    {
+                      "name": "measure(Taxa de recuperação)",
+                      "expression": "MEASURE(`Taxa de recuperação`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "canal",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Canal de venda"
+                },
+                "y": {
+                  "fieldName": "measure(Taxa de recuperação)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Taxa de recuperação",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de recuperação por canal de venda"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "sf_taxa_forma",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_safra",
+                  "fields": [
+                    {
+                      "name": "forma_pagamento",
+                      "expression": "`forma_pagamento`"
+                    },
+                    {
+                      "name": "measure(Taxa de recuperação)",
+                      "expression": "MEASURE(`Taxa de recuperação`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "forma_pagamento",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Forma de pagamento"
+                },
+                "y": {
+                  "fieldName": "measure(Taxa de recuperação)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Taxa de recuperação",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de recuperação por forma de pagamento"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 11,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ]
+    },
+    {
+      "name": "dir_qualidade",
+      "displayName": "Qualidade dos dados",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cab_dir_qualidade",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Qualidade dos dados\n",
+                "\n",
+                "Quanto dos eventos do sistema de origem entra nos números. Eventos barrados vão para a quarentena e não entram; avisos entram, mas com dado incompleto. O detalhe por regra está no painel **pos_venda · Qualidade de dados**."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "dq_recebidos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_qualidade",
+                  "fields": [
+                    {
+                      "name": "sum(recebidos)",
+                      "expression": "SUM(`recebidos`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(recebidos)",
+                  "displayName": "Eventos recebidos",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos recebidos",
+                "showDescription": true,
+                "description": "Todo o período"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dq_barrados",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_qualidade",
+                  "fields": [
+                    {
+                      "name": "sum(barrados)",
+                      "expression": "SUM(`barrados`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(barrados)",
+                  "displayName": "Eventos barrados",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos barrados",
+                "showDescription": true,
+                "description": "Foram para a quarentena"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dq_taxa_barrados",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_qualidade",
+                  "fields": [
+                    {
+                      "name": "measure(Taxa de barrados)",
+                      "expression": "MEASURE(`Taxa de barrados`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Taxa de barrados)",
+                  "displayName": "Taxa de barrados",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de barrados",
+                "showDescription": true,
+                "description": "Barrados / recebidos"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dq_vazamento",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_qualidade",
+                  "fields": [
+                    {
+                      "name": "sum(vazamento)",
+                      "expression": "SUM(`vazamento`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(vazamento)",
+                  "displayName": "Forma de pagamento não cadastrada",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Forma de pagamento não cadastrada",
+                "showDescription": true,
+                "description": "Eventos que vazaram a barreira (incidente de dez/2026)"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "dq_barrados_dia",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_qualidade",
+                  "fields": [
+                    {
+                      "name": "dia",
+                      "expression": "`dia`"
+                    },
+                    {
+                      "name": "measure(Taxa de barrados)",
+                      "expression": "MEASURE(`Taxa de barrados`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "dia",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Dia"
+                },
+                "y": {
+                  "fieldName": "measure(Taxa de barrados)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Taxa de barrados",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Confiabilidade dos dados: taxa de eventos barrados",
+                "showDescription": true,
+                "description": "Eventos que não entraram nos números por violar regras de qualidade"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dq_avisos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_qualidade",
+                  "fields": [
+                    {
+                      "name": "dia",
+                      "expression": "`dia`"
+                    },
+                    {
+                      "name": "sum(cpf_invalido)",
+                      "expression": "SUM(`cpf_invalido`)"
+                    },
+                    {
+                      "name": "sum(email_ausente)",
+                      "expression": "SUM(`email_ausente`)"
+                    },
+                    {
+                      "name": "sum(cep_malformado)",
+                      "expression": "SUM(`cep_malformado`)"
+                    },
+                    {
+                      "name": "sum(vazamento)",
+                      "expression": "SUM(`vazamento`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "dia",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Dia"
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "sum(cpf_invalido)",
+                      "displayName": "CPF inválido"
+                    },
+                    {
+                      "fieldName": "sum(email_ausente)",
+                      "displayName": "E-mail ausente"
+                    },
+                    {
+                      "fieldName": "sum(cep_malformado)",
+                      "displayName": "CEP malformado"
+                    },
+                    {
+                      "fieldName": "sum(vazamento)",
+                      "displayName": "Forma de pagamento não cadastrada"
+                    }
+                  ]
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Avisos de qualidade por dia",
+                "showDescription": true,
+                "description": "Eventos que entraram nos números, mas com dado incompleto ou fora do padrão"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ]
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#F7F8FA",
+        "dark": "#1F272D"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#11171C"
+      },
+      "widgetBorderColor": {
+        "light": "#FFFFFF",
+        "dark": "#11171C"
+      },
+      "fontColor": {
+        "light": "#11171C",
+        "dark": "#E8ECF0"
+      },
+      "selectionColor": {
+        "light": "#2272B4",
+        "dark": "#8ACAFF"
+      },
+      "visualizationColors": [
+        "#003F5C",
+        "#2F6B9A",
+        "#7A5195",
+        "#BC5090",
+        "#EF5675",
+        "#FFA600",
+        "#58B09C"
+      ],
+      "widgetHeaderAlignment": "LEFT"
+    },
+    "genieSpace": {
+      "isEnabled": true,
+      "overrideId": "01f1e477314b1903a4212843cf0dabf1",
+      "enablementMode": "ENABLED"
+    }
+  }
+}

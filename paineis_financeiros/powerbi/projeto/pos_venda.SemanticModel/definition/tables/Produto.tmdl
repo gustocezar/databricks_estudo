@@ -1,0 +1,32 @@
+/// Produtos de seguro de vida.
+table Produto
+	lineageTag: 02206044-0f3d-57b3-bb63-afb26122700f
+
+	column Produto
+		dataType: string
+		lineageTag: 3ae7b9b3-d522-5710-8bc3-23c6101acc9d
+		summarizeBy: none
+		sourceColumn: produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Categoria do produto'
+		dataType: string
+		lineageTag: 5e52bd94-01a7-5d85-98e2-f013073fc4fb
+		summarizeBy: none
+		sourceColumn: categoria_produto
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Produto = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "produto"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

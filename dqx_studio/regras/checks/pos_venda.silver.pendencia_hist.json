@@ -1,0 +1,165 @@
+[
+  {
+    "name": "pk_unica_pendencia_id_inicio_vigencia",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "pendencia_id",
+          "__START_AT"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "uma_versao_corrente_por_pendencia",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "pendencia_id"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    },
+    "filter": "__END_AT IS NULL"
+  },
+  {
+    "name": "pendencia_id_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "pendencia_id"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "__START_AT_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "__START_AT"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "status_cobranca_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "status_cobranca"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "tipo_evento_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "tipo_evento"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "status_cobranca_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "status_cobranca",
+        "allowed": [
+          "'PENDENTE'",
+          "'EM_COBRANCA'",
+          "'PROMESSA_PAGAMENTO'",
+          "'NEGOCIADO'",
+          "'COBRANCA_EXTERNA'",
+          "'PAGA'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "tipo_evento_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "tipo_evento",
+        "allowed": [
+          "'NOVA'",
+          "'ATUALIZACAO'",
+          "'BAIXA'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "vigencia_fim_depois_do_inicio",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "__END_AT IS NULL OR __END_AT > __START_AT",
+        "msg": "fim de vigencia nao e posterior ao inicio",
+        "name": "vigencia_fim_depois_do_inicio"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "versao_paga_e_a_corrente",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "status_cobranca <> 'PAGA' OR __END_AT IS NULL",
+        "msg": "versao PAGA deveria ser a ultima (corrente)",
+        "name": "versao_paga_e_a_corrente"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  }
+]

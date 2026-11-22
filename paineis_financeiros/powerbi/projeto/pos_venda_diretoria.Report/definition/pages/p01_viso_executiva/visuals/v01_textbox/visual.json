@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v01_textbox",
+  "position": {
+    "x": 12.0,
+    "y": 12,
+    "width": 1248.0,
+    "height": 112,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Pós-venda · KPIs financeiros da diretoria",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "16pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Carteira de parcelas de seguro de vida em atraso. Esta página resume os quatro fatos; cada um tem a sua página (carteira em aberto, recuperação, safras e qualidade dos dados). A primeira linha compara a foto mais recente com 30 dias antes; a segunda, o mês corrente com o fechamento do mês anterior. O saldo é uma posição diária: aparece por dia ou na foto mais recente e nunca se soma entre dias. O mês corrente ainda não fechou: nele vale a foto mais recente. Dados sintéticos.",
+                    "textStyle": {
+                      "fontSize": "10pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,605 @@
+[
+  {
+    "name": "pk_unica_data_referencia_sk_pendencia_id",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "data_referencia_sk",
+          "pendencia_id"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "data_referencia_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "data_referencia_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "pendencia_id_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "pendencia_id"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cliente_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "apolice_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "apolice_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "produto_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "produto_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "corretor_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "corretor_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "ponto_venda_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "ponto_venda_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "periodicidade_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "periodicidade_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "forma_pagamento_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "forma_pagamento_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "status_cobranca_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "status_cobranca_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "motivo_pendencia_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "motivo_pendencia_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "faixa_atraso_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "faixa_atraso_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "data_vencimento_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "data_vencimento_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_cliente_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "cliente_sk"
+        ],
+        "ref_columns": [
+          "cliente_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_cliente"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_apolice_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "apolice_sk"
+        ],
+        "ref_columns": [
+          "apolice_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_apolice"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_produto_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "produto_sk"
+        ],
+        "ref_columns": [
+          "produto_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_produto"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_corretor_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "corretor_sk"
+        ],
+        "ref_columns": [
+          "corretor_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_corretor"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_ponto_venda_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "ponto_venda_sk"
+        ],
+        "ref_columns": [
+          "ponto_venda_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_ponto_venda"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_periodicidade_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "periodicidade_sk"
+        ],
+        "ref_columns": [
+          "periodicidade_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_periodicidade"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_forma_pagamento_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "forma_pagamento_sk"
+        ],
+        "ref_columns": [
+          "forma_pagamento_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_forma_pagamento"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_status_cobranca_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "status_cobranca_sk"
+        ],
+        "ref_columns": [
+          "status_cobranca_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_status_cobranca"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_motivo_pendencia_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "motivo_pendencia_sk"
+        ],
+        "ref_columns": [
+          "motivo_pendencia_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_motivo_pendencia"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_faixa_atraso_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "faixa_atraso_sk"
+        ],
+        "ref_columns": [
+          "faixa_atraso_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_faixa_atraso"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_data_referencia_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "data_referencia_sk"
+        ],
+        "ref_columns": [
+          "data_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_data"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_data_vencimento_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "data_vencimento_sk"
+        ],
+        "ref_columns": [
+          "data_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_data"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "valor_parcela_positivo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_less_than",
+      "arguments": {
+        "column": "valor_parcela",
+        "limit": 0.01
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "dias_atraso_minimo_1",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_less_than",
+      "arguments": {
+        "column": "dias_atraso",
+        "limit": 1
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "tentativas_entre_1_e_10",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_range",
+      "arguments": {
+        "column": "tentativas_cobranca",
+        "min_limit": 1,
+        "max_limit": 10
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "canal_contato_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "canal_ultimo_contato",
+        "allowed": [
+          "'SMS'",
+          "'EMAIL'",
+          "'WHATSAPP'",
+          "'TELEFONE'",
+          "'CARTA'",
+          "'NENHUM'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "qtd_pendencias_igual_1",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "qtd_pendencias = 1",
+        "msg": "grao da fato: qtd_pendencias deve ser 1",
+        "name": "qtd_pendencias_igual_1"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "valor_total_igual_parcela_multa_juros",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01",
+        "msg": "valor_total_pendente difere de parcela + multa + juros",
+        "name": "valor_total_igual_parcela_multa_juros"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "valores_seguem_regras_de_calculo",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "(valor_multa <=> pos_venda.regras.valor_multa(valor_parcela)) AND (valor_juros <=> pos_venda.regras.valor_juros(valor_parcela, dias_atraso)) AND (valor_total_pendente <=> pos_venda.regras.valor_total_pendente(valor_parcela, dias_atraso))",
+        "msg": "multa, juros ou total diferentes das funções pos_venda.regras (barreira: valores_fora_da_regra)",
+        "name": "valores_seguem_regras_de_calculo"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "multa_e_2_por_cento_da_parcela",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "abs(valor_multa - round(valor_parcela * 0.02, 2)) < 0.01",
+        "msg": "multa diferente de 2% da parcela",
+        "name": "multa_e_2_por_cento_da_parcela"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "entrada_depois_do_vencimento",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "data_entrada_pendencia_sk > data_vencimento_sk",
+        "msg": "pendencia entra antes do vencimento",
+        "name": "entrada_depois_do_vencimento"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "foto_nao_anterior_a_entrada",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "data_referencia_sk >= data_entrada_pendencia_sk",
+        "msg": "foto anterior a entrada da pendencia",
+        "name": "foto_nao_anterior_a_entrada"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

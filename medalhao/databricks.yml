@@ -1,0 +1,23 @@
+# Bundle do medalhão pos_venda: duas implementações independentes do mesmo pipeline de dados.
+#   A) job com 3 notebooks SQL   -> grava em pos_venda.{bronze,silver,gold}_sql
+#   B) pipeline Lakeflow (SDP)   -> grava em pos_venda.{bronze,silver,gold}_ldp
+# Cada uma tem a sua agenda. PAUSED = desligada (só roda sob demanda); UNPAUSED = ligada.
+bundle:
+  name: pos_venda_medalhao
+
+variables:
+  sql_schedule_status:
+    description: "Agenda diaria do job de notebooks SQL. PAUSED = desligada, UNPAUSED = ligada."
+    default: PAUSED
+  ldp_schedule_status:
+    description: "Agenda diaria do job que dispara o pipeline Lakeflow. PAUSED = desligada, UNPAUSED = ligada."
+    default: PAUSED
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-15c48c79-7aa2.cloud.databricks.com

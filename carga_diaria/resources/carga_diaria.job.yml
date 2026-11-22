@@ -1,0 +1,63 @@
+resources:
+  jobs:
+    carga_diaria:
+      name: pos_venda_carga_diaria
+      description: >-
+        Carga diaria: gera os eventos do dia no bronze, atualiza a silver (Lakeflow: eventos, historica SCD2 e atual),
+        as dimensoes da gold e acrescenta a foto do dia na fato historica. Parametros: data_inicio e data_fim
+        (padrao = dia da execucao). Para o backfill, informe o intervalo.
+      tags:
+        dominio: pos_venda
+        abordagem: carga_diaria
+        aidevkit_project: ai-dev-kit
+      performance_target: STANDARD
+      max_concurrent_runs: 1
+      parameters:
+        - name: data_inicio
+          default: "{{job.start_time.iso_date}}"
+        - name: data_fim
+          default: "{{job.start_time.iso_date}}"
+      schedule:
+        quartz_cron_expression: "0 0 5 * * ?"     # todo dia as 05:00
+        timezone_id: America/Sao_Paulo
+        pause_status: ${var.carga_schedule_status}
+      tasks:
+        # portão: os cenários BDD das regras de negócio (pos_venda/regras) rodam contra as funções pos_venda.regras.*;
+        # se algum falhar, nada mais roda (silver, barreira e gold usam essas funções)
+        - task_key: portao_regras
+          notebook_task:
+            notebook_path: ../src/notebooks/05_portao_regras.py
+            base_parameters:
+              suite: ${workspace.file_path}/src/portao_regras
+        - task_key: gerar_eventos
+          depends_on:
+            - task_key: portao_regras
+          notebook_task:
+            notebook_path: ../src/notebooks/10_gerar_eventos.py
+        - task_key: silver_lakeflow
+          depends_on:
+            - task_key: gerar_eventos
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.silver_lakeflow.id}
+            full_refresh: false
+        - task_key: gold_dimensoes
+          depends_on:
+            - task_key: silver_lakeflow
+          notebook_task:
+            notebook_path: ../src/notebooks/20_gold_dims.py
+        - task_key: gold_fato_snapshot
+          depends_on:
+            - task_key: gold_dimensoes
+          notebook_task:
+            notebook_path: ../src/notebooks/30_fato_snapshot.py
+        - task_key: dq_metricas
+          depends_on:
+            - task_key: gold_fato_snapshot
+          notebook_task:
+            notebook_path: ../src/notebooks/25_dq_metricas.py
+        # liga o DQX Studio (para sozinho após 24 h no Free Edition) para a avaliação agendada das 06:30
+        - task_key: ligar_dqx_studio
+          depends_on:
+            - task_key: dq_metricas
+          notebook_task:
+            notebook_path: ../src/notebooks/40_ligar_dqx_studio.py

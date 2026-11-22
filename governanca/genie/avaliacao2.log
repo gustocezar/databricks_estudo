@@ -1,0 +1,25 @@
+ACERTOU [analista] Qual o saldo em aberto hoje?
+ACERTOU [analista] Qual o saldo em aberto por faixa de atraso na posição atual?
+ACERTOU [analista] Quais os 3 produtos com maior saldo acima de 60 dias hoje?
+ACERTOU [analista] Qual era o saldo em aberto em 30/11/2026 por canal de venda?
+ACERTOU [analista] Quanto foi recuperado em dezembro de 2026 por forma de pagamento?
+ACERTOU [analista] Qual foi o ticket médio recuperado em novembro de 2026?
+ACERTOU [analista] Qual a taxa de recuperação das safras de setembro, outubro e novembro de 2026?
+REVISAR [analista] Quantas pendências entraram em outubro de 2026?
+ACERTOU [analista] Qual grupo de motivo concentra o maior saldo em aberto hoje?
+ACERTOU [analista] Qual o atraso médio em dias das pendências em aberto hoje por status de cobrança?
+ACERTOU [analista] Quantos eventos foram barrados em dezembro de 2026 por motivo da rejeição?
+ACERTOU [analista] Quais as 10 pendências pagas em dezembro de 2026 com maior valor pago?
+ACERTOU [diretor] Como evoluiu o saldo em aberto no fim de cada mês?
+ACERTOU [diretor] Qual o percentual do saldo acima de 60 dias hoje?
+ACERTOU [diretor] Qual era o percentual do saldo acima de 60 dias em 24/11/2026?
+ACERTOU [diretor] Quanto recuperamos por mês em 2026?
+ACERTOU [diretor] Qual a taxa de recuperação por safra de entrada?
+ACERTOU [diretor] Qual o saldo em cobrança externa por produto hoje?
+ACERTOU [diretor] Qual foi o saldo médio diário em dezembro de 2026?
+ACERTOU [diretor] Qual foi a taxa de eventos barrados em cada semana de dezembro de 2026?
+ACERTOU [diretor] Quantas pendências e quantos clientes estão em aberto hoje?
+ACERTOU [diretor] Qual a variação do saldo em aberto entre o fim de outubro e o fim de novembro de 2026?
+ACERTOU [diretor] Quantos eventos com forma de pagamento não cadastrada entraram em dezembro de 2026?
+ACERTOU [diretor] Qual o saldo em aberto hoje?
+RESULTADO: 23/24 respostas iguais ao esperado

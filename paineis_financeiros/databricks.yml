@@ -1,0 +1,32 @@
+# Painéis AI/BI de KPIs financeiros do Pós-venda (diretoria e analista), sobre as metric views de pos_venda.ontologia.
+# Gerar o JSON: python3 gerar_paineis.py   |   Publicar: databricks bundle deploy -t dev --profile dbx-workshop
+bundle:
+  name: pos_venda_paineis_financeiros
+
+variables:
+  warehouse_id:
+    description: "SQL warehouse dos painéis (Serverless Starter Warehouse)."
+    default: 5f010b8396e591fb
+
+resources:
+  dashboards:
+    kpis_diretoria:
+      display_name: "pos_venda · KPIs financeiros · Diretoria"
+      file_path: ./src/diretoria.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      dataset_catalog: pos_venda
+      dataset_schema: ontologia
+      embed_credentials: true
+    kpis_analista:
+      display_name: "pos_venda · KPIs financeiros · Analista"
+      file_path: ./src/analista.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      dataset_catalog: pos_venda
+      dataset_schema: ontologia
+      embed_credentials: true
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-15c48c79-7aa2.cloud.databricks.com

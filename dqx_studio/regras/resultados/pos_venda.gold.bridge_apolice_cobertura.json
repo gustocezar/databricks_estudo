@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "2a596be4bd72452d",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "2a596be4bd72452d",
+    "source_table_fqn": "pos_venda.gold.bridge_apolice_cobertura",
+    "total_rows": 10000,
+    "valid_rows": 10000,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}

@@ -1,0 +1,370 @@
+/// Carteira em aberto por dia (foto diária). Saldo SEMIADITIVO: as medidas pegam o último dia do contexto.
+table 'Carteira diária'
+	lineageTag: ef24ce57-38fa-574d-acc5-dd10fd719094
+
+	/// Último dia com foto no contexto (sem filtro de data: a foto mais recente).
+	measure 'Data da foto' = CALCULATE ( MAX ( 'Carteira diária'[Data] ), ALL ( 'Carteira diária' ), VALUES ( 'Calendário'[Data] ) )
+		formatString: dd/mm/yyyy
+		displayFolder: Carteira
+		lineageTag: 699673b8-e0f8-5589-9074-f117ace6177f
+
+	/// Saldo em aberto na foto do contexto (último dia). Nunca soma dias diferentes.
+	measure 'Saldo em aberto' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[saldo_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira
+		lineageTag: ef18e468-5ec3-5557-a822-cc1e30f9b308
+
+	/// Pendências em aberto na foto do contexto.
+	measure 'Pendências em aberto' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[pendencias_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d )
+			    )
+		formatString: #,0
+		displayFolder: Carteira
+		lineageTag: fbd1ef02-9c37-57de-984a-6d78dd118cb1
+
+	/// Valor original das parcelas, sem encargos.
+	measure 'Valor das parcelas em aberto' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[valor_parcelas_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira
+		lineageTag: 5fd21d2a-5e68-57bd-a9e5-c301c8969307
+
+	/// Multa e juros acumulados na foto do contexto.
+	measure 'Multa e juros em aberto' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[multa_juros_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira
+		lineageTag: cff34e38-5a20-5acd-9758-35219f16dbce
+
+	/// Saldo com mais de 60 dias de atraso.
+	measure 'Saldo acima de 60 dias' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[saldo_acima_60_dias] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira
+		lineageTag: 51cbbbc6-4562-591b-a2b8-45136f13d4ee
+
+	/// Saldo com status COBRANCA_EXTERNA.
+	measure 'Saldo em cobrança externa' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[saldo_cobranca_externa] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira
+		lineageTag: 15bc7371-cdfa-523e-b787-8b9d3be9b8a4
+
+	/// Indicador de risco: saldo acima de 60 dias / saldo em aberto.
+	measure '% do saldo acima de 60 dias' = DIVIDE ( [Saldo acima de 60 dias], [Saldo em aberto] )
+		formatString: 0.0%
+		displayFolder: Carteira
+		lineageTag: 6acb9761-ae4f-5192-a946-e8a12d46a742
+
+	/// Saldo em aberto / pendências em aberto.
+	measure 'Ticket médio da pendência' = DIVIDE ( [Saldo em aberto], [Pendências em aberto] )
+		formatString: R$ #,0.00
+		displayFolder: Carteira
+		lineageTag: b3fe6e3d-913b-50aa-982c-9e637b48ec54
+
+	/// Saldo 30 dias antes da foto.
+	measure 'Saldo 30 dias antes' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[saldo_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d - 30 )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira · comparação
+		lineageTag: bd89e2c7-5525-5ce5-8981-5a69e535c5ed
+
+	measure 'Pendências 30 dias antes' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[pendencias_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d - 30 )
+			    )
+		formatString: #,0
+		displayFolder: Carteira · comparação
+		lineageTag: d01e9177-9b7b-5206-a0d8-fd2f6798a046
+
+	measure 'Multa e juros 30 dias antes' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[multa_juros_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d - 30 )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira · comparação
+		lineageTag: 1f632289-186b-568c-93fb-390c1f1f0ece
+
+	measure 'Saldo acima de 60 dias 30 dias antes' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[saldo_acima_60_dias] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _d - 30 )
+			    )
+		formatString: R$ #,0.00
+		isHidden
+		displayFolder: Carteira · comparação
+		lineageTag: 9febd9b6-6445-54bc-a85b-6c5ceb2e8e29
+
+	measure '% acima de 60 dias 30 dias antes' = DIVIDE ( [Saldo acima de 60 dias 30 dias antes], [Saldo 30 dias antes] )
+		formatString: 0.0%
+		displayFolder: Carteira · comparação
+		lineageTag: c32e4179-5451-5491-81be-81572c2101cb
+
+	measure 'Ticket médio 30 dias antes' = DIVIDE ( [Saldo 30 dias antes], [Pendências 30 dias antes] )
+		formatString: R$ #,0.00
+		displayFolder: Carteira · comparação
+		lineageTag: 82a52efe-3852-5fdb-96a3-19a357d3a8b1
+
+	/// Saldo no último dia do mês anterior ao da foto.
+	measure 'Fechamento do mês anterior' =
+			VAR _d = [Data da foto]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[saldo_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = EOMONTH ( _d, -1 ) )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira · mês
+		lineageTag: ff4789ec-61b4-558c-8961-0a252971dd5a
+
+	/// Saldo no primeiro dia com foto do mês da foto (maio/2026 começa em 19/05).
+	measure 'Saldo no início do mês' =
+			VAR _d = [Data da foto]
+			VAR _ini =
+			    CALCULATE (
+			        MIN ( 'Carteira diária'[Data] ),
+			        ALL ( 'Carteira diária' ),
+			        DATESBETWEEN ( 'Calendário'[Data], EOMONTH ( _d, -1 ) + 1, _d )
+			    )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _d ),
+			        CALCULATE ( SUM ( 'Carteira diária'[saldo_em_aberto] ), REMOVEFILTERS ( 'Calendário' ), 'Calendário'[Data] = _ini )
+			    )
+		formatString: R$ #,0.00
+		displayFolder: Carteira · mês
+		lineageTag: 1acf6d8a-8e55-5d42-8828-2b14eeb0052c
+
+	/// Saldo da foto sobre o fechamento do mês anterior (MoM).
+	measure 'Variação mensal do saldo' = DIVIDE ( [Saldo em aberto] - [Fechamento do mês anterior], [Fechamento do mês anterior] )
+		formatString: 0.0%
+		displayFolder: Carteira · mês
+		lineageTag: d97de3cd-e019-5418-beb9-d075cb7e1d3f
+
+	/// Saldo da foto menos o saldo do início do mês.
+	measure 'Crescimento da carteira no mês' = IF ( NOT ISBLANK ( [Saldo em aberto] ), [Saldo em aberto] - [Saldo no início do mês] )
+		formatString: R$ #,0.00
+		displayFolder: Carteira · mês
+		lineageTag: df41a0cf-fdfa-5233-bbfd-d56cf37d8a0a
+
+	/// Subtítulo do cartão.
+	measure 'Rótulo saldo' =
+			VAR _a = [Saldo em aberto]
+			VAR _b = [Saldo 30 dias antes]
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), FORMAT ( DIVIDE ( _a - _b, _b ), "+0.0%;-0.0%" ) & " vs. 30 dias antes" )
+		isHidden
+		displayFolder: Rótulos
+		lineageTag: a229808f-0a24-57f2-8af4-821e399b14e2
+
+	measure 'Rótulo pendências' =
+			VAR _a = [Pendências em aberto]
+			VAR _b = [Pendências 30 dias antes]
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), FORMAT ( DIVIDE ( _a - _b, _b ), "+0.0%;-0.0%" ) & " vs. 30 dias antes" )
+		isHidden
+		displayFolder: Rótulos
+		lineageTag: 2645aab5-6b3d-5f4d-be5f-7df8f38860c0
+
+	measure 'Rótulo ticket' =
+			VAR _a = [Ticket médio da pendência]
+			VAR _b = [Ticket médio 30 dias antes]
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), FORMAT ( DIVIDE ( _a - _b, _b ), "+0.0%;-0.0%" ) & " vs. 30 dias antes" )
+		isHidden
+		displayFolder: Rótulos
+		lineageTag: 54168239-ba61-5263-8c58-6c465c35b8fc
+
+	measure 'Rótulo multa e juros' =
+			VAR _a = [Multa e juros em aberto]
+			VAR _b = [Multa e juros 30 dias antes]
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), FORMAT ( DIVIDE ( _a - _b, _b ), "+0.0%;-0.0%" ) & " vs. 30 dias antes" )
+		isHidden
+		displayFolder: Rótulos
+		lineageTag: f4bc4e44-9c43-5836-ba45-ac3b8bf6419a
+
+	measure 'Rótulo acima de 60 dias' =
+			VAR _a = [% do saldo acima de 60 dias]
+			VAR _b = [% acima de 60 dias 30 dias antes]
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), FORMAT ( ( _a - _b ) * 100, "+0.0;-0.0" ) & " p.p. vs. 30 dias antes" )
+		isHidden
+		displayFolder: Rótulos
+		lineageTag: 6a4bbd42-cd94-5b69-a352-7a88f864f542
+
+	column Data
+		dataType: dateTime
+		isHidden
+		lineageTag: 98d20398-429e-5fba-a2bb-5482acda1edf
+		summarizeBy: none
+		sourceColumn: data_referencia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		isHidden
+		lineageTag: 3e27d16d-57b5-5995-bf68-13d024856e30
+		summarizeBy: none
+		sourceColumn: produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Canal de venda'
+		dataType: string
+		isHidden
+		lineageTag: e69201c9-4358-543e-add4-7c69718591d5
+		summarizeBy: none
+		sourceColumn: canal_venda
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Forma de pagamento'
+		dataType: string
+		isHidden
+		lineageTag: 025c516f-0708-5d05-ae4d-f30ac38af2eb
+		summarizeBy: none
+		sourceColumn: forma_pagamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Faixa de atraso'
+		dataType: string
+		lineageTag: 845827b2-d6b2-59c2-810b-d2dd707ce330
+		summarizeBy: none
+		sourceColumn: faixa_atraso
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Status de cobrança'
+		dataType: string
+		lineageTag: 0647a4e6-90cf-50c7-9536-15f39ec47c84
+		summarizeBy: none
+		sourceColumn: status_cobranca
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo do motivo'
+		dataType: string
+		lineageTag: 34d3988c-b162-5eff-a407-559ef0816d87
+		summarizeBy: none
+		sourceColumn: grupo_motivo
+
+		annotation SummarizationSetBy = Automatic
+
+	column saldo_em_aberto
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: 54f922e5-3302-5168-ac30-1041e7a39a86
+		summarizeBy: none
+		sourceColumn: saldo_em_aberto
+
+		annotation SummarizationSetBy = Automatic
+
+	column pendencias_em_aberto
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 179b6c25-6025-5f5d-8d94-f627c6dd44d2
+		summarizeBy: none
+		sourceColumn: pendencias_em_aberto
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor_parcelas_em_aberto
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: cd8675f1-b168-5100-bf27-fe2109b9bc06
+		summarizeBy: none
+		sourceColumn: valor_parcelas_em_aberto
+
+		annotation SummarizationSetBy = Automatic
+
+	column multa_juros_em_aberto
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: 3d761269-3378-5668-83cb-b1d17ce06f61
+		summarizeBy: none
+		sourceColumn: multa_juros_em_aberto
+
+		annotation SummarizationSetBy = Automatic
+
+	column saldo_acima_60_dias
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: 4bb2e847-b503-5c45-9ff5-f649671c3404
+		summarizeBy: none
+		sourceColumn: saldo_acima_60_dias
+
+		annotation SummarizationSetBy = Automatic
+
+	column saldo_cobranca_externa
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: 12127609-dc76-5899-b263-5e91563cd938
+		summarizeBy: none
+		sourceColumn: saldo_cobranca_externa
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Carteira diária' = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "carteira_diaria"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

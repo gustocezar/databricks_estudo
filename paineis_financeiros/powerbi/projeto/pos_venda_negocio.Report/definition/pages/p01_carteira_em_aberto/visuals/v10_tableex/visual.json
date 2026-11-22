@@ -1,0 +1,136 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
+  "name": "v10_tableex",
+  "position": {
+    "x": 12.0,
+    "y": 692,
+    "width": 1248.0,
+    "height": 272,
+    "z": 9000,
+    "tabOrder": 9000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Produto"
+                    }
+                  },
+                  "Property": "Produto"
+                }
+              },
+              "queryRef": "Produto.Produto",
+              "nativeQueryRef": "Produto",
+              "displayName": "Produto"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Canal de venda"
+                    }
+                  },
+                  "Property": "Canal de venda"
+                }
+              },
+              "queryRef": "Canal de venda.Canal de venda",
+              "nativeQueryRef": "Canal de venda",
+              "displayName": "Canal"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "Saldo em aberto"
+                }
+              },
+              "queryRef": "Carteira diária.Saldo em aberto",
+              "nativeQueryRef": "Saldo em aberto",
+              "displayName": "Saldo em aberto"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "Pendências em aberto"
+                }
+              },
+              "queryRef": "Carteira diária.Pendências em aberto",
+              "nativeQueryRef": "Pendências em aberto",
+              "displayName": "Pendências"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "% do saldo acima de 60 dias"
+                }
+              },
+              "queryRef": "Carteira diária.% do saldo acima de 60 dias",
+              "nativeQueryRef": "% do saldo acima de 60 dias",
+              "displayName": "% acima de 60 dias"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Carteira diária"
+                    }
+                  },
+                  "Property": "Ticket médio da pendência"
+                }
+              },
+              "queryRef": "Carteira diária.Ticket médio da pendência",
+              "nativeQueryRef": "Ticket médio da pendência",
+              "displayName": "Ticket médio"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Carteira por produto e canal'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "2ecf4502f7ef4d60",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "2ecf4502f7ef4d60",
+    "source_table_fqn": "pos_venda.gold.dim_ponto_venda",
+    "total_rows": 1157,
+    "valid_rows": 1157,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}

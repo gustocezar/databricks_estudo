@@ -1,0 +1,40 @@
+== governed tags do domínio
+   Pós-venda existente
+   Pós-venda/Cobrança e inadimplência existente
+   Pós-venda/Clientes e apólices existente
+   Pós-venda/Qualidade de dados existente
+== domínio e subdomínios
+   Pós-venda atualizado domains/afaf03c9-e7fb-491e-b5c3-6de556f026ef
+   Pós-venda/Cobrança e inadimplência atualizado domains/62b379b6-8d28-43c3-9c33-a937b620d8cd
+   Pós-venda/Clientes e apólices atualizado domains/7d346f09-ec52-4351-a6a8-410842c73da9
+   Pós-venda/Qualidade de dados atualizado domains/97350464-a64b-4d22-bf71-12ddc5c52b59
+== tags (domínio nos schemas, camada, subdomínio, tipo, entidade, certificação, classificação LGPD)
+   columns  criada      5
+   columns  existente   345
+   schemas  atualizada  6
+   schemas  criada      2
+   schemas  existente   6
+   tables   atualizada  106
+   tables   criada      84
+   tables   existente   34
+== Pages
+   atualizada  Pendência de pagamento
+   atualizada  Status de cobrança
+   atualizada  Dias de atraso e faixa de atraso (aging)
+   atualizada  Valor total pendente
+   atualizada  Saldo em aberto da carteira
+   atualizada  Baixa (pagamento da pendência)
+   atualizada  Valor recuperado e taxa de recuperação
+   atualizada  Motivo da pendência
+   atualizada  Foto diária da carteira (snapshot)
+   atualizada  Tentativas e canal de contato da cobrança
+   atualizada  Cliente (segurado pagador)
+   atualizada  Apólice de seguro de vida
+   atualizada  Produto e coberturas de vida
+   atualizada  Canal de venda, corretor e ponto de venda
+   atualizada  Forma de pagamento e periodicidade
+   atualizada  Quarentena (dado não apto)
+   atualizada  Regra de erro e regra de aviso
+   atualizada  Janela de avaliação do DQX Studio
+== Wikis
+   publicadas: 51/51

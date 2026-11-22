@@ -1,0 +1,158 @@
+/// Qualidade diária dos eventos do sistema de origem.
+table Qualidade
+	lineageTag: 10aca29d-9e85-5317-8749-20eb85b7a937
+
+	/// Eventos recebidos do sistema de origem.
+	measure 'Eventos recebidos' = SUM ( 'Qualidade'[eventos_recebidos] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: 66b90a18-6b6a-53c8-92bd-a6460d3c0771
+
+	/// Passaram na barreira e entraram nos números.
+	measure 'Eventos aptos' = SUM ( 'Qualidade'[eventos_aptos] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: 9f939c52-793a-5bdb-a22d-a3e300b8b790
+
+	/// Foram para a quarentena e não entram nos números.
+	measure 'Eventos barrados' = SUM ( 'Qualidade'[eventos_barrados] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: b0db1ef2-f13c-53b9-bf55-f386e164e391
+
+	measure 'Eventos duplicados' = SUM ( 'Qualidade'[eventos_duplicados] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: 4cbe3933-053b-51d5-ae91-2bc9de9bb68a
+
+	/// Aviso.
+	measure 'E-mail ausente' = SUM ( 'Qualidade'[email_ausente] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: 46fb2a80-55d1-5a21-be20-c28446e4b709
+
+	/// Aviso (contagem; não contém CPF).
+	measure 'CPF inválido' = SUM ( 'Qualidade'[cpf_invalido] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: 68a158b2-c508-5d50-be45-5b922b14f355
+
+	/// Aviso.
+	measure 'CEP malformado' = SUM ( 'Qualidade'[cep_malformado] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: a7a44eae-1e60-5347-aee5-f7897c2e2713
+
+	/// Eventos aptos com forma fora do catálogo.
+	measure 'Forma de pagamento não cadastrada' = SUM ( 'Qualidade'[forma_pagamento_nao_cadastrada] )
+		formatString: #,0
+		displayFolder: Qualidade
+		lineageTag: 7a82b28c-6776-56b1-a17c-85df410e4f49
+
+	/// Barrados / recebidos.
+	measure 'Taxa de barrados' = DIVIDE ( [Eventos barrados], [Eventos recebidos] )
+		formatString: 0.0%
+		displayFolder: Qualidade
+		lineageTag: 0c3961b7-60df-5169-a954-ffe0e00e1ec5
+
+	column Dia
+		dataType: dateTime
+		isHidden
+		lineageTag: 13385f18-eacd-535c-9d75-4ad68c3657af
+		summarizeBy: none
+		sourceColumn: dia
+
+		annotation SummarizationSetBy = Automatic
+
+	column eventos_recebidos
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 9334efad-739f-5fef-a7a3-ba146f4d5419
+		summarizeBy: none
+		sourceColumn: eventos_recebidos
+
+		annotation SummarizationSetBy = Automatic
+
+	column eventos_aptos
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 7c2f33a4-dcab-5e52-a79d-b9fb0be4514c
+		summarizeBy: none
+		sourceColumn: eventos_aptos
+
+		annotation SummarizationSetBy = Automatic
+
+	column eventos_barrados
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: c6e6cbe7-69a4-51f7-ba1d-e8dc30684468
+		summarizeBy: none
+		sourceColumn: eventos_barrados
+
+		annotation SummarizationSetBy = Automatic
+
+	column eventos_duplicados
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: f7cdc31e-2cb8-5507-8ac0-149b1c5f6ea2
+		summarizeBy: none
+		sourceColumn: eventos_duplicados
+
+		annotation SummarizationSetBy = Automatic
+
+	column email_ausente
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: bfb8bd37-a751-5853-9f79-1dddae943e70
+		summarizeBy: none
+		sourceColumn: email_ausente
+
+		annotation SummarizationSetBy = Automatic
+
+	column cpf_invalido
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: e51a452e-6ebc-5c1c-8082-58a30b72f582
+		summarizeBy: none
+		sourceColumn: cpf_invalido
+
+		annotation SummarizationSetBy = Automatic
+
+	column cep_malformado
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 66146bbf-3c31-5a5a-a657-34fecd854978
+		summarizeBy: none
+		sourceColumn: cep_malformado
+
+		annotation SummarizationSetBy = Automatic
+
+	column forma_pagamento_nao_cadastrada
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: e0d64cef-906c-5419-97b5-4d59c5720f5b
+		summarizeBy: none
+		sourceColumn: forma_pagamento_nao_cadastrada
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Qualidade = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "qualidade_diaria"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

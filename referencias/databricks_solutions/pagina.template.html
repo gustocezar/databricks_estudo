@@ -1,0 +1,340 @@
+<title>Databricks Solutions no Pós-venda</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+/* Layout: coluna única de leitura; resumo em matriz, sequência recomendada, depois catálogo filtrável. */
+:root {
+  --bg: #f5f7f7; --surface: #ffffff; --ink: #142023; --muted: #56656a; --line: #dbe2e3;
+  --accent: #0d6670; --accent-soft: #e2f0f1;
+  --alta: #0c7448; --alta-bg: #dff2e8;
+  --media: #8f5c00; --media-bg: #faefd6;
+  --baixa: #46565e; --baixa-bg: #e9eef0;
+  --nenhuma: #7d898e; --nenhuma-bg: #f0f3f4;
+  --nao: #a03428; --nao-bg: #f8e4e1;
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-head: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1415; --surface: #151d1f; --ink: #e3ebec; --muted: #98a8ad; --line: #283437;
+    --accent: #5ec3cc; --accent-soft: #15292c;
+    --alta: #63d39f; --alta-bg: #12301f;
+    --media: #efb54d; --media-bg: #35290f;
+    --baixa: #a9b8be; --baixa-bg: #1f292c;
+    --nenhuma: #788589; --nenhuma-bg: #182023;
+    --nao: #f08b7f; --nao-bg: #3a1c18;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1415; --surface: #151d1f; --ink: #e3ebec; --muted: #98a8ad; --line: #283437;
+  --accent: #5ec3cc; --accent-soft: #15292c;
+  --alta: #63d39f; --alta-bg: #12301f;
+  --media: #efb54d; --media-bg: #35290f;
+  --baixa: #a9b8be; --baixa-bg: #1f292c;
+  --nenhuma: #788589; --nenhuma-bg: #182023;
+  --nao: #f08b7f; --nao-bg: #3a1c18;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+h1, h2 { font-family: var(--font-head); font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(28px, 4.2vw, 40px); line-height: 1.1; }
+h2 { font-size: 22px; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+header { display: flex; flex-direction: column; gap: 12px; }
+.lede { max-width: 68ch; color: var(--muted); font-size: 16px; }
+.lede strong { color: var(--ink); font-weight: 600; }
+section { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.sec-note { color: var(--muted); max-width: 70ch; }
+
+/* matriz */
+.matrix-box { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+table.matrix { border-collapse: collapse; width: 100%; min-width: 560px; font-variant-numeric: tabular-nums; }
+.matrix th, .matrix td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--line); }
+.matrix th:first-child, .matrix td:first-child { text-align: left; }
+.matrix thead th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 500; }
+.matrix tbody tr:last-child td { border-bottom: 0; }
+.matrix tfoot td { font-weight: 600; border-top: 1px solid var(--line); border-bottom: 0; }
+.cell { font: inherit; font-variant-numeric: tabular-nums; border: 0; border-radius: 4px; min-width: 40px; padding: 3px 8px; cursor: pointer; color: var(--ink); background: transparent; }
+.cell[disabled] { cursor: default; color: var(--line); }
+.cell.A { background: color-mix(in srgb, var(--alta-bg) calc(var(--w) * 100%), transparent); color: var(--alta); font-weight: 600; }
+.cell.M { background: color-mix(in srgb, var(--media-bg) calc(var(--w) * 100%), transparent); color: var(--media); font-weight: 600; }
+.cell.B { background: color-mix(in srgb, var(--baixa-bg) calc(var(--w) * 100%), transparent); color: var(--baixa); }
+.cell.N { color: var(--nenhuma); }
+.cell:not([disabled]):hover { outline: 1px solid var(--accent); }
+
+/* sequência recomendada */
+ol.passos { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: passo; }
+ol.passos li { counter-increment: passo; display: grid; grid-template-columns: 34px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+ol.passos li::before { content: counter(passo); font-family: var(--font-mono); font-weight: 500; color: var(--alta); background: var(--alta-bg); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; }
+.passo-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.passo-body .titulo { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.passo-body .acao { font-weight: 600; }
+.passo-body .por { color: var(--muted); }
+
+/* barra de filtros */
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.toolbar input[type="search"] { flex: 1 1 220px; min-width: 0; font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 13px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; }
+.chip[aria-pressed="true"].A { background: var(--alta-bg); color: var(--alta); border-color: transparent; font-weight: 600; }
+.chip[aria-pressed="true"].M { background: var(--media-bg); color: var(--media); border-color: transparent; font-weight: 600; }
+.chip[aria-pressed="true"].B { background: var(--baixa-bg); color: var(--baixa); border-color: transparent; font-weight: 600; }
+.chip[aria-pressed="true"].N { background: var(--nenhuma-bg); color: var(--ink); border-color: transparent; font-weight: 600; }
+.toolbar select { font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); max-width: 100%; }
+.toolbar label { display: flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.linkbtn { font: inherit; font-size: 13px; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 4px; text-decoration: underline; }
+.contagem { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* cartões */
+.lista { display: flex; flex-direction: column; gap: 10px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; border-left: 4px solid var(--line); }
+.card.A { border-left-color: var(--alta); }
+.card.M { border-left-color: var(--media); }
+.card-top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.nome { font-family: var(--font-mono); font-weight: 500; font-size: 15px; overflow-wrap: anywhere; }
+.pill { font-size: 12px; padding: 2px 8px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+.pill.A { background: var(--alta-bg); color: var(--alta); }
+.pill.M { background: var(--media-bg); color: var(--media); }
+.pill.B { background: var(--baixa-bg); color: var(--baixa); }
+.pill.N { background: var(--nenhuma-bg); color: var(--nenhuma); }
+.fe { font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.fe.S { color: var(--alta); }
+.fe.C { color: var(--media); }
+.fe.N { color: var(--nao); }
+.situacao { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent); color: var(--surface); font-weight: 600; white-space: nowrap; }
+.situacao.adiado { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.nota-sit { font-size: 13px; color: var(--muted); max-width: 78ch; }
+.meta { font-size: 12.5px; color: var(--muted); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.campo { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
+.campo .rot { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding-top: 2px; }
+.campo .txt { min-width: 0; max-width: 78ch; }
+.campo.beneficio .txt { color: var(--ink); }
+.card.A .campo.beneficio .rot, .card.M .campo.beneficio .rot { color: var(--accent); font-weight: 600; }
+details { border-top: 1px dashed var(--line); padding-top: 8px; }
+summary { cursor: pointer; font-size: 13px; color: var(--accent); width: fit-content; }
+details[open] summary { margin-bottom: 8px; }
+details .campo + .campo { margin-top: 8px; }
+.nota-fe { font-size: 13px; color: var(--muted); }
+.vazio { padding: 24px; text-align: center; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; }
+footer { color: var(--muted); font-size: 13px; max-width: 75ch; display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 640px) {
+  .campo { grid-template-columns: 1fr; gap: 2px; }
+  .toolbar { position: static; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">github.com/databricks-solutions · 147 repositórios lidos em 20/11/2026 e revistos em 22/11/2026</div>
+    <h1>Databricks Solutions no Pós-venda</h1>
+    <p class="lede">Para cada repositório público da organização: para que serve, como se usa, casos de uso e o que traz para o <strong>pos_venda</strong> (pendências de pagamento de seguro de vida no Free Edition, com medallion, DQX Studio, metric views, painéis AI/BI e dois espaços Genie). <strong>5</strong> têm relevância alta e <strong>16</strong> média; a maioria é de outros setores ou exige recursos fora do Free Edition.</p>
+  </header>
+
+  <section aria-labelledby="t-matriz">
+    <h2 id="t-matriz">Onde está o valor</h2>
+    <p class="sec-note">Repositórios por categoria e relevância para o projeto. Clique num número para filtrar o catálogo.</p>
+    <div class="matrix-box"><table class="matrix" id="matriz"></table></div>
+  </section>
+
+  <section aria-labelledby="t-passos">
+    <h2 id="t-passos">Por onde começar</h2>
+    <p class="sec-note">Os cinco de relevância alta, na ordem em que eu aplicaria: primeiro o que não exige implantar nada, depois as avaliações, por fim a otimização e a referência de arquitetura.</p>
+    <ol class="passos" id="passos"></ol>
+  </section>
+
+  <section aria-labelledby="t-cat">
+    <h2 id="t-cat">Todos os repositórios</h2>
+    <div class="toolbar" role="search">
+      <input type="search" id="busca" placeholder="Buscar por nome, finalidade ou benefício" aria-label="Buscar repositórios">
+      <div class="chips" id="chips" aria-label="Relevância"></div>
+      <label for="fcat">Categoria <select id="fcat"></select></label>
+      <label for="ffe">Free Edition <select id="ffe">
+        <option value="">Todos</option><option value="S">Sim</option><option value="C">A confirmar</option><option value="N">Não</option>
+      </select></label>
+      <label for="ford">Ordenar <select id="ford">
+        <option value="rel">Relevância</option><option value="stars">Estrelas</option><option value="push">Atualização</option><option value="nome">Nome</option>
+      </select></label>
+      <button type="button" class="linkbtn" id="limpar">Limpar filtros</button>
+      <span class="contagem" id="contagem" aria-live="polite"></span>
+    </div>
+    <div class="lista" id="lista"></div>
+  </section>
+
+  <footer>
+    <p>Finalidade, uso e casos de uso resumem o README de cada repositório. A relevância e o benefício são minha avaliação para o pos_venda. "Free Edition: Sim" aparece só quando o recurso já funciona neste workspace ou o README afirma isso; "A confirmar" depende de cota, limite de apps ou recursos em prévia. Nenhum repositório foi instalado.</p>
+    <p>Os repositórios são aceleradores da equipe de campo, sem suporte oficial da Databricks.</p>
+  </footer>
+</div>
+
+<script type="application/json" id="dados">/*DADOS*/</script>
+<script>
+(function () {
+  var DADOS = JSON.parse(document.getElementById("dados").textContent);
+  var ROT = { A: "Alta", M: "Média", B: "Baixa", N: "Nenhuma" };
+  var FE = { S: "Free Edition: sim", C: "Free Edition: a confirmar", N: "Free Edition: não" };
+  var ORDEM = { A: 0, M: 1, B: 2, N: 3 };
+  var PASSOS = [
+    { n: "uc-semantics-patterns", acao: "Aplicar os padrões de saldo semiaditivo e de comparação de períodos nas metric views", por: "Não exige implantar nada: é copiar YAML. Corrige o ponto mais delicado da gold (saldo em aberto) e abre MoM, YoY e ranking para a Genie e os painéis." },
+    { n: "genie-best-practices-agent", acao: "Rodar a revisão de boas práticas nos espaços Analista e Diretoria", por: "Roda localmente e devolve uma lista objetiva do que falta em instruções, exemplos e descrições." },
+    { n: "genie-ontology-readiness", acao: "Medir a camada de ontologia em 7 pilares", por: "Dá uma nota para o domínio, as Pages, os wikis, as tags e as metric views que montamos e mostra as lacunas, como relações entre tabelas." },
+    { n: "databricks-genie-workbench", acao: "Otimizar os espaços Genie com benchmarks", por: "Automatiza o ciclo de perguntas de benchmark que fizemos à mão. É uma App com Lakebase: confira o limite de apps do Free Edition antes." },
+    { n: "regulatory_data_governance", acao: "Usar o kit RC18 como referência para uma app de críticas e aprovação", por: "Mesma pilha do projeto e em português. Vale como modelo de arquitetura; as regras são do BACEN, e seguradoras seguem a SUSEP." }
+  ];
+
+  var porNome = {}; DADOS.forEach(function (d) { porNome[d.n] = d; });
+  var estado = { busca: "", rel: { A: true, M: true, B: true, N: true }, cat: "", fe: "", ord: "rel" };
+
+  function el(tag, attrs, filhos) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === "text") e.textContent = attrs[k];
+      else if (k === "class") e.className = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    });
+    (filhos || []).forEach(function (f) { if (f) e.appendChild(f); });
+    return e;
+  }
+
+  // matriz
+  var cats = []; DADOS.forEach(function (d) { if (cats.indexOf(d.cat) < 0) cats.push(d.cat); });
+  var cont = {}; var maxc = 1;
+  DADOS.forEach(function (d) { var k = d.cat + "|" + d.r; cont[k] = (cont[k] || 0) + 1; });
+  cats.sort(function (a, b) {
+    function peso(c) { return (cont[c + "|A"] || 0) * 100 + (cont[c + "|M"] || 0) * 10 + (cont[c + "|B"] || 0); }
+    return peso(b) - peso(a);
+  });
+  Object.keys(cont).forEach(function (k) { if (k.slice(-1) !== "N") maxc = Math.max(maxc, cont[k]); });
+  var tabela = document.getElementById("matriz");
+  var thead = el("thead", null, [el("tr", null, [el("th", { text: "Categoria", scope: "col" })].concat(
+    ["A", "M", "B", "N"].map(function (r) { return el("th", { text: ROT[r], scope: "col" }); })).concat([el("th", { text: "Total", scope: "col" })]))]);
+  var tbody = el("tbody");
+  var totais = { A: 0, M: 0, B: 0, N: 0 };
+  cats.forEach(function (c) {
+    var tr = el("tr", null, [el("td", { text: c })]); var tot = 0;
+    ["A", "M", "B", "N"].forEach(function (r) {
+      var v = cont[c + "|" + r] || 0; tot += v; totais[r] += v;
+      var b = el("button", { type: "button", class: "cell " + r, text: v ? String(v) : "·", "aria-label": c + ", relevância " + ROT[r] + ": " + v });
+      b.style.setProperty("--w", v ? (0.35 + 0.65 * v / maxc).toFixed(2) : "0");
+      if (!v) b.disabled = true;
+      b.addEventListener("click", function () { filtrarPor(c, r); });
+      tr.appendChild(el("td", null, [b]));
+    });
+    tr.appendChild(el("td", { text: String(tot) }));
+    tbody.appendChild(tr);
+  });
+  var tfoot = el("tfoot", null, [el("tr", null, [el("td", { text: "Total" })].concat(
+    ["A", "M", "B", "N"].map(function (r) { return el("td", { text: String(totais[r]) }); })).concat([el("td", { text: String(DADOS.length) })]))]);
+  tabela.appendChild(thead); tabela.appendChild(tbody); tabela.appendChild(tfoot);
+
+  // passos
+  var ol = document.getElementById("passos");
+  PASSOS.forEach(function (p) {
+    var d = porNome[p.n];
+    ol.appendChild(el("li", null, [el("div", { class: "passo-body" }, [
+      el("div", { class: "titulo" }, [
+        el("a", { class: "nome", href: d.url, target: "_blank", rel: "noopener", text: d.n }),
+        el("span", { class: "fe " + d.fe, text: FE[d.fe] })
+      ]),
+      el("p", { class: "acao", text: p.acao }),
+      el("p", { class: "por", text: p.por })
+    ])]));
+  });
+
+  // filtros
+  var chips = document.getElementById("chips");
+  ["A", "M", "B", "N"].forEach(function (r) {
+    var b = el("button", { type: "button", class: "chip " + r, "aria-pressed": "true", text: ROT[r], id: "chip-" + r });
+    b.addEventListener("click", function () { estado.rel[r] = !estado.rel[r]; desenhar(); });
+    chips.appendChild(b);
+  });
+  var fcat = document.getElementById("fcat");
+  fcat.appendChild(el("option", { value: "", text: "Todas" }));
+  cats.slice().sort().forEach(function (c) { fcat.appendChild(el("option", { value: c, text: c })); });
+  document.getElementById("busca").addEventListener("input", function (e) { estado.busca = e.target.value; desenhar(); });
+  fcat.addEventListener("change", function (e) { estado.cat = e.target.value; desenhar(); });
+  document.getElementById("ffe").addEventListener("change", function (e) { estado.fe = e.target.value; desenhar(); });
+  document.getElementById("ford").addEventListener("change", function (e) { estado.ord = e.target.value; desenhar(); });
+  document.getElementById("limpar").addEventListener("click", function () {
+    estado = { busca: "", rel: { A: true, M: true, B: true, N: true }, cat: "", fe: "", ord: "rel" }; sincronizar(); desenhar();
+  });
+
+  function filtrarPor(cat, r) {
+    estado.cat = cat; estado.rel = { A: false, M: false, B: false, N: false }; estado.rel[r] = true;
+    sincronizar(); desenhar();
+    document.getElementById("t-cat").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function sincronizar() {
+    document.getElementById("busca").value = estado.busca;
+    fcat.value = estado.cat;
+    document.getElementById("ffe").value = estado.fe;
+    document.getElementById("ford").value = estado.ord;
+  }
+
+  function norm(s) { return (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+
+  function campo(rotulo, texto, extra) {
+    return el("div", { class: "campo" + (extra ? " " + extra : "") }, [el("div", { class: "rot", text: rotulo }), el("p", { class: "txt", text: texto })]);
+  }
+
+  function cartao(d) {
+    var meta = [d.cat, "★ " + d.stars, d.lang || null, "push " + d.push.split("-").reverse().join("/"), d.arq ? "arquivado" : null].filter(Boolean).join(" · ");
+    var det = el("details", null, [
+      el("summary", { text: "Como usar e casos de uso" }),
+      campo("Como usar", d.u),
+      campo("Casos de uso", d.k)
+    ]);
+    if (d.fn) det.appendChild(el("p", { class: "nota-fe", text: "Free Edition: " + d.fn }));
+    return el("article", { class: "card " + d.r }, [
+      el("div", { class: "card-top" }, [
+        el("a", { class: "nome", href: d.url, target: "_blank", rel: "noopener", text: d.n }),
+        el("span", { class: "pill " + d.r, text: ROT[d.r] }),
+        el("span", { class: "fe " + d.fe, text: FE[d.fe] })
+      ].concat(d.s ? [el("span", { class: "situacao " + d.s, text: d.s })] : [])),
+      el("div", { class: "meta", text: meta }),
+      campo("Finalidade", d.f),
+      campo("Para o pos_venda", d.b, "beneficio"),
+      d.s ? campo("Situação", d.s.charAt(0).toUpperCase() + d.s.slice(1) + ". " + d.sn) : null,
+      det
+    ]);
+  }
+
+  function desenhar() {
+    ["A", "M", "B", "N"].forEach(function (r) { document.getElementById("chip-" + r).setAttribute("aria-pressed", estado.rel[r] ? "true" : "false"); });
+    var q = norm(estado.busca);
+    var vis = DADOS.filter(function (d) {
+      if (!estado.rel[d.r]) return false;
+      if (estado.cat && d.cat !== estado.cat) return false;
+      if (estado.fe && d.fe !== estado.fe) return false;
+      if (q && norm([d.n, d.f, d.b, d.k, d.u, d.cat].join(" ")).indexOf(q) < 0) return false;
+      return true;
+    });
+    vis.sort(function (a, b) {
+      if (estado.ord === "stars") return b.stars - a.stars;
+      if (estado.ord === "push") return a.push < b.push ? 1 : a.push > b.push ? -1 : 0;
+      if (estado.ord === "nome") return a.n.localeCompare(b.n);
+      return ORDEM[a.r] - ORDEM[b.r] || b.stars - a.stars;
+    });
+    var lista = document.getElementById("lista");
+    lista.textContent = "";
+    if (!vis.length) lista.appendChild(el("div", { class: "vazio", text: "Nenhum repositório com esses filtros. Use Limpar filtros para ver todos." }));
+    vis.forEach(function (d) { lista.appendChild(cartao(d)); });
+    document.getElementById("contagem").textContent = vis.length + " de " + DADOS.length;
+  }
+  desenhar();
+})();
+</script>

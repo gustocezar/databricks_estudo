@@ -1,0 +1,18 @@
+# Painel AI/BI de qualidade do domínio pos_venda: métricas diárias do pipeline, evolução semanal no DQX Studio
+# e dados não aptos. As views de apoio ficam em pos_venda.dq (views_painel.sql, aplicadas por aplicar_e_testar.py).
+bundle:
+  name: pos_venda_painel_qualidade
+
+variables:
+  warehouse_id:
+    description: "SQL warehouse do painel (o Serverless Starter Warehouse do workspace)."
+    default: 5f010b8396e591fb
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-15c48c79-7aa2.cloud.databricks.com

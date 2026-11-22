@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "3b8dd9577074488c",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "3b8dd9577074488c",
+    "source_table_fqn": "pos_venda.silver.pendencia_hist",
+    "total_rows": 10000,
+    "valid_rows": 10000,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}

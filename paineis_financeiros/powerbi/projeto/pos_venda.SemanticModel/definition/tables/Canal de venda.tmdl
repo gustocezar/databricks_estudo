@@ -1,0 +1,24 @@
+/// Canais de venda.
+table 'Canal de venda'
+	lineageTag: 3cf35a3a-64cb-5a53-bf37-16fc33b42a51
+
+	column 'Canal de venda'
+		dataType: string
+		lineageTag: 194bcef3-d0cb-524e-a89b-bf8f2509f8f2
+		summarizeBy: none
+		sourceColumn: canal_venda
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Canal de venda' = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "canal_venda"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

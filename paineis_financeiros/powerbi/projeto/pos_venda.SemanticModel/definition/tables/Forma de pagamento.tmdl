@@ -1,0 +1,32 @@
+/// Formas de pagamento (NAO_CADASTRADA = vazamento).
+table 'Forma de pagamento'
+	lineageTag: 83e72962-b2c1-5825-a089-7d9db60b5daf
+
+	column 'Forma de pagamento'
+		dataType: string
+		lineageTag: e5bc8da7-965b-5094-b10b-a2057b70d4b5
+		summarizeBy: none
+		sourceColumn: forma_pagamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo da forma de pagamento'
+		dataType: string
+		lineageTag: 468f36c6-bfcb-57f0-bfb4-e210454e90a8
+		summarizeBy: none
+		sourceColumn: grupo_forma_pagamento
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Forma de pagamento' = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "forma_pagamento"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

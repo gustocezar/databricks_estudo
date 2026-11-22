@@ -1,0 +1,35 @@
+{
+  "pos_venda.dq.v_silver_eventos_aptos_janela": {
+    "run_id": "c280c1c6d836423e",
+    "estado": "SUCCESS",
+    "total": 59756,
+    "erro": 0,
+    "aviso": 5710,
+    "regras_violadas": [
+      {
+        "regra": "rg_preenchido",
+        "linhas": 2976,
+        "erro": 0,
+        "aviso": 2976
+      },
+      {
+        "regra": "email_preenchido",
+        "linhas": 1458,
+        "erro": 0,
+        "aviso": 1458
+      },
+      {
+        "regra": "cpf_valido",
+        "linhas": 937,
+        "erro": 0,
+        "aviso": 937
+      },
+      {
+        "regra": "evento_unico_por_dia_pendencia_tipo",
+        "linhas": 540,
+        "erro": 0,
+        "aviso": 540
+      }
+    ]
+  }
+}

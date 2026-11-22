@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "5318cd9dae344975",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "5318cd9dae344975",
+    "source_table_fqn": "pos_venda.gold.dim_data",
+    "total_rows": 5844,
+    "valid_rows": 5844,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}

@@ -1,0 +1,20 @@
+{
+ "schedule_name": "pos_venda_janela_diaria",
+ "config": {
+  "frequency": "daily",
+  "hour": 9,
+  "minute": 30,
+  "scope_mode": "schema",
+  "scope_schemas": [
+   "pos_venda.dq"
+  ],
+  "sample_size": 0,
+  "paused": true,
+  "description": "pos_venda: avalia as janelas dos ultimos 7 dias (bronze, silver aptos, fato) com todas as linhas, 06:30 BRT, depois da carga diaria das 05:00"
+ },
+ "version": 1,
+ "created_by": "gustocezar@gmail.com",
+ "created_at": "2026-11-19T05:51:43.735929+00:00",
+ "updated_by": "gustocezar@gmail.com",
+ "updated_at": "2026-11-19T05:51:43.735929+00:00"
+}

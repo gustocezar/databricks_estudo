@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "p01_viso_executiva",
+    "p02_carteira_em_aberto",
+    "p03_recuperao",
+    "p04_safras",
+    "p05_qualidade_dos_dados"
+  ],
+  "activePageName": "p01_viso_executiva"
+}

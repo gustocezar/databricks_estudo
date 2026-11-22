@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "1643cae3df134071",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "1643cae3df134071",
+    "source_table_fqn": "pos_venda.gold.dim_produto",
+    "total_rows": 8,
+    "valid_rows": 8,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}

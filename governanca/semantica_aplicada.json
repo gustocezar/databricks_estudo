@@ -1,0 +1,11 @@
+{
+  "tags": {
+    "schemas|existente": 9,
+    "schemas|atualizada": 18,
+    "tables|criada": 24,
+    "tables|atualizada": 385,
+    "tables|existente": 48,
+    "columns|existente": 553,
+    "columns|atualizada": 532
+  }
+}

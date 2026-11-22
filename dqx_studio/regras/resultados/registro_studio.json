@@ -1,0 +1,14 @@
+{
+ "pos_venda.dq.v_bronze_eventos_janela": "5fac367ddd504a09",
+ "pos_venda.dq.v_silver_eventos_aptos_janela": "00c9d64c53aa42a5",
+ "pos_venda.dq.v_fato_snapshot_janela": "f61d94bc96a2482f",
+ "pos_venda.silver.pendencia_atual": "b098676a91fe4d30",
+ "pos_venda.silver.pendencia_hist": "3eca30daf6614696",
+ "pos_venda.gold.dim_cliente": "4faa475b51b24414",
+ "pos_venda.gold.dim_apolice": "b95942a574d24bc9",
+ "pos_venda.gold.dim_corretor": "ba1d6f54cd0d476b",
+ "pos_venda.gold.dim_ponto_venda": "066e0f3b2ff04a47",
+ "pos_venda.gold.dim_produto": "50f0a86f9e714091",
+ "pos_venda.gold.dim_data": "356d2dd030b94a9e",
+ "pos_venda.gold.bridge_apolice_cobertura": "1bf919e9a3104b59"
+}

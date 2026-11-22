@@ -1,0 +1,132 @@
+[
+  {
+    "name": "pk_unica_ponto_venda_sk",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "ponto_venda_sk"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "pk_unica_ponto_venda_codigo",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "ponto_venda_codigo"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "ponto_venda_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "ponto_venda_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "ponto_venda_codigo_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "ponto_venda_codigo"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "ponto_venda_nome_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "ponto_venda_nome"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "tipo_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "ponto_venda_tipo",
+        "allowed": [
+          "'ESCRITORIO_CORRETOR'",
+          "'AGENCIA_BANCARIA'",
+          "'PLATAFORMA_DIGITAL'",
+          "'CENTRAL_TELEVENDAS'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "canal_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "canal_venda",
+        "allowed": [
+          "'CORRETOR'",
+          "'BANCASSURANCE'",
+          "'DIGITAL'",
+          "'TELEVENDAS'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "tipo_coerente_com_canal",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "(canal_venda = 'CORRETOR' AND ponto_venda_tipo = 'ESCRITORIO_CORRETOR') OR (canal_venda = 'BANCASSURANCE' AND ponto_venda_tipo = 'AGENCIA_BANCARIA') OR (canal_venda = 'DIGITAL' AND ponto_venda_tipo = 'PLATAFORMA_DIGITAL') OR (canal_venda = 'TELEVENDAS' AND ponto_venda_tipo = 'CENTRAL_TELEVENDAS')",
+        "msg": "tipo do ponto de venda incompativel com o canal",
+        "name": "tipo_coerente_com_canal"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

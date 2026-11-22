@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "b8310d39c462413f",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "b8310d39c462413f",
+    "source_table_fqn": "pos_venda.gold.dim_corretor",
+    "total_rows": 2501,
+    "valid_rows": 2501,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}

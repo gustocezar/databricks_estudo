@@ -1,0 +1,119 @@
+[
+  {
+    "name": "pk_unica_apolice_sk_cobertura_sk",
+    "criticality": "error",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "apolice_sk",
+          "cobertura_sk"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "apolice_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "apolice_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "cobertura_sk_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cobertura_sk"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "papel_cobertura_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "papel_cobertura"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "papel_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "papel_cobertura",
+        "allowed": [
+          "'PRINCIPAL'",
+          "'ADICIONAL'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_apolice_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "apolice_sk"
+        ],
+        "ref_columns": [
+          "apolice_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_apolice"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  },
+  {
+    "name": "fk_cobertura_sk",
+    "criticality": "error",
+    "check": {
+      "function": "foreign_key",
+      "arguments": {
+        "columns": [
+          "cobertura_sk"
+        ],
+        "ref_columns": [
+          "cobertura_sk"
+        ],
+        "ref_table": "pos_venda.gold.dim_cobertura"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "gold"
+    }
+  }
+]

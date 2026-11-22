@@ -1,0 +1,118 @@
+/// Safras de entrada (mês em que a pendência entrou) e quanto já foi pago.
+table Safras
+	lineageTag: c01179cf-842a-5289-8501-424402366c9a
+
+	measure 'Pendências que entraram' = SUM ( 'Safras'[pendencias_entraram] )
+		formatString: #,0
+		displayFolder: Safras
+		lineageTag: 7eb44b2a-f025-5e86-89a3-93cc090a9043
+
+	measure 'Pendências pagas da safra' = SUM ( 'Safras'[pendencias_pagas] )
+		formatString: #,0
+		displayFolder: Safras
+		lineageTag: 68ca2f48-aac5-5b5f-a247-adc532be7baa
+
+	/// Pendências pagas / pendências que entraram.
+	measure 'Taxa de recuperação' = DIVIDE ( [Pendências pagas da safra], [Pendências que entraram] )
+		formatString: 0.0%
+		displayFolder: Safras
+		lineageTag: 350ade6c-086b-5b69-bb47-1aba36dff391
+
+	measure 'Valor das parcelas que entraram' = SUM ( 'Safras'[valor_parcelas_entraram] )
+		formatString: R$ #,0.00
+		displayFolder: Safras
+		lineageTag: 5bcd4f1d-af12-59bc-a756-3e5b05abf9f5
+
+	measure 'Valor recuperado da safra' = SUM ( 'Safras'[valor_recuperado] )
+		formatString: R$ #,0.00
+		displayFolder: Safras
+		lineageTag: 3127ca92-affd-568d-8ad8-ba0bb4dccb89
+
+	column 'Safra de entrada'
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: d2088ec5-70a7-54ed-8625-6676b15225d7
+		summarizeBy: none
+		sourceColumn: safra_entrada
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		isHidden
+		lineageTag: 1b541bfa-6299-5bc3-a102-7baa19ed354d
+		summarizeBy: none
+		sourceColumn: produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Canal de venda'
+		dataType: string
+		isHidden
+		lineageTag: 56487751-a704-5d74-a3f5-cf40d3b95b51
+		summarizeBy: none
+		sourceColumn: canal_venda
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Forma de pagamento'
+		dataType: string
+		isHidden
+		lineageTag: b6bda516-8a8b-5ef5-b47a-efdae6918468
+		summarizeBy: none
+		sourceColumn: forma_pagamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column pendencias_entraram
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 68c57139-a90b-5883-8a4c-168bd290f853
+		summarizeBy: none
+		sourceColumn: pendencias_entraram
+
+		annotation SummarizationSetBy = Automatic
+
+	column pendencias_pagas
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 5fe0a5ab-b10a-5b5c-8a2c-b758be259cb2
+		summarizeBy: none
+		sourceColumn: pendencias_pagas
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor_parcelas_entraram
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: 0d691b22-06b7-545e-91fd-e1262246d5e6
+		summarizeBy: none
+		sourceColumn: valor_parcelas_entraram
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor_recuperado
+		dataType: decimal
+		formatString: R$ #,0.00
+		isHidden
+		lineageTag: 4b9bab20-f222-5cee-b684-adbe9817fe1f
+		summarizeBy: none
+		sourceColumn: valor_recuperado
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Safras = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),
+				    Catalogo = Fonte{[Name = "pos_venda", Kind = "Database"]}[Data],
+				    Esquema = Catalogo{[Name = "bi", Kind = "Schema"]}[Data],
+				    Dados = Esquema{[Name = "safras"]}[Data]
+				in
+				    Dados
+
+	annotation PBI_ResultType = Table

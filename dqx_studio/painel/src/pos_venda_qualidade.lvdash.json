@@ -1,0 +1,2096 @@
+{
+  "datasets": [
+    {
+      "name": "ds_diario",
+      "displayName": "Qualidade diária (bronze > silver) e órfãs da fato",
+      "queryLines": [
+        "SELECT * FROM v_painel_diario ",
+        "ORDER BY dia"
+      ],
+      "columns": [
+        {
+          "displayName": "Taxa de barrados",
+          "description": "Eventos barrados / eventos recebidos no período",
+          "expression": "SUM(`eventos_barrados`) * 1.0 / SUM(`eventos_recebidos`)"
+        }
+      ]
+    },
+    {
+      "name": "ds_barrados",
+      "displayName": "Barrados por dia, motivo e tipo de evento",
+      "queryLines": [
+        "SELECT * FROM v_painel_barrados ",
+        "ORDER BY dia, motivo_rejeicao"
+      ]
+    },
+    {
+      "name": "ds_quarentena",
+      "displayName": "Dados não aptos (quarentena do pipeline)",
+      "queryLines": [
+        "SELECT * FROM v_painel_quarentena ",
+        "ORDER BY dia DESC, motivo_rejeicao, pendencia_id"
+      ]
+    },
+    {
+      "name": "ds_studio_exec",
+      "displayName": "DQX Studio: execuções completas por semana",
+      "queryLines": [
+        "SELECT * EXCEPT (error_summary_json) FROM v_painel_studio_execucoes ",
+        "ORDER BY semana_n, camada"
+      ],
+      "columns": [
+        {
+          "displayName": "Quarentena reprovada no Studio",
+          "description": "Linhas da quarentena do pipeline que reprovam em alguma regra de erro do Studio",
+          "expression": "SUM(CASE WHEN `camada_curta` = 'quarentena' THEN `error_rows` ELSE 0 END) * 1.0 / SUM(CASE WHEN `camada_curta` = 'quarentena' THEN `total_rows` ELSE 0 END)"
+        }
+      ]
+    },
+    {
+      "name": "ds_studio_regras",
+      "displayName": "DQX Studio: regras violadas por semana",
+      "queryLines": [
+        "SELECT * FROM v_painel_studio_regras ",
+        "WHERE camada_curta <> 'quarentena' ",
+        "ORDER BY semana_n, regra_rotulo"
+      ]
+    },
+    {
+      "name": "ds_studio_reprovadas",
+      "displayName": "DQX Studio: linhas reprovadas com a regra",
+      "queryLines": [
+        "SELECT * FROM v_painel_studio_reprovadas ",
+        "ORDER BY semana_n DESC, camada, regra"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "visao_geral",
+      "displayName": "Visão geral",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cabecalho_visao",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# pos_venda · Qualidade dos pagamentos pendentes\n",
+                "\n",
+                "Cinco semanas de cargas diárias simuladas. **Semana 1** é a linha de base. Na **semana 2** sobem os *avisos* (CPF inválido, e-mail ausente, duplicatas): o dado entra, sinalizado. Nas **semanas 3 e 4** chegam *erros* (valor ≤ 0, status inválido, total inconsistente, vencimento futuro, menor de idade, UF inválida...), barrados na quarentena antes da silver. Em 13/12 uma **forma de pagamento nova vaza**: não estava na barreira, entra na silver e vira chave órfã na fato. Na **semana 5** os incidentes caem até zerar, mas as órfãs ficam enquanto as pendências seguem abertas."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_recebidos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "sum(eventos_recebidos)",
+                      "expression": "SUM(`eventos_recebidos`)"
+                    },
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(eventos_recebidos)",
+                  "displayName": "Recebidos",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "daily(dia)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos recebidos",
+                "showDescription": true,
+                "description": "Bronze, no período filtrado"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_barrados",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "sum(eventos_barrados)",
+                      "expression": "SUM(`eventos_barrados`)"
+                    },
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(eventos_barrados)",
+                  "displayName": "Barrados",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "daily(dia)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos barrados",
+                "showDescription": true,
+                "description": "Foram para a quarentena"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_taxa_barrados",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "measure(Taxa de barrados)",
+                      "expression": "MEASURE(`Taxa de barrados`)"
+                    },
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Taxa de barrados)",
+                  "displayName": "% barrados",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "daily(dia)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Taxa de barrados",
+                "showDescription": true,
+                "description": "Barrados / recebidos"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_orfas",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "max(fato_linhas_orfas)",
+                      "expression": "MAX(`fato_linhas_orfas`)"
+                    },
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "max(fato_linhas_orfas)",
+                  "displayName": "Órfãs (pico diário)"
+                },
+                "period": {
+                  "fieldName": "daily(dia)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Pico de linhas órfãs na fato",
+                "showDescription": true,
+                "description": "Forma de pagamento sem dimensão"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "barrados_por_dia",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    },
+                    {
+                      "name": "sum(eventos_barrados)",
+                      "expression": "SUM(`eventos_barrados`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(dia)",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Dia"
+                },
+                "y": {
+                  "fieldName": "sum(eventos_barrados)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Eventos barrados"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos barrados por dia",
+                "showDescription": true,
+                "description": "Quantos eventos a barreira de qualidade segurou a cada dia"
+              },
+              "annotations": [
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "2026-11-27T00:00:00.000",
+                      "dataType": "DATETIME"
+                    },
+                    "label": {
+                      "value": "Semana 2: só avisos"
+                    },
+                    "color": {
+                      "value": {
+                        "hex": "#FFA600"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "2026-12-04T00:00:00.000",
+                      "dataType": "DATETIME"
+                    },
+                    "label": {
+                      "value": "Semana 3: chegam os erros"
+                    },
+                    "color": {
+                      "value": {
+                        "hex": "#FF7E5C"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "2026-12-13T00:00:00.000",
+                      "dataType": "DATETIME"
+                    },
+                    "label": {
+                      "value": "Forma de pagamento nova vaza"
+                    },
+                    "color": {
+                      "value": {
+                        "hex": "#7A5195"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 8,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "barrados_por_motivo",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_barrados",
+                  "fields": [
+                    {
+                      "name": "motivo_rejeicao",
+                      "expression": "`motivo_rejeicao`"
+                    },
+                    {
+                      "name": "sum(eventos)",
+                      "expression": "SUM(`eventos`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(eventos)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Eventos"
+                },
+                "y": {
+                  "fieldName": "motivo_rejeicao",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Motivo"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Barrados por motivo",
+                "showDescription": true,
+                "description": "Primeira regra de erro violada"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 6,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "avisos_por_dia",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    },
+                    {
+                      "name": "avg(taxa_email_ausente)",
+                      "expression": "AVG(`taxa_email_ausente`)"
+                    },
+                    {
+                      "name": "avg(taxa_cpf_invalido)",
+                      "expression": "AVG(`taxa_cpf_invalido`)"
+                    },
+                    {
+                      "name": "avg(taxa_duplicados)",
+                      "expression": "AVG(`taxa_duplicados`)"
+                    },
+                    {
+                      "name": "avg(taxa_cep_malformado)",
+                      "expression": "AVG(`taxa_cep_malformado`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(dia)",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Dia"
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "avg(taxa_email_ausente)",
+                      "displayName": "E-mail ausente"
+                    },
+                    {
+                      "fieldName": "avg(taxa_cpf_invalido)",
+                      "displayName": "CPF inválido"
+                    },
+                    {
+                      "fieldName": "avg(taxa_duplicados)",
+                      "displayName": "Duplicatas"
+                    },
+                    {
+                      "fieldName": "avg(taxa_cep_malformado)",
+                      "displayName": "CEP malformado"
+                    }
+                  ],
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Avisos que passam (% dos eventos)",
+                "showDescription": true,
+                "description": "Problemas sinalizados como aviso: entram na silver, com alerta"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "orfas_por_dia",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    },
+                    {
+                      "name": "sum(fato_linhas_orfas)",
+                      "expression": "SUM(`fato_linhas_orfas`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(dia)",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "Dia"
+                },
+                "y": {
+                  "fieldName": "sum(fato_linhas_orfas)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Linhas órfãs na foto do dia"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Fato histórica: linhas com forma de pagamento órfã",
+                "showDescription": true,
+                "description": "Dado não cadastrado que passou pela barreira e chegou à gold"
+              },
+              "annotations": [
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "2026-12-13T00:00:00.000",
+                      "dataType": "DATETIME"
+                    },
+                    "label": {
+                      "value": "Vazamento começa"
+                    },
+                    "color": {
+                      "value": {
+                        "hex": "#7A5195"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "vertical-line",
+                  "encodings": {
+                    "x": {
+                      "dataValue": "2026-12-22T00:00:00.000",
+                      "dataType": "DATETIME"
+                    },
+                    "label": {
+                      "value": "Último dia na origem"
+                    },
+                    "color": {
+                      "value": {
+                        "hex": "#58B09C"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "motivo_por_semana",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_barrados",
+                  "fields": [
+                    {
+                      "name": "semana",
+                      "expression": "`semana`"
+                    },
+                    {
+                      "name": "motivo_rejeicao",
+                      "expression": "`motivo_rejeicao`"
+                    },
+                    {
+                      "name": "sum(eventos)",
+                      "expression": "SUM(`eventos`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "heatmap",
+              "encodings": {
+                "x": {
+                  "fieldName": "semana",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Semana"
+                },
+                "y": {
+                  "fieldName": "motivo_rejeicao",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Motivo da rejeição"
+                },
+                "color": {
+                  "fieldName": "sum(eventos)",
+                  "scale": {
+                    "type": "quantitative",
+                    "colorRamp": {
+                      "mode": "custom-sequential",
+                      "colors": {
+                        "start": "#FDF1E0",
+                        "end": "#FF7E5C"
+                      }
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos barrados por motivo e semana",
+                "showDescription": true,
+                "description": "Cada incidente aparece na semana em que foi injetado"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 18,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ]
+    },
+    {
+      "name": "studio",
+      "displayName": "DQX Studio · evolução",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cabecalho_studio",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## DQX Studio · evolução semana a semana\n",
+                "\n",
+                "Cada camada foi avaliada pelo Studio uma vez por semana, com **todas as linhas** da janela (views `pos_venda.dq.v_*_janela`). Erros na **silver** e na **fato** só aparecem quando algo **vazou** da barreira; a **quarentena** reprova 100% nas regras de erro: pipeline e Studio usam a mesma régua."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_studio_linhas",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "sum(total_rows)",
+                      "expression": "SUM(`total_rows`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_rows)",
+                  "displayName": "Linhas avaliadas",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Linhas avaliadas pelo Studio",
+                "showDescription": true,
+                "description": "Execuções completas (sem amostra)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_studio_erros",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "sum(error_rows)",
+                      "expression": "SUM(`error_rows`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(error_rows)",
+                  "displayName": "Em erro",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Linhas reprovadas",
+                "showDescription": true,
+                "description": "Violam ao menos uma regra de erro"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_studio_avisos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "sum(warning_rows)",
+                      "expression": "SUM(`warning_rows`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(warning_rows)",
+                  "displayName": "Com aviso",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Linhas com aviso",
+                "showDescription": true,
+                "description": "Passam, mas sinalizadas"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_studio_reconciliacao",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "measure(Quarentena reprovada no Studio)",
+                      "expression": "MEASURE(`Quarentena reprovada no Studio`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Quarentena reprovada no Studio)",
+                  "displayName": "Reprovadas",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Quarentena reprovada no Studio",
+                "showDescription": true,
+                "description": "Reconciliação pipeline × Studio"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "studio_erros_semana",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "semana",
+                      "expression": "`semana`"
+                    },
+                    {
+                      "name": "sum(error_rows)",
+                      "expression": "SUM(`error_rows`)"
+                    },
+                    {
+                      "name": "camada",
+                      "expression": "`camada`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "semana",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Semana"
+                },
+                "y": {
+                  "fieldName": "sum(error_rows)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Linhas em erro"
+                },
+                "color": {
+                  "fieldName": "camada",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "1 · Bronze (tudo que chegou)",
+                        "color": "#2F6B9A"
+                      },
+                      {
+                        "value": "2 · Quarentena (não aptos)",
+                        "color": "#FF7E5C"
+                      },
+                      {
+                        "value": "3 · Silver (eventos aptos)",
+                        "color": "#7A5195"
+                      },
+                      {
+                        "value": "4 · Silver histórica (SCD2)",
+                        "color": "#58B09C"
+                      },
+                      {
+                        "value": "5 · Gold (fato histórica)",
+                        "color": "#003F5C"
+                      }
+                    ]
+                  },
+                  "displayName": "Camada"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Linhas em erro por semana e camada"
+              },
+              "mark": {
+                "layout": "group"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "studio_avisos_semana",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "semana",
+                      "expression": "`semana`"
+                    },
+                    {
+                      "name": "sum(warning_rows)",
+                      "expression": "SUM(`warning_rows`)"
+                    },
+                    {
+                      "name": "camada",
+                      "expression": "`camada`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "semana",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Semana"
+                },
+                "y": {
+                  "fieldName": "sum(warning_rows)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Linhas com aviso"
+                },
+                "color": {
+                  "fieldName": "camada",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "1 · Bronze (tudo que chegou)",
+                        "color": "#2F6B9A"
+                      },
+                      {
+                        "value": "2 · Quarentena (não aptos)",
+                        "color": "#FF7E5C"
+                      },
+                      {
+                        "value": "3 · Silver (eventos aptos)",
+                        "color": "#7A5195"
+                      },
+                      {
+                        "value": "4 · Silver histórica (SCD2)",
+                        "color": "#58B09C"
+                      },
+                      {
+                        "value": "5 · Gold (fato histórica)",
+                        "color": "#003F5C"
+                      }
+                    ]
+                  },
+                  "displayName": "Camada"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Linhas com aviso por semana e camada"
+              },
+              "mark": {
+                "layout": "group"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "studio_regras_semana",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_regras",
+                  "fields": [
+                    {
+                      "name": "semana",
+                      "expression": "`semana`"
+                    },
+                    {
+                      "name": "regra_rotulo",
+                      "expression": "`regra_rotulo`"
+                    },
+                    {
+                      "name": "sum(linhas)",
+                      "expression": "SUM(`linhas`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "heatmap",
+              "encodings": {
+                "x": {
+                  "fieldName": "semana",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Semana"
+                },
+                "y": {
+                  "fieldName": "regra_rotulo",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Camada · regra (criticidade)"
+                },
+                "color": {
+                  "fieldName": "sum(linhas)",
+                  "scale": {
+                    "type": "quantitative",
+                    "colorRamp": {
+                      "mode": "custom-sequential",
+                      "colors": {
+                        "start": "#FDF1E0",
+                        "end": "#FF7E5C"
+                      }
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Regras violadas por semana (linhas)",
+                "showDescription": true,
+                "description": "Bronze, silver e fato; a quarentena repete as regras do bronze e fica de fora"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 12,
+            "height": 9
+          }
+        },
+        {
+          "widget": {
+            "name": "studio_execucoes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "semana",
+                      "expression": "`semana`"
+                    },
+                    {
+                      "name": "camada",
+                      "expression": "`camada`"
+                    },
+                    {
+                      "name": "total_rows",
+                      "expression": "`total_rows`"
+                    },
+                    {
+                      "name": "error_rows",
+                      "expression": "`error_rows`"
+                    },
+                    {
+                      "name": "warning_rows",
+                      "expression": "`warning_rows`"
+                    },
+                    {
+                      "name": "taxa_erro",
+                      "expression": "`taxa_erro`"
+                    },
+                    {
+                      "name": "taxa_aviso",
+                      "expression": "`taxa_aviso`"
+                    },
+                    {
+                      "name": "created_at",
+                      "expression": "`created_at`"
+                    },
+                    {
+                      "name": "run_id",
+                      "expression": "`run_id`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "semana",
+                    "displayName": "Semana"
+                  },
+                  {
+                    "fieldName": "camada",
+                    "displayName": "Camada"
+                  },
+                  {
+                    "fieldName": "total_rows",
+                    "displayName": "Linhas",
+                    "format": {
+                      "type": "number",
+                      "abbreviation": "compact",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 1
+                      }
+                    }
+                  },
+                  {
+                    "fieldName": "error_rows",
+                    "displayName": "Em erro",
+                    "style": {
+                      "type": "basic",
+                      "rules": [
+                        {
+                          "condition": {
+                            "operand": {
+                              "type": "data-value",
+                              "value": "0"
+                            },
+                            "operator": ">"
+                          },
+                          "backgroundColor": {
+                            "hex": "#FF7E5C"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "fieldName": "warning_rows",
+                    "displayName": "Com aviso"
+                  },
+                  {
+                    "fieldName": "taxa_erro",
+                    "displayName": "% erro",
+                    "format": {
+                      "type": "number-percent",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 2
+                      }
+                    }
+                  },
+                  {
+                    "fieldName": "taxa_aviso",
+                    "displayName": "% aviso",
+                    "format": {
+                      "type": "number-percent",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 2
+                      }
+                    }
+                  },
+                  {
+                    "fieldName": "created_at",
+                    "displayName": "Executada em"
+                  },
+                  {
+                    "fieldName": "run_id",
+                    "displayName": "Execução no Studio"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Execuções completas no DQX Studio",
+                "showDescription": true,
+                "description": "Abra o Histórico de Execuções do Studio e filtre pela tabela para ver cada uma"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 20,
+            "width": 12,
+            "height": 7
+          }
+        }
+      ]
+    },
+    {
+      "name": "nao_aptos",
+      "displayName": "Dados não aptos",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "cabecalho_nao_aptos",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Dados não aptos\n",
+                "\n",
+                "Eventos que a barreira de qualidade **barrou** antes da silver, com o motivo e o cadastro do cliente (`silver.pendencia_evento_quarentena`), e as linhas que o **DQX Studio reprovou**, com a regra e a mensagem. Use os filtros (dia, motivo, camada) na página de filtros."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_qt_eventos",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_quarentena",
+                  "fields": [
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    },
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "count(*)",
+                  "displayName": "Eventos",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "daily(dia)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos na quarentena"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_qt_valor",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_quarentena",
+                  "fields": [
+                    {
+                      "name": "sum(valor_total_pendente)",
+                      "expression": "SUM(`valor_total_pendente`)"
+                    },
+                    {
+                      "name": "daily(dia)",
+                      "expression": "DATE_TRUNC(\"DAY\", `dia`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(valor_total_pendente)",
+                  "displayName": "Valor retido",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "BRL",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                },
+                "period": {
+                  "fieldName": "daily(dia)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Valor pendente retido"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_qt_apolices",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_quarentena",
+                  "fields": [
+                    {
+                      "name": "countdistinct(numero_apolice)",
+                      "expression": "COUNT(DISTINCT `numero_apolice`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "countdistinct(numero_apolice)",
+                  "displayName": "Apólices",
+                  "format": {
+                    "type": "number",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Apólices afetadas"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 2,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "quarentena_linhas",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_quarentena",
+                  "fields": [
+                    {
+                      "name": "dia",
+                      "expression": "`dia`"
+                    },
+                    {
+                      "name": "motivo_rejeicao",
+                      "expression": "`motivo_rejeicao`"
+                    },
+                    {
+                      "name": "pendencia_id",
+                      "expression": "`pendencia_id`"
+                    },
+                    {
+                      "name": "tipo_evento",
+                      "expression": "`tipo_evento`"
+                    },
+                    {
+                      "name": "numero_apolice",
+                      "expression": "`numero_apolice`"
+                    },
+                    {
+                      "name": "numero_parcela",
+                      "expression": "`numero_parcela`"
+                    },
+                    {
+                      "name": "status_cobranca",
+                      "expression": "`status_cobranca`"
+                    },
+                    {
+                      "name": "valor_parcela",
+                      "expression": "`valor_parcela`"
+                    },
+                    {
+                      "name": "valor_total_pendente",
+                      "expression": "`valor_total_pendente`"
+                    },
+                    {
+                      "name": "data_vencimento",
+                      "expression": "`data_vencimento`"
+                    },
+                    {
+                      "name": "dias_atraso",
+                      "expression": "`dias_atraso`"
+                    },
+                    {
+                      "name": "data_baixa",
+                      "expression": "`data_baixa`"
+                    },
+                    {
+                      "name": "valor_pago",
+                      "expression": "`valor_pago`"
+                    },
+                    {
+                      "name": "cliente_nome",
+                      "expression": "`cliente_nome`"
+                    },
+                    {
+                      "name": "cliente_cpf",
+                      "expression": "`cliente_cpf`"
+                    },
+                    {
+                      "name": "cliente_idade",
+                      "expression": "`cliente_idade`"
+                    },
+                    {
+                      "name": "cliente_uf",
+                      "expression": "`cliente_uf`"
+                    },
+                    {
+                      "name": "forma_pagamento",
+                      "expression": "`forma_pagamento`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "dia",
+                    "displayName": "Dia"
+                  },
+                  {
+                    "fieldName": "motivo_rejeicao",
+                    "displayName": "Motivo"
+                  },
+                  {
+                    "fieldName": "pendencia_id",
+                    "displayName": "Pendência"
+                  },
+                  {
+                    "fieldName": "tipo_evento",
+                    "displayName": "Evento"
+                  },
+                  {
+                    "fieldName": "numero_apolice",
+                    "displayName": "Apólice"
+                  },
+                  {
+                    "fieldName": "numero_parcela",
+                    "displayName": "Parcela"
+                  },
+                  {
+                    "fieldName": "status_cobranca",
+                    "displayName": "Status"
+                  },
+                  {
+                    "fieldName": "valor_parcela",
+                    "displayName": "Parcela (R$)"
+                  },
+                  {
+                    "fieldName": "valor_total_pendente",
+                    "displayName": "Total (R$)"
+                  },
+                  {
+                    "fieldName": "data_vencimento",
+                    "displayName": "Vencimento"
+                  },
+                  {
+                    "fieldName": "dias_atraso",
+                    "displayName": "Dias de atraso"
+                  },
+                  {
+                    "fieldName": "data_baixa",
+                    "displayName": "Baixa"
+                  },
+                  {
+                    "fieldName": "valor_pago",
+                    "displayName": "Pago (R$)"
+                  },
+                  {
+                    "fieldName": "cliente_nome",
+                    "displayName": "Cliente"
+                  },
+                  {
+                    "fieldName": "cliente_cpf",
+                    "displayName": "CPF"
+                  },
+                  {
+                    "fieldName": "cliente_idade",
+                    "displayName": "Idade"
+                  },
+                  {
+                    "fieldName": "cliente_uf",
+                    "displayName": "UF"
+                  },
+                  {
+                    "fieldName": "forma_pagamento",
+                    "displayName": "Forma de pagamento"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Eventos barrados (quarentena do pipeline)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 12,
+            "height": 9
+          }
+        },
+        {
+          "widget": {
+            "name": "studio_reprovadas",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_studio_reprovadas",
+                  "fields": [
+                    {
+                      "name": "semana",
+                      "expression": "`semana`"
+                    },
+                    {
+                      "name": "camada",
+                      "expression": "`camada`"
+                    },
+                    {
+                      "name": "regra",
+                      "expression": "`regra`"
+                    },
+                    {
+                      "name": "mensagem",
+                      "expression": "`mensagem`"
+                    },
+                    {
+                      "name": "referencia",
+                      "expression": "`referencia`"
+                    },
+                    {
+                      "name": "pendencia_id",
+                      "expression": "`pendencia_id`"
+                    },
+                    {
+                      "name": "numero_apolice",
+                      "expression": "`numero_apolice`"
+                    },
+                    {
+                      "name": "cliente_nome",
+                      "expression": "`cliente_nome`"
+                    },
+                    {
+                      "name": "valor_total_pendente",
+                      "expression": "`valor_total_pendente`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "semana",
+                    "displayName": "Semana"
+                  },
+                  {
+                    "fieldName": "camada",
+                    "displayName": "Camada"
+                  },
+                  {
+                    "fieldName": "regra",
+                    "displayName": "Regra violada"
+                  },
+                  {
+                    "fieldName": "mensagem",
+                    "displayName": "Mensagem"
+                  },
+                  {
+                    "fieldName": "referencia",
+                    "displayName": "Dia / foto"
+                  },
+                  {
+                    "fieldName": "pendencia_id",
+                    "displayName": "Pendência"
+                  },
+                  {
+                    "fieldName": "numero_apolice",
+                    "displayName": "Apólice"
+                  },
+                  {
+                    "fieldName": "cliente_nome",
+                    "displayName": "Cliente"
+                  },
+                  {
+                    "fieldName": "valor_total_pendente",
+                    "displayName": "Total (R$)"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Linhas reprovadas pelo DQX Studio (regra de erro)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 12,
+            "height": 8
+          }
+        }
+      ]
+    },
+    {
+      "name": "filtros",
+      "displayName": "Filtros",
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "filtro_dia",
+            "queries": [
+              {
+                "name": "f_dia_ds_diario",
+                "query": {
+                  "datasetName": "ds_diario",
+                  "fields": [
+                    {
+                      "name": "dia",
+                      "expression": "`dia`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "f_dia_ds_barrados",
+                "query": {
+                  "datasetName": "ds_barrados",
+                  "fields": [
+                    {
+                      "name": "dia",
+                      "expression": "`dia`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "f_dia_ds_quarentena",
+                "query": {
+                  "datasetName": "ds_quarentena",
+                  "fields": [
+                    {
+                      "name": "dia",
+                      "expression": "`dia`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "dia",
+                    "displayName": "Dia",
+                    "queryName": "f_dia_ds_diario"
+                  },
+                  {
+                    "fieldName": "dia",
+                    "displayName": "Dia",
+                    "queryName": "f_dia_ds_barrados"
+                  },
+                  {
+                    "fieldName": "dia",
+                    "displayName": "Dia",
+                    "queryName": "f_dia_ds_quarentena"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Dia"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "filtro_motivo",
+            "queries": [
+              {
+                "name": "f_motivo_rejeicao_ds_barrados",
+                "query": {
+                  "datasetName": "ds_barrados",
+                  "fields": [
+                    {
+                      "name": "motivo_rejeicao",
+                      "expression": "`motivo_rejeicao`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "f_motivo_rejeicao_ds_quarentena",
+                "query": {
+                  "datasetName": "ds_quarentena",
+                  "fields": [
+                    {
+                      "name": "motivo_rejeicao",
+                      "expression": "`motivo_rejeicao`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "motivo_rejeicao",
+                    "displayName": "Motivo da rejeição",
+                    "queryName": "f_motivo_rejeicao_ds_barrados"
+                  },
+                  {
+                    "fieldName": "motivo_rejeicao",
+                    "displayName": "Motivo da rejeição",
+                    "queryName": "f_motivo_rejeicao_ds_quarentena"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Motivo da rejeição"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "filtro_camada",
+            "queries": [
+              {
+                "name": "f_camada_ds_studio_exec",
+                "query": {
+                  "datasetName": "ds_studio_exec",
+                  "fields": [
+                    {
+                      "name": "camada",
+                      "expression": "`camada`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "f_camada_ds_studio_regras",
+                "query": {
+                  "datasetName": "ds_studio_regras",
+                  "fields": [
+                    {
+                      "name": "camada",
+                      "expression": "`camada`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "f_camada_ds_studio_reprovadas",
+                "query": {
+                  "datasetName": "ds_studio_reprovadas",
+                  "fields": [
+                    {
+                      "name": "camada",
+                      "expression": "`camada`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "camada",
+                    "displayName": "Camada (Studio)",
+                    "queryName": "f_camada_ds_studio_exec"
+                  },
+                  {
+                    "fieldName": "camada",
+                    "displayName": "Camada (Studio)",
+                    "queryName": "f_camada_ds_studio_regras"
+                  },
+                  {
+                    "fieldName": "camada",
+                    "displayName": "Camada (Studio)",
+                    "queryName": "f_camada_ds_studio_reprovadas"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Camada (Studio)"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        }
+      ]
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#F7F8FA",
+        "dark": "#1F272D"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#11171C"
+      },
+      "widgetBorderColor": {
+        "light": "#FFFFFF",
+        "dark": "#11171C"
+      },
+      "fontColor": {
+        "light": "#11171C",
+        "dark": "#E8ECF0"
+      },
+      "selectionColor": {
+        "light": "#2272B4",
+        "dark": "#8ACAFF"
+      },
+      "visualizationColors": [
+        "#003F5C",
+        "#2F6B9A",
+        "#7A5195",
+        "#BC5090",
+        "#EF5675",
+        "#FFA600",
+        "#58B09C"
+      ],
+      "widgetHeaderAlignment": "LEFT"
+    }
+  }
+}

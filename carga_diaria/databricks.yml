@@ -1,0 +1,17 @@
+# Carga diaria do dominio pos_venda: gerador de pendencias -> bronze -> silver (Lakeflow) -> gold (star schema + fato historica).
+bundle:
+  name: pos_venda_carga_diaria
+
+variables:
+  carga_schedule_status:
+    description: "Agenda diaria da carga (05:00). PAUSED = desligada (so sob demanda), UNPAUSED = ligada."
+    default: PAUSED
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-15c48c79-7aa2.cloud.databricks.com

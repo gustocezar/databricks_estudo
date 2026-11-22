@@ -1,0 +1,89 @@
+{
+  "diario": [
+    {
+      "dia": "2026-11-27",
+      "eventos_recebidos": "8682",
+      "eventos_aptos": "8682",
+      "eventos_barrados": "0",
+      "pct_barrados": "0.000",
+      "eventos_duplicados": "49",
+      "cpf_invalido": "140",
+      "email_ausente": "541",
+      "cep_malformado": "0",
+      "forma_pagamento_nao_cadastrada": "0"
+    },
+    {
+      "dia": "2026-11-28",
+      "eventos_recebidos": "8748",
+      "eventos_aptos": "8748",
+      "eventos_barrados": "0",
+      "pct_barrados": "0.000",
+      "eventos_duplicados": "45",
+      "cpf_invalido": "482",
+      "email_ausente": "854",
+      "cep_malformado": "0",
+      "forma_pagamento_nao_cadastrada": "0"
+    },
+    {
+      "dia": "2026-11-29",
+      "eventos_recebidos": "8642",
+      "eventos_aptos": "8642",
+      "eventos_barrados": "0",
+      "pct_barrados": "0.000",
+      "eventos_duplicados": "246",
+      "cpf_invalido": "773",
+      "email_ausente": "1155",
+      "cep_malformado": "0",
+      "forma_pagamento_nao_cadastrada": "0"
+    },
+    {
+      "dia": "2026-11-30",
+      "eventos_recebidos": "5579",
+      "eventos_aptos": "5579",
+      "eventos_barrados": "0",
+      "pct_barrados": "0.000",
+      "eventos_duplicados": "287",
+      "cpf_invalido": "785",
+      "email_ausente": "977",
+      "cep_malformado": "0",
+      "forma_pagamento_nao_cadastrada": "0"
+    },
+    {
+      "dia": "2026-12-01",
+      "eventos_recebidos": "5184",
+      "eventos_aptos": "5184",
+      "eventos_barrados": "0",
+      "pct_barrados": "0.000",
+      "eventos_duplicados": "277",
+      "cpf_invalido": "478",
+      "email_ausente": "717",
+      "cep_malformado": "0",
+      "forma_pagamento_nao_cadastrada": "0"
+    },
+    {
+      "dia": "2026-12-02",
+      "eventos_recebidos": "7772",
+      "eventos_aptos": "7772",
+      "eventos_barrados": "0",
+      "pct_barrados": "0.000",
+      "eventos_duplicados": "207",
+      "cpf_invalido": "412",
+      "email_ausente": "773",
+      "cep_malformado": "0",
+      "forma_pagamento_nao_cadastrada": "0"
+    },
+    {
+      "dia": "2026-12-03",
+      "eventos_recebidos": "7767",
+      "eventos_aptos": "7767",
+      "eventos_barrados": "0",
+      "pct_barrados": "0.000",
+      "eventos_duplicados": "36",
+      "cpf_invalido": "121",
+      "email_ausente": "448",
+      "cep_malformado": "0",
+      "forma_pagamento_nao_cadastrada": "0"
+    }
+  ],
+  "barrados_por_motivo": []
+}

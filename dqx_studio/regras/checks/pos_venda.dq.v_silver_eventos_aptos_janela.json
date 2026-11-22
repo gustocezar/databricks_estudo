@@ -1,0 +1,496 @@
+[
+  {
+    "name": "pendencia_id_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "pendencia_id"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "cliente_id_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_id"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "numero_apolice_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "numero_apolice"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "numero_parcela_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "numero_parcela"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "data_vencimento_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "data_vencimento"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "status_cobranca_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "status_cobranca"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "valor_parcela_nao_nulo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "valor_parcela"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "status_cobranca_valido",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "status_cobranca",
+        "allowed": [
+          "'PENDENTE'",
+          "'EM_COBRANCA'",
+          "'PROMESSA_PAGAMENTO'",
+          "'NEGOCIADO'",
+          "'COBRANCA_EXTERNA'",
+          "'PAGA'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "faixa_atraso_valida",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "faixa_atraso",
+        "allowed": [
+          "'01_1_A_15'",
+          "'02_16_A_30'",
+          "'03_31_A_60'",
+          "'04_61_A_90'",
+          "'05_91_A_120'",
+          "'06_ACIMA_120'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "uf_valida",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "cliente_uf",
+        "allowed": [
+          "'AC'",
+          "'AL'",
+          "'AP'",
+          "'AM'",
+          "'BA'",
+          "'CE'",
+          "'DF'",
+          "'ES'",
+          "'GO'",
+          "'MA'",
+          "'MT'",
+          "'MS'",
+          "'MG'",
+          "'PA'",
+          "'PB'",
+          "'PR'",
+          "'PE'",
+          "'PI'",
+          "'RJ'",
+          "'RN'",
+          "'RS'",
+          "'RO'",
+          "'RR'",
+          "'SC'",
+          "'SP'",
+          "'SE'",
+          "'TO'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "valor_parcela_positivo",
+    "criticality": "error",
+    "check": {
+      "function": "is_not_less_than",
+      "arguments": {
+        "column": "valor_parcela",
+        "limit": 0.01
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "tentativas_entre_1_e_10",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_range",
+      "arguments": {
+        "column": "tentativas_cobranca",
+        "min_limit": 1,
+        "max_limit": 10
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "valor_total_igual_parcela_multa_juros",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01",
+        "msg": "valor_total_pendente difere de parcela + multa + juros",
+        "name": "valor_total_igual_parcela_multa_juros"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "valores_seguem_regras_de_calculo",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "(valor_multa <=> pos_venda.regras.valor_multa(valor_parcela)) AND (valor_juros <=> pos_venda.regras.valor_juros(valor_parcela, dias_atraso)) AND (valor_total_pendente <=> pos_venda.regras.valor_total_pendente(valor_parcela, dias_atraso))",
+        "msg": "multa, juros ou total diferentes das funções pos_venda.regras (barreira: valores_fora_da_regra)",
+        "name": "valores_seguem_regras_de_calculo"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "vencimento_ate_extracao",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "data_vencimento <= data_extracao",
+        "msg": "vencimento depois da data de extracao",
+        "name": "vencimento_ate_extracao"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "paga_tem_data_baixa",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "(status_cobranca = 'PAGA') = (data_baixa IS NOT NULL)",
+        "msg": "status PAGA e data_baixa nao batem",
+        "name": "paga_tem_data_baixa"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "cliente_maior_de_idade",
+    "criticality": "error",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "cliente_idade >= 18",
+        "msg": "cliente menor de 18 anos",
+        "name": "cliente_maior_de_idade"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "cpf_valido",
+    "criticality": "warn",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "NOT dq_cpf_invalido",
+        "msg": "CPF com digito verificador invalido",
+        "name": "cpf_valido"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "cep_8_digitos",
+    "criticality": "warn",
+    "check": {
+      "function": "regex_match",
+      "arguments": {
+        "column": "cliente_cep",
+        "regex": "^[0-9]{8}$"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "celular_11_digitos",
+    "criticality": "warn",
+    "check": {
+      "function": "regex_match",
+      "arguments": {
+        "column": "cliente_celular",
+        "regex": "^[0-9]{11}$"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "telefone_fixo_10_digitos",
+    "criticality": "warn",
+    "check": {
+      "function": "regex_match",
+      "arguments": {
+        "column": "cliente_telefone_fixo",
+        "regex": "^[0-9]{10}$"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "rg_formato",
+    "criticality": "warn",
+    "check": {
+      "function": "regex_match",
+      "arguments": {
+        "column": "cliente_rg",
+        "regex": "^[0-9]{8}[0-9X]$"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "email_valido",
+    "criticality": "warn",
+    "check": {
+      "function": "is_valid_email",
+      "arguments": {
+        "column": "cliente_email"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "email_preenchido",
+    "criticality": "warn",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_email"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "rg_preenchido",
+    "criticality": "warn",
+    "check": {
+      "function": "is_not_null",
+      "arguments": {
+        "column": "cliente_rg"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "forma_pagamento_cadastrada",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "forma_pagamento",
+        "allowed": [
+          "'DEBITO_CONTA'",
+          "'BOLETO'",
+          "'CARTAO_CREDITO'",
+          "'PIX_AUTOMATICO'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "motivo_pendencia_cadastrado",
+    "criticality": "error",
+    "check": {
+      "function": "is_in_list",
+      "arguments": {
+        "column": "motivo_pendencia",
+        "allowed": [
+          "'SALDO_INSUFICIENTE'",
+          "'LIMITE_INSUFICIENTE'",
+          "'CARTAO_RECUSADO'",
+          "'BOLETO_NAO_PAGO'",
+          "'DADOS_BANCARIOS_INVALIDOS'",
+          "'CONTA_ENCERRADA'",
+          "'CARTAO_EXPIRADO'",
+          "'AUTORIZACAO_DEBITO_CANCELADA'",
+          "'AUTORIZACAO_PIX_REVOGADA'",
+          "'BOLETO_NAO_RECEBIDO'"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "canal_corretor_tem_corretor",
+    "criticality": "warn",
+    "check": {
+      "function": "sql_expression",
+      "arguments": {
+        "expression": "canal_venda <> 'CORRETOR' OR corretor_id IS NOT NULL",
+        "msg": "venda pelo canal CORRETOR sem corretor",
+        "name": "canal_corretor_tem_corretor"
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  },
+  {
+    "name": "evento_unico_por_dia_pendencia_tipo",
+    "criticality": "warn",
+    "check": {
+      "function": "is_unique",
+      "arguments": {
+        "columns": [
+          "pendencia_id",
+          "data_extracao",
+          "tipo_evento"
+        ]
+      }
+    },
+    "user_metadata": {
+      "dominio": "pos_venda",
+      "camada": "silver"
+    }
+  }
+]

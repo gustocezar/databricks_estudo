@@ -1,0 +1,20 @@
+{
+  "status": {
+    "run_id": "8f159477c9b64eda",
+    "state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "message": "",
+    "view_cleaned_up": true
+  },
+  "resultado": {
+    "run_id": "8f159477c9b64eda",
+    "source_table_fqn": "pos_venda.gold.fact_pagamento_pendente_snapshot",
+    "total_rows": 10000,
+    "valid_rows": 10000,
+    "invalid_rows": 0,
+    "error_rows": 0,
+    "warning_rows": 0,
+    "error_summary": [],
+    "sample_invalid": []
+  }
+}
