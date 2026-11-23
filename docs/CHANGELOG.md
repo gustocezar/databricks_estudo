@@ -17,6 +17,35 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 23/11/2026
 
+### Documento e apresentação do framework com a camada FinOps
+- **O que mudou:**
+  - O documento compartilhável e a apresentação (ambos no claude.ai, privados) ganharam a camada Custo e uso
+    (FinOps, P30 a P34).
+  - **Documento:**
+    - abertura com 34 práticas e 23 fases;
+    - diagrama com a caixa "Custo e uso" e legenda "9 camadas · 34 práticas";
+    - 4 linhas novas no mapa de gatilhos;
+    - seção "Custo e uso (FinOps)" com a tabela P30–P34;
+    - fontes FinOps;
+    - módulos M1 a M11.
+  - **Apresentação:**
+    - slide novo "Custo e uso: todo custo com dono", agora com 18 slides;
+    - camadas "de 9";
+    - números atualizados (34 práticas, 23 fases, 78 lições, 49 fontes);
+    - linha nova no mapa de gatilhos;
+    - pendência de tags e budget policies;
+    - fontes FinOps.
+- **Por quê:** pedido do usuário: atualizar o documento e a apresentação com a camada FinOps.
+- **Onde:** artefatos do claude.ai (fora do repositório). No repositório, só esta entrada.
+- **Conferência:**
+  - captura do diagrama sem texto cortado;
+  - busca no documento sem "29 práticas" restante;
+  - na apresentação, 18 slides na ordem, todos com arquivo, e nenhum número antigo;
+  - altura do slide do mapa de gatilhos (12 linhas) estimada em ~761 px dos 792 úteis.
+  
+  A apresentação não foi pré-visualizada, porque o Playwright não está instalado.
+- **Docs atualizadas:** nenhuma além desta entrada
+
 ### Visões de custo e uso no padrão FOCUS (FinOps)
 - **O que mudou:**
   - Schema novo `pos_venda.finops`, com 19 visões e a metric view `mv_finops_custo`, gerados por
