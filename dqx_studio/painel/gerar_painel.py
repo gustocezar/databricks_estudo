@@ -173,12 +173,14 @@ DATASETS = [
 p1 = [
     texto("cabecalho_visao", [
         "# pos_venda · Qualidade dos pagamentos pendentes\n", "\n",
-        "Cinco semanas de cargas diárias simuladas. **Semana 1** é a linha de base. Na **semana 2** sobem os *avisos* "
+        "Sete semanas de cargas diárias simuladas. **Semana 1** é a linha de base. Na **semana 2** sobem os *avisos* "
         "(CPF inválido, e-mail ausente, duplicatas): o dado entra, sinalizado. Nas **semanas 3 e 4** chegam *erros* "
         "(valor ≤ 0, status inválido, total inconsistente, vencimento futuro, menor de idade, UF inválida...), barrados na "
         "quarentena antes da silver. Em 13/12 uma **forma de pagamento nova vaza**: não estava na barreira, entra na silver "
         "e vira chave órfã na fato. Na **semana 5** os incidentes caem até zerar, mas as órfãs ficam enquanto as pendências "
-        "seguem abertas."], pos(0, 0, 12, 3)),
+        "seguem abertas. As **semanas 6 e 7** são o catálogo de exemplos: na 6 voltam todos os erros de origem e avisos; na 7 "
+        "passam pela barreira os vazamentos que chegam às dimensões e à fato (cadastro ruim, código novo, chave corrigida "
+        "depois)."], pos(0, 0, 12, 3)),
     contador("kpi_recebidos", "ds_diario", agg("sum", "eventos_recebidos"), "Eventos recebidos", pos(0, 3, 3, 3), INT, DIA,
              rotulo="Recebidos", descricao="Bronze, no período filtrado"),
     contador("kpi_barrados", "ds_diario", agg("sum", "eventos_barrados"), "Eventos barrados", pos(3, 3, 3, 3), INT, DIA,
@@ -190,7 +192,8 @@ p1 = [
     grafico("barrados_por_dia", "bar", "ds_diario", DIA, agg("sum", "eventos_barrados"), "Eventos barrados por dia", pos(0, 6, 8, 6),
             x_rotulo="Dia", y_rotulo="Eventos barrados",
             anotacoes=[anotacao("2026-11-27", "Semana 2: só avisos", AVISO), anotacao("2026-12-04", "Semana 3: chegam os erros", RUIM),
-                       anotacao("2026-12-13", "Forma de pagamento nova vaza", "#7A5195")],
+                       anotacao("2026-12-13", "Forma de pagamento nova vaza", "#7A5195"),
+                       anotacao("2026-12-26", "Semana 6: catálogo de erros", RUIM), anotacao("2027-01-01", "Semana 7: vazamentos", "#7A5195")],
             descricao="Quantos eventos a barreira de qualidade segurou a cada dia"),
     barras_horizontais("barrados_por_motivo", "ds_barrados", campo("motivo_rejeicao"), agg("sum", "eventos"),
                        "Barrados por motivo", pos(8, 6, 4, 6), "Eventos", descricao="Primeira regra de erro violada"),

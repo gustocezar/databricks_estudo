@@ -1,0 +1,20 @@
+pos_venda.dq.v_bronze_eventos_janela igual
+pos_venda.dq.v_silver_eventos_aptos_janela igual
+pos_venda.dq.v_silver_hist_janela igual
+pos_venda.dq.v_fato_snapshot_janela igual
+pos_venda.dq.v_quarentena_janela igual
+=== REPLAY CICLO 6: janela 2026-12-25 -> 2026-12-31 (todas as linhas) ===
+  [studio] ciclo 6: 5 execucoes concluidas, 0 pendentes
+     v_silver_hist_janela           SUCCESS  total=49939 erro=0 aviso=0  
+     v_bronze_eventos_janela        SUCCESS  total=54091 erro=3368 aviso=6768  email_preenchido=3000; evento_unico_por_dia_pendencia_tipo=2270; valores_seguem_regras_de_calculo=1306
+     v_silver_eventos_aptos_janela  SUCCESS  total=50990 erro=880 aviso=9892  email_preenchido=2780; rg_preenchido=2542; evento_unico_por_dia_pendencia_tipo=2102
+     v_quarentena_janela            SUCCESS  total=3101 erro=3101 aviso=639  valores_seguem_regras_de_calculo=1306; atraso_confere_com_as_datas=694; vencimento_ate_data_do_evento=345
+     v_fato_snapshot_janela         SUCCESS  total=1794037 erro=2331 aviso=0  fk_forma_pagamento_sk=1676; fk_motivo_pendencia_sk=655
+=== REPLAY CICLO 7: janela 2027-01-01 -> 2027-01-07 (todas as linhas) ===
+  [studio] ciclo 7: 5 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_janela        SUCCESS  total=49383 erro=1398 aviso=2527  email_preenchido=1328; evento_unico_por_dia_pendencia_tipo=594; uf_em_maiusculas=519
+     v_silver_hist_janela           SUCCESS  total=48638 erro=1 aviso=0  versao_paga_e_a_corrente=1
+     v_silver_eventos_aptos_janela  SUCCESS  total=48930 erro=1009 aviso=5332  rg_preenchido=2507; email_preenchido=1314; cpf_valido=884
+     v_quarentena_janela            SUCCESS  total=453 erro=453 aviso=34  valores_seguem_regras_de_calculo=170; valor_parcela_positivo=131; atraso_confere_com_as_datas=130
+     v_fato_snapshot_janela         SUCCESS  total=1809584 erro=5261 aviso=0  fk_forma_pagamento_sk=2025; fk_motivo_pendencia_sk=1469; canal_contato_valido=1094
+janela devolvida aos ultimos 7 dias carregados

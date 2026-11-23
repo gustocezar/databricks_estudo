@@ -11,13 +11,13 @@
   "doc03": "3093",
   "soma_aplicavel": "8992",
   "achados": "8992",
-  "pendencias": "337",
-  "nao_conformes": "337",
+  "pendencias": "338",
+  "nao_conformes": "338",
   "regras": "28",
   "regras_sem_dados": "0",
   "historico_hoje": "28",
   "ultima_sonda": "2026-11-23T17:01:27.000Z",
-  "pendencias_mv": "337"
+  "pendencias_mv": "338"
  },
  "checks": [
   {
@@ -48,7 +48,7 @@
   {
    "check": "pendências = achados não conformes",
    "ok": true,
-   "detalhe": "337 = 337 = 337 (metric view)"
+   "detalhe": "338 = 338 = 338 (metric view)"
   },
   {
    "check": "toda regra verificou algum objeto",
@@ -270,8 +270,8 @@
   {
    "regra_id": "USO01",
    "aplicavel": "26",
-   "conformes": "24",
-   "pct_conforme": "92.3",
+   "conformes": "23",
+   "pct_conforme": "88.5",
    "meta_pct": "100.0",
    "situacao": "atenção"
   },

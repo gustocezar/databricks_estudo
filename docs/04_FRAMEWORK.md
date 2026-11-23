@@ -3,7 +3,7 @@
 > Documento incremental. Última atualização: **23/11/2026**. Cada prática tem um código (`P##`) que não muda.
 > Fontes conferidas em 22 e 23/11/2026 (todos os links responderam).
 
-Este framework reúne as **37 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 24 da
+Este framework reúne as **37 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 25 da
 [trilha](01_TRILHA_DE_APRENDIZAGEM.md)), cada uma com:
 
 - **Origem:** de onde veio. Pode ser documentação oficial, acelerador da Databricks, Databricks Labs, Microsoft,
@@ -198,15 +198,24 @@ Os outros documentos complementam este:
 
 ### P10 · Incidentes programados para provar a barreira
 - **Origem:** prática do projeto (L07, L64).
-- **Como aplicamos:** 5 ciclos semanais com roteiro, nesta ordem:
+- **Como aplicamos:** 7 ciclos semanais com roteiro, nesta ordem:
   1. semana limpa;
   2. pico de avisos;
   3. erros barrados;
   4. erros que vazam;
-  5. recuperação.
+  5. recuperação;
+  6. catálogo de erros e avisos: voltam os incidentes e entram os que faltavam para cada regra de origem;
+  7. catálogo de vazamentos: cadastro ruim, código novo e chave corrigida depois chegam às dimensões e à fato.
+
+  Os 34 incidentes (I01 a I34) vivem no gerador de eventos (`carga_diaria/gerar_carga.py`) e entram pelo fluxo normal:
+  bronze, barreira, silver, dimensões e fato.
 - **Por quê:** um dia sem incidente prova que a regra não reprova evento bom, não que ela pega erro.
 - **Reaplique quando:** a qualidade precisa ser demonstrada ou homologada.
-- **Prova:** roteiro em [dqx_studio/demo/ROTEIRO.md](../dqx_studio/demo/ROTEIRO.md).
+- **Prova:**
+  - roteiro em [dqx_studio/demo/ROTEIRO.md](../dqx_studio/demo/ROTEIRO.md);
+  - nas semanas 6 e 7, 133 das 224 regras do DQX Studio (13 tabelas) têm exemplo; antes eram cerca de 32;
+  - das 91 em zero, 86 são garantias da arquitetura (L84): chave por hash, chave única, valores recalculados pelas
+    funções e o que a barreira já tira.
 
 ### P11 · Monitoramento contínuo com DQX Studio, em janelas com todas as linhas
 - **Origem:** [DQX](https://github.com/databrickslabs/dqx) ([documentação](https://databrickslabs.github.io/dqx/))
@@ -214,7 +223,7 @@ Os outros documentos complementam este:
 - **Como aplicamos:**
   - Studio instalado como app, com estado no Lakebase.
   - Registro de Regras com 69 modelos, 12 tabelas monitoradas e 194 checagens aprovadas.
-  - Views de janela (`dq.v_*_janela`) e replay das 5 semanas.
+  - Views de janela (`dq.v_*_janela`) e replay das 7 semanas.
   - Agendamento às 06:30, depois da carga; a tarefa `ligar_dqx_studio` liga o app.
   - A regra de cálculo foi espelhada no Studio (P20).
 - **Por quê:**
@@ -468,7 +477,7 @@ Os outros documentos complementam este:
 - **Por quê:** quem chega depois entende o porquê de cada escolha. Uma mudança só está pronta quando a conferência está
   registrada.
 - **Reaplique quando:** sempre.
-- **Prova:** 22 fases, 74 lições, inventário regenerado a cada mudança.
+- **Prova:** 26 fases (0 a 25), 85 lições, inventário regenerado a cada mudança.
 
 ---
 

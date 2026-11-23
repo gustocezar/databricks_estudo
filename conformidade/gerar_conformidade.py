@@ -851,6 +851,8 @@ WHERE table_type IN ('VIEW', 'METRIC_VIEW', 'MATERIALIZED_VIEW') AND table_catal
         estado, erro, _ = executar(f"DESCRIBE QUERY /* sonda-conformidade */ SELECT * FROM {nome}")
         return v, estado == "SUCCEEDED", "" if estado == "SUCCEEDED" else (erro or estado)[:500]
 
+    if not views:
+        sys.exit("nenhuma view para sondar: confira o acesso ao information_schema")
     with cf.ThreadPoolExecutor(4) as ex:
         res = list(ex.map(sondar, views))
     valores = ",\n".join(

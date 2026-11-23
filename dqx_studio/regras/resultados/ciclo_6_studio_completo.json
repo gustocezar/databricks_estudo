@@ -1,0 +1,364 @@
+{
+  "pos_venda.dq.v_silver_hist_janela": {
+    "run_id": "198add5cddc6486c",
+    "estado": "SUCCESS",
+    "total": 49939,
+    "erro": 0,
+    "aviso": 0,
+    "regras_violadas": []
+  },
+  "pos_venda.dq.v_bronze_eventos_janela": {
+    "run_id": "2319690294bc4048",
+    "estado": "SUCCESS",
+    "total": 54091,
+    "erro": 3368,
+    "aviso": 6768,
+    "regras_violadas": [
+      {
+        "regra": "email_preenchido",
+        "linhas": 3000,
+        "erro": 0,
+        "aviso": 3000
+      },
+      {
+        "regra": "evento_unico_por_dia_pendencia_tipo",
+        "linhas": 2270,
+        "erro": 0,
+        "aviso": 2270
+      },
+      {
+        "regra": "valores_seguem_regras_de_calculo",
+        "linhas": 1306,
+        "erro": 1306,
+        "aviso": 0
+      },
+      {
+        "regra": "uf_em_maiusculas",
+        "linhas": 1108,
+        "erro": 0,
+        "aviso": 1108
+      },
+      {
+        "regra": "atraso_confere_com_as_datas",
+        "linhas": 694,
+        "erro": 694,
+        "aviso": 0
+      },
+      {
+        "regra": "canal_corretor_tem_corretor",
+        "linhas": 670,
+        "erro": 0,
+        "aviso": 670
+      },
+      {
+        "regra": "vencimento_ate_data_do_evento",
+        "linhas": 345,
+        "erro": 345,
+        "aviso": 0
+      },
+      {
+        "regra": "uf_valida",
+        "linhas": 327,
+        "erro": 327,
+        "aviso": 0
+      },
+      {
+        "regra": "valor_total_igual_parcela_multa_juros",
+        "linhas": 321,
+        "erro": 321,
+        "aviso": 0
+      },
+      {
+        "regra": "valor_parcela_positivo",
+        "linhas": 318,
+        "erro": 318,
+        "aviso": 0
+      },
+      {
+        "regra": "cliente_maior_de_idade",
+        "linhas": 306,
+        "erro": 306,
+        "aviso": 0
+      },
+      {
+        "regra": "status_cobranca_valido",
+        "linhas": 290,
+        "erro": 290,
+        "aviso": 0
+      },
+      {
+        "regra": "motivo_pendencia_cadastrado",
+        "linhas": 284,
+        "erro": 284,
+        "aviso": 0
+      },
+      {
+        "regra": "baixa_tem_data_e_valor_pago",
+        "linhas": 201,
+        "erro": 201,
+        "aviso": 0
+      },
+      {
+        "regra": "pendencia_id_nao_nulo",
+        "linhas": 188,
+        "erro": 188,
+        "aviso": 0
+      },
+      {
+        "regra": "tipo_evento_nao_nulo",
+        "linhas": 116,
+        "erro": 116,
+        "aviso": 0
+      },
+      {
+        "regra": "tipo_evento_valido",
+        "linhas": 111,
+        "erro": 111,
+        "aviso": 0
+      },
+      {
+        "regra": "email_valido",
+        "linhas": 57,
+        "erro": 0,
+        "aviso": 57
+      },
+      {
+        "regra": "cpf_formato_com_ou_sem_mascara",
+        "linhas": 29,
+        "erro": 0,
+        "aviso": 29
+      }
+    ]
+  },
+  "pos_venda.dq.v_silver_eventos_aptos_janela": {
+    "run_id": "d13211034c344404",
+    "estado": "SUCCESS",
+    "total": 50990,
+    "erro": 880,
+    "aviso": 9892,
+    "regras_violadas": [
+      {
+        "regra": "email_preenchido",
+        "linhas": 2780,
+        "erro": 0,
+        "aviso": 2780
+      },
+      {
+        "regra": "rg_preenchido",
+        "linhas": 2542,
+        "erro": 0,
+        "aviso": 2542
+      },
+      {
+        "regra": "evento_unico_por_dia_pendencia_tipo",
+        "linhas": 2102,
+        "erro": 0,
+        "aviso": 2102
+      },
+      {
+        "regra": "cpf_valido",
+        "linhas": 1620,
+        "erro": 0,
+        "aviso": 1620
+      },
+      {
+        "regra": "cep_8_digitos",
+        "linhas": 1107,
+        "erro": 0,
+        "aviso": 1107
+      },
+      {
+        "regra": "canal_corretor_tem_corretor",
+        "linhas": 617,
+        "erro": 0,
+        "aviso": 617
+      },
+      {
+        "regra": "tentativas_entre_1_e_10",
+        "linhas": 315,
+        "erro": 315,
+        "aviso": 0
+      },
+      {
+        "regra": "faixa_atraso_valida",
+        "linhas": 307,
+        "erro": 307,
+        "aviso": 0
+      },
+      {
+        "regra": "motivo_pendencia_cadastrado",
+        "linhas": 267,
+        "erro": 267,
+        "aviso": 0
+      },
+      {
+        "regra": "email_valido",
+        "linhas": 51,
+        "erro": 0,
+        "aviso": 51
+      },
+      {
+        "regra": "celular_11_digitos",
+        "linhas": 48,
+        "erro": 0,
+        "aviso": 48
+      },
+      {
+        "regra": "telefone_fixo_10_digitos",
+        "linhas": 40,
+        "erro": 0,
+        "aviso": 40
+      },
+      {
+        "regra": "rg_formato",
+        "linhas": 12,
+        "erro": 0,
+        "aviso": 12
+      }
+    ]
+  },
+  "pos_venda.dq.v_quarentena_janela": {
+    "run_id": "f645b5a6053e4deb",
+    "estado": "SUCCESS",
+    "total": 3101,
+    "erro": 3101,
+    "aviso": 639,
+    "regras_violadas": [
+      {
+        "regra": "valores_seguem_regras_de_calculo",
+        "linhas": 1306,
+        "erro": 1306,
+        "aviso": 0
+      },
+      {
+        "regra": "atraso_confere_com_as_datas",
+        "linhas": 694,
+        "erro": 694,
+        "aviso": 0
+      },
+      {
+        "regra": "vencimento_ate_data_do_evento",
+        "linhas": 345,
+        "erro": 345,
+        "aviso": 0
+      },
+      {
+        "regra": "uf_valida",
+        "linhas": 327,
+        "erro": 327,
+        "aviso": 0
+      },
+      {
+        "regra": "valor_total_igual_parcela_multa_juros",
+        "linhas": 321,
+        "erro": 321,
+        "aviso": 0
+      },
+      {
+        "regra": "valor_parcela_positivo",
+        "linhas": 318,
+        "erro": 318,
+        "aviso": 0
+      },
+      {
+        "regra": "cliente_maior_de_idade",
+        "linhas": 306,
+        "erro": 306,
+        "aviso": 0
+      },
+      {
+        "regra": "status_cobranca_valido",
+        "linhas": 290,
+        "erro": 290,
+        "aviso": 0
+      },
+      {
+        "regra": "uf_em_maiusculas",
+        "linhas": 227,
+        "erro": 0,
+        "aviso": 227
+      },
+      {
+        "regra": "email_preenchido",
+        "linhas": 220,
+        "erro": 0,
+        "aviso": 220
+      },
+      {
+        "regra": "baixa_tem_data_e_valor_pago",
+        "linhas": 201,
+        "erro": 201,
+        "aviso": 0
+      },
+      {
+        "regra": "pendencia_id_nao_nulo",
+        "linhas": 188,
+        "erro": 188,
+        "aviso": 0
+      },
+      {
+        "regra": "evento_unico_por_dia_pendencia_tipo",
+        "linhas": 168,
+        "erro": 0,
+        "aviso": 168
+      },
+      {
+        "regra": "tipo_evento_nao_nulo",
+        "linhas": 116,
+        "erro": 116,
+        "aviso": 0
+      },
+      {
+        "regra": "tipo_evento_valido",
+        "linhas": 111,
+        "erro": 111,
+        "aviso": 0
+      },
+      {
+        "regra": "canal_corretor_tem_corretor",
+        "linhas": 53,
+        "erro": 0,
+        "aviso": 53
+      },
+      {
+        "regra": "motivo_pendencia_cadastrado",
+        "linhas": 17,
+        "erro": 17,
+        "aviso": 0
+      },
+      {
+        "regra": "email_valido",
+        "linhas": 6,
+        "erro": 0,
+        "aviso": 6
+      },
+      {
+        "regra": "cpf_formato_com_ou_sem_mascara",
+        "linhas": 3,
+        "erro": 0,
+        "aviso": 3
+      }
+    ]
+  },
+  "pos_venda.dq.v_fato_snapshot_janela": {
+    "run_id": "933bfb976f5b4b1a",
+    "estado": "SUCCESS",
+    "total": 1794037,
+    "erro": 2331,
+    "aviso": 0,
+    "regras_violadas": [
+      {
+        "regra": "fk_forma_pagamento_sk",
+        "linhas": 1676,
+        "erro": 1676,
+        "aviso": 0
+      },
+      {
+        "regra": "fk_motivo_pendencia_sk",
+        "linhas": 655,
+        "erro": 655,
+        "aviso": 0
+      }
+    ]
+  }
+}

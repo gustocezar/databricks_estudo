@@ -82,16 +82,20 @@ def main():
 
     # checagens de consistência (os números que a demonstração cita)
     checagens = [
-        ("5 camadas x 5 semanas no Studio, sem repetição",
-         "SELECT count(*) = 25 AND count(DISTINCT destino, semana_n) = 25 AS ok FROM v_painel_studio_execucoes"),
-        ("quarentena 100% reprovada no Studio",
-         "SELECT sum(error_rows) = sum(total_rows) AND sum(total_rows) = 3049 AS ok FROM v_painel_studio_execucoes WHERE camada_curta = 'quarentena'"),
-        ("órfãs da fato no Studio = métrica do pipeline (semanas 4 e 5)",
-         "SELECT (SELECT sum(error_rows) FROM v_painel_studio_execucoes WHERE camada_curta = 'fato') = "
+        ("5 camadas por semana no Studio, sem repetição",
+         "SELECT count(*) = 5 * count(DISTINCT semana_n) AND count(*) = count(DISTINCT destino, semana_n) AS ok FROM v_painel_studio_execucoes"),
+        ("quarentena 100% reprovada no Studio = quarentena do painel nas semanas avaliadas",
+         "SELECT (SELECT sum(error_rows) = sum(total_rows) FROM v_painel_studio_execucoes WHERE camada_curta = 'quarentena') AND "
+         "(SELECT sum(total_rows) FROM v_painel_studio_execucoes WHERE camada_curta = 'quarentena') = "
+         "(SELECT count(*) FROM v_painel_quarentena q WHERE q.semana_n <= (SELECT max(semana_n) FROM v_painel_studio_execucoes)) AS ok"),
+        ("órfãs da fato no Studio = métrica do pipeline (semanas 4 e 5, só forma de pagamento)",
+         "SELECT (SELECT sum(error_rows) FROM v_painel_studio_execucoes WHERE camada_curta = 'fato' AND semana_n <= 5) = "
          "(SELECT sum(fato_linhas_orfas) FROM v_painel_diario WHERE dia BETWEEN DATE'2026-12-11' AND DATE'2026-12-24') AS ok"),
         ("um dia de métricas por dia carregado desde 20/11, sem buraco",
          "SELECT count(*) = datediff(max(dia), DATE'2026-11-20') + 1 AND count(*) >= 35 AS ok FROM v_painel_diario"),
-        ("quarentena do painel = quarentena do pipeline", "SELECT count(*) = 3049 AS ok FROM v_painel_quarentena"),
+        ("quarentena do painel = quarentena do pipeline",
+         "SELECT (SELECT count(*) FROM v_painel_quarentena) = "
+         "(SELECT count(*) FROM pos_venda.silver.pendencia_evento_quarentena WHERE data_extracao >= DATE'2026-11-20') AS ok"),
     ]
     for desc, sql in checagens:
         estado, erro, _, linhas = executar(sql, "pos_venda", "dq")

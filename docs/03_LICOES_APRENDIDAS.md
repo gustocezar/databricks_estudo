@@ -35,6 +35,10 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   clássicos, spot, policies), e o rightsizing de clusters falha em toda execução → checagem sem objeto para verificar
   não é conformidade: mostre "sem dados", nunca "atende", e tire do Free Edition o que só faz sentido com clusters
   clássicos. (`acoes_observabilidade`; `conferir` reprova regra sem dados)
+- **L85** O job liga o app `dqx-studio` e ele aparece como RUNNING, mas ainda reinstala os pacotes por cerca de um
+  minuto. Nesse intervalo, todas as 18 submissões do replay voltaram HTTP 502, e o script terminou como se tivesse
+  rodado → antes de submeter, espere "Application startup complete" em `databricks apps logs dqx-studio` e confira
+  no log do replay que nenhuma linha diz "erro submeter". (`rodar_ciclos.py`)
 
 ## Custo e FinOps
 
@@ -65,6 +69,10 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L09** Chave substituta sequencial quebraria a fato histórica → use `xxhash64(chave de negócio)`.
 - **L10** Saldo de carteira é semiaditivo (uma linha por dia) → nunca some dias; use fechamento, média diária ou uma data.
 - **L11** A simulação não baixa pendências por perda, então a carteira só cresce → diga isso na demonstração; não confunda com tendência real.
+- **L82** A guarda de idempotência do gerador de eventos usava `data_evento NOT IN (SELECT DISTINCT data_extracao FROM
+  bronze)`. Bastaria uma linha com `data_extracao` nula na bronze para o `NOT IN` virar NULL e nenhuma carga futura
+  inserir nada, sem erro → em `NOT IN` com subconsulta, filtre os nulos (`WHERE data_extracao IS NOT NULL`) ou use
+  `NOT EXISTS`. (`carga_diaria/gerar_carga.py`)
 
 ## Qualidade e DQX Studio
 
@@ -87,6 +95,15 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L44** Agendar uma tabela monitorada já concede SELECT aos service principals do agendador (que leem sem o token do
   usuário); confira antes com `schedule-grants/preflight`. Execuções agendadas aparecem com `run_type = 'scheduled'`
   e `requesting_user = 'scheduler'`.
+- **L83** As dimensões pegam o evento mais recente de cada entidade. Um defeito injetado num produto, ponto de venda ou
+  corretor que já existe estragaria a dimensão inteira dessa entidade, e com ela os painéis → nos incidentes de
+  demonstração, o defeito de entidade compartilhada vai num código novo (`VIDA_QA_*`, `PV_QA_*`, `COR_QA_*`); só
+  clientes e apólices, que são individuais, recebem o defeito no próprio cadastro. (`gerar_carga.py`, I31 a I33)
+- **L84** Cerca de 40 regras do DQX Studio ficam em zero mesmo com os incidentes, porque são garantias da arquitetura:
+  a barreira tira os erros antes da silver e a fato recalcula faixa, multa, juros, total e tentativas pelas funções de
+  regra. Exemplos: chave única, chave substituta não nula, `dim_data` e a faixa "Vence hoje" → zero nessas regras é
+  prova de que a barreira e o recálculo funcionam, não falta de dado. Os exemplos delas ficam na quarentena e na
+  bronze. (`dqx_studio/demo/ROTEIRO.md`)
 
 ## Governança e metadados
 

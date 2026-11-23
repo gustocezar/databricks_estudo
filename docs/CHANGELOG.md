@@ -17,6 +17,80 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 23/11/2026
 
+### Catálogo de exemplos de qualidade: semanas 6 e 7 pelo fluxo normal
+- **O que mudou:**
+  - **Gerador de eventos** (`carga_diaria/gerar_carga.py`):
+    - 19 incidentes novos (I16 a I34) e duas semanas;
+    - semana 6 (26/12 a 01/01): erros de origem e avisos;
+    - semana 7 (02/01 a 08/01): vazamentos para as dimensões e a fato — cadastro de cliente e apólice com defeito,
+      produto, ponto de venda e corretor novos (`VIDA_QA_*`, `PV_QA_*`, `COR_QA_*`), chave digitada errado e
+      corrigida depois, motivo e periodicidade fora do catálogo, canal de contato inválido, vencimento nulo;
+    - os incidentes antigos voltam com taxa baixa;
+    - a guarda de idempotência agora ignora data nula (L82).
+  - **Carga:** 14 dias pelo job `pos_venda_carga_diaria` (26/12/2026 a 08/01/2027).
+  - **DQX Studio:** replay das semanas 6 e 7 e das 8 tabelas inteiras (`rodar_ciclos.py`, ciclos 6 e 7 alinhados à
+    grade do painel).
+  - **Painel de qualidade:** texto e anotações das semanas 6 e 7; as checagens de `aplicar_e_testar.py` deixaram de
+    usar números fixos (25 execuções, 3.049 na quarentena) e passaram a comparar com o pipeline.
+- **Por quê:** pedido do usuário: dados para dar exemplo a todos os indicadores do DQX Studio, das fatos e das regras,
+  com o mínimo de dado e pelo fluxo normal. Também atualizar a documentação, o framework e as apresentações, verificar
+  os apps e enviar ao Git.
+- **Onde:** `carga_diaria/` (gerador e notebooks gerados), `dqx_studio/regras/rodar_ciclos.py`, `dqx_studio/painel/`,
+  `dqx_studio/demo/ROTEIRO.md`. No workspace: bronze, silver, gold, `main.dqx_studio` e os painéis.
+- **Conferência:**
+  - **Job:** SUCCESS em 16 minutos; portão 36/36; 102.612 eventos no intervalo; 3.613.748 linhas novas na fato
+    (14 fotos).
+  - **Quarentena:** os 11 motivos, com 3.596 eventos nas semanas novas.
+  - **Fato:** em 08/01/2027, todas as faixas (menos "Vence hoje", por desenho) e todos os status em aberto. Chaves
+    órfãs em cliente (59), apólice (24), produto (5), corretor (27), ponto de venda (31), periodicidade (632), forma
+    de pagamento (3.806) e motivo (2.380).
+  - **Studio:** 19 execuções com todas as linhas, todas SUCCESS (a primeira tentativa deu HTTP 502, L85). 133 das 224
+    regras com exemplo; das 91 em zero, 86 são garantias da arquitetura (L84) e 5 pedem mais um dia.
+  - **Painel de qualidade:** 6/6 conjuntos de dados e 5/5 checagens; 35 execuções (7 semanas); implantado.
+  - **Painéis financeiros:** foto de 08/01/2027, saldo em aberto R$ 33.079.336,07.
+  - **Apps:**
+    - `dqx-studio` RUNNING, com as execuções novas no histórico;
+    - `genie-ontology-readiness` RUNNING, com a avaliação 4 gravada no Lakebase: 94,5 (era 92,7), com métricas de 76
+      para 84 e metadados de 93,5 para 94,5.
+- **Docs atualizadas:** trilha (fase 25) · playbook (passo 6 do roteiro e 1 linha na matriz) · lições (L82–L85) ·
+  framework (P10, P11, P29) · `docs/README.md` · `README.md` · `AGENTS.md` · README da carga · roteiro da demo ·
+  inventário
+
+### Revisão total do projeto
+- **O que mudou (correções):**
+  - **Fases.** A trilha tem 25 fases (0 a 24), não 24. Corrigido no documento e na apresentação, que nas entradas
+    anteriores deste dia diziam "24 fases". A prova da P29 (estava "22 fases, 74 lições") foi corrigida no framework
+    e no documento.
+  - **Datas.** Corrigidas a "Última atualização" da trilha e do playbook e o título "Situação em 23/11/2026".
+  - **Guia de opções para LLM.** O contexto dizia "29 práticas em 8 camadas" e a regra 1 não citava Custo e uso nem
+    Conformidade. `gerar_opcoes.py` foi corrigido, e `OPCOES_PARA_LLM.md` e `opcoes.json` foram gerados de novo.
+  - **Espaços Genie.** `analista.json` e `diretor.json` estavam atrás do `genie.py`: ainda fixavam a data
+    24/12/2026. Foram gerados de novo. Os espaços publicados já tinham o texto novo.
+  - **Sonda.** `gerar_conformidade.py registrar` agora para com uma mensagem quando não há view para sondar; antes,
+    o INSERT saía vazio.
+- **Por quê:** pedido do usuário: revisão total.
+- **Onde:** `docs/` (framework, trilha, playbook, README), `referencias/databricks_solutions/` (guia de opções),
+  `governanca/genie/*.json`, `conformidade/gerar_conformidade.py`. O documento e a apresentação estão no claude.ai.
+- **Conferência:**
+  - **Geradores.** Os 12 que rodam sem warehouse foram rodados: 11 sem diferença e 1 (Genie) com o JSON atrasado,
+    agora corrigido.
+  - **Links e código.**
+    - links internos dos `.md`: 0 quebrados;
+    - links externos da documentação: 61 de 61 responderam 200;
+    - `py_compile` em todos os `.py`: ok;
+    - imports e funções sem uso nos geradores de FinOps e conformidade: 0.
+  - **Varredura.** 0 token. O e-mail do autor e um caminho local aparecem em 4 arquivos, já publicados por decisão do
+    dono (fase 21, L70).
+  - **Workspace.**
+    - conformidade: 9/9 checagens, 8.992 verificações, 338 pendências;
+    - FinOps: 7/7, com US$ 1.228,43 = billing;
+    - sonda: 0 view quebrada no `pos_venda`; as 22 quebradas estão fora dele e têm a mesma causa (L76);
+    - jobs do pós-venda: última execução com sucesso;
+    - apps `dqx-studio` e `genie-ontology-readiness`: parados, o esperado no Free Edition.
+  - **Não refeito**, porque gasta cota e não mudou desde a última conferência registrada: cenários BDD, validação e
+    avaliação da Genie, paridade do Power BI.
+- **Docs atualizadas:** framework (prova da P29) · trilha · playbook · `docs/README.md` · guia de opções
+
 ### Origem "Alerta SQL" na FinOps; documento e apresentação com a conformidade
 - **O que mudou:**
   - **FinOps.**

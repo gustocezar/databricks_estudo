@@ -1,6 +1,6 @@
 # Trilha de aprendizagem · pos_venda
 
-> Documento incremental. Cada fase nova entra no fim, com a mesma estrutura. Última atualização: **22/11/2026**.
+> Documento incremental. Cada fase nova entra no fim, com a mesma estrutura. Última atualização: **23/11/2026**.
 > Mudanças pontuais vão para o [CHANGELOG](CHANGELOG.md); regras gerais que surgirem viram itens nas
 > [lições aprendidas](03_LICOES_APRENDIDAS.md) e passos no [playbook](02_PLAYBOOK.md).
 
@@ -558,4 +558,41 @@ igual ao `information_schema`, pendências iguais aos não conformes e à metric
 - Alerta SQL novo roda como job oculto. Ache pelo `query_source.alert_id` e limite a agenda (L79).
 - Separe as tabelas internas do Lakeflow antes de contar: eram 382 falsos "sem descrição" (L80).
 - Checagem sem objeto para verificar não é conformidade: mostre "sem dados" (L81).
+
+## Fase 25 · Catálogo de exemplos de qualidade pelo fluxo normal
+
+**Objetivo:** dar exemplo a todos os indicadores do DQX Studio, das fatos e das regras, com o mínimo de dado e pelo
+fluxo que já existe: gerador de eventos, barreira, silver, dimensões e fato.
+
+**O que fizemos (23/11/2026):**
+- **Medição.** Das 388 regras nas últimas execuções do Studio, 348 estavam sem exemplo. A gold estava toda em zero,
+  porque a barreira e o recálculo da fato impedem o erro de chegar lá.
+- **Incidentes novos.** O gerador (`carga_diaria/gerar_carga.py`) ganhou 19 incidentes (I16 a I34) e duas semanas:
+  - a 6, de erros e avisos;
+  - a 7, de vazamentos: cadastro ruim, código novo de produto, ponto de venda e corretor, chave digitada errado e
+    corrigida depois.
+- **Carga mínima.** 14 dias (26/12/2026 a 08/01/2027): 102.612 eventos, 3,6 milhões de linhas novas na fato.
+- **Studio.** Replay das semanas 6 e 7 com todas as linhas, mais as 8 tabelas inteiras.
+- **Guarda corrigida.** A guarda de idempotência do gerador não trava mais com data nula (L82).
+- **Painel de qualidade.** Ganhou as semanas 6 e 7, e as checagens deixaram de usar números fixos.
+
+**Onde está:** [dqx_studio/demo/ROTEIRO.md](../dqx_studio/demo/ROTEIRO.md) (semanas 6 e 7 e a cobertura das regras).
+
+**Resultado:**
+- **Regras com exemplo.** 133 das 224 regras das 13 tabelas avaliadas têm exemplo; antes eram cerca de 32.
+- **Regras em zero.** 86 das 91 em zero são garantias da arquitetura (L84). As outras 5 pedem mais um dia de carga.
+- **Quarentena.** Os 11 motivos aparecem (3.596 eventos barrados nas semanas novas).
+- **Fato.** Todas as faixas e todos os status em aberto têm pendências na foto de 08/01/2027; as chaves órfãs
+  aparecem para cliente, apólice, produto, corretor, ponto de venda, forma de pagamento, motivo e periodicidade.
+- **Painéis e apps.** Os painéis financeiros mostram a foto de 08/01/2027 (saldo em aberto R$ 33.079.336,07). O app
+  de prontidão gravou a avaliação 4, com 94,5.
+
+**Como conferir:** `python3 dqx_studio/painel/aplicar_e_testar.py` passa nos 6 conjuntos de dados e nas 5 checagens.
+Ele confere 5 camadas por semana, a quarentena igual à do pipeline e um dia de métrica por dia carregado.
+
+**O que aprendemos:**
+- Em `NOT IN` com subconsulta, filtre os nulos (L82).
+- Defeito de entidade compartilhada vai num código novo (L83).
+- Zero numa garantia da arquitetura é prova, não falta de dado (L84).
+- App recém-ligado responde 502 até terminar de subir (L85).
 

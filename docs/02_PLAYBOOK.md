@@ -1,6 +1,6 @@
 # Playbook · domínio de dados com qualidade, governança e IA no Databricks
 
-> Documento incremental. Última atualização: **22/11/2026**. Cada módulo tem um **critério de saída** verificável;
+> Documento incremental. Última atualização: **23/11/2026**. Cada módulo tem um **critério de saída** verificável;
 > quando o projeto mudar, atualize o módulo afetado e registre no [CHANGELOG](CHANGELOG.md).
 
 Este playbook transforma o que foi feito no pos_venda num **framework reaproveitável**. Ele serve para duas coisas:
@@ -269,6 +269,7 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
 | Portão das regras reprovado | tarefa `portao_regras` falha e a carga do dia não roda | ler o cenário que falhou no log da tarefa; corrigir a função (ou o cenário, se a regra de negócio mudou) e rodar o job de novo |
 | Timeout de leitura na Statement Execution API | `ReadTimeoutError` (60 s) num cenário BDD | espera síncrona de 20 s, consulta do estado e nova tentativa só em erro de transporte (`regras/uc.py`) |
 | Dia novo carregado | textos com data fixa ("foto de 24/12") ficam errados; teste que contava 35 dias reprova; painel de qualidade abre uma "Semana 6" | escreva "foto mais recente" em painéis e instruções da Genie; checagens dependentes da data (`count = dias desde o início`); confira roteiro e gabaritos depois da carga |
+| App do DQX Studio recém-ligado | as submissões do replay voltam HTTP 502, com o app em RUNNING | esperar "Application startup complete" em `databricks apps logs dqx-studio` (o app reinstala os pacotes ao subir) e rodar de novo (L85) |
 | View quebrada por mudança em tabela de sistema ou em outro schema | `DESCRIBE QUERY` falha; a regra USO03 da conformidade cai | `gerar_conformidade.py registrar` lista as quebradas em `sonda_views`; recriar a partir do código ou apagar (L76) |
 | Alerta SQL de hora em hora | warehouse acorda o dia todo; custo SQL "sem dono" | `databricks alerts-v2 list-alerts`; espaçar a agenda (regra PLT06, L79) |
 | Projeto Power BI não abre no Desktop | erro de TMDL/PBIR com arquivo e linha | corrigir em `gerar_powerbi.py` (não no arquivo gerado), gerar de novo e rodar a conferência contra os esquemas oficiais |
@@ -286,7 +287,7 @@ Ordem para recriar tudo do zero num workspace (perfil `dbx-workshop`). Cada pass
 | 3 | Carga diária: gerar e implantar | `cd carga_diaria && python3 gerar_carga.py && databricks bundle deploy -t dev` | validate OK, job PAUSED |
 | 4 | Setup e backfill | `databricks bundle run carga_setup -t dev` e `bundle run carga_diaria -t dev --params data_inicio=2026-05-19,data_fim=2026-11-18` | silver e fato preenchidas |
 | 5 | DQX Studio | instalar pelo bundle oficial com o patch do warehouse ([dqx_studio/README.md](../dqx_studio/README.md)) | app RUNNING, setup `ready` |
-| 6 | Ciclos com incidentes e histórico | `cd dqx_studio/regras && python3 definir_regras.py && python3 -u rodar_ciclos.py 2 3 4 5` e depois `rodar_ciclos.py 1 2 3 4 5 --replay` | 25 execuções completas no histórico |
+| 6 | Ciclos com incidentes e histórico | `cd dqx_studio/regras && python3 definir_regras.py && python3 -u rodar_ciclos.py 2 3 4 5` e depois `rodar_ciclos.py 1 2 3 4 5 --replay`; o catálogo de exemplos: carga de 26/12 a 08/01 e `rodar_ciclos.py 6 7 --replay` e `--dims` | 35 execuções completas no histórico (7 semanas) |
 | 7 | Registro de Regras | `python3 registro_studio.py aplicar && python3 registro_studio.py executar` (depois do passo 18: uma regra chama `pos_venda.regras`) | 70 modelos, 12 tabelas, execuções SUCCESS com nota |
 | 8 | Painel de qualidade | `cd dqx_studio/painel && python3 aplicar_e_testar.py && python3 gerar_painel.py && databricks bundle deploy -t dev` | "RESULTADO: tudo certo" |
 | 9 | Ontologia e metric views | `cd governanca && python3 gerar_ontologia_sql.py && python3 aplicar_sql.py ontologia_sql.json` | 21 comandos ok |

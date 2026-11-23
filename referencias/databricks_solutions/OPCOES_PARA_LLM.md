@@ -18,11 +18,11 @@ Este guia lista os **147 repositórios públicos** da organização [databricks-
 | Dados | Sintéticos (dbldatagen); dado pessoal marcado por tag e sem máscara, por decisão (a validação usa os valores) |
 | Consumo | 2 espaços Genie (analista e diretor), painéis AI/BI, opção Power BI por importação (schema bi) |
 | Versionamento | Git no GitHub (gustocezar/databricks_estudo); ainda sem CI/CD |
-| Framework | docs/04_FRAMEWORK.md: 29 práticas (P01 a P29) em 8 camadas |
+| Framework | docs/04_FRAMEWORK.md: 37 práticas (P01 a P37) em 10 camadas |
 
 ## Regras de escolha
 
-1. Identifique a necessidade e a camada do framework que ela toca (Fundação, Dados, Qualidade, Governança, Semântica, Consumo, Avaliação, Operação).
+1. Identifique a necessidade e a camada do framework que ela toca (Fundação, Dados, Qualidade, Governança, Semântica, Consumo, Avaliação, Custo e uso, Operação, Conformidade).
 2. Filtre as opções pela camada e pelas práticas (campos `camada` e `praticas`); confira o campo `escolha_quando`.
 3. Se uma opção `Já aplicado` cobre a necessidade, estenda-a antes de adotar outra (ela já está integrada e testada).
 4. Enquanto o projeto estiver no Free Edition, descarte `Não roda no Free Edition`; em `Com ressalvas`, leia a `nota_free_edition` e diga a ressalva.

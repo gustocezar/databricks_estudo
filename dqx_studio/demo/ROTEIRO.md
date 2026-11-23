@@ -16,7 +16,7 @@ o pico e a recuperação, e deixa ver **linha por linha** o que foi reprovado e 
 
 ---
 
-## A história (5 semanas simuladas)
+## A história (7 semanas simuladas)
 
 | Ciclo | Semana | O que acontece | Onde aparece |
 |---|---|---|---|
@@ -26,7 +26,54 @@ o pico e a recuperação, e deixa ver **linha por linha** o que foi reprovado e 
 | 4 | 11–17/12 | vencimento futuro, menor de idade, UF inválida, baixa sem data, atraso errado | **erros**: barrados |
 |   |  | forma de pagamento nova, CEP malformado, canal CORRETOR sem corretor | **entram na silver**: a forma de pagamento é **erro que vazou** (não está na barreira); CEP e CORRETOR são **avisos** |
 | 5 | 18–24/12 | recuperação: os incidentes caem até zerar (22/12) | barrados e vazados caem; as **órfãs da fato continuam** enquanto as pendências seguem abertas |
-| (6) | 25/12 | dia limpo, carregado em 22/11 pelo job completo para provar as funções de regra | 0 barrados; no painel de qualidade aparece como "Semana 6" parcial (1 dia) |
+| 6 | 25–31/12 | **catálogo de erros e avisos**. O dia 25/12 é limpo; de 26/12 em diante voltam os incidentes I01 a I15. Entram também: tipo de evento nulo ou `ESTORNO`, multa fora da regra (com total coerente), faixa fora do domínio, tentativas fora de 1 a 10, cadastro do cliente com defeito e UF minúscula | **erros** barrados (os 11 motivos da quarentena) e **avisos** na silver |
+| 7 | 01–07/01/2027 | **catálogo de vazamentos**. Passam pela barreira: cliente, apólice ou parcela sem número; vencimento nulo; `PAGA` sem baixa; canal de contato e motivo fora do domínio; periodicidade nova; cadastro de apólice ruim; produto, ponto de venda e corretor novos e incompletos (`VIDA_QA_*`, `PV_QA_*`, `COR_QA_*`); chave digitada errado e corrigida no evento seguinte | **dimensões** com cadastro ruim e **fato** com chaves órfãs |
+| (8) | 08/01/2027 | último dia carregado, ainda com os vazamentos | fica fora das janelas do replay; aparece no painel como "Semana 8" parcial (1 dia) |
+
+
+## Cobertura das regras (semanas 6 e 7)
+
+Medida nas 19 execuções do Studio de 23/11/2026: replay das semanas 6 e 7 nas 5 camadas, mais as 8 tabelas inteiras.
+São 224 regras nas 13 tabelas, e **133 têm exemplo**. Antes das semanas 6 e 7, eram cerca de 32.
+
+| Tabela | Regras | Com exemplo |
+|---|---|---|
+| bronze (`v_bronze_eventos_janela`) | 26 | 24 |
+| quarentena (`v_quarentena_janela`) | 26 | 21 |
+| silver, eventos aptos (`v_silver_eventos_aptos_janela`) | 29 | 19 |
+| silver atual (`pendencia_atual`) | 29 | 18 |
+| silver histórica (`v_silver_hist_janela`) | 10 | 1 |
+| fato (`v_fato_snapshot_janela`) | 36 | 11 |
+| `dim_cliente` | 20 | 14 |
+| `dim_apolice` | 16 | 13 |
+| `dim_produto` | 7 | 3 |
+| `dim_ponto_venda` | 8 | 4 |
+| `dim_corretor` | 7 | 3 |
+| `bridge_apolice_cobertura` | 7 | 2 |
+| `dim_data` | 3 | 0 |
+
+**As 86 regras que ficam em zero por desenho (L84)** são garantias da arquitetura. O exemplo delas, quando existe,
+está numa camada anterior:
+- **Chave substituta não nula**, na fato, nas dimensões e na ponte: a chave é `xxhash64` do código, que nunca é nula.
+- **Chave única**, nas dimensões, na fato, na silver atual e na histórica: a dimensão pega uma linha por código, e o
+  Auto CDC guarda uma versão por pendência e vigência.
+- **Valores recalculados na fato:** multa de 2%, total igual a parcela + multa + juros, valores conforme as funções
+  de regra, tentativas de 1 a 10, uma pendência por linha, entrada depois do vencimento e foto depois da entrada. As
+  funções `pos_venda.regras.*` recalculam esses valores no dia da foto.
+- **O que a barreira tira da silver:** pendência sem id, status nulo ou fora do domínio, valor nulo ou não positivo,
+  total inconsistente, valores fora da regra, vencimento depois do evento, menor de idade e UF inválida. O exemplo
+  fica na quarentena.
+- **Data da extração nula:** a origem sempre carimba a data, e a guarda da carga ignora linha sem data (L82).
+- **Na quarentena:** vencimento, apólice e parcela nulos passam pela barreira, então nunca estão na quarentena.
+- **`dim_data`:** é um calendário gerado. A faixa "Vence hoje" também não chega à fato, porque a pendência entra um dia
+  depois do vencimento.
+
+**As 5 que pedem mais um dia de carga:**
+- dias de atraso menores que 1, na bronze e na quarentena;
+- nascimento nulo na `dim_cliente`;
+- código nulo na `dim_produto` e na `dim_ponto_venda`.
+
+Basta um incidente novo no gerador e um dia a mais de carga, seguidos do replay da semana 8 e das dimensões.
 
 Como o dado é avaliado:
 

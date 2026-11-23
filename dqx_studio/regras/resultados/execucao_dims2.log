@@ -1,0 +1,15 @@
+pos_venda.dq.v_bronze_eventos_janela igual
+pos_venda.dq.v_silver_eventos_aptos_janela igual
+pos_venda.dq.v_silver_hist_janela igual
+pos_venda.dq.v_fato_snapshot_janela igual
+pos_venda.dq.v_quarentena_janela igual
+=== TABELAS INTEIRAS (silver atual + dimensoes) ===
+  [studio] ciclo inteiras: 8 execucoes concluidas, 0 pendentes
+     dim_cliente                    SUCCESS  total=107809 erro=334 aviso=11822  rg_preenchido=5433; email_preenchido=3638; cpf_valido=2305
+     dim_apolice                    SUCCESS  total=160641 erro=413 aviso=46  ao_menos_uma_cobertura=50; premio_positivo=49; status_apolice_nao_nulo=48
+     dim_corretor                   SUCCESS  total=2534 erro=3 aviso=0  corretor_nome_nao_nulo=1; comissao_entre_0_e_30_por_cento=1; status_corretor_valido=1
+     dim_ponto_venda                SUCCESS  total=1187 erro=4 aviso=0  tipo_coerente_com_canal=3; ponto_venda_nome_nao_nulo=1; tipo_valido=1
+     pendencia_atual                SUCCESS  total=646449 erro=1762 aviso=63472  rg_preenchido=32158; email_preenchido=19011; cpf_valido=11902
+     dim_produto                    SUCCESS  total=20 erro=3 aviso=0  produto_nome_nao_nulo=1; categoria_produto_nao_nulo=1; cobertura_principal_codigo_nao_nulo=1
+     dim_data                       SUCCESS  total=5844 erro=0 aviso=0  
+     bridge_apolice_cobertura       SUCCESS  total=425654 erro=125 aviso=0  fk_cobertura_sk=63; pk_unica_apolice_sk_cobertura_sk=62

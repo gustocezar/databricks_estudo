@@ -30,7 +30,7 @@ Atalhos:
 | Documento | Responde |
 |---|---|
 | [docs/README.md](docs/README.md) | mapa da documentação e situação de cada bloco |
-| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 24) |
+| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 25) |
 | [Playbook](docs/02_PLAYBOOK.md) | como recriar a estrutura ou aplicá-la a outra base |
 | [Lições aprendidas](docs/03_LICOES_APRENDIDAS.md) | armadilhas reais e a regra que ficou (`L##`) |
 | [Framework](docs/04_FRAMEWORK.md) | as 37 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |

@@ -26,19 +26,19 @@ Documentos de cada bloco continuam nas pastas: [medalhao](../medalhao/README.md)
 [painéis financeiros e opção Power BI](../paineis_financeiros/README.md),
 [auditoria Power BI (pba)](../paineis_financeiros/powerbi/auditoria/README.md), [régua da Genie (scanner)](../governanca/genie/scanner/TRIAGEM.md).
 
-## Situação em 22/11/2026
+## Situação em 23/11/2026
 
 | Bloco | Situação |
 |---|---|
-| Dados, medalhão e carga diária | pronto; job `pos_venda_carga_diaria` implantado e **pausado**; dados até **25/12/2026** (dia carregado em 22/11 pelo job completo) |
-| Qualidade (barreira, DQX Studio, painel) | pronto; o app `dqx-studio` para sozinho após 24 h: `databricks apps start dqx-studio` antes de demonstrar |
+| Dados, medalhão e carga diária | pronto; job `pos_venda_carga_diaria` implantado e **pausado**; dados até **08/01/2027** (semanas 6 e 7 carregadas em 23/11 com o catálogo de incidentes I16 a I34) |
+| Qualidade (barreira, DQX Studio, painel) | pronto; 7 semanas no histórico do Studio (35 execuções completas); 133 de 224 regras com exemplo, e as 91 em zero explicadas no roteiro; o app `dqx-studio` para sozinho após 24 h: `databricks apps start dqx-studio` e esperar "Application startup complete" antes de demonstrar |
 | Avaliação contínua do Studio | pronto e **pausado**: 12 tabelas às 06:30; ligar junto com o job (`registro_studio.py ligar`); o job liga o app |
 | Governança e metadados | pronto; 1.977 de 1.977 colunas principais (com o schema `bi`) e 682 de 682 legadas descritas; `dado_pessoal` em 380 colunas principais e 152 legadas, 0 sem tag (sem máscara, por decisão: a validação usa os valores reais); auditoria em 28 s |
 | Ontologia, metric views, Genie e painéis financeiros | pronto; Genie 29/29 nas perguntas de avaliação (com simulações pelas funções de regra); painéis da diretoria e do time de negócio com **uma página por fato** |
 | Opção Power BI (avaliação) | gerada: schema `pos_venda.bi` (8 visões das metric views) + projeto PBIP com os 2 relatórios; 102 arquivos válidos nos esquemas oficiais; paridade 21/21 com o painel; **não aberta no Power BI Desktop** (precisa de Windows) |
 | Ontologia sem identificadores pessoais | pronto: nenhum `cliente_id` no schema `ontologia` (ligações por `cliente_sk`) |
 | Regras de negócio (BDD) | pronto: 5 funções em `pos_venda.regras`, 36/36 cenários, portão no job diário, silver/barreira/gold/Genie/DQX Studio usando as funções, paridade 100% |
-| Prontidão para a Genie Ontology | **92,7 (Optimized)**, com histórico no Lakebase (`avaliar.py`); domínio e responsável por tags padrão; schemas legados descritos (682/682) e com dado pessoal marcado; histórico: ids 1–3 |
+| Prontidão para a Genie Ontology | **94,5 (Optimized)** na avaliação 4 (23/11), com histórico no Lakebase (`avaliar.py`); domínio e responsável por tags padrão; schemas legados descritos (682/682) e com dado pessoal marcado; histórico: ids 1–4 |
 | Auditorias externas e RELY (22/11) | `pba`: modelo Power BI 80/100, lado Databricks 75/100 (só limites do warehouse); scanner da Genie 8/12 nos dois espaços (teto 10/12 sem o Workbench; ajustes nos itens 4, 7 e 8 propostos, não feitos); `RELY` em 14/14 PKs da gold, FKs sem `RELY` |
 | Custo e uso (FinOps) | `pos_venda.finops`: 19 visões + metric view no padrão FOCUS 1.4; totais = billing (US$ 1.217,11 a preço de lista desde 22/06); plataforma 77,1%, pós-venda 5,3%, não atribuído 10,3%; 11 de 15 boas práticas atendem; `finops.observability` intocado |
 | Conformidade e observabilidade (23/11) | `pos_venda.conformidade`: 28 regras, 8.992 verificações; 13 atendem, 12 em atenção, 3 críticas (descrição fora do `pos_venda`, `subject_area` em 17 ativos, 22 views quebradas); LGPD e colunas descritas em 100%; 8 ações de observabilidade avaliadas (alertas SQL a consertar, rightsizing a aposentar); `registrar` ainda sem agenda |

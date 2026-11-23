@@ -22,7 +22,10 @@ fonte.apolices ──► [1] gerar eventos ──► bronze.pagamentos_pendentes
 - `NOVA`: parcela que venceu ontem e não foi paga entra na carteira de pendentes;
 - `ATUALIZACAO`: mudança de status de cobrança (pendente → em cobrança → promessa / negociado / cobrança externa);
 - `BAIXA`: pagamento da parcela, a pendência sai da carteira;
-- cerca de 0,5% das linhas chegam duplicadas (defeito proposital, tratado na silver).
+- cerca de 0,5% das linhas chegam duplicadas (defeito proposital, tratado na silver);
+- de 27/11/2026 a 08/01/2027, incidentes programados (I01 a I34, em `JANELAS` e `mod` no `gerar_carga.py`) injetam um
+  defeito por regra de qualidade. Os erros vão para a quarentena; os vazamentos chegam às dimensões e à fato. O
+  roteiro está em [dqx_studio/demo/ROTEIRO.md](../dqx_studio/demo/ROTEIRO.md).
 
 O gerador é determinístico (hash) e idempotente: dias já carregados no bronze são ignorados.
 

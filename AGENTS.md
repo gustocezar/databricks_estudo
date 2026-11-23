@@ -33,6 +33,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Genie | `governanca/genie.py` e [governanca/genie/scanner/TRIAGEM.md](governanca/genie/scanner/TRIAGEM.md) |
 | Power BI | [paineis_financeiros/powerbi/README.md](paineis_financeiros/powerbi/README.md) e a [auditoria](paineis_financeiros/powerbi/auditoria/README.md) |
 | Conformidade: descrição, tags governadas, dado pessoal, chave, certificação, jobs e alertas; views quebradas; o que fazer com a observabilidade que já existe | [conformidade/README.md](conformidade/README.md), [AVALIACAO_OBSERVABILIDADE.md](conformidade/AVALIACAO_OBSERVABILIDADE.md) e as visões de `pos_venda.conformidade` (`boas_praticas_dados`, `pendencias`, `squad_por_schema`, `plataforma_por_catalogo`, `acoes_observabilidade`) |
+| Qualidade: quais incidentes existem, que regra cada um dispara, por que uma regra está em zero | [dqx_studio/demo/ROTEIRO.md](dqx_studio/demo/ROTEIRO.md) e os incidentes I01 a I34 em `carga_diaria/gerar_carga.py` (`JANELAS` e `mod`) |
 | Custo, uso, FinOps, FOCUS, quanto custa cada funcionalidade, custo de um squad ou da plataforma | [finops/README.md](finops/README.md) e as visões de `pos_venda.finops` (`focus_custo_uso`, `custo_por_funcionalidade`, `plataforma_*`, `squad_*`, `uso_*`, `boas_praticas_custo`) |
 
 Diga de onde tirou a resposta (arquivo, `P##`, `L##` ou entrada do CHANGELOG). Se o repositório não responde, diga

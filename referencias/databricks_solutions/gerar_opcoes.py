@@ -73,11 +73,11 @@ CONTEXTO = {
     "dados": "Sintéticos (dbldatagen); dado pessoal marcado por tag e sem máscara, por decisão (a validação usa os valores)",
     "consumo": "2 espaços Genie (analista e diretor), painéis AI/BI, opção Power BI por importação (schema bi)",
     "versionamento": "Git no GitHub (gustocezar/databricks_estudo); ainda sem CI/CD",
-    "framework": "docs/04_FRAMEWORK.md: 29 práticas (P01 a P29) em 8 camadas",
+    "framework": "docs/04_FRAMEWORK.md: 37 práticas (P01 a P37) em 10 camadas",
 }
 REGRAS = [
     "Identifique a necessidade e a camada do framework que ela toca (Fundação, Dados, Qualidade, Governança, "
-    "Semântica, Consumo, Avaliação, Operação).",
+    "Semântica, Consumo, Avaliação, Custo e uso, Operação, Conformidade).",
     "Filtre as opções pela camada e pelas práticas (campos `camada` e `praticas`); confira o campo `escolha_quando`.",
     "Se uma opção `Já aplicado` cobre a necessidade, estenda-a antes de adotar outra (ela já está integrada e testada).",
     "Enquanto o projeto estiver no Free Edition, descarte `Não roda no Free Edition`; em `Com ressalvas`, leia a "

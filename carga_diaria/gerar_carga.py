@@ -190,6 +190,37 @@ JANELAS = {
     "I13": [("2026-12-11", "2026-12-17", 0.09)],                                          # CEP malformado
     "I15": [("2026-12-14", "2026-12-17", 0.05)],                                          # canal CORRETOR sem corretor
 }
+# Semanas 6 e 7 (26/12/2026 a 08/01/2027): catalogo de exemplos para todas as regras de qualidade, pelo fluxo normal.
+# Semana 6 = erros de origem (vao para a quarentena) e avisos; semana 7 = vazamentos que passam pela barreira e chegam
+# as dimensoes e a fato. Os incidentes antigos voltam com taxa baixa; os novos (I16 a I34) entram no fim do dicionario,
+# para nao mudar o sal dos antigos.
+S6, S7 = ("2026-12-26", "2027-01-01"), ("2027-01-02", "2027-01-08")
+for _inc, _jan in {"I01": [(*S6, 0.03)], "I02": [(*S6, 0.03)], "I12": [(*S6, 0.06)], "I03": [(*S6, 0.012), (*S7, 0.004)],
+                   "I04": [(*S6, 0.012), (*S7, 0.004)], "I07": [(*S6, 0.012)], "I05": [(*S6, 0.006)],
+                   "I06": [(*S6, 0.012), (*S7, 0.004)], "I08": [(*S6, 0.01)], "I09": [(*S6, 0.012)], "I10": [(*S6, 0.03)],
+                   "I14": [(*S6, 0.012)], "I11": [(*S7, 0.012)], "I13": [(*S6, 0.04)], "I15": [(*S6, 0.04)]}.items():
+    JANELAS[_inc] = JANELAS[_inc] + _jan
+JANELAS.update({
+    "I16": [(*S6, 0.008)],                  # tipo de evento nulo ou fora do dominio (ESTORNO)
+    "I17": [(*S6, 0.012)],                  # multa fora da regra, com total coerente (so a funcao de regra pega)
+    "I18": [(*S7, 0.004)],                  # cliente sem id (passa a barreira)
+    "I19": [(*S7, 0.004)],                  # apolice sem numero (passa a barreira)
+    "I20": [(*S7, 0.004)],                  # parcela sem numero (passa a barreira)
+    "I21": [(*S7, 0.003)],                  # vencimento nulo numa atualizacao (passa a barreira e chega a fato)
+    "I22": [(*S6, 0.012)],                  # faixa de atraso fora do dominio no arquivo de origem
+    "I23": [(*S6, 0.012)],                  # tentativas de cobranca fora de 1 a 10
+    "I24": [(*S7, 0.004)],                  # status PAGA numa atualizacao, sem data de baixa
+    "I25": [(*S7, 0.02)],                   # canal de contato fora do dominio (chega a fato)
+    "I26": [(*S6, 0.01), (*S7, 0.01)],      # motivo de pendencia nao cadastrado (vira chave orfa na fato)
+    "I27": [(*S7, 0.008)],                  # periodicidade nova (vira chave orfa na fato)
+    "I28": [(*S6, 0.02), (*S7, 0.02)],      # cadastro do cliente com defeito (chega a dim_cliente)
+    "I29": [(*S6, 0.015)],                  # UF em minusculas (a silver padroniza)
+    "I30": [(*S7, 0.02)],                   # cadastro da apolice com defeito (chega a dim_apolice)
+    "I31": [(*S7, 0.006)],                  # produto novo com cadastro incompleto (dim_produto e ponte)
+    "I32": [(*S7, 0.006)],                  # ponto de venda novo inconsistente (dim_ponto_venda)
+    "I33": [(*S7, 0.006)],                  # corretor novo inconsistente (dim_corretor)
+    "I34": [(*S7, 0.02)],                   # chave digitada errado na NOVA e corrigida depois (chave orfa na fato)
+})
 ORDEM_INC = list(JANELAS)
 
 
@@ -226,12 +257,81 @@ MOD = {
     "cliente_cep": "CASE WHEN ap_I13 THEN substring(cliente_cep, 1, 4) ELSE cliente_cep END",
     "corretor_id": "CASE WHEN ap_I15 AND canal_venda = 'CORRETOR' THEN CAST(NULL AS STRING) ELSE corretor_id END",
 }
+
+
+def mod(col, cond, val):
+    MOD[col] = f"CASE WHEN {cond} THEN {val} ELSE {MOD.get(col, col)} END"
+
+
+B = "CAST(floor(u_v * 10) AS INT)"   # balde 0..9 do evento, para escolher um defeito por linha
+mod("tipo_evento", "ap_I16", "CASE WHEN u_v < 0.5 THEN CAST(NULL AS STRING) ELSE 'ESTORNO' END")
+mod("valor_multa", "ap_I17", "CAST(round(valor_parcela * 0.05, 2) AS DECIMAL(14,2))")
+mod("valor_total_pendente", "ap_I17", "CAST(valor_parcela + round(valor_parcela * 0.05, 2) + valor_juros AS DECIMAL(14,2))")
+mod("cliente_id", "ap_I18", "CAST(NULL AS STRING)")
+mod("numero_apolice", "ap_I19", "CAST(NULL AS STRING)")
+mod("numero_parcela", "ap_I20", "CAST(NULL AS BIGINT)")
+mod("data_vencimento", "ap_I21 AND tipo_evento = 'ATUALIZACAO'", "CAST(NULL AS DATE)")
+mod("faixa_atraso", "ap_I22", "element_at(array('SEM_FAIXA', '07_ACIMA_365', '01-15'), CAST(floor(u_v * 3) AS INT) + 1)")
+mod("tentativas_cobranca", "ap_I23", "CAST(CASE WHEN u_v < 0.5 THEN 0 ELSE 12 + floor(u_v * 5) END AS INT)")
+mod("status_cobranca", "ap_I24 AND tipo_evento = 'ATUALIZACAO'", "'PAGA'")
+mod("canal_ultimo_contato", "ap_I25", "element_at(array('FAX', 'TELEGRAMA', 'VISITA_DOMICILIAR'), CAST(floor(u_v * 3) AS INT) + 1)")
+mod("motivo_pendencia", "ap_I26", "element_at(array('MOTIVO_NAO_INFORMADO', 'ERRO_SISTEMA_BANCO'), CAST(floor(u_v * 2) AS INT) + 1)")
+mod("periodicidade_pagamento", "ap_I27", "element_at(array('QUINZENAL', 'BIMESTRAL'), CAST(floor(u_v * 2) AS INT) + 1)")
+# I28: um defeito de cadastro por evento, pelo balde
+mod("cliente_sexo", f"ap_I28 AND {B} = 0", "'X'")
+mod("cliente_estado_civil", f"ap_I28 AND {B} = 1", "'NAO_INFORMADO'")
+mod("cliente_renda_faixa", f"ap_I28 AND {B} = 2", "'SEM_INFORMACAO'")
+mod("cliente_rg_data_emissao", f"ap_I28 AND {B} = 3", "date_sub(cliente_data_nascimento, 400)")
+mod("cliente_celular", f"ap_I28 AND {B} = 4", "substring(regexp_replace(cliente_celular, '[^0-9]', ''), 1, 10)")
+mod("cliente_telefone_fixo", f"ap_I28 AND {B} = 5", "substring(regexp_replace(cliente_telefone_fixo, '[^0-9]', ''), 1, 9)")
+mod("cliente_rg", f"ap_I28 AND {B} = 6", "CASE WHEN u_v < 0.63 THEN '12.345' ELSE CAST(NULL AS STRING) END")
+mod("cliente_email", f"ap_I28 AND {B} = 7", "concat(split(cliente_email, '@')[0], '.semarroba.com')")
+mod("cliente_nome", f"ap_I28 AND {B} = 8", "CAST(NULL AS STRING)")
+mod("cliente_cpf", f"ap_I28 AND {B} = 9", "CASE WHEN u_v < 0.95 THEN substring(regexp_replace(cliente_cpf, '[^0-9]', ''), 1, 10) ELSE CAST(NULL AS STRING) END")
+mod("cliente_uf", "ap_I29", "lower(cliente_uf)")
+# I30: um defeito de cadastro da apolice por evento
+mod("status_apolice", f"ap_I30 AND {B} IN (0, 8)", "CASE WHEN " + B + " = 0 THEN 'EM_ANALISE' ELSE CAST(NULL AS STRING) END")
+mod("dia_vencimento", f"ap_I30 AND {B} = 1", "CASE WHEN u_v < 0.15 THEN 31 ELSE 0 END")
+mod("valor_premio_periodico", f"ap_I30 AND {B} = 2", "CAST(0 AS DECIMAL(14,2))")
+mod("qtd_coberturas", f"ap_I30 AND {B} = 3", "0")
+mod("qtd_beneficiarios", f"ap_I30 AND {B} = 4", "CASE WHEN u_v < 0.45 THEN 0 ELSE 6 END")
+mod("data_fim_vigencia_atual", f"ap_I30 AND {B} IN (5, 9)", "CASE WHEN " + B + " = 5 THEN date_sub(data_inicio_vigencia, 30) ELSE CAST(NULL AS DATE) END")
+mod("capital_segurado_total", f"ap_I30 AND {B} = 6", "CAST(capital_segurado_principal - 1000 AS DECIMAL(14,2))")
+mod("qtd_endossos", f"ap_I30 AND {B} = 7", "2")
+mod("numero_ultimo_endosso", f"ap_I30 AND {B} = 7", "CAST(NULL AS STRING)")
+mod("data_emissao", f"ap_I30 AND {B} = 8 AND u_v >= 0.85", "CAST(NULL AS DATE)")
+mod("data_inicio_vigencia", f"ap_I30 AND {B} = 9 AND u_v < 0.95", "CAST(NULL AS DATE)")
+# I31: produto novo (codigo proprio, para nao estragar os produtos reais), um defeito por codigo
+P5 = "CAST(floor(u_v * 5) AS INT)"
+mod("produto_codigo", "ap_I31", f"element_at(array('VIDA_QA_NOME', 'VIDA_QA_CATEGORIA', 'VIDA_QA_COB_NULA', 'VIDA_QA_COB_INEXISTENTE', 'VIDA_QA_COB_DUPLICADA'), {P5} + 1)")
+mod("produto_nome", f"ap_I31 AND {P5} = 0", "CAST(NULL AS STRING)")
+mod("categoria_produto", f"ap_I31 AND {P5} = 1", "CAST(NULL AS STRING)")
+mod("cobertura_principal_codigo", f"ap_I31 AND {P5} IN (2, 3, 4)", f"element_at(array(CAST(NULL AS STRING), 'COB_INEXISTENTE', 'IPTA'), {P5} - 1)")
+mod("possui_ipta", f"ap_I31 AND {P5} = 4", "true")
+# I32: ponto de venda novo, um defeito por codigo
+P4 = "CAST(floor(u_v * 4) AS INT)"
+mod("ponto_venda_codigo", "ap_I32", f"element_at(array('PV_QA_TIPO', 'PV_QA_CANAL', 'PV_QA_INCOERENTE', 'PV_QA_NOME'), {P4} + 1)")
+mod("ponto_venda_tipo", f"ap_I32 AND {P4} IN (0, 2)", f"CASE WHEN {P4} = 0 THEN 'QUIOSQUE' ELSE 'AGENCIA_BANCARIA' END")
+mod("canal_venda", f"ap_I32 AND {P4} IN (1, 2)", f"CASE WHEN {P4} = 1 THEN 'PORTA_A_PORTA' ELSE 'CORRETOR' END")
+mod("ponto_venda_nome", f"ap_I32 AND {P4} = 3", "CAST(NULL AS STRING)")
+# I33: corretor novo (so quando a venda tem corretor), um defeito por codigo
+P3 = "CAST(floor(u_v * 3) AS INT)"
+mod("corretor_id", "ap_I33 AND corretor_id IS NOT NULL", f"element_at(array('COR_QA_COMISSAO', 'COR_QA_STATUS', 'COR_QA_NOME'), {P3} + 1)")
+mod("corretor_comissao_pct", f"ap_I33 AND corretor_id IS NOT NULL AND {P3} = 0", "CAST(45 AS DECIMAL(5,2))")
+mod("corretor_status", f"ap_I33 AND corretor_id IS NOT NULL AND {P3} = 1", "'DESCREDENCIADO'")
+mod("corretor_nome", f"ap_I33 AND corretor_id IS NOT NULL AND {P3} = 2", "CAST(NULL AS STRING)")
+# I34: chave digitada errado na NOVA; o proximo evento traz a chave certa, e a versao antiga fica orfa na fato
+mod("cliente_id", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 0", "concat(cliente_id, '-ERR')")
+mod("numero_apolice", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 1", "concat(numero_apolice, '-ERR')")
+mod("produto_codigo", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 2", "concat(produto_codigo, '-ERR')")
+mod("corretor_id", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 3 AND corretor_id IS NOT NULL", "concat(corretor_id, '-ERR')")
+mod("ponto_venda_codigo", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 4", "concat(ponto_venda_codigo, '-ERR')")
 FLAGS_SQL = (",\n    " + FLAGS) if INCIDENTES_ON else ""
 saida = ",\n  ".join(f"{MOD[c]} AS {c}" if (INCIDENTES_ON and c in MOD) else c for c in OUT_COLS)
 TAXA_DUP = f"(0.005 + {taxa('I02')})" if INCIDENTES_ON else "0.005"
 
 tabela_existe = spark.catalog.tableExists(BRONZE)
-guarda = f"AND data_evento NOT IN (SELECT DISTINCT data_extracao FROM {BRONZE})" if tabela_existe else ""
+guarda = f"AND data_evento NOT IN (SELECT DISTINCT data_extracao FROM {BRONZE} WHERE data_extracao IS NOT NULL)" if tabela_existe else ""
 
 SQL_EVENTOS = f"""
 WITH ap AS (
