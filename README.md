@@ -30,10 +30,10 @@ Atalhos:
 | Documento | Responde |
 |---|---|
 | [docs/README.md](docs/README.md) | mapa da documentação e situação de cada bloco |
-| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 22) |
+| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 23) |
 | [Playbook](docs/02_PLAYBOOK.md) | como recriar a estrutura ou aplicá-la a outra base |
 | [Lições aprendidas](docs/03_LICOES_APRENDIDAS.md) | armadilhas reais e a regra que ficou (`L##`) |
-| [Framework](docs/04_FRAMEWORK.md) | as 29 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
+| [Framework](docs/04_FRAMEWORK.md) | as 34 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
 | [CHANGELOG](docs/CHANGELOG.md) | o que mudou, quando e como foi conferido |
 | [Inventário](docs/INVENTARIO.md) | retrato atual de scripts, bundles, objetos, painéis e jobs (gerado) |
 
@@ -48,6 +48,7 @@ Atalhos:
 | [`governanca/`](governanca/README.md) | descrições, tags, ontologia, metric views e espaços Genie |
 | [`regras/`](regras/README.md) | regras de negócio como funções do Unity Catalog testadas por cenários (BDD) |
 | [`paineis_financeiros/`](paineis_financeiros/README.md) | painéis AI/BI e projeto Power BI (PBIP) |
+| [`finops/`](finops/README.md) | custo e uso do workspace no padrão FOCUS: por funcionalidade, projeto, time de plataforma e squad, com boas práticas |
 | [`referencias/`](referencias/databricks_solutions/OPCOES_PARA_LLM.md) | catálogo dos 147 repositórios databricks-solutions e o guia de opções para LLM (qual usar a seguir) |
 
 ## Para rodar no seu workspace

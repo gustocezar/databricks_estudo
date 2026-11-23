@@ -3,7 +3,7 @@
 > Documento incremental. Última atualização: **23/11/2026**. Cada prática tem um código (`P##`) que não muda.
 > Fontes conferidas em 22/11/2026 (todos os links responderam).
 
-Este framework reúne as **29 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 22 da
+Este framework reúne as **34 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 23 da
 [trilha](01_TRILHA_DE_APRENDIZAGEM.md)), cada uma com:
 
 - **Origem:** de onde veio. Pode ser documentação oficial, acelerador da Databricks, Databricks Labs, Microsoft,
@@ -25,6 +25,7 @@ Os outros documentos complementam este:
  Fundação ─► Dados ─► Qualidade ─► Governança ─► Semântica ─► Consumo ─► Avaliação
  (P01–P03)  (P04–P08) (P09–P12)    (P13–P16)     (P17–P20)    (P21–P23)  (P24–P27)
                                 Operação contínua (P28–P29)
+                    Custo e uso · FinOps (P30–P34), sobre o workspace inteiro
 ```
 
 ---
@@ -58,6 +59,10 @@ Os outros documentos complementam este:
 | Star schema consultado por metric views ou BI | P08 |
 | Recriações que apagam metadados | P16 |
 | Repositório público | P03 |
+| Saber quanto custa cada funcionalidade e de quem é o custo | P30, P31 |
+| Time de plataforma e squads dividindo o mesmo workspace | P31, P32 |
+| Medir a adoção de Genie e painéis | P33 |
+| Revisar custo com uma régua conhecida | P34 |
 
 ---
 
@@ -463,6 +468,88 @@ Os outros documentos complementam este:
 
 ---
 
+## Custo e uso (FinOps)
+
+### P30 · Base de custo no padrão FOCUS, a partir das tabelas de sistema
+- **Origem:** [FinOps FOCUS 1.4](https://focus.finops.org/what-is-focus/) ([especificação](https://github.com/FinOps-Open-Cost-and-Usage-Spec/FOCUS_Spec));
+  [cloud-infra-costs](https://github.com/databricks-solutions/cloud-infra-costs) (databricks-solutions, `focus_query_1_4.sql`);
+  [tabelas de sistema de billing](https://docs.databricks.com/aws/en/admin/system-tables/billing) (Databricks).
+- **Como aplicamos:**
+  - `pos_venda.finops.focus_custo_uso` tem as 65 colunas da FOCUS 1.4, mais colunas `x_` para projeto, time,
+    funcionalidade e custo em BRL.
+  - `custo_por_funcionalidade` agrega por mês e funcionalidade do Databricks.
+  - Tudo é gerado por `finops/gerar_finops.py`.
+- **Por quê:** a FOCUS é uma linguagem comum de custo, comparável entre nuvens e ferramentas. A base escolhe os campos
+  um a um, porque o framework anterior quebrou quando a tabela de sistema ganhou campos (L76).
+- **Reaplique quando:** alguém precisa saber quanto custa o quê. No Free Edition, a medida é o custo a preço de lista; o
+  `BilledCost` é 0, porque não há fatura.
+- **Prova:** 27.613 linhas = billing; US$ 1.217,11 = uso × preço de lista; 0 linha com `ServiceCategory` fora da
+  especificação.
+
+### P31 · Todo custo com dono: tag, regra, rateio por consulta
+- **Origem:**
+  - prática CO-03-01 (tags) do pilar de custo do Well-Architected da Databricks
+    ([databricks-waf](https://github.com/databricks-solutions/databricks-waf));
+  - rateio do warehouse pelo tempo de cada consulta, do
+    [dbx-adoption-monitor](https://github.com/databricks-solutions/dbx-adoption-monitor);
+  - lição L77.
+- **Como aplicamos:**
+  - A ordem de atribuição é: tag `project` do recurso, depois as regras pelo nome (`REGRAS` em `gerar_finops.py`).
+  - O warehouse é rateado por consulta. Cada consulta vai para o dono da sua origem: espaço Genie, painel, job ou o
+    catálogo que cita.
+  - Sobra o "não atribuído".
+- **Por quê:** sem dono, o custo não entra em nenhum showback. Num workspace compartilhado, o warehouse é o grosso da
+  conta.
+- **Reaplique quando:** mais de um time usa o mesmo workspace.
+- **Prova:** o não atribuído caiu de 80% para 10,3% depois que a consulta sem origem nomeada passou a ser classificada
+  pelo texto. O que sobrou são US$ 92 de projetos Lakebase removidos.
+
+### P32 · Uma visão por público: plataforma e squad
+- **Origem:** prática CO-03-03 e CO-03-04 do Well-Architected da Databricks (monitorar e gerir custo); prática do projeto.
+- **Como aplicamos:**
+  - `plataforma_*` para o time de plataforma: custo diário com anomalia, cobertura de atribuição, top recursos e
+    warehouses.
+  - `squad_*` para o squad: custo mensal, custo unitário e uso.
+  - `mv_finops_custo` para a Genie e os painéis.
+- **Por quê:** a plataforma pergunta "onde está o desperdício"; o squad pergunta "quanto custa o meu produto por
+  unidade entregue".
+- **Reaplique quando:** há um time de plataforma e squads produto.
+- **Prova:** a plataforma leva 77,1% do custo (jobs de monitoramento); o pós-venda leva 5,3%, a US$ 0,0063 por consulta
+  e US$ 0,09 por execução de job em novembro.
+
+### P33 · Uso medido separando pessoas de automação
+- **Origem:** [dbx-adoption-monitor](https://github.com/databricks-solutions/dbx-adoption-monitor) (alcance e
+  profundidade da Genie, painel publicado × rascunho); [audit logs](https://docs.databricks.com/aws/en/admin/system-tables/audit-logs)
+  (Databricks); lição L78.
+- **Como aplicamos:**
+  - `uso_genie_diario` separa a UI (pessoas) da API (automação e avaliações).
+  - `uso_paineis_diario` separa a versão publicada do rascunho.
+  - `uso_consultas_diario` mostra a origem de cada consulta.
+  - `uso_jobs_diario` mostra o custo das execuções com falha.
+- **Por quê:** avaliações automáticas e edição inflam o uso. A adoção real é a UI e o painel publicado.
+- **Reaplique quando:** alguém vai medir a adoção de Genie ou de painéis.
+- **Prova:** das 249 perguntas de novembro aos espaços do pós-venda, todas vieram da API; a adoção por pessoas foi zero.
+
+### P34 · Boas práticas de custo medidas, com meta
+- **Origem:**
+  - pilar de custo do Well-Architected da Databricks, práticas CO-01 a CO-04
+    ([databricks-waf](https://github.com/databricks-solutions/databricks-waf),
+    [boas práticas](https://docs.databricks.com/aws/en/lakehouse-architecture/cost-optimization/best-practices));
+  - SS-005 do [powerbi-analyzer](https://github.com/databricks-solutions/powerbi-analyzer);
+  - dbx-adoption-monitor;
+  - FOCUS.
+- **Como aplicamos:** `boas_praticas_custo` mede 15 práticas nos últimos 30 dias, cada uma com métrica, meta, situação,
+  leitura e recomendação.
+- **Por quê:** a régua vira número que se acompanha, em vez de lista de conselhos.
+- **Reaplique quando:** há uma revisão de custo periódica.
+- **Prova:** 11 práticas atendem e 4 pedem atenção:
+  - tags cobrem 22,4% do custo;
+  - nenhum consumo serverless tem budget policy;
+  - o armazenamento cresceu 506% em 30 dias;
+  - 64,5% das aberturas de painel foram no rascunho.
+
+---
+
 ## Opções databricks-solutions: qual acelerador usar a seguir
 
 Os 147 repositórios públicos da organização [databricks-solutions](https://github.com/databricks-solutions) estão
@@ -548,6 +635,13 @@ painéis; qual opção databricks-solutions usar no pos_venda?". As regras levam
 - Kimball: [Additive, semi-additive, non-additive facts](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/additive-semi-additive-non-additive-fact/) (P07)
 - [Gherkin](https://cucumber.io/docs/gherkin/reference/) (P20)
 - [Lei 13.709/2018 (LGPD)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm) (P15, P17)
+
+**FinOps e custo**
+- [FOCUS](https://focus.finops.org/what-is-focus/) e a [especificação FOCUS 1.4](https://github.com/FinOps-Open-Cost-and-Usage-Spec/FOCUS_Spec) (P30)
+- [cloud-infra-costs](https://github.com/databricks-solutions/cloud-infra-costs) (P30)
+- [dbx-adoption-monitor](https://github.com/databricks-solutions/dbx-adoption-monitor) (P31, P33)
+- [databricks-waf](https://github.com/databricks-solutions/databricks-waf) e as [boas práticas de custo](https://docs.databricks.com/aws/en/lakehouse-architecture/cost-optimization/best-practices) (P31, P32, P34)
+- [Billing system tables](https://docs.databricks.com/aws/en/admin/system-tables/billing), [query history](https://docs.databricks.com/aws/en/admin/system-tables/query-history), [audit logs](https://docs.databricks.com/aws/en/admin/system-tables/audit-logs) e [budget policies](https://docs.databricks.com/aws/en/admin/usage/budget-policies) (P30 a P34)
 
 **Do próprio projeto:** [trilha](01_TRILHA_DE_APRENDIZAGEM.md), [playbook](02_PLAYBOOK.md),
 [lições](03_LICOES_APRENDIDAS.md), [CHANGELOG](CHANGELOG.md) e

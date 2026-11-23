@@ -32,6 +32,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Métrica, KPI ou camada semântica | `governanca/ontologia.py` e `governanca/gerar_ontologia_sql.py` (metric views) |
 | Genie | `governanca/genie.py` e [governanca/genie/scanner/TRIAGEM.md](governanca/genie/scanner/TRIAGEM.md) |
 | Power BI | [paineis_financeiros/powerbi/README.md](paineis_financeiros/powerbi/README.md) e a [auditoria](paineis_financeiros/powerbi/auditoria/README.md) |
+| Custo, uso, FinOps, FOCUS, quanto custa cada funcionalidade, custo de um squad ou da plataforma | [finops/README.md](finops/README.md) e as visões de `pos_venda.finops` (`focus_custo_uso`, `custo_por_funcionalidade`, `plataforma_*`, `squad_*`, `uso_*`, `boas_praticas_custo`) |
 
 Diga de onde tirou a resposta (arquivo, `P##`, `L##` ou entrada do CHANGELOG). Se o repositório não responde, diga
 isso; não invente número, prática nem fonte.
@@ -53,6 +54,9 @@ Não reabra estas decisões sem pedido do dono do projeto.
   órfãs de propósito (`NAO_CADASTRADA`).
 - **Agendas pausadas.** O job `pos_venda_carga_diaria` e o agendamento do DQX Studio só ligam a pedido.
 - **O app `genie-ontology-readiness` não recebe acesso aos catálogos `main` e `workspace`.**
+- **`finops.observability` (o framework FinOps que já existia no workspace) só se lê.** As visões novas ficam em
+  `pos_venda.finops`. Não recrie nem corrija as `v_focus_*` sem pedido do dono.
+- **Custo no Free Edition é a preço de lista (`ListCost`).** O `BilledCost` é 0, porque não há fatura.
 - **Aceleradores se escolhem pelas regras de `OPCOES_PARA_LLM.md`.** O Genie Workbench está adiado, porque ocuparia
   a última vaga de app.
 
@@ -73,6 +77,7 @@ Não edite um arquivo gerado: mude a fonte e gere de novo.
 | `referencias/databricks_solutions/catalogo_databricks_solutions.html` | `montar_pagina.py` (a partir de `pagina.template.html`) |
 | `referencias/databricks_solutions/OPCOES_PARA_LLM.md`, `opcoes.json` | `gerar_opcoes.py` (dados em `catalogo.py`) |
 | `docs/INVENTARIO.md` | `docs/gerar_inventario.py` |
+| `finops/finops.sql`, `finops/ativos.json`, `finops/conferencia.json` e as visões de `pos_venda.finops` | `finops/gerar_finops.py` (regras de atribuição na lista `REGRAS`) |
 | `governanca/auditoria_metadados.json`, `governanca/semantica_aplicada.json`, `governanca/rely/*.json` | `auditar_metadados.py`, `aplicar_semantica.py`, `aplicar_rely.py` |
 
 Logs (`*.log`) e resultados de execução (`dqx_studio/regras/resultados/`) são evidência: não edite, não apague.

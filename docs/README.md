@@ -11,7 +11,8 @@ views, Genie para o financeiro e painéis AI/BI.
 | [01 · Trilha de aprendizagem](01_TRILHA_DE_APRENDIZAGEM.md) | quem quer entender o projeto | o que fizemos, em que ordem, por quê e o que aprendemos em cada fase |
 | [02 · Playbook](02_PLAYBOOK.md) | quem vai recriar ou construir outro domínio | perfil da base, módulos com critério de saída, matriz de resiliência, roteiro de reconstrução |
 | [03 · Lições aprendidas](03_LICOES_APRENDIDAS.md) | quem vai mexer no código | armadilhas reais e a regra que ficou (códigos `L##`) |
-| [04 · Framework](04_FRAMEWORK.md) | quem vai aplicar em outro case | as 29 práticas (`P##`): origem, como aplicamos, por quê, quando reaplicar e a prova, com as fontes |
+| [04 · Framework](04_FRAMEWORK.md) | quem vai aplicar em outro case | as 34 práticas (`P##`): origem, como aplicamos, por quê, quando reaplicar e a prova, com as fontes |
+| [FinOps](../finops/README.md) | plataforma, squads e quem avalia custo | custo e uso no padrão FOCUS: por funcionalidade, projeto e time, com boas práticas medidas |
 | [AGENTS.md](../AGENTS.md) | LLMs e agentes de código | ordem de leitura, onde está cada resposta, decisões já tomadas, fonte × gerado e o que registrar a cada mudança |
 | [CHANGELOG](CHANGELOG.md) | todos | o que mudou, quando e como foi conferido |
 | [Inventário](INVENTARIO.md) | todos | retrato atual: scripts, bundles, objetos do catálogo, painéis, Genie, jobs, apps e cobertura de metadados (gerado) |
@@ -38,6 +39,7 @@ Documentos de cada bloco continuam nas pastas: [medalhao](../medalhao/README.md)
 | Regras de negócio (BDD) | pronto: 5 funções em `pos_venda.regras`, 36/36 cenários, portão no job diário, silver/barreira/gold/Genie/DQX Studio usando as funções, paridade 100% |
 | Prontidão para a Genie Ontology | **92,7 (Optimized)**, com histórico no Lakebase (`avaliar.py`); domínio e responsável por tags padrão; schemas legados descritos (682/682) e com dado pessoal marcado; histórico: ids 1–3 |
 | Auditorias externas e RELY (22/11) | `pba`: modelo Power BI 80/100, lado Databricks 75/100 (só limites do warehouse); scanner da Genie 8/12 nos dois espaços (teto 10/12 sem o Workbench; ajustes nos itens 4, 7 e 8 propostos, não feitos); `RELY` em 14/14 PKs da gold, FKs sem `RELY` |
+| Custo e uso (FinOps) | `pos_venda.finops`: 19 visões + metric view no padrão FOCUS 1.4; totais = billing (US$ 1.217,11 a preço de lista desde 22/06); plataforma 77,1%, pós-venda 5,3%, não atribuído 10,3%; 11 de 15 boas práticas atendem; `finops.observability` intocado |
 | Versionamento | no GitHub: [gustocezar/databricks_estudo](https://github.com/gustocezar/databricks_estudo) (público, branch `main`); depois de cada mudança, `git add -A && git commit && git push` |
 
 ## Como manter esta documentação (incremental)

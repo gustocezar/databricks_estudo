@@ -44,6 +44,7 @@ base, use o [playbook](02_PLAYBOOK.md); esta trilha é para entender o porquê.
 | 20 | Painéis por fato e opção Power BI | `paineis_financeiros/` |
 | 21 | Projeto versionado no GitHub | `.gitignore`, `README.md` |
 | 22 | Auditorias externas e RELY nas chaves | `paineis_financeiros/powerbi/auditoria/`, `governanca/genie/scanner/`, `governanca/aplicar_rely.py` |
+| 23 | Custo e uso no padrão FOCUS (FinOps) | `finops/` |
 
 ---
 
@@ -483,3 +484,43 @@ que aponta para a documentação.
   de aparecer no relógio (L72).
 - A régua da Genie não lê as descrições do Unity Catalog. Por isso o item 3 é falso positivo aqui (L73).
 - O deploy do bundle segue o `.gitignore` (L74).
+
+## Fase 23 · Custo e uso no padrão FOCUS (FinOps)
+
+**Objetivo:** ver o custo e o uso do workspace por funcionalidade do Databricks, por projeto e por time (plataforma e
+squad), no padrão FinOps FOCUS, com boas práticas medidas.
+
+**O que fizemos (23/11/2026):**
+- **Framework anterior intocado.** O framework FinOps que já existia (`finops.observability`) ficou como estava, por
+  decisão do dono. 19 das suas 28 visões falhavam porque a base congelou um esquema antigo do billing (L76).
+- **Schema novo `pos_venda.finops`.** Tem 19 visões e uma metric view, todas geradas por `finops/gerar_finops.py`.
+- **Base FOCUS 1.4.** Adaptada da consulta oficial do `cloud-infra-costs`.
+- **Atribuição em camadas.** Tag, depois regra por nome, depois rateio do warehouse por consulta (padrão do
+  `dbx-adoption-monitor`).
+- **Visões por público.** Para a plataforma e para o squad, mais as de uso (Genie separando pessoas de automação).
+- **Boas práticas.** 15 práticas do Well-Architected da Databricks, do `powerbi-analyzer` e do `dbx-adoption-monitor`.
+
+**Onde está:** [finops/README.md](../finops/README.md).
+
+**Resultado:**
+- **Conferência.** Os totais batem com o billing: 27.613 linhas e US$ 1.217,11 a preço de lista desde 22/06.
+- **Quem gasta.**
+
+  | Quem | Parte do custo |
+  |---|---|
+  | Plataforma (framework de Observabilidade) | 77,1% |
+  | Não atribuído | 10,3% |
+  | Squad pós-venda | 5,3% |
+  | Outros squads | 6,0% |
+
+- **Boas práticas.** 11 de 15 atendem.
+- **Genie.** 100% das perguntas de novembro foram de automação.
+
+**Como conferir:** `python3 finops/gerar_finops.py conferir`. Ela verifica que cada visão responde e que os totais batem
+com o faturamento.
+
+**O que aprendemos:**
+- Numa visão sobre tabela de sistema, escolha os campos do struct; o struct inteiro quebra quando a tabela muda (L76).
+- Atribua em camadas e meça o que sobrou sem dono; job removido não tem nome (L77).
+- Adoção se mede pelo canal UI; o resto é teste (L78).
+

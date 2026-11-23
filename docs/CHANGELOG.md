@@ -17,6 +17,35 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 23/11/2026
 
+### Visões de custo e uso no padrão FOCUS (FinOps)
+- **O que mudou:**
+  - Schema novo `pos_venda.finops`, com 19 visões e a metric view `mv_finops_custo`, gerados por
+    `finops/gerar_finops.py`:
+    - base FOCUS 1.4 (`focus_custo_uso`, 65 colunas da especificação + colunas `x_`);
+    - custo por funcionalidade do Databricks, custo SQL rateado por consulta e custo por projeto;
+    - uso de painéis, Genie (UI × API), consultas e jobs;
+    - visões do time de plataforma (custo diário e anomalias, cobertura de atribuição, top recursos, warehouses);
+    - visões do time de squad (custo mensal, custo unitário, uso);
+    - 15 boas práticas de custo com meta.
+  - Todas as colunas são descritas. As regras de atribuição ficam em `REGRAS`, e os nomes dos ativos em `ativos.json`.
+  - `finops.observability` não foi alterado.
+- **Por quê:** pedido do usuário: visões de uso e de custo, com o framework FOCUS do FinOps, boas práticas dos
+  aceleradores da Databricks, custo por funcionalidade e visões do time de plataforma e do time de squad.
+- **Onde:** `finops/` (`gerar_finops.py`, `README.md`, `finops.sql`, `ativos.json`, `conferencia.json`). No workspace,
+  o schema `pos_venda.finops`.
+- **Conferência** (`python3 finops/gerar_finops.py conferir`):
+  - 19/19 visões e a metric view respondem;
+  - 27.613 linhas na base = billing;
+  - US$ 1.217,11 = uso × preço de lista;
+  - custo por funcionalidade e por projeto = base;
+  - SQL rateado = SQL da base (US$ 938,40);
+  - 0 linha com `ServiceCategory` fora da FOCUS e 0 com coluna obrigatória nula.
+  
+  A primeira versão deixou 80% do custo sem dono. Corrigido para 10,3%, classificando pelo texto da consulta quando a
+  origem não tem nome (L77). Os links das fontes foram conferidos e responderam 200.
+- **Docs atualizadas:** trilha (fase 23) · playbook (M11) · lições (L76–L78) · framework (P30–P34) · `AGENTS.md` ·
+  `docs/README.md` · `README.md` · inventário
+
 ### Orientação para LLMs e agentes: AGENTS.md, CLAUDE.md e README
 - **O que mudou:**
   - Novo `AGENTS.md` na raiz, com:

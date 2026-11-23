@@ -199,6 +199,29 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
 - **Armadilhas:** espera síncrona da API perto do timeout de leitura do SDK (60 s) quebra por rede; o `{}` do parse do
   behave não casa texto vazio (passo próprio para `""`).
 
+### M11 · Custo e uso (FinOps)
+
+- **Quando usar:** quando alguém precisa saber quanto custa cada funcionalidade e de quem é o custo, ou quando
+  plataforma e squads dividem o mesmo workspace.
+- **Passos:**
+  1. Base FOCUS a partir de `system.billing.usage` e `list_prices`, escolhendo os campos do `usage_metadata` um a um.
+  2. Regras de atribuição: tag, nome do recurso, compartilhado; o SQL warehouse é rateado por consulta.
+  3. Visões por público: plataforma, squad e uso, com a Genie separando UI de API.
+  4. Boas práticas com meta (Well-Architected CO-01 a CO-04).
+  5. `conferir` depois de cada mudança.
+- **Modelo:** `finops/gerar_finops.py` (`REGRAS`, `ativos`, `aplicar`, `conferir`) e `finops/README.md`.
+- **Critério de saída:**
+  - cada visão responde;
+  - linhas e custo da base FOCUS = billing;
+  - custo por funcionalidade e por projeto = base;
+  - SQL rateado = SQL da base;
+  - não atribuído medido e explicado.
+- **Armadilhas:**
+  - struct inteiro de tabela de sistema numa visão (L76);
+  - job removido sem nome (L77);
+  - contar avaliações automáticas como adoção (L78);
+  - no Free Edition o `BilledCost` é 0 e a medida é o custo a preço de lista.
+
 ---
 
 ## Matriz de resiliência

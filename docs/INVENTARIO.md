@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 23/11/2026 11:17. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 23/11/2026 12:34. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -18,6 +18,7 @@
 | `dqx_studio/regras` | `definir_regras.py` | Regras de qualidade (DQX) do dominio pos_venda: bronze, silver e gold (star schema). |
 | `dqx_studio/regras` | `registro_studio.py` | Leva as regras do pos_venda para o Registro de Regras e as Tabelas Monitoradas do DQX Studio (o que o menu do app mostra). |
 | `dqx_studio/regras` | `rodar_ciclos.py` | Roda ciclos de carga (1 semana por ciclo) e, depois de cada um, executa as regras no DQX Studio. |
+| `finops` | `gerar_finops.py` | Visões de custo e uso (FinOps) no schema pos_venda.finops, com base FOCUS 1.4. |
 | `governanca` | `aplicar_descricoes.py` | Grava a descrição de cada coluna das camadas principais do pos_venda (dicionário descricoes_colunas.py). |
 | `governanca` | `aplicar_rely.py` | RELY nas 14 chaves primárias da gold, com prova de unicidade e medição antes/depois. |
 | `governanca` | `aplicar_semantica.py` | Aplica a camada semântica do domínio Pós-venda no Unity Catalog (Discover), a partir de ontologia.py. |
@@ -59,6 +60,7 @@
 | `bronze_sql` | 1 | 0 | 0 | — |
 | `default` | 0 | 0 | 0 | — |
 | `dq` | 1 | 15 | 0 | — |
+| `finops` | 0 | 19 | 1 | — |
 | `fonte` | 1 | 0 | 0 | — |
 | `gold` | 17 | 0 | 0 | — |
 | `gold_ldp` | 0 | 0 | 0 | MATERIALIZED_VIEW 14 |

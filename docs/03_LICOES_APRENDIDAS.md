@@ -32,6 +32,20 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   o deploy da carga apagou do workspace 2 arquivos `.pyc` ("2 deleted") → leia a linha de arquivos do deploy e
   confira que só sumiu o que devia; nunca ponha no `.gitignore` algo que o bundle precisa enviar.
 
+## Custo e FinOps
+
+- **L76** O framework FinOps que já existia (`finops.observability`) quebrou em 19 de 28 visões: a base
+  `v_focus_cost_usage` guardou o struct `system.billing.usage.usage_metadata` inteiro, e o struct ganhou campos (de 50
+  para 58) → numa visão sobre tabela de sistema, escolha os campos do struct um a um (`usage_metadata.job_id AS job_id`),
+  nunca o struct inteiro; o Databricks acrescenta campos sem aviso. (`finops/gerar_finops.py`)
+- **L77** Na primeira versão das visões FinOps, 80% do custo ficou sem dono. A causa eram 2.122 consultas de cinco jobs
+  que não existem mais em `system.lakeflow.jobs` e não têm nome no billing → atribua em camadas: tag, nome da origem
+  (job, espaço Genie, painel) e, quando a origem não tem nome, o texto da consulta (catálogo citado). Confira sempre quanto
+  sobrou sem dono antes de mostrar o custo por time. (`custo_sql_por_consulta`)
+- **L78** As 249 perguntas de novembro aos espaços Genie do pós-venda vieram todas pela API (as avaliações
+  automáticas); o uso por pessoas foi zero → meça a adoção pelo canal UI e pelo painel publicado; contar todos os
+  eventos mede os testes, não as pessoas. (`uso_genie_diario`, `uso_paineis_diario`)
+
 ## Dados e pipeline
 
 - **L07** Defeitos injetados de propósito tornam a demonstração de qualidade convincente → planeje os incidentes por semana
