@@ -867,7 +867,8 @@ REVISAO = {
         b="Arquitetura mais próxima do pos_venda (medallion, DQX Studio, AI/BI, Genie, em português), mas para a "
           "Resolução BACEN nº 18; o pós-venda segue a SUSEP. Não instalar: reaproveitar a dimensão de qualidade em "
           "user_metadata de cada regra e a linhagem externa no Unity Catalog.",
-        s="proposto", sn="Propostas 4 (dimensão de qualidade nas regras) e 7 (linhagem externa com Power BI) da revisão de 22/11."),
+        s="proposto", sn="Só os padrões, sem instalar o acelerador: propostas 4 (dimensão de qualidade nas regras) e 7 "
+                         "(linhagem externa com Power BI) da revisão de 22/11."),
     "dbx-adoption-monitor": dict(
         fe="S", fn="system.access.audit é legível neste workspace (7 dias: 71 eventos de painéis, 1.421 da Genie, 21 de apps).",
         b="Copiar só as metric views de adoção de painéis e Genie para medir o uso na avaliação Databricks × Power BI; "
@@ -887,6 +888,19 @@ REVISAO = {
         s="adiado", sn="Decisão do usuário: não mascarar dado pessoal, usado na validação. Retomar se a Genie abrir a mais pessoas."),
     "databricks-waf": dict(
         s="adiado", sn="App com Lakebase; serve para preparar a ida para produção."),
+    # "Não agora" da revisão de 22/11 (fora do escopo atual), registrado aqui em 23/11 para o guia de opções
+    "lakeflow_framework": dict(
+        s="adiado", sn="Fora do escopo atual (revisão de 22/11): a carga diária já funciona, com paridade linha a linha. "
+                       "Retomar ao construir um segundo domínio com o mesmo padrão."),
+    "ingestion-workbench": dict(
+        s="adiado", sn="Fora do escopo atual (revisão de 22/11): os dados são sintéticos e não há sistema de origem real. "
+                       "Retomar quando o banco de cobrança e apólices for ligado."),
+    "mlops-quickstart": dict(
+        s="adiado", sn="Fora do escopo atual (revisão de 22/11): o projeto não tem modelo de propensão. Retomar se a "
+                       "cobrança pedir priorização por modelo."),
+    "advance-document-processing": dict(
+        s="adiado", sn="Fora do escopo atual (revisão de 22/11): não há documentos para ler. Retomar se comprovantes, "
+                       "boletos ou cartas de cobrança entrarem no projeto."),
 }
 
 

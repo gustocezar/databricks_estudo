@@ -1,7 +1,7 @@
 # Lições aprendidas · pos_venda
 
 > Documento incremental. Cada lição tem um código (`L##`) que não muda, para ser citada no playbook, no CHANGELOG e em
-> revisões. Lição nova entra no fim do tema dela, com o próximo número livre. Última atualização: **22/11/2026**.
+> revisões. Lição nova entra no fim do tema dela, com o próximo número livre. Última atualização: **23/11/2026**.
 
 Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra está aplicada.
 
@@ -192,3 +192,6 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   leitor de PBIP não extrai visuais) → leia o resumo
   de cada aprovação; "sem histórico" ou "nada encontrado" é "não avaliado", e vai para a triagem como lacuna.
   (`paineis_financeiros/powerbi/auditoria/README.md`)
+- **L75** A revisão de 22/11 pôs quatro repositórios em "não agora" só no texto, e o guia de opções gerado do
+  catálogo os recomendou como candidatos → toda decisão sobre um acelerador vai para o dado de onde as ferramentas
+  leem (`s` e `sn` em `catalogo.py`), não só para o documento da revisão. (`referencias/databricks_solutions/gerar_opcoes.py`)

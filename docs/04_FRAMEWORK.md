@@ -1,6 +1,6 @@
 # Framework · práticas aplicadas no pos_venda, de onde vieram e por quê
 
-> Documento incremental. Última atualização: **22/11/2026**. Cada prática tem um código (`P##`) que não muda.
+> Documento incremental. Última atualização: **23/11/2026**. Cada prática tem um código (`P##`) que não muda.
 > Fontes conferidas em 22/11/2026 (todos os links responderam).
 
 Este framework reúne as **29 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 22 da
@@ -431,6 +431,8 @@ Os outros documentos complementam este:
   - Os 147 repositórios estão catalogados em `referencias/databricks_solutions/`.
   - Cada um tem a situação no projeto: aplicado, proposto ou adiado, com o motivo.
   - A revisão de 22/11 gerou 7 propostas, das quais 3 já foram aplicadas.
+  - Desde 23/11, um guia escrito para LLM transforma o catálogo em opções ranqueadas (seção
+    [Opções databricks-solutions](#opções-databricks-solutions-qual-acelerador-usar-a-seguir)).
 - **Por quê:** o catálogo envelhece pelo lado do projeto. A opção Power BI levou o `powerbi-analyzer` de relevância baixa
   para alta.
 - **Reaplique quando:** a cada fase nova do projeto.
@@ -458,6 +460,41 @@ Os outros documentos complementam este:
   registrada.
 - **Reaplique quando:** sempre.
 - **Prova:** 22 fases, 74 lições, inventário regenerado a cada mudança.
+
+---
+
+## Opções databricks-solutions: qual acelerador usar a seguir
+
+Os 147 repositórios públicos da organização [databricks-solutions](https://github.com/databricks-solutions) estão
+num guia escrito para que uma LLM, ou uma pessoa, escolha a melhor opção para o projeto:
+[OPCOES_PARA_LLM.md](../referencias/databricks_solutions/OPCOES_PARA_LLM.md) e a versão estruturada
+[opcoes.json](../referencias/databricks_solutions/opcoes.json).
+
+Para cada repositório, o guia diz:
+- o que é;
+- como ajudaria no pos_venda;
+- quando escolher e como usar;
+- a relevância para o projeto;
+- se cabe no Free Edition, e com qual ressalva;
+- a camada e as práticas deste framework que ele reforça;
+- a situação no projeto, com o motivo;
+- uma recomendação e uma prioridade.
+
+O guia também traz o contexto do projeto (vagas de app, Lakebase, modelos disponíveis) e 9 regras de escolha.
+`gerar_opcoes.py` gera os dois arquivos a partir de `catalogo.py`, que segue como a fonte única.
+
+| Recomendação | Opções | Camada |
+|---|---|---|
+| Aplicar a seguir (2) | `regulatory_data_governance` (só os padrões: dimensão de qualidade nas regras e linhagem externa), `dbx-adoption-monitor` (metric views de uso dos painéis e da Genie) | Qualidade e Governança; Avaliação |
+| Candidato (5) | `ai-dev-kit`, `aibi-dashboard-wanderbricks`, `caspers`, `databricks-aibi-design-first-accelerator`, `databricks-forge` | Fundação; Consumo; Dados e Qualidade; Semântica; Governança |
+| Já aplicado (7) | `powerbi-analyzer`, `uc-semantics-patterns`, `genie-best-practices-agent`, `genie-ontology-readiness`, `technical-services-solutions` (genie-agent-scanner), `agentic-bdd-uc-functions`, `power-bi-on-databricks-quickstarts` | P08, P19, P20, P23 a P26 |
+| Adiado, com motivo (10) | `databricks-dab-examples`, `databricks-genie-workbench`, `uc-declarative-abac`, `genierails`, `data-classification-review-app`, `databricks-waf`, `lakeflow_framework`, `ingestion-workbench`, `mlops-quickstart`, `advance-document-processing` | várias |
+| Só se a necessidade mudar (69) · fora do escopo (37) · não roda no Free Edition (17) | listadas no guia, com o motivo | — |
+
+**Como pedir a uma LLM:** entregue o guia e descreva a necessidade, por exemplo: "quero medir o uso da Genie e dos
+painéis; qual opção databricks-solutions usar no pos_venda?". As regras levam à resposta. Neste exemplo, a escolha é
+`dbx-adoption-monitor`: está em *Aplicar a seguir*, cabe no Free Edition e não ocupa vaga de app. O
+`databricks-genie-workbench` fica de fora, porque gastaria a última vaga de app.
 
 ---
 

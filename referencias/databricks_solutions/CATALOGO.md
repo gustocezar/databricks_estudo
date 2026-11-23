@@ -8,7 +8,7 @@
 
 **Proposto (2):** [dbx-adoption-monitor](https://github.com/databricks-solutions/dbx-adoption-monitor), [regulatory_data_governance](https://github.com/databricks-solutions/regulatory_data_governance)
 
-**Adiado (6):** [data-classification-review-app](https://github.com/databricks-solutions/data-classification-review-app), [databricks-dab-examples](https://github.com/databricks-solutions/databricks-dab-examples), [databricks-genie-workbench](https://github.com/databricks-solutions/databricks-genie-workbench), [databricks-waf](https://github.com/databricks-solutions/databricks-waf), [genierails](https://github.com/databricks-solutions/genierails), [uc-declarative-abac](https://github.com/databricks-solutions/uc-declarative-abac)
+**Adiado (10):** [advance-document-processing](https://github.com/databricks-solutions/advance-document-processing), [data-classification-review-app](https://github.com/databricks-solutions/data-classification-review-app), [databricks-dab-examples](https://github.com/databricks-solutions/databricks-dab-examples), [databricks-genie-workbench](https://github.com/databricks-solutions/databricks-genie-workbench), [databricks-waf](https://github.com/databricks-solutions/databricks-waf), [genierails](https://github.com/databricks-solutions/genierails), [ingestion-workbench](https://github.com/databricks-solutions/ingestion-workbench), [lakeflow_framework](https://github.com/databricks-solutions/lakeflow_framework), [mlops-quickstart](https://github.com/databricks-solutions/mlops-quickstart), [uc-declarative-abac](https://github.com/databricks-solutions/uc-declarative-abac)
 
 ## Relevância Alta (6)
 
@@ -54,7 +54,7 @@
 - **Casos de uso:** Governança de dados regulatórios, críticas de qualidade com aprovação, linhagem externa, evidências para auditoria.
 - **Benefício para o pos_venda:** Arquitetura mais próxima do pos_venda (medallion, DQX Studio, AI/BI, Genie, em português), mas para a Resolução BACEN nº 18; o pós-venda segue a SUSEP. Não instalar: reaproveitar a dimensão de qualidade em user_metadata de cada regra e a linhagem externa no Unity Catalog.
 - **Nota Free Edition:** Exige DQX Studio e Lakebase no mesmo workspace, que o projeto já tem; o deploy cria vários recursos e consome cota.
-- **Situação no projeto:** proposto. Propostas 4 (dimensão de qualidade nas regras) e 7 (linhagem externa com Power BI) da revisão de 22/11.
+- **Situação no projeto:** proposto. Só os padrões, sem instalar o acelerador: propostas 4 (dimensão de qualidade nas regras) e 7 (linhagem externa com Power BI) da revisão de 22/11.
 
 ### [technical-services-solutions](https://github.com/databricks-solutions/technical-services-solutions) · Workshops, demos e coleções · ★14 · Free Edition: A confirmar
 
@@ -73,6 +73,7 @@
 - **Casos de uso:** Extrair campos de PDFs, classificar páginas, montar base de conhecimento.
 - **Benefício para o pos_venda:** Próximo passo natural do pós-venda: ler comprovantes de pagamento, boletos e cartas de cobrança e conciliar com as pendências.
 - **Nota Free Edition:** Usa ai_parse_document e AI Functions; confira disponibilidade e cota.
+- **Situação no projeto:** adiado. Fora do escopo atual (revisão de 22/11): não há documentos para ler. Retomar se comprovantes, boletos ou cartas de cobrança entrarem no projeto.
 
 ### [mlops-quickstart](https://github.com/databricks-solutions/mlops-quickstart) · Avaliação, MLOps e modelos · ★13 · Free Edition: A confirmar
 
@@ -81,6 +82,7 @@
 - **Casos de uso:** Primeiro modelo em produção com esteira.
 - **Benefício para o pos_venda:** Esqueleto para um modelo de propensão de regularização das pendências, que priorizaria a cobrança.
 - **Nota Free Edition:** Treino leve em serverless; serving pode não estar disponível.
+- **Situação no projeto:** adiado. Fora do escopo atual (revisão de 22/11): o projeto não tem modelo de propensão. Retomar se a cobrança pedir priorização por modelo.
 
 ### [power-bi-on-databricks-quickstarts](https://github.com/databricks-solutions/power-bi-on-databricks-quickstarts) · BI externo (Power BI, Grafana) · ★101 · Free Edition: Sim
 
@@ -137,6 +139,7 @@
 - **Casos de uso:** Ingestão em massa de bancos transacionais, estates com milhares de tabelas.
 - **Benefício para o pos_venda:** Caminho de produção para trocar o gerador sintético pelo banco real do sistema de cobrança e apólices.
 - **Nota Free Edition:** Usa Lakehouse Federation para bancos externos; no Free Edition não há origem real nem rede privada.
+- **Situação no projeto:** adiado. Fora do escopo atual (revisão de 22/11): os dados são sintéticos e não há sistema de origem real. Retomar quando o banco de cobrança e apólices for ligado.
 
 ### [databricks-dab-examples](https://github.com/databricks-solutions/databricks-dab-examples) · Pipelines e engenharia de dados · ★54 · Free Edition: Sim
 
@@ -153,6 +156,7 @@
 - **Casos de uso:** Padronizar dezenas de tabelas medallion, SCD, data vault, modelo dimensional.
 - **Benefício para o pos_venda:** Alternativa para trocar os notebooks escritos à mão do carga_diaria por pipelines declarados, com expectations nativas ao lado do DQX.
 - **Nota Free Edition:** Usa Spark Declarative Pipelines serverless; confira consumo da cota diária.
+- **Situação no projeto:** adiado. Fora do escopo atual (revisão de 22/11): a carga diária já funciona, com paridade linha a linha. Retomar ao construir um segundo domínio com o mesmo padrão.
 
 ### [agentic-bdd-uc-functions](https://github.com/databricks-solutions/agentic-bdd-uc-functions) · Qualidade, governança e segurança · ★1 · Free Edition: Sim
 

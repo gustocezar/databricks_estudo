@@ -242,6 +242,8 @@ mês anterior e variação mensal (offset), acumulado no mês e no ano (cumulati
 aplicados (`uc-semantics-patterns`, `genie-best-practices-agent`, `genie-ontology-readiness`, `agentic-bdd-uc-functions`);
 sete propostas ficaram priorizadas em `referencias/databricks_solutions/REVISAO_2026-11-22.md`, a começar pela auditoria
 do Power BI (`powerbi-analyzer`), pela nota da Genie sem instalar app (`genie-agent-scanner`) e por `RELY` nas PKs da gold.
+Em 23/11, o catálogo virou também um guia de opções para LLM (`OPCOES_PARA_LLM.md` e `opcoes.json`): os 147 repositórios
+com recomendação, prioridade, camada do framework e regras de escolha.
 
 ## Fase 13 · Avaliação independente da Genie
 

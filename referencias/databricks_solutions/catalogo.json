@@ -257,7 +257,7 @@
   "k": "Governança de dados regulatórios, críticas de qualidade com aprovação, linhagem externa, evidências para auditoria.",
   "b": "Arquitetura mais próxima do pos_venda (medallion, DQX Studio, AI/BI, Genie, em português), mas para a Resolução BACEN nº 18; o pós-venda segue a SUSEP. Não instalar: reaproveitar a dimensão de qualidade em user_metadata de cada regra e a linhagem externa no Unity Catalog.",
   "s": "proposto",
-  "sn": "Propostas 4 (dimensão de qualidade nas regras) e 7 (linhagem externa com Power BI) da revisão de 22/11.",
+  "sn": "Só os padrões, sem instalar o acelerador: propostas 4 (dimensão de qualidade nas regras) e 7 (linhagem externa com Power BI) da revisão de 22/11.",
   "cat": "Qualidade, governança e segurança",
   "url": "https://github.com/databricks-solutions/regulatory_data_governance",
   "stars": 2,
@@ -408,14 +408,14 @@
   "u": "Descrever fluxos em arquivos de configuração e padrões, implantar com bundle; a documentação traz quick start.",
   "k": "Padronizar dezenas de tabelas medallion, SCD, data vault, modelo dimensional.",
   "b": "Alternativa para trocar os notebooks escritos à mão do carga_diaria por pipelines declarados, com expectations nativas ao lado do DQX.",
+  "s": "adiado",
+  "sn": "Fora do escopo atual (revisão de 22/11): a carga diária já funciona, com paridade linha a linha. Retomar ao construir um segundo domínio com o mesmo padrão.",
   "cat": "Pipelines e engenharia de dados",
   "url": "https://github.com/databricks-solutions/lakeflow_framework",
   "stars": 30,
   "lang": "Python",
   "push": "2026-11-20",
-  "arq": false,
-  "s": "",
-  "sn": ""
+  "arq": false
  },
  {
   "n": "databricks-dab-examples",
@@ -579,14 +579,14 @@
   "u": "Implantar, descrever tabelas como linhas de metadados e acompanhar os jobs na app.",
   "k": "Ingestão em massa de bancos transacionais, estates com milhares de tabelas.",
   "b": "Caminho de produção para trocar o gerador sintético pelo banco real do sistema de cobrança e apólices.",
+  "s": "adiado",
+  "sn": "Fora do escopo atual (revisão de 22/11): os dados são sintéticos e não há sistema de origem real. Retomar quando o banco de cobrança e apólices for ligado.",
   "cat": "Ingestão e streaming",
   "url": "https://github.com/databricks-solutions/ingestion-workbench",
   "stars": 5,
   "lang": "Python",
   "push": "2026-11-20",
-  "arq": false,
-  "s": "",
-  "sn": ""
+  "arq": false
  },
  {
   "n": "zerobus-ingest-examples",
@@ -1225,14 +1225,14 @@
   "u": "Escolher o pipeline (classificação e extração de páginas, citações, base de conhecimento) e implantar o bundle.",
   "k": "Extrair campos de PDFs, classificar páginas, montar base de conhecimento.",
   "b": "Próximo passo natural do pós-venda: ler comprovantes de pagamento, boletos e cartas de cobrança e conciliar com as pendências.",
+  "s": "adiado",
+  "sn": "Fora do escopo atual (revisão de 22/11): não há documentos para ler. Retomar se comprovantes, boletos ou cartas de cobrança entrarem no projeto.",
   "cat": "Agentes e IA generativa",
   "url": "https://github.com/databricks-solutions/advance-document-processing",
   "stars": 2,
   "lang": "Python",
   "push": "2026-11-03",
-  "arq": false,
-  "s": "",
-  "sn": ""
+  "arq": false
  },
  {
   "n": "agentic-customer-support",
@@ -1567,14 +1567,14 @@
   "u": "Seguir o vídeo e adaptar com o Genie Code para seus dados.",
   "k": "Primeiro modelo em produção com esteira.",
   "b": "Esqueleto para um modelo de propensão de regularização das pendências, que priorizaria a cobrança.",
+  "s": "adiado",
+  "sn": "Fora do escopo atual (revisão de 22/11): o projeto não tem modelo de propensão. Retomar se a cobrança pedir priorização por modelo.",
   "cat": "Avaliação, MLOps e modelos",
   "url": "https://github.com/databricks-solutions/mlops-quickstart",
   "stars": 13,
   "lang": "Jupyter Notebook",
   "push": "2026-07-22",
-  "arq": false,
-  "s": "",
-  "sn": ""
+  "arq": false
  },
  {
   "n": "databricks-ab-testing",

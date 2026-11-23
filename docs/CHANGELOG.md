@@ -15,6 +15,33 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ---
 
+## 23/11/2026
+
+### Guia de opções databricks-solutions para LLM
+- **O que mudou:**
+  - `referencias/databricks_solutions/gerar_opcoes.py` gera `OPCOES_PARA_LLM.md` e `opcoes.json` a partir do
+    catálogo: os 147 repositórios como opções para o pos_venda.
+  - Cada opção traz o que é, como ajudaria no projeto, quando escolher, como usar, relevância, Free Edition (com a
+    ressalva), camada e práticas do framework, situação com motivo, recomendação e prioridade.
+  - O guia abre com o contexto do projeto (vagas de app, Lakebase, modelos) e 9 regras de escolha.
+  - O framework, o documento e a apresentação ganharam a seção de opções; a apresentação passou a ter 17 slides.
+  - `catalogo.py` registrou como **adiados** os 4 repositórios que a revisão de 22/11 pôs em "não agora" e que o dado
+    ainda mostrava sem decisão: `lakeflow_framework`, `ingestion-workbench`, `mlops-quickstart` e
+    `advance-document-processing`.
+  - Em `regulatory_data_governance`, a situação diz "só os padrões, sem instalar".
+- **Por quê:** pedido do usuário: todas as opções da databricks-solutions, com como ajudariam no projeto, de forma que
+  uma LLM entenda qual é a melhor opção.
+- **Onde:** `referencias/databricks_solutions/` (`gerar_opcoes.py` novo, `OPCOES_PARA_LLM.md`, `opcoes.json`,
+  `catalogo.py` e os gerados); `docs/04_FRAMEWORK.md` (seção nova e P27).
+- **Conferência:**
+  - 147 opções com 147 nomes únicos, e `opcoes.json` válido.
+  - Recomendações: aplicar a seguir 2, candidato 5, já aplicado 7, adiado 10, só se a necessidade mudar 69, fora do
+    escopo 37, não roda no Free Edition 17.
+  - A primeira geração recomendou como candidatos 4 repositórios já adiados; a causa foi corrigida no catálogo (L75).
+  - O exemplo do guia (medir o uso da Genie) leva ao `dbx-adoption-monitor`, que está em *Aplicar a seguir*.
+- **Docs atualizadas:** framework (seção de opções, P27) · revisão de 22/11 · trilha (fase 12) · lições (L75) ·
+  `README.md` · inventário
+
 ## 22/11/2026
 
 ### Framework das práticas aplicadas, documento e apresentação

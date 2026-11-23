@@ -30,7 +30,7 @@ Os dados de clientes são **sintéticos**, gerados com o [dbldatagen](https://gi
 | [`governanca/`](governanca/README.md) | descrições, tags, ontologia, metric views e espaços Genie |
 | [`regras/`](regras/README.md) | regras de negócio como funções do Unity Catalog testadas por cenários (BDD) |
 | [`paineis_financeiros/`](paineis_financeiros/README.md) | painéis AI/BI e projeto Power BI (PBIP) |
-| `referencias/` | catálogo comentado dos repositórios databricks-solutions |
+| [`referencias/`](referencias/databricks_solutions/OPCOES_PARA_LLM.md) | catálogo dos 147 repositórios databricks-solutions e o guia de opções para LLM (qual usar a seguir) |
 
 ## Para rodar no seu workspace
 
