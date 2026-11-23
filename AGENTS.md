@@ -13,7 +13,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 
 1. [README.md](README.md): o mapa do repositório.
 2. [docs/README.md](docs/README.md): a situação de cada bloco e como manter a documentação.
-3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 29 práticas (`P##`), com a origem, como aplicamos e por quê.
+3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 37 práticas (`P##`), com a origem, como aplicamos e por quê.
 4. [docs/03_LICOES_APRENDIDAS.md](docs/03_LICOES_APRENDIDAS.md): as armadilhas (`L##`). Leia antes de mudar código.
 5. [docs/02_PLAYBOOK.md](docs/02_PLAYBOOK.md): o passo a passo, os critérios de saída e a matriz de resiliência.
 6. [docs/CHANGELOG.md](docs/CHANGELOG.md): o que mudou e como foi conferido, do mais recente para o mais antigo.
@@ -32,6 +32,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Métrica, KPI ou camada semântica | `governanca/ontologia.py` e `governanca/gerar_ontologia_sql.py` (metric views) |
 | Genie | `governanca/genie.py` e [governanca/genie/scanner/TRIAGEM.md](governanca/genie/scanner/TRIAGEM.md) |
 | Power BI | [paineis_financeiros/powerbi/README.md](paineis_financeiros/powerbi/README.md) e a [auditoria](paineis_financeiros/powerbi/auditoria/README.md) |
+| Conformidade: descrição, tags governadas, dado pessoal, chave, certificação, jobs e alertas; views quebradas; o que fazer com a observabilidade que já existe | [conformidade/README.md](conformidade/README.md), [AVALIACAO_OBSERVABILIDADE.md](conformidade/AVALIACAO_OBSERVABILIDADE.md) e as visões de `pos_venda.conformidade` (`boas_praticas_dados`, `pendencias`, `squad_por_schema`, `plataforma_por_catalogo`, `acoes_observabilidade`) |
 | Custo, uso, FinOps, FOCUS, quanto custa cada funcionalidade, custo de um squad ou da plataforma | [finops/README.md](finops/README.md) e as visões de `pos_venda.finops` (`focus_custo_uso`, `custo_por_funcionalidade`, `plataforma_*`, `squad_*`, `uso_*`, `boas_praticas_custo`) |
 
 Diga de onde tirou a resposta (arquivo, `P##`, `L##` ou entrada do CHANGELOG). Se o repositório não responde, diga
@@ -56,6 +57,10 @@ Não reabra estas decisões sem pedido do dono do projeto.
 - **O app `genie-ontology-readiness` não recebe acesso aos catálogos `main` e `workspace`.**
 - **`finops.observability` (o framework FinOps que já existia no workspace) só se lê.** As visões novas ficam em
   `pos_venda.finops`. Não recrie nem corrija as `v_focus_*` sem pedido do dono.
+- **O bundle `observabilidade-framework` também só se lê.** Isso vale para os jobs, os alertas SQL e
+  `main.observabilidade_dev`. As recomendações (espaçar o alerta horário, pausar o rightsizing) ficam com o dono, em
+  [AVALIACAO_OBSERVABILIDADE.md](conformidade/AVALIACAO_OBSERVABILIDADE.md). A conformidade fica em
+  `pos_venda.conformidade`.
 - **Custo no Free Edition é a preço de lista (`ListCost`).** O `BilledCost` é 0, porque não há fatura.
 - **Aceleradores se escolhem pelas regras de `OPCOES_PARA_LLM.md`.** O Genie Workbench está adiado, porque ocuparia
   a última vaga de app.
@@ -78,6 +83,7 @@ Não edite um arquivo gerado: mude a fonte e gere de novo.
 | `referencias/databricks_solutions/OPCOES_PARA_LLM.md`, `opcoes.json` | `gerar_opcoes.py` (dados em `catalogo.py`) |
 | `docs/INVENTARIO.md` | `docs/gerar_inventario.py` |
 | `finops/finops.sql`, `finops/ativos.json`, `finops/conferencia.json` e as visões de `pos_venda.finops` | `finops/gerar_finops.py` (regras de atribuição na lista `REGRAS`) |
+| `conformidade/conformidade.sql`, `politicas_tags.json`, `alertas.json`, `conferencia.json` e os objetos de `pos_venda.conformidade` | `conformidade/gerar_conformidade.py` (regras em `REGRAS`, papel dos schemas em `CAMADAS`, avaliação em `ACOES`) |
 | `governanca/auditoria_metadados.json`, `governanca/semantica_aplicada.json`, `governanca/rely/*.json` | `auditar_metadados.py`, `aplicar_semantica.py`, `aplicar_rely.py` |
 
 Logs (`*.log`) e resultados de execução (`dqx_studio/regras/resultados/`) são evidência: não edite, não apague.

@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 23/11/2026 12:34. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 23/11/2026 19:02. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -10,6 +10,7 @@
 | `carga_diaria` | `gerar_carga.py` | Gera os notebooks e o SQL do pipeline de CARGA DIARIA do dominio pos_venda. |
 | `carga_diaria` | `janela_avaliacao.py` | Janela de avaliacao do DQX Studio (dominio pos_venda). |
 | `carga_diaria` | `views_preservadas.py` | Cria ou atualiza views do Unity Catalog sem perder a governança. |
+| `conformidade` | `gerar_conformidade.py` | Monitoramento de conformidade dos dados e do workspace no schema pos_venda.conformidade. |
 | `dqx_studio/demo` | `resumo_evolucao.py` | Monta a evolucao semana a semana a partir do historico do DQX Studio (execucoes com TODAS as linhas das janelas). |
 | `dqx_studio/painel` | `aplicar_e_testar.py` | Cria as views do painel (views_painel.sql) e testa cada consulta do painel como o AI/BI vai executá-la. |
 | `dqx_studio/painel` | `descricoes_painel.py` | Descrição das colunas das views do painel de qualidade (pos_venda.dq.v_painel_*). |
@@ -58,6 +59,7 @@
 | `bronze` | 1 | 0 | 0 | — |
 | `bronze_ldp` | 0 | 0 | 0 | MATERIALIZED_VIEW 1 |
 | `bronze_sql` | 1 | 0 | 0 | — |
+| `conformidade` | 2 | 12 | 1 | — |
 | `default` | 0 | 0 | 0 | — |
 | `dq` | 1 | 15 | 0 | — |
 | `finops` | 0 | 19 | 1 | — |

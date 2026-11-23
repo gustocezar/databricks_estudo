@@ -1,0 +1,61 @@
+{
+ "gerado_em": "2026-11-23",
+ "politicas": [
+  {
+   "tag": "contem_dado_pessoal",
+   "valores": [
+    "sim"
+   ],
+   "descricao": "A tabela ou view tem pelo menos uma coluna com dado pessoal (LGPD); veja a tag dado_pessoal nas colunas."
+  },
+  {
+   "tag": "contem_dado_sensivel",
+   "valores": [
+    "sim"
+   ],
+   "descricao": "A tabela ou view tem dado pessoal sensível (LGPD, art. 5º, II), como dado de saúde."
+  },
+  {
+   "tag": "dado_pessoal",
+   "valores": [
+    "sensivel",
+    "identificacao",
+    "contato",
+    "endereco",
+    "perfil"
+   ],
+   "descricao": "Coluna com dado pessoal (LGPD), por categoria: identificacao, contato, endereco, perfil ou sensivel (art. 5º, II: dado de saúde). Não mascarado: usado na validação de qualidade."
+  },
+  {
+   "tag": "data_owner",
+   "valores": [
+    "financeiro_pos_venda"
+   ],
+   "descricao": "Responsável (papel) pelo ativo e pelo significado dos dados."
+  },
+  {
+   "tag": "domain",
+   "valores": [
+    "pos_venda"
+   ],
+   "descricao": "Domínio de negócio do ativo (chave padrão, sem acento). pos_venda = Pós-venda de seguro de vida."
+  },
+  {
+   "tag": "subject_area",
+   "valores": [
+    "cobranca",
+    "carteira",
+    "qualidade"
+   ],
+   "descricao": "Subdomínio do ativo: cobranca (Cobrança e inadimplência), carteira (Clientes e apólices) ou qualidade (Qualidade de dados)."
+  },
+  {
+   "tag": "system.certification_status",
+   "valores": [
+    "certified",
+    "deprecated"
+   ],
+   "descricao": "This tag can be used to show a Databricks object's quality and lifecycle. Objects can be \"certified\" or \"deprecated\"."
+  }
+ ]
+}

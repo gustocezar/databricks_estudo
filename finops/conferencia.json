@@ -1,13 +1,13 @@
 {
  "totais": {
-  "linhas_billing": 27613.0,
-  "linhas_focus": 27613.0,
-  "custo_billing": 1217.111939,
-  "custo_focus": 1217.111939,
-  "custo_funcionalidade": 1217.111939,
-  "custo_projeto": 1217.111986,
-  "custo_sql_focus": 938.402244,
-  "custo_sql_rateado": 938.402291,
+  "linhas_billing": 27757.0,
+  "linhas_focus": 27757.0,
+  "custo_billing": 1228.427979,
+  "custo_focus": 1228.427979,
+  "custo_funcionalidade": 1228.427979,
+  "custo_projeto": 1228.428011,
+  "custo_sql_focus": 949.201597,
+  "custo_sql_rateado": 949.201629,
   "categoria_fora_da_focus": 0.0,
   "obrigatorias_nulas": 0.0
  },
@@ -15,27 +15,27 @@
   {
    "check": "linhas da base FOCUS = linhas do billing",
    "ok": true,
-   "detalhe": "27613 = 27613"
+   "detalhe": "27757 = 27757"
   },
   {
    "check": "custo FOCUS = uso × preço de lista",
    "ok": true,
-   "detalhe": "1217.1119 = 1217.1119"
+   "detalhe": "1228.4280 = 1228.4280"
   },
   {
    "check": "custo por funcionalidade = FOCUS",
    "ok": true,
-   "detalhe": "1217.1119"
+   "detalhe": "1228.4280"
   },
   {
    "check": "custo por projeto (com rateio SQL) = FOCUS",
    "ok": true,
-   "detalhe": "1217.1120"
+   "detalhe": "1228.4280"
   },
   {
    "check": "SQL rateado por consulta = SQL da FOCUS",
    "ok": true,
-   "detalhe": "938.4023 = 938.4022"
+   "detalhe": "949.2016 = 949.2016"
   },
   {
    "check": "ServiceCategory só com valores da FOCUS",

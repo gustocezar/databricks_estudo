@@ -1,0 +1,65 @@
+{
+ "gerado_em": "2026-11-23",
+ "alertas": [
+  {
+   "id": "250698304652422",
+   "nome": "[Observabilidade] Alerta - Custo Diario Alto (USD)",
+   "agenda": "0 0 20 * * ?",
+   "fuso": "America/Sao_Paulo",
+   "pausado": false,
+   "disparos_dia": 1,
+   "descricao": true,
+   "estado": "ACTIVE",
+   "warehouse_id": "5f010b8396e591fb",
+   "atualizado_em": "2026-07-03 23:43:35"
+  },
+  {
+   "id": "250698304652424",
+   "nome": "[Observabilidade] Alerta - Jobs com Falha (mais de 3 por dia)",
+   "agenda": "0 0 8,12,18 * * ?",
+   "fuso": "America/Sao_Paulo",
+   "pausado": false,
+   "disparos_dia": 3,
+   "descricao": true,
+   "estado": "ACTIVE",
+   "warehouse_id": "5f010b8396e591fb",
+   "atualizado_em": "2026-07-03 23:43:35"
+  },
+  {
+   "id": "250698304652420",
+   "nome": "[Observabilidade] Alerta - Queries Lentas (> 5 min)",
+   "agenda": "0 0 * * * ?",
+   "fuso": "America/Sao_Paulo",
+   "pausado": false,
+   "disparos_dia": 24,
+   "descricao": true,
+   "estado": "ACTIVE",
+   "warehouse_id": "5f010b8396e591fb",
+   "atualizado_em": "2026-07-03 23:43:35"
+  },
+  {
+   "id": "250698304652421",
+   "nome": "[Observabilidade] Alerta - Recursos sem Tag com Custo Alto",
+   "agenda": "0 0 9 * * ?",
+   "fuso": "America/Sao_Paulo",
+   "pausado": false,
+   "disparos_dia": 1,
+   "descricao": true,
+   "estado": "ACTIVE",
+   "warehouse_id": "5f010b8396e591fb",
+   "atualizado_em": "2026-07-03 23:43:35"
+  },
+  {
+   "id": "3609132029342407",
+   "nome": "[Observabilidade] Alerta - Trafego Detectado no Unity AI Gateway",
+   "agenda": "0 0 8 * * ?",
+   "fuso": "America/Sao_Paulo",
+   "pausado": false,
+   "disparos_dia": 1,
+   "descricao": true,
+   "estado": "ACTIVE",
+   "warehouse_id": "5f010b8396e591fb",
+   "atualizado_em": "2026-07-30 19:54:16"
+  }
+ ]
+}

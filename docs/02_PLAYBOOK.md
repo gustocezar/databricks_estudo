@@ -218,9 +218,36 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
   - não atribuído medido e explicado.
 - **Armadilhas:**
   - struct inteiro de tabela de sistema numa visão (L76);
-  - job removido sem nome (L77);
+  - job oculto de alerta SQL, sem nome (L77, L79);
   - contar avaliações automáticas como adoção (L78);
   - no Free Edition o `BilledCost` é 0 e a medida é o custo a preço de lista.
+
+### M12 · Conformidade contínua e observabilidade
+
+- **Quando usar:** quando as regras de governança (descrição, tags, dado pessoal) precisam continuar valendo depois
+  da primeira aplicação, ou quando o workspace já tem observabilidade de outra pessoa.
+- **Passos:**
+  1. Dê um papel a cada schema (`CAMADAS`: principal, legado, apoio) e separe as tabelas internas do Lakeflow (L80).
+  2. Escreva as regras com meta, severidade, origem e como corrigir (`REGRAS`). Prefira regras que já têm prática no
+     framework (P08, P13 a P16, P31).
+  3. Leia pela API o que as tabelas de sistema não têm: os valores das tags governadas (`politicas`) e os alertas SQL
+     (`alertas`).
+  4. `aplicar`; depois `registrar` (sonda das views e histórico do dia) e `conferir`.
+  5. Faça a triagem das pendências antes de corrigir. Falso positivo vira ajuste no gerador, não exceção à mão.
+  6. Avalie a observabilidade que já existe, ação por ação, com veredito e custo (`acoes_observabilidade`).
+- **Modelo:** `conformidade/gerar_conformidade.py` e `conformidade/README.md`.
+- **Critério de saída:**
+  - cada visão responde;
+  - o inventário tem todo ativo do `information_schema`;
+  - as regras de descrição verificam todo ativo e toda coluna que não sejam internos;
+  - pendências = achados não conformes = metric view;
+  - nenhuma regra "sem dados";
+  - histórico do dia com uma linha por regra.
+- **Armadilhas:**
+  - tabelas internas do Lakeflow contadas como ativos (L80);
+  - alerta SQL que roda como job oculto (L79);
+  - checagem de cluster clássico que volta vazia no Free Edition (L81);
+  - a sonda usa `DESCRIBE QUERY`: pega a view que não resolve, mas não um erro que só aparece ao executar.
 
 ---
 
@@ -242,6 +269,8 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
 | Portão das regras reprovado | tarefa `portao_regras` falha e a carga do dia não roda | ler o cenário que falhou no log da tarefa; corrigir a função (ou o cenário, se a regra de negócio mudou) e rodar o job de novo |
 | Timeout de leitura na Statement Execution API | `ReadTimeoutError` (60 s) num cenário BDD | espera síncrona de 20 s, consulta do estado e nova tentativa só em erro de transporte (`regras/uc.py`) |
 | Dia novo carregado | textos com data fixa ("foto de 24/12") ficam errados; teste que contava 35 dias reprova; painel de qualidade abre uma "Semana 6" | escreva "foto mais recente" em painéis e instruções da Genie; checagens dependentes da data (`count = dias desde o início`); confira roteiro e gabaritos depois da carga |
+| View quebrada por mudança em tabela de sistema ou em outro schema | `DESCRIBE QUERY` falha; a regra USO03 da conformidade cai | `gerar_conformidade.py registrar` lista as quebradas em `sonda_views`; recriar a partir do código ou apagar (L76) |
+| Alerta SQL de hora em hora | warehouse acorda o dia todo; custo SQL "sem dono" | `databricks alerts-v2 list-alerts`; espaçar a agenda (regra PLT06, L79) |
 | Projeto Power BI não abre no Desktop | erro de TMDL/PBIR com arquivo e linha | corrigir em `gerar_powerbi.py` (não no arquivo gerado), gerar de novo e rodar a conferência contra os esquemas oficiais |
 
 ---

@@ -38,6 +38,7 @@ AS SELECT * FROM VALUES
   (22, 'job', '%ligar_dqx_studio%', 'pos_venda', 'Squad pós-venda', 'squad'),
   (23, 'job', 'grant-lakebase-sp', 'pos_venda', 'Squad pós-venda', 'squad'),
   (24, 'job', '%[Observabilidade]%', 'observabilidade-framework', 'Plataforma · engenharia-dados', 'plataforma'),
+  (25, 'alerta', '%[Observabilidade]%', 'observabilidade-framework', 'Plataforma · engenharia-dados', 'plataforma'),
   (30, 'pipeline', 'pos_venda%', 'pos_venda', 'Squad pós-venda', 'squad'),
   (31, 'pipeline', '%dbx-agentic-psp%', 'dbx-agentic-psp', 'Squad dbx-agentic-psp', 'squad'),
   (40, 'app', 'dqx-studio', 'pos_venda', 'Squad pós-venda', 'squad'),
@@ -69,7 +70,7 @@ CREATE OR REPLACE VIEW pos_venda.finops.config_ativos (
   id COMMENT 'Identificador do ativo.',
   nome COMMENT 'Nome do ativo.'
 )
-COMMENT 'Nomes de painéis, espaços Genie e projetos Lakebase (foto da API em 2026-11-23, por `gerar_finops.py ativos`).'
+COMMENT 'Nomes de painéis, espaços Genie, projetos Lakebase e alertas SQL (foto da API em 2026-11-23, por `gerar_finops.py ativos`).'
 AS SELECT * FROM VALUES
   ('painel', '01f17682cbb713939ace802864505669', '[dev gustocezar] [Observabilidade] AI Functions e Otimizacao Preditiva - Custo e Uso'),
   ('painel', '01f176de801b17e69680a2aa7bba26e8', '[dev gustocezar] [Observabilidade] Apresentacao Diretoria - Engenharia de Dados'),
@@ -128,7 +129,12 @@ AS SELECT * FROM VALUES
   ('genie', '01f1773dbcb918f099a9d00689dfe6d2', '[dev gustocezar] System Tables - Observabilidade Controlada'),
   ('genie', '01f1773dbcb315cea1e96bcce9306e93', '[dev gustocezar] FOCUS Observabilidade - Engenharia de Dados'),
   ('genie', '01f16e6c05df1741993b6c6b21b9f4d6', 'Bakehouse Sales Starter Space'),
-  ('lakebase', 'c0a6315b-b12e-4758-8db0-92839c1cdb90', 'dqx-studio-db')
+  ('lakebase', 'c0a6315b-b12e-4758-8db0-92839c1cdb90', 'dqx-studio-db'),
+  ('alerta', '3609132029342407', '[Observabilidade] Alerta - Trafego Detectado no Unity AI Gateway'),
+  ('alerta', '250698304652424', '[Observabilidade] Alerta - Jobs com Falha (mais de 3 por dia)'),
+  ('alerta', '250698304652420', '[Observabilidade] Alerta - Queries Lentas (> 5 min)'),
+  ('alerta', '250698304652422', '[Observabilidade] Alerta - Custo Diario Alto (USD)'),
+  ('alerta', '250698304652421', '[Observabilidade] Alerta - Recursos sem Tag com Custo Alto')
 AS a(tipo, id, nome);
 
 CREATE OR REPLACE VIEW pos_venda.finops.focus_custo_uso (
@@ -416,7 +422,7 @@ CREATE OR REPLACE VIEW pos_venda.finops.custo_sql_por_consulta (
   hora COMMENT 'Hora (início).',
   warehouse_id COMMENT 'SQL warehouse.',
   statement_id COMMENT 'Consulta (statement_id do query.history); NULL na linha de warehouse ocioso.',
-  origem COMMENT 'De onde veio a consulta (Painel AI/BI, Genie, Job, Pipeline, CLI/SDK, App, Power BI, Outro) ou ''Warehouse ocioso''.',
+  origem COMMENT 'De onde veio a consulta (Painel AI/BI, Genie, Alerta SQL, Job, Pipeline, CLI/SDK, App, Power BI, Outro) ou ''Warehouse ocioso''.',
   projeto COMMENT 'Projeto dono do custo ou do uso.',
   time COMMENT 'Time dono do custo ou do uso.',
   tipo_time COMMENT 'squad, plataforma, compartilhado ou não atribuído.',
@@ -442,7 +448,7 @@ jobs AS (
     WHERE usage_metadata.job_id IS NOT NULL AND usage_metadata.job_name IS NOT NULL) GROUP BY job_id),
 pipelines AS (SELECT pipeline_id, name FROM system.lakeflow.pipelines QUALIFY row_number() OVER (PARTITION BY pipeline_id ORDER BY change_time DESC) = 1),
 c0 AS (
-  SELECT h.*, ga.nome AS nome_genie, pa.nome AS nome_painel, j.name AS nome_job, p.name AS nome_pipeline,
+  SELECT h.*, ga.nome AS nome_genie, pa.nome AS nome_painel, al.nome AS nome_alerta, j.name AS nome_job, p.name AS nome_pipeline,
     CASE
       WHEN lower(h.statement_text) LIKE '%pos_venda.finops.%' THEN 'finops'
       WHEN lower(h.statement_text) LIKE '%pos_venda.%' THEN 'pos_venda'
@@ -452,6 +458,7 @@ c0 AS (
   FROM system.query.history h
   LEFT JOIN pos_venda.finops.config_ativos ga ON ga.tipo = 'genie' AND ga.id = h.query_source.genie_space_id
   LEFT JOIN pos_venda.finops.config_ativos pa ON pa.tipo = 'painel' AND pa.id = h.query_source.dashboard_id
+  LEFT JOIN pos_venda.finops.config_ativos al ON al.tipo = 'alerta' AND al.id = h.query_source.alert_id
   LEFT JOIN jobs j ON j.job_id = h.query_source.job_info.job_id
   LEFT JOIN pipelines p ON p.pipeline_id = h.query_source.pipeline_info.pipeline_id
   WHERE h.compute.warehouse_id IS NOT NULL),
@@ -464,6 +471,7 @@ c AS (
     CASE
       WHEN h.query_source.genie_space_id IS NOT NULL THEN 'Genie'
       WHEN h.query_source.dashboard_id IS NOT NULL OR h.query_source.legacy_dashboard_id IS NOT NULL THEN 'Painel AI/BI'
+      WHEN h.query_source.alert_id IS NOT NULL THEN 'Alerta SQL'
       WHEN h.query_source.job_info.job_id IS NOT NULL THEN 'Job'
       WHEN h.query_source.pipeline_info.pipeline_id IS NOT NULL THEN 'Pipeline'
       WHEN h.client_application ILIKE '%power bi%' THEN 'Power BI'
@@ -471,14 +479,15 @@ c AS (
       WHEN h.client_application ILIKE '%genie-ontology-readiness%' THEN 'App'
       WHEN h.client_application ILIKE '%catalog explorer%' THEN 'Catalog Explorer'
       ELSE 'Outro' END AS origem,
-    -- a origem com nome conhecido decide; sem nome (job removido, painel fora da foto), decide o texto da consulta
+    -- a origem com nome conhecido decide; sem nome (painel fora da foto, alerta novo), decide o texto da consulta
     CASE
       WHEN h.nome_genie IS NOT NULL THEN 'genie'
       WHEN h.nome_painel IS NOT NULL THEN 'painel'
+      WHEN h.nome_alerta IS NOT NULL THEN 'alerta'
       WHEN h.nome_job IS NOT NULL THEN 'job'
       WHEN h.nome_pipeline IS NOT NULL THEN 'pipeline'
       ELSE 'consulta' END AS tipo_recurso,
-    coalesce(h.nome_genie, h.nome_painel, h.nome_job, h.nome_pipeline, h.marca_texto) AS recurso
+    coalesce(h.nome_genie, h.nome_painel, h.nome_alerta, h.nome_job, h.nome_pipeline, h.marca_texto) AS recurso
   FROM c0 h),
 ca AS (
   SELECT c.*, g.projeto, g.time, g.tipo_time FROM c
@@ -620,7 +629,7 @@ FROM t;
 
 CREATE OR REPLACE VIEW pos_venda.finops.uso_consultas_diario (
   dia COMMENT 'Dia.',
-  origem COMMENT 'De onde veio a consulta (Painel AI/BI, Genie, Job, Pipeline, CLI/SDK, App, Power BI, Outro) ou ''Warehouse ocioso''.',
+  origem COMMENT 'De onde veio a consulta (Painel AI/BI, Genie, Alerta SQL, Job, Pipeline, CLI/SDK, App, Power BI, Outro) ou ''Warehouse ocioso''.',
   projeto COMMENT 'Projeto dono do custo ou do uso.',
   time COMMENT 'Time dono do custo ou do uso.',
   tipo_time COMMENT 'squad, plataforma, compartilhado ou não atribuído.',

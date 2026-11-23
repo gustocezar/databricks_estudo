@@ -35,7 +35,7 @@ das 28 visões falhavam: a base `v_focus_cost_usage` guardou o struct `usage_met
 | `custo_por_projeto_diario` | plataforma e squad | custo por dia, projeto, time e funcionalidade; o SQL entra rateado por consulta e o total bate com a base |
 | `uso_paineis_diario` | squad | aberturas da versão publicada e do rascunho, consultas e usuários de cada painel |
 | `uso_genie_diario` | squad | perguntas, leituras, aberturas e usuários por espaço, separando **UI (pessoas)** de **API (automação e avaliações)**, com os DBUs |
-| `uso_consultas_diario` | plataforma e squad | consultas por origem (painel, Genie, job, CLI, Power BI): execuções, falhas, duração, fila e custo |
+| `uso_consultas_diario` | plataforma e squad | consultas por origem (painel, Genie, alerta SQL, job, CLI, Power BI): execuções, falhas, duração, fila e custo |
 | `uso_jobs_diario` | squad | execuções, falhas, duração, custo por execução e custo das execuções com falha |
 | `plataforma_custo_diario` | plataforma | custo diário por funcionalidade com a média dos 7 dias anteriores e a marcação de anomalia |
 | `plataforma_atribuicao_mensal` | plataforma | quanto do custo tem dono (tag ou regra), é compartilhado ou não tem regra |
@@ -75,7 +75,7 @@ Cada linha de consumo ganha um projeto e um time, nesta ordem:
 2. **Regras pelo nome do recurso** (`REGRAS` em `gerar_finops.py`). Exemplos: jobs `pos_venda%`, os apps `dqx-studio` e
    `genie-ontology-readiness`, os espaços Genie "Pós-venda…", os painéis "pos_venda…" e o projeto Lakebase `dqx-studio-db`.
 3. **Compartilhado:** SQL warehouse, armazenamento, rede, otimização preditiva e endpoints de modelos. O warehouse é
-   depois **rateado por consulta**: cada consulta ganha o dono pela origem (espaço Genie, painel, job) ou pelo catálogo
+   depois **rateado por consulta**: cada consulta ganha o dono pela origem (espaço Genie, painel, alerta SQL, job) ou pelo catálogo
    que cita (`pos_venda.` ou `finops.`).
 4. **Não atribuído:** o resto, inclusive os projetos Lakebase que já foram removidos.
 
@@ -112,7 +112,7 @@ Lakebase acompanhem o workspace, rode `ativos` antes.
 
 ```bash
 cd pos_venda
-python3 finops/gerar_finops.py ativos     # nomes de painéis, espaços Genie e projetos Lakebase (ativos.json)
+python3 finops/gerar_finops.py ativos     # nomes de painéis, espaços Genie, projetos Lakebase e alertas SQL (ativos.json)
 python3 finops/gerar_finops.py aplicar    # schema e visões; só recria a visão cuja definição mudou
 python3 finops/gerar_finops.py conferir   # cada visão responde + os totais batem com o faturamento (conferencia.json)
 ```
@@ -165,3 +165,8 @@ python3 finops/gerar_finops.py conferir   # cada visão responde + os totais bat
 já não existem em `system.lakeflow.jobs` e que não têm nome no billing. Todas liam só tabelas de sistema (consultas
 lentas, falhas, custo sem tag). A regra passou a decidir pelo texto da consulta quando a origem não tem nome, e o não
 atribuído caiu para 10,3% (L77).
+
+**Correção (23/11/2026):** os cinco "jobs" eram os jobs ocultos dos 5 alertas SQL do bundle de observabilidade (L79).
+Agora `ativos.json` traz os nomes dos alertas, a consulta com `query_source.alert_id` tem a origem **Alerta SQL** e a
+regra 25 atribui os alertas `[Observabilidade]` ao projeto `observabilidade-framework` pelo nome, sem depender do texto
+da consulta.

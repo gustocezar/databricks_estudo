@@ -63,5 +63,12 @@
  },
  "lakebase": {
   "c0a6315b-b12e-4758-8db0-92839c1cdb90": "dqx-studio-db"
+ },
+ "alertas": {
+  "3609132029342407": "[Observabilidade] Alerta - Trafego Detectado no Unity AI Gateway",
+  "250698304652424": "[Observabilidade] Alerta - Jobs com Falha (mais de 3 por dia)",
+  "250698304652420": "[Observabilidade] Alerta - Queries Lentas (> 5 min)",
+  "250698304652422": "[Observabilidade] Alerta - Custo Diario Alto (USD)",
+  "250698304652421": "[Observabilidade] Alerta - Recursos sem Tag com Custo Alto"
  }
 }

@@ -17,6 +17,66 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 23/11/2026
 
+### Origem "Alerta SQL" na FinOps; documento e apresentação com a conformidade
+- **O que mudou:**
+  - **FinOps.**
+    - `ativos.json` traz os nomes dos 5 alertas SQL, sem o prefixo de usuário do bundle.
+    - `custo_sql_por_consulta` ganhou a origem "Alerta SQL" (por `query_source.alert_id`) e o tipo de recurso `alerta`.
+    - A regra 25 atribui os alertas `[Observabilidade]` ao projeto `observabilidade-framework` pelo nome.
+  - **Documento do framework:**
+    - 37 práticas e 24 fases;
+    - a seção "Conformidade e observabilidade" (P35 a P37);
+    - 3 gatilhos e 7 fontes novas;
+    - a faixa de Conformidade no diagrama das camadas.
+  - **Apresentação:**
+    - slide novo de conformidade (19 slides) e 10 camadas;
+    - 37 práticas, 24 fases, 81 lições e 56 fontes;
+    - 2 pendências novas.
+- **Por quê:** pedido do usuário: fazer os próximos passos da entrega de conformidade.
+- **Onde:** `finops/` (`gerar_finops.py`, `ativos.json`, `finops.sql`, `README.md`). O documento e a apresentação são
+  artefatos privados no claude.ai.
+- **Conferência:**
+  - FinOps (`python3 finops/gerar_finops.py conferir`): 19/19 visões e a metric view respondem, e as 7 checagens
+    passam (27.757 linhas e US$ 1.228,43 = billing; SQL rateado = SQL da base, US$ 949,20);
+  - as 2.129 consultas dos alertas têm a origem "Alerta SQL" e o projeto `observabilidade-framework` (US$ 817,22);
+  - diagrama do documento conferido pela captura da página;
+  - slides alterados renderizados em 1920×1080, sem estouro.
+- **Docs atualizadas:** `finops/README.md` (correção do achado da L77)
+
+### Conformidade dos dados e avaliação da observabilidade do workspace
+- **O que mudou:**
+  - **Avaliação.** Foram avaliadas as 8 ações de observabilidade que já rodam no workspace: os 6 jobs e os 5 alertas
+    SQL do bundle `observabilidade-framework`, as visões de `main.observabilidade_dev` e `finops.observability`. Cada
+    ação recebeu um veredito: 3 internalizadas, 2 mantidas, 1 a consertar (alertas), 1 a aposentar (rightsizing) e 1
+    só leitura. Nada do bundle foi alterado; as recomendações ficam com o dono.
+  - **Schema novo `pos_venda.conformidade`.** Gerado por `conformidade/gerar_conformidade.py`, tem:
+    - 28 regras em 7 dimensões, com meta, severidade, origem, link e como corrigir;
+    - 12 visões, a metric view `mv_conformidade` e as tabelas `sonda_views` e `historico`.
+
+    As regras de warehouse, tags e policies do bundle viraram PLT01 a PLT06.
+  - **Alertas.** Os 5 alertas SQL rodam como jobs ocultos e eram as consultas "sem dono" da L77: US$ 816,20 desde
+    julho. A L77 recebeu uma nota de correção, e a trilha e o playbook trocaram "job removido" por "job oculto de
+    alerta SQL".
+- **Por quê:** pedido do usuário: avaliar se as ações de observabilidade do workspace entram no framework e monitorar
+  se os dados estão em conformidade, com tags, descrições e boas práticas.
+- **Onde:** `conformidade/` (`gerar_conformidade.py`, `README.md`, `AVALIACAO_OBSERVABILIDADE.md`, `conformidade.sql`,
+  `politicas_tags.json`, `alertas.json`, `conferencia.json`). No workspace, o schema `pos_venda.conformidade`.
+- **Conferência** (`python3 conformidade/gerar_conformidade.py conferir`): 15 de 15 objetos respondem e as 9 checagens
+  passam.
+  - inventário = `information_schema`: 229 ativos e 3.885 colunas;
+  - DOC01 verifica 207 ativos e DOC03 verifica 3.093 colunas, todos os que não são internos;
+  - soma por regra = 8.992 achados;
+  - pendências = não conformes = metric view = 337;
+  - 0 regra sem dados;
+  - histórico do dia com 28 linhas;
+  - sonda de 140 views: 118 respondem.
+
+  **Triagem.** A primeira rodada acusou 382 colunas sem descrição e 129 colunas de dado pessoal sem tag. Eram
+  tabelas internas do Lakeflow (L80) e 3 nomes de métrica da ontologia. Corrigido no gerador. Os links das fontes
+  novas responderam 200.
+- **Docs atualizadas:** trilha (fase 24) · playbook (M12 e 2 linhas na matriz de resiliência) · lições (L79–L81 e
+  correção da L77) · framework (P35–P37) · `AGENTS.md` · `docs/README.md` · `README.md` · inventário
+
 ### Documento e apresentação do framework com a camada FinOps
 - **O que mudou:**
   - O documento compartilhável e a apresentação (ambos no claude.ai, privados) ganharam a camada Custo e uso

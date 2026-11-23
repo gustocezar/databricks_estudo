@@ -17,7 +17,7 @@ o rateio por tempo de execução de databricks-solutions/dbx-adoption-monitor (0
 Não altera nada em `finops.observability` (decisão do dono): só lê o câmbio e o desconto de v_focus_price_config.
 
 Uso:
-    python3 finops/gerar_finops.py ativos     # atualiza ativos.json (nomes de painéis, espaços Genie, Lakebase)
+    python3 finops/gerar_finops.py ativos     # atualiza ativos.json (nomes de painéis, espaços Genie, Lakebase, alertas)
     python3 finops/gerar_finops.py gerar      # escreve finops/finops.sql
     python3 finops/gerar_finops.py aplicar    # cria o schema e as visões (só recria a que mudou)
     python3 finops/gerar_finops.py conferir   # cada visão responde + totais batem com o faturamento
@@ -38,8 +38,8 @@ PERFIL = "dbx-workshop"
 JANELA = 30          # dias das visões de boas práticas, top recursos e warehouses
 
 # ------------------------------------------------------------------------------------------------ atribuição
-# Ordem: a primeira regra que casar vale. tipo_recurso: tag_projeto (custom_tags['project']), job, pipeline, app,
-# genie, painel, lakebase, endpoint, warehouse, servico, consulta (texto da consulta SQL). padrao: LIKE.
+# Ordem: a primeira regra que casar vale. tipo_recurso: tag_projeto (custom_tags['project']), job, alerta (alerta SQL),
+# pipeline, app, genie, painel, lakebase, endpoint, warehouse, servico, consulta (texto da consulta SQL). padrao: LIKE.
 # tipo_time: squad, plataforma, compartilhado. O que não casar fica "não atribuído".
 SQUAD_PV, PLATAFORMA, COMPART = "Squad pós-venda", "Plataforma · engenharia-dados", "Plataforma (compartilhado)"
 REGRAS = [
@@ -49,6 +49,7 @@ REGRAS = [
     (22, "job", "%ligar_dqx_studio%", "pos_venda", SQUAD_PV, "squad"),
     (23, "job", "grant-lakebase-sp", "pos_venda", SQUAD_PV, "squad"),
     (24, "job", "%[Observabilidade]%", "observabilidade-framework", PLATAFORMA, "plataforma"),
+    (25, "alerta", "%[Observabilidade]%", "observabilidade-framework", PLATAFORMA, "plataforma"),   # alertas SQL (L79)
     (30, "pipeline", "pos_venda%", "pos_venda", SQUAD_PV, "squad"),
     (31, "pipeline", "%dbx-agentic-psp%", "dbx-agentic-psp", "Squad dbx-agentic-psp", "squad"),
     (40, "app", "dqx-studio", "pos_venda", SQUAD_PV, "squad"),
@@ -200,7 +201,7 @@ D = {   # descrições das colunas das demais visões (mesmo nome, mesma descri�
     "custo_faturado_usd": "Custo faturado, em USD (FOCUS BilledCost; 0 no Free Edition).",
     "pct_do_mes": "Participação no custo de lista do mês, em %.", "recursos": "Recursos distintos com consumo.",
     "warehouse_id": "SQL warehouse.", "statement_id": "Consulta (statement_id do query.history); NULL na linha de warehouse ocioso.",
-    "origem": "De onde veio a consulta (Painel AI/BI, Genie, Job, Pipeline, CLI/SDK, App, Power BI, Outro) ou 'Warehouse ocioso'.",
+    "origem": "De onde veio a consulta (Painel AI/BI, Genie, Alerta SQL, Job, Pipeline, CLI/SDK, App, Power BI, Outro) ou 'Warehouse ocioso'.",
     "situacao": "Situação de execução da consulta.", "duracao_s": "Duração total da consulta, em segundos.",
     "fila_s": "Espera por capacidade e por computação, em segundos.", "peso_ms": "Tempo de trabalho usado no rateio do custo da hora, em ms.",
     "origem_atribuicao": "Como o custo chegou ao projeto (direta, rateio por consulta, compartilhado, tag, regra, sem regra).",
@@ -254,7 +255,7 @@ def visoes():
     func = " ".join(f"WHEN '{k}' THEN '{v}'" for k, v in FUNCIONALIDADE.items())
     regras = ",\n  ".join(f"({o}, '{t}', '{q(p)}', '{q(pr)}', '{q(ti)}', '{tt}')" for o, t, p, pr, ti, tt in REGRAS)
     linhas_ativos = [("painel", i, n) for i, n in A["paineis"].items()] + [("genie", i, n) for i, n in A["genie"].items()] + \
-                    [("lakebase", i, n) for i, n in A["lakebase"].items()]
+                    [("lakebase", i, n) for i, n in A["lakebase"].items()] + [("alerta", i, n) for i, n in A.get("alertas", {}).items()]
     vals_ativos = ",\n  ".join(f"('{t}', '{i}', '{q(n)}')" for t, i, n in linhas_ativos)
     V = []
 
@@ -277,7 +278,7 @@ LEFT JOIN (SELECT * FROM finops.observability.v_focus_price_config ORDER BY fx_r
   {regras}
 AS r(ordem, tipo_recurso, padrao, projeto, time, tipo_time)"""))
 
-    V.append(("config_ativos", f"Nomes de painéis, espaços Genie e projetos Lakebase (foto da API em {A['gerado_em']}, por `gerar_finops.py ativos`).",
+    V.append(("config_ativos", f"Nomes de painéis, espaços Genie, projetos Lakebase e alertas SQL (foto da API em {A['gerado_em']}, por `gerar_finops.py ativos`).",
               cols("tipo", "id", "nome"),
               f"""SELECT * FROM VALUES
   {vals_ativos}
@@ -496,7 +497,7 @@ jobs AS (
     WHERE usage_metadata.job_id IS NOT NULL AND usage_metadata.job_name IS NOT NULL) GROUP BY job_id),
 pipelines AS (SELECT pipeline_id, name FROM system.lakeflow.pipelines QUALIFY row_number() OVER (PARTITION BY pipeline_id ORDER BY change_time DESC) = 1),
 c0 AS (
-  SELECT h.*, ga.nome AS nome_genie, pa.nome AS nome_painel, j.name AS nome_job, p.name AS nome_pipeline,
+  SELECT h.*, ga.nome AS nome_genie, pa.nome AS nome_painel, al.nome AS nome_alerta, j.name AS nome_job, p.name AS nome_pipeline,
     CASE
       WHEN lower(h.statement_text) LIKE '%pos_venda.finops.%' THEN 'finops'
       WHEN lower(h.statement_text) LIKE '%pos_venda.%' THEN 'pos_venda'
@@ -506,6 +507,7 @@ c0 AS (
   FROM system.query.history h
   LEFT JOIN {S}.config_ativos ga ON ga.tipo = 'genie' AND ga.id = h.query_source.genie_space_id
   LEFT JOIN {S}.config_ativos pa ON pa.tipo = 'painel' AND pa.id = h.query_source.dashboard_id
+  LEFT JOIN {S}.config_ativos al ON al.tipo = 'alerta' AND al.id = h.query_source.alert_id
   LEFT JOIN jobs j ON j.job_id = h.query_source.job_info.job_id
   LEFT JOIN pipelines p ON p.pipeline_id = h.query_source.pipeline_info.pipeline_id
   WHERE h.compute.warehouse_id IS NOT NULL),
@@ -518,6 +520,7 @@ c AS (
     CASE
       WHEN h.query_source.genie_space_id IS NOT NULL THEN 'Genie'
       WHEN h.query_source.dashboard_id IS NOT NULL OR h.query_source.legacy_dashboard_id IS NOT NULL THEN 'Painel AI/BI'
+      WHEN h.query_source.alert_id IS NOT NULL THEN 'Alerta SQL'
       WHEN h.query_source.job_info.job_id IS NOT NULL THEN 'Job'
       WHEN h.query_source.pipeline_info.pipeline_id IS NOT NULL THEN 'Pipeline'
       WHEN h.client_application ILIKE '%power bi%' THEN 'Power BI'
@@ -525,14 +528,15 @@ c AS (
       WHEN h.client_application ILIKE '%genie-ontology-readiness%' THEN 'App'
       WHEN h.client_application ILIKE '%catalog explorer%' THEN 'Catalog Explorer'
       ELSE 'Outro' END AS origem,
-    -- a origem com nome conhecido decide; sem nome (job removido, painel fora da foto), decide o texto da consulta
+    -- a origem com nome conhecido decide; sem nome (painel fora da foto, alerta novo), decide o texto da consulta
     CASE
       WHEN h.nome_genie IS NOT NULL THEN 'genie'
       WHEN h.nome_painel IS NOT NULL THEN 'painel'
+      WHEN h.nome_alerta IS NOT NULL THEN 'alerta'
       WHEN h.nome_job IS NOT NULL THEN 'job'
       WHEN h.nome_pipeline IS NOT NULL THEN 'pipeline'
       ELSE 'consulta' END AS tipo_recurso,
-    coalesce(h.nome_genie, h.nome_painel, h.nome_job, h.nome_pipeline, h.marca_texto) AS recurso
+    coalesce(h.nome_genie, h.nome_painel, h.nome_alerta, h.nome_job, h.nome_pipeline, h.marca_texto) AS recurso
   FROM c0 h),
 ca AS (
   SELECT c.*, g.projeto, g.time, g.tipo_time FROM c
@@ -936,10 +940,13 @@ def cmd_ativos():
     paineis = {d["dashboard_id"]: d.get("display_name", "") for d in cli("lakeview", "list")}
     genie = {s["space_id"]: s.get("title", "") for s in (cli("genie", "list-spaces") or {}).get("spaces", [])}
     lakebase = {p.get("uid"): (p.get("name") or "").replace("projects/", "") for p in cli("postgres", "list-projects")}
+    al = cli("alerts-v2", "list-alerts")
+    al = al if isinstance(al, list) else (al or {}).get("alerts", [])
+    alertas = {a["id"]: re.sub(r"^\[dev [^\]]+\]\s*", "", a.get("display_name", "")) for a in al}   # sem o usuário do bundle
     import datetime
-    d = {"gerado_em": datetime.date.today().isoformat(), "paineis": paineis, "genie": genie, "lakebase": lakebase}
+    d = {"gerado_em": datetime.date.today().isoformat(), "paineis": paineis, "genie": genie, "lakebase": lakebase, "alertas": alertas}
     (AQUI / "ativos.json").write_text(json.dumps(d, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(f"ativos.json: {len(paineis)} painéis, {len(genie)} espaços Genie, {len(lakebase)} projetos Lakebase")
+    print(f"ativos.json: {len(paineis)} painéis, {len(genie)} espaços Genie, {len(lakebase)} projetos Lakebase, {len(alertas)} alertas SQL")
 
 
 def cmd_gerar():

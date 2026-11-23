@@ -31,6 +31,10 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L74** O `databricks bundle deploy` segue o `.gitignore` da raiz do repositório: depois do primeiro `.gitignore`,
   o deploy da carga apagou do workspace 2 arquivos `.pyc` ("2 deleted") → leia a linha de arquivos do deploy e
   confira que só sumiu o que devia; nunca ponha no `.gitignore` algo que o bundle precisa enviar.
+- **L81** No Free Edition, 7 das 10 consultas da materialização diária de observabilidade voltam vazias (clusters
+  clássicos, spot, policies), e o rightsizing de clusters falha em toda execução → checagem sem objeto para verificar
+  não é conformidade: mostre "sem dados", nunca "atende", e tire do Free Edition o que só faz sentido com clusters
+  clássicos. (`acoes_observabilidade`; `conferir` reprova regra sem dados)
 
 ## Custo e FinOps
 
@@ -41,10 +45,17 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L77** Na primeira versão das visões FinOps, 80% do custo ficou sem dono. A causa eram 2.122 consultas de cinco jobs
   que não existem mais em `system.lakeflow.jobs` e não têm nome no billing → atribua em camadas: tag, nome da origem
   (job, espaço Genie, painel) e, quando a origem não tem nome, o texto da consulta (catálogo citado). Confira sempre quanto
-  sobrou sem dono antes de mostrar o custo por time. (`custo_sql_por_consulta`)
+  sobrou sem dono antes de mostrar o custo por time. (`custo_sql_por_consulta`) *Correção de 23/11/2026: os cinco
+  "jobs" eram os jobs ocultos dos 5 alertas SQL do bundle de observabilidade (L79).*
 - **L78** As 249 perguntas de novembro aos espaços Genie do pós-venda vieram todas pela API (as avaliações
   automáticas); o uso por pessoas foi zero → meça a adoção pelo canal UI e pelo painel publicado; contar todos os
   eventos mede os testes, não as pessoas. (`uso_genie_diario`, `uso_paineis_diario`)
+- **L79** Os 5 alertas SQL do bundle de observabilidade (API `alerts-v2`) rodam como jobs ocultos: não aparecem em
+  `databricks jobs list`, `jobs get` responde "does not exist" e a API antiga (`databricks alerts list`) volta vazia.
+  Eram eles as consultas "sem dono" da L77: US$ 816,20 desde julho. Só o alerta de hora em hora custou US$ 29,73 em 7
+  dias, porque cada disparo acorda o warehouse, que fica ligado até o auto-stop → procure alertas com
+  `databricks alerts-v2 list-alerts`; ligue consulta a alerta por `system.query.history.query_source.alert_id`; limite
+  a agenda a poucos disparos por dia. (`conformidade/gerar_conformidade.py alertas`, regra PLT06)
 
 ## Dados e pipeline
 
@@ -102,6 +113,11 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L55** Marcar dado pessoal só nas camadas "oficiais" deixou CPF, RG e endereço sem tag em 6 schemas antigos que
   continuavam consultáveis → a marcação segue o dado, não a camada: todo schema no catálogo entra no plano de tags de dado
   pessoal (`tags_dado_pessoal` em `aplicar_semantica.py`). A nota de prontidão não muda com isso.
+- **L80** As tabelas internas que o Lakeflow cria (`__materialization_*` e `event_log_*`) aparecem no `information_schema`
+  como tabelas `MANAGED`, sem descrição nem tags. Na primeira rodada da conformidade, elas renderam 382 colunas "sem
+  descrição" e 126 colunas "de dado pessoal sem tag". Todos eram falsos positivos → separe as tabelas internas (papel
+  `interno`) antes de contar, porque são do pipeline, não do domínio. Pelo mesmo motivo, confira se a regra por nome
+  de coluna não pega nome de métrica ("CPF inválido"). (`conformidade/gerar_conformidade.py`, `INTERNO` e `NAO_PII`)
 
 ## Camada semântica (metric views)
 

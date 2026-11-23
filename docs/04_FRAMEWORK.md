@@ -1,9 +1,9 @@
 # Framework · práticas aplicadas no pos_venda, de onde vieram e por quê
 
 > Documento incremental. Última atualização: **23/11/2026**. Cada prática tem um código (`P##`) que não muda.
-> Fontes conferidas em 22/11/2026 (todos os links responderam).
+> Fontes conferidas em 22 e 23/11/2026 (todos os links responderam).
 
-Este framework reúne as **34 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 23 da
+Este framework reúne as **37 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 24 da
 [trilha](01_TRILHA_DE_APRENDIZAGEM.md)), cada uma com:
 
 - **Origem:** de onde veio. Pode ser documentação oficial, acelerador da Databricks, Databricks Labs, Microsoft,
@@ -17,7 +17,7 @@ Os outros documentos complementam este:
 
 | Documento | O que dá |
 |---|---|
-| [Playbook](02_PLAYBOOK.md) | o **passo a passo**: perfil da base, módulos M1 a M10 com critério de saída, matriz de resiliência, roteiro de reconstrução |
+| [Playbook](02_PLAYBOOK.md) | o **passo a passo**: perfil da base, módulos M1 a M12 com critério de saída, matriz de resiliência, roteiro de reconstrução |
 | [Lições aprendidas](03_LICOES_APRENDIDAS.md) | as **armadilhas**, com o código `L##` |
 | Este framework | o **porquê de cada escolha** e a fonte de cada uma |
 
@@ -26,6 +26,7 @@ Os outros documentos complementam este:
  (P01–P03)  (P04–P08) (P09–P12)    (P13–P16)     (P17–P20)    (P21–P23)  (P24–P27)
                                 Operação contínua (P28–P29)
                     Custo e uso · FinOps (P30–P34), sobre o workspace inteiro
+              Conformidade e observabilidade (P35–P37), sobre o workspace inteiro
 ```
 
 ---
@@ -36,7 +37,7 @@ Os outros documentos complementam este:
    os dados chegam, o que muda no tempo, a natureza das medidas, dado pessoal, quem consome, regulação e onde roda.
 2. **Escolha as práticas** pelo [mapa de gatilhos](#mapa-de-gatilhos) abaixo. Cada resposta do perfil aponta para as
    práticas que valem.
-3. **Construa na ordem das camadas**, usando os módulos do playbook (M1 a M10). Não avance sem o critério de saída do
+3. **Construa na ordem das camadas**, usando os módulos do playbook (M1 a M12). Não avance sem o critério de saída do
    módulo.
 4. **Avalie com réguas de fora** (P24 a P26) e faça a triagem de cada achado antes de mudar qualquer coisa.
 5. **Registre:** CHANGELOG, trilha, lições e a situação de cada acelerador (P27, P29).
@@ -63,6 +64,9 @@ Os outros documentos complementam este:
 | Time de plataforma e squads dividindo o mesmo workspace | P31, P32 |
 | Medir a adoção de Genie e painéis | P33 |
 | Revisar custo com uma régua conhecida | P34 |
+| Regras de governança que precisam continuar valendo depois da primeira aplicação | P35, P37 |
+| Observabilidade herdada (jobs, alertas, visões) que ninguém revisou | P36 |
+| Views sobre tabelas de sistema ou sobre schemas de outro time | P37 |
 
 ---
 
@@ -550,6 +554,80 @@ Os outros documentos complementam este:
 
 ---
 
+## Conformidade e observabilidade
+
+### P35 · Conformidade medida por regra, com meta, origem e correção
+- **Origem:**
+  - documentação Databricks: [comentários](https://docs.databricks.com/aws/en/comments/),
+    [governed tags](https://docs.databricks.com/aws/en/admin/governed-tags/),
+    [data classification](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-classification),
+    [constraints](https://docs.databricks.com/aws/en/tables/constraints),
+    [boas práticas do Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices),
+    [lineage](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage) e
+    [Predictive Optimization](https://docs.databricks.com/aws/en/optimizations/predictive-optimization);
+  - Well-Architected da Databricks
+    ([governança](https://docs.databricks.com/aws/en/lakehouse-architecture/data-governance/best-practices) e custo);
+  - LGPD;
+  - as checagens do bundle `observabilidade-framework` (`policy_compliance_monitoring`, `materializa_dados_observabilidade`);
+  - as práticas P08 e P13 a P16 deste framework.
+- **Como aplicamos:** o schema `pos_venda.conformidade`, gerado por `conformidade/gerar_conformidade.py`, tem:
+  - 28 regras em 7 dimensões (documentação, tags governadas, LGPD, confiança e estrutura, atualização e uso,
+    otimização, plataforma), cada uma com meta, severidade, origem, link e como corrigir (`config_regras`);
+  - uma linha por verificação (`achados`), a lista de correções (`pendencias`) e a situação de cada regra
+    (`boas_praticas_dados`);
+  - uma visão por público (`squad_por_schema`, `plataforma_por_catalogo`) e a metric view `mv_conformidade`.
+
+  As tabelas internas do Lakeflow (`__materialization_*`, `event_log_*`) ficam fora das regras (L80).
+- **Por quê:** a governança aplicada uma vez (P13 a P16) se desfaz sem aviso. A view recriada perde as tags, a tabela
+  nova chega sem descrição e o job novo sobe sem tag.
+- **Reaplique quando:** as regras de governança precisam continuar valendo depois da primeira aplicação, ou mais de
+  um time publica no mesmo catálogo.
+- **Prova:** 8.992 verificações em 23/11/2026; 13 regras atendem, 12 pedem atenção e 3 são críticas.
+  - Dado pessoal (5 regras), colunas descritas e valores de tag governada estão em 100%.
+  - Pendências reais:
+    - 17 ativos principais sem `subject_area`;
+    - 56 ativos sem descrição fora do `pos_venda`;
+    - 10 de 11 jobs sem timeout;
+    - 5 jobs sem as tags `project` e `team`.
+
+### P36 · Observabilidade herdada avaliada antes de copiar
+- **Origem:** o bundle `observabilidade-framework` e o framework FinOps anterior (`finops.observability`), que já
+  rodavam no workspace; a revisão de catálogo da P27.
+- **Como aplicamos:**
+  - inventário de jobs, alertas SQL e visões;
+  - para cada ação: o que faz, o que encontramos, execuções e custo em 30 dias e um veredito (internalizar, manter,
+    consertar, aposentar ou só leitura).
+
+  Está em `acoes_observabilidade` e em
+  [AVALIACAO_OBSERVABILIDADE.md](../conformidade/AVALIACAO_OBSERVABILIDADE.md). Nada do bundle foi alterado: as
+  recomendações ficam com o dono.
+- **Por quê:**
+  - checagem escrita para clusters clássicos volta vazia no Free Edition e parece "tudo certo" (L81);
+  - o alerta mais simples de escrever pode ser o mais caro de rodar (L79).
+- **Reaplique quando:** o workspace já tem monitoramento de outra pessoa ou de outro projeto.
+- **Prova:** 8 ações:
+  - 3 internalizadas;
+  - 2 mantidas;
+  - 1 a consertar: os alertas. Custaram US$ 816,20 desde julho; só o alerta horário, US$ 29,73 em 7 dias;
+  - 1 a aposentar: o rightsizing, que falha em toda execução;
+  - 1 só leitura.
+
+### P37 · Sonda diária das views e histórico; regra sem dado é "sem dados"
+- **Origem:** L71 (auditoria sem dado de entrada aprova em branco), L76 (views quebradas por mudança na tabela de
+  sistema) e P28.
+- **Como aplicamos:**
+  - `gerar_conformidade.py registrar` testa cada view, metric view e materialized view do workspace com
+    `DESCRIBE QUERY`, que analisa a view sem executá-la, e grava `sonda_views`;
+  - depois, grava em `historico` a situação de cada regra no dia;
+  - `conferir` reprova se alguma regra não verificou nenhum objeto, e confere que as contagens fecham (inventário =
+    `information_schema`; pendências = não conformes = metric view).
+- **Por quê:** a view quebrada não avisa ninguém, e sem histórico não se vê a conformidade cair.
+- **Reaplique quando:** há views sobre tabelas de sistema ou sobre schemas de outro time.
+- **Prova:** 140 views sondadas. 22 não respondem, todas pela mesma causa (L76): 19 em `finops.observability` e 3
+  cópias em `workspace.default`.
+
+---
+
 ## Opções databricks-solutions: qual acelerador usar a seguir
 
 Os 147 repositórios públicos da organização [databricks-solutions](https://github.com/databricks-solutions) estão
@@ -642,6 +720,14 @@ painéis; qual opção databricks-solutions usar no pos_venda?". As regras levam
 - [dbx-adoption-monitor](https://github.com/databricks-solutions/dbx-adoption-monitor) (P31, P33)
 - [databricks-waf](https://github.com/databricks-solutions/databricks-waf) e as [boas práticas de custo](https://docs.databricks.com/aws/en/lakehouse-architecture/cost-optimization/best-practices) (P31, P32, P34)
 - [Billing system tables](https://docs.databricks.com/aws/en/admin/system-tables/billing), [query history](https://docs.databricks.com/aws/en/admin/system-tables/query-history), [audit logs](https://docs.databricks.com/aws/en/admin/system-tables/audit-logs) e [budget policies](https://docs.databricks.com/aws/en/admin/usage/budget-policies) (P30 a P34)
+
+**Conformidade e observabilidade**
+- [Boas práticas do Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices) e [boas práticas de governança do Well-Architected](https://docs.databricks.com/aws/en/lakehouse-architecture/data-governance/best-practices) (P35)
+- [Data lineage](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage) e a [tabela de sistema de lineage](https://docs.databricks.com/aws/en/admin/system-tables/lineage) (P35)
+- [Predictive Optimization](https://docs.databricks.com/aws/en/optimizations/predictive-optimization) (P35)
+- [Configurações de job](https://docs.databricks.com/aws/en/jobs/settings) e a [tabela de sistema de jobs](https://docs.databricks.com/aws/en/admin/system-tables/jobs) (P35)
+- [SQL warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/create) e [alertas SQL](https://docs.databricks.com/aws/en/sql/user/alerts/) (P35, P36)
+- [Query history](https://docs.databricks.com/aws/en/admin/system-tables/query-history) (`query_source.alert_id`) (P36)
 
 **Do próprio projeto:** [trilha](01_TRILHA_DE_APRENDIZAGEM.md), [playbook](02_PLAYBOOK.md),
 [lições](03_LICOES_APRENDIDAS.md), [CHANGELOG](CHANGELOG.md) e

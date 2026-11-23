@@ -521,6 +521,41 @@ com o faturamento.
 
 **O que aprendemos:**
 - Numa visão sobre tabela de sistema, escolha os campos do struct; o struct inteiro quebra quando a tabela muda (L76).
-- Atribua em camadas e meça o que sobrou sem dono; job removido não tem nome (L77).
+- Atribua em camadas e meça o que sobrou sem dono; job oculto de alerta SQL não tem nome (L77, L79).
 - Adoção se mede pelo canal UI; o resto é teste (L78).
+
+## Fase 24 · Conformidade dos dados e observabilidade do workspace
+
+**Objetivo:** avaliar se as ações de observabilidade que já rodavam no workspace entram no framework, e monitorar se
+os dados seguem as regras do projeto: descrições, tags, dado pessoal e boas práticas.
+
+**O que fizemos (23/11/2026):**
+- **Inventário da observabilidade existente.** O bundle `observabilidade-framework` tem 6 jobs, 5 alertas SQL e grava
+  em `main.observabilidade_dev`. Ao lado dele está o framework FinOps anterior, `finops.observability`.
+- **Veredito por ação.** Cada ação recebeu o que faz, o que encontramos, o custo em 30 dias e um veredito:
+  internalizar, manter, consertar, aposentar ou só leitura. Nada do bundle foi alterado.
+- **Schema novo `pos_venda.conformidade`.** Gerado por `conformidade/gerar_conformidade.py`, tem 28 regras em 7
+  dimensões, com meta, severidade, origem e como corrigir; visões para o squad e para a plataforma; a metric view
+  `mv_conformidade`; a sonda diária das views; e o histórico.
+
+**Onde está:** [conformidade/README.md](../conformidade/README.md) e
+[AVALIACAO_OBSERVABILIDADE.md](../conformidade/AVALIACAO_OBSERVABILIDADE.md).
+
+**Resultado:**
+- **Avaliação.** Das 8 ações, 3 foram internalizadas, 2 mantidas, 1 vai para conserto (os alertas), 1 para aposentar
+  (o rightsizing, que falha em toda execução) e 1 fica só leitura.
+- **Alertas.** Os 5 alertas SQL rodam como jobs ocultos e eram as consultas "sem dono" da fase 23. Custaram
+  US$ 816,20 desde julho; só o alerta horário, US$ 29,73 em 7 dias.
+- **Conformidade.** São 8.992 verificações: 13 regras atendem, 12 pedem atenção e 3 são críticas.
+  - LGPD, colunas descritas e valores de tag governada: 100%.
+  - Pendências reais: 17 ativos principais sem `subject_area`, 22 views quebradas (19 em `finops.observability`),
+    10 de 11 jobs sem timeout e 5 jobs sem as tags `project` e `team`.
+
+**Como conferir:** `python3 conformidade/gerar_conformidade.py conferir`. São 9 checagens, entre elas: o inventário
+igual ao `information_schema`, pendências iguais aos não conformes e à metric view, e nenhuma regra "sem dados".
+
+**O que aprendemos:**
+- Alerta SQL novo roda como job oculto. Ache pelo `query_source.alert_id` e limite a agenda (L79).
+- Separe as tabelas internas do Lakeflow antes de contar: eram 382 falsos "sem descrição" (L80).
+- Checagem sem objeto para verificar não é conformidade: mostre "sem dados" (L81).
 
