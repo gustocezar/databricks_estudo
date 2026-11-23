@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 23/11/2026 11:05. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 23/11/2026 11:17. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 

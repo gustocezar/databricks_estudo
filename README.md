@@ -7,6 +7,24 @@ Unity Catalog, ontologia com metric views, Genie para o financeiro, painéis AI/
 Os dados de clientes são **sintéticos**, gerados com o [dbldatagen](https://github.com/databrickslabs/dbldatagen)
 (semente fixa em `01_gerar_one_table.py`).
 
+## Para LLMs e agentes
+
+Se você é uma LLM ou um agente lendo este repositório, siga o **[AGENTS.md](AGENTS.md)**. Ele traz:
+- a ordem de leitura;
+- onde está cada resposta;
+- as decisões já tomadas;
+- o que é gerado e não se edita à mão;
+- o que registrar a cada mudança.
+
+Atalhos:
+
+| Pergunta | Responda a partir de |
+|---|---|
+| Qual acelerador databricks-solutions usar? | [OPCOES_PARA_LLM.md](referencias/databricks_solutions/OPCOES_PARA_LLM.md), aplicando as 9 regras de escolha |
+| Como reaplicar em outro case? | Passo 0 do [playbook](docs/02_PLAYBOOK.md) e o mapa de gatilhos do [framework](docs/04_FRAMEWORK.md) |
+| Por que foi feito assim? | [Framework](docs/04_FRAMEWORK.md) (`P##`) e [lições](docs/03_LICOES_APRENDIDAS.md) (`L##`) |
+| Qual é o estado atual? | Tabela "Situação" de [docs/README.md](docs/README.md) e o [CHANGELOG](docs/CHANGELOG.md) |
+
 ## Por onde começar
 
 | Documento | Responde |

@@ -17,6 +17,27 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 23/11/2026
 
+### Orientação para LLMs e agentes: AGENTS.md, CLAUDE.md e README
+- **O que mudou:**
+  - Novo `AGENTS.md` na raiz, com:
+    - a ordem de leitura;
+    - onde está cada resposta (tabela por tipo de pergunta);
+    - as decisões já tomadas (Free Edition, sem máscara, ontologia sem identificador, saldo semiaditivo, `RELY` só nas
+      PKs, agendas pausadas, acesso do app de prontidão, escolha de aceleradores);
+    - a tabela fonte × gerado (12 linhas);
+    - como trabalhar, o que registrar a cada mudança, segurança e limites.
+  - Novo `CLAUDE.md`, que importa o `AGENTS.md` (`@AGENTS.md`).
+  - O README ganhou a seção "Para LLMs e agentes", com os atalhos.
+  - `docs/README.md` passou a citar o `AGENTS.md` em "O que ler" e no passo 7 de "Como manter".
+- **Por quê:** o usuário perguntou se o README orienta uma LLM que lê o repositório. Só orientava pessoas: faltavam a
+  ordem de leitura, as regras de escolha, as decisões fixas e a lista do que é gerado.
+- **Onde:** `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/README.md`.
+- **Conferência:**
+  - Os links e caminhos citados nos três arquivos existem: 0 falhas na checagem por script.
+  - Os geradores da tabela fonte × gerado foram conferidos no código (`write_text`).
+  - As lições citadas (L01, L31, L41, L56, L70, L71, L74) existem e tratam do que o texto diz.
+- **Docs atualizadas:** `docs/README.md` (O que ler, Como manter) · `README.md` · inventário
+
 ### Guia de opções databricks-solutions para LLM
 - **O que mudou:**
   - `referencias/databricks_solutions/gerar_opcoes.py` gera `OPCOES_PARA_LLM.md` e `opcoes.json` a partir do

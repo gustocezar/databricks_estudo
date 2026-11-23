@@ -12,6 +12,7 @@ views, Genie para o financeiro e painéis AI/BI.
 | [02 · Playbook](02_PLAYBOOK.md) | quem vai recriar ou construir outro domínio | perfil da base, módulos com critério de saída, matriz de resiliência, roteiro de reconstrução |
 | [03 · Lições aprendidas](03_LICOES_APRENDIDAS.md) | quem vai mexer no código | armadilhas reais e a regra que ficou (códigos `L##`) |
 | [04 · Framework](04_FRAMEWORK.md) | quem vai aplicar em outro case | as 29 práticas (`P##`): origem, como aplicamos, por quê, quando reaplicar e a prova, com as fontes |
+| [AGENTS.md](../AGENTS.md) | LLMs e agentes de código | ordem de leitura, onde está cada resposta, decisões já tomadas, fonte × gerado e o que registrar a cada mudança |
 | [CHANGELOG](CHANGELOG.md) | todos | o que mudou, quando e como foi conferido |
 | [Inventário](INVENTARIO.md) | todos | retrato atual: scripts, bundles, objetos do catálogo, painéis, Genie, jobs, apps e cobertura de metadados (gerado) |
 
@@ -49,5 +50,7 @@ A documentação acompanha o código. A cada mudança no projeto:
 4. **Playbook:** se mudou um passo, um comando ou um critério de saída, atualize o módulo (M#) e o roteiro de reconstrução.
 5. **Lições:** se apareceu uma armadilha nova, crie o próximo `L##` no tema certo e cite o código no CHANGELOG.
 6. **Situação** (tabela acima): atualize a linha do bloco.
+7. **AGENTS.md:** se mudou uma decisão já tomada, um gerador (fonte × gerado) ou onde está cada resposta, atualize o
+   [AGENTS.md](../AGENTS.md) da raiz, que orienta LLMs e agentes.
 
 Regra de ouro: uma mudança só está pronta quando o critério de saída do módulo passou **e** o CHANGELOG tem a conferência.
