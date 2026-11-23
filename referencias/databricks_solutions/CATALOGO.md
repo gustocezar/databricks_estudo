@@ -4,9 +4,9 @@
 
 ## Situação no projeto
 
-**Aplicado (4):** [agentic-bdd-uc-functions](https://github.com/databricks-solutions/agentic-bdd-uc-functions), [genie-best-practices-agent](https://github.com/databricks-solutions/genie-best-practices-agent), [genie-ontology-readiness](https://github.com/databricks-solutions/genie-ontology-readiness), [uc-semantics-patterns](https://github.com/databricks-solutions/uc-semantics-patterns)
+**Aplicado (7):** [agentic-bdd-uc-functions](https://github.com/databricks-solutions/agentic-bdd-uc-functions), [genie-best-practices-agent](https://github.com/databricks-solutions/genie-best-practices-agent), [genie-ontology-readiness](https://github.com/databricks-solutions/genie-ontology-readiness), [power-bi-on-databricks-quickstarts](https://github.com/databricks-solutions/power-bi-on-databricks-quickstarts), [powerbi-analyzer](https://github.com/databricks-solutions/powerbi-analyzer), [technical-services-solutions](https://github.com/databricks-solutions/technical-services-solutions), [uc-semantics-patterns](https://github.com/databricks-solutions/uc-semantics-patterns)
 
-**Proposto (5):** [dbx-adoption-monitor](https://github.com/databricks-solutions/dbx-adoption-monitor), [power-bi-on-databricks-quickstarts](https://github.com/databricks-solutions/power-bi-on-databricks-quickstarts), [powerbi-analyzer](https://github.com/databricks-solutions/powerbi-analyzer), [regulatory_data_governance](https://github.com/databricks-solutions/regulatory_data_governance), [technical-services-solutions](https://github.com/databricks-solutions/technical-services-solutions)
+**Proposto (2):** [dbx-adoption-monitor](https://github.com/databricks-solutions/dbx-adoption-monitor), [regulatory_data_governance](https://github.com/databricks-solutions/regulatory_data_governance)
 
 **Adiado (6):** [data-classification-review-app](https://github.com/databricks-solutions/data-classification-review-app), [databricks-dab-examples](https://github.com/databricks-solutions/databricks-dab-examples), [databricks-genie-workbench](https://github.com/databricks-solutions/databricks-genie-workbench), [databricks-waf](https://github.com/databricks-solutions/databricks-waf), [genierails](https://github.com/databricks-solutions/genierails), [uc-declarative-abac](https://github.com/databricks-solutions/uc-declarative-abac)
 
@@ -19,7 +19,7 @@
 - **Casos de uso:** Auditoria de boas práticas.
 - **Benefício para o pos_venda:** Audita o projeto Power BI do pos_venda e o lado Databricks contra as 42 regras da cheat sheet; cobre parte do que hoje só o Power BI Desktop verificaria e dá um relatório de boas práticas para a avaliação das duas ferramentas.
 - **Nota Free Edition:** `pba pbix` lê .pbip sem credencial (roda no Mac); `pba databricks` lê system.query.history, legível neste workspace.
-- **Situação no projeto:** proposto. Proposta 1 da revisão de 22/11.
+- **Situação no projeto:** aplicado. Proposta 1, aplicada em 22/11 (paineis_financeiros/powerbi/auditoria/): modelo 80/100, Databricks 75/100. O leitor de PBIP só aceita model.bim (o gerador ganhou a saída bim) e as regras de preparo de dados passam sem avaliar enquanto o Power BI não consultar o warehouse.
 
 ### [genie-best-practices-agent](https://github.com/databricks-solutions/genie-best-practices-agent) · Genie e camada semântica · ★5 · Free Edition: A confirmar
 
@@ -62,7 +62,7 @@
 - **Como usar:** Entrar na pasta do tema e seguir o README de cada projeto.
 - **Casos de uso:** Aceleradores pontuais por tema.
 - **Benefício para o pos_venda:** genie/genie-agent-scanner aplica a régua de 12 itens do Genie Workbench sem app, Lakebase ou LLM aos dois espaços Genie. data-warehousing/pbi-aibi-converter e aibi-migration convertem .pbip em painel AI/BI com LLM (Claude, ausente no Free Edition); servem só de referência, porque os dois painéis já saem do mesmo gerador.
-- **Situação no projeto:** proposto. Proposta 2 da revisão de 22/11 (genie-agent-scanner).
+- **Situação no projeto:** aplicado. Proposta 2, aplicada em 22/11 (governanca/genie/scanner/): 8/12 nos dois espaços; teto de 10/12 sem o Workbench; itens 4, 7 e 8 ficam como ajuste proposto.
 
 ## Relevância Média (17)
 
@@ -88,7 +88,7 @@
 - **Como usar:** Abrir o quickstart do tema e a cheat sheet.
 - **Casos de uso:** Desempenho de Power BI em DBSQL.
 - **Benefício para o pos_venda:** Referência das regras que o powerbi-analyzer verifica. Com importação (942 mil linhas na maior tabela) valem parâmetros de conexão (já usados), chaves com RELY (07), integridade referencial (16) e OAuth M2M (13) para atualizar no serviço; os de DirectQuery e agregações valem se a carteira for consultada ao vivo.
-- **Situação no projeto:** proposto. Proposta 3 da revisão de 22/11: RELY nas 14 PKs da gold (não na FK de forma de pagamento, que tem órfãs de propósito).
+- **Situação no projeto:** aplicado. Proposta 3, aplicada em 22/11 (governanca/aplicar_rely.py): RELY nas 14 PKs da gold, FKs sem RELY; saldo por dia na metric view passou de 9 junções para 0, com o mesmo resultado.
 
 ### [ai-dev-kit](https://github.com/databricks-solutions/ai-dev-kit) · Ferramentas para coding agents · ★1995 · Free Edition: Sim
 

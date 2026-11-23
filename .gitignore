@@ -18,3 +18,6 @@ paineis_financeiros/powerbi/.esquemas/
 .DS_Store
 .vscode/
 .idea/
+
+# model.bim gerado só para o powerbi-analyzer (python3 gerar_powerbi.py bim)
+paineis_financeiros/powerbi/auditoria/modelo_bim/

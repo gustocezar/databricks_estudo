@@ -17,6 +17,33 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 22/11/2026
 
+### Propostas 1 a 3 da revisão: auditoria Power BI, régua da Genie e RELY nas chaves
+- **O que mudou:**
+  - (1) **Auditoria do Power BI com o `powerbi-analyzer` (`pba`):** o modelo tirou 80/100 e o lado Databricks, 75/100.
+    `gerar_powerbi.py` ganhou a ação `bim` (model.bim só para o `pba`, fora de `projeto/`), e `auditoria/pba_oauth.py`
+    deixa o `pba` usar o perfil OAuth.
+  - (2) **Régua de 12 itens do Genie Workbench com o `genie-agent-scanner`:** os dois espaços tiraram 8/12. Nada foi
+    alterado nos espaços.
+  - (3) **`RELY` nas 14 chaves primárias da gold** (`governanca/aplicar_rely.py`): as 15 estrangeiras foram recriadas sem
+    `RELY`, e `gerar_carga.py` passou a criar as chaves já com `RELY` (notebooks regenerados, bundle da carga implantado,
+    job ainda pausado). O catálogo marca os três repositórios como aplicados.
+- **Por quê:** pedido do usuário: aplicar as três propostas pequenas da revisão do catálogo.
+- **Onde:** `paineis_financeiros/powerbi/auditoria/` (relatórios e triagem), `paineis_financeiros/powerbi/gerar_powerbi.py`,
+  `governanca/genie/scanner/` (relatórios e `TRIAGEM.md`), `governanca/aplicar_rely.py` e `governanca/rely/` (medições e
+  cópia das definições antes), `carga_diaria/gerar_carga.py` e `src/notebooks/20_gold_dims.py` e `30_fato_snapshot.py`,
+  `referencias/databricks_solutions/` (revisão e catálogo), `.gitignore` (`auditoria/modelo_bim/`).
+- **Conferência:**
+  - `projeto/` regenerado **sem diferença**; `model.bim` com 8 tabelas, 47 medidas e 12 relações.
+  - Unicidade: 14/14 chaves únicas e sem nulo, inclusive os 30.147.469 registros da fato.
+  - `aplicar_rely.py conferir`: 14/14 PK com `RELY`, 15/15 FK, 0 FK com `RELY`.
+  - Medição: junções no plano otimizado de 9 para 0 (saldo por dia), de 9 para 1 (saldo por produto) e de 9 para 6
+    (`bi.carteira_diaria`). Linhas e assinatura do resultado iguais; tempo igual (~1,5 s).
+  - O deploy apagou 2 `.pyc` do workspace (efeito do `.gitignore`), e os 7 notebooks continuam lá.
+  - **Não avaliado de fato:** as regras do `pba` que dependem de visuais (RD-001, RD-010) e as de preparo de dados (o
+    Power BI ainda não consultou o warehouse). IN-008 e o item 3 da régua da Genie são falsos positivos (ver as triagens).
+- **Docs atualizadas:** trilha (fase 22) · playbook (M4, M9) · lições (L71–L74) · `docs/README.md` (situação) · READMEs de
+  `powerbi/` e `governanca/` · revisão de 22/11
+
 ### Projeto no GitHub
 - **O que mudou:** o projeto inteiro foi para o repositório público `gustocezar/databricks_estudo` (branch `main`). A raiz
   ganhou `.gitignore` (fora: `.venv` de `regras/` com 29 MB, caches Python, `.databricks/` dos bundles, esquemas do Power

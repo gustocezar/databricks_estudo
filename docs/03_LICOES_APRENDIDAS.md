@@ -28,6 +28,9 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   envio, varra tokens (`dapi`, `gho_`, chaves privadas), e-mails e caminhos locais; mostre ao dono onde cada achado está e
   deixe a decisão explícita; no `.gitignore`, só o que se recria (`.venv`, caches, `.databricks/`, esquemas baixados).
   (`.gitignore`, fase 21)
+- **L74** O `databricks bundle deploy` segue o `.gitignore` da raiz do repositório: depois do primeiro `.gitignore`,
+  o deploy da carga apagou do workspace 2 arquivos `.pyc` ("2 deleted") → leia a linha de arquivos do deploy e
+  confira que só sumiu o que devia; nunca ponha no `.gitignore` algo que o bundle precisa enviar.
 
 ## Dados e pipeline
 
@@ -95,6 +98,11 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L30** Ranking (`RANK() OVER`) não pode ir na mesma consulta que medidas de janela (`SCALAR_SUBQUERY_TOO_MANY_ROWS`).
 - **L31** Recriar metric view apaga tags e Wiki → rode `aplicar_semantica.py` e republique as Wikis depois.
 - **L32** Campo sem descrição confunde a IA ("CPF inválido" lido como dado pessoal) → descreva todo campo de metric view. (`DESCR` em `gerar_ontologia_sql.py`)
+- **L72** A visão por trás da metric view da carteira junta 9 dimensões, e sem `RELY` o plano lê todas, mesmo numa
+  pergunta só sobre o saldo por dia → declare `RELY` nas chaves primárias depois de provar unicidade e ausência de nulos
+  (o Databricks não valida); deixe as estrangeiras sem `RELY` quando houver órfãs. Não existe `ALTER CONSTRAINT`: remova a
+  PK e declare de novo; o `CASCADE` apaga as FKs que apontam para ela, então recrie-as no mesmo script. Resultado: 9 → 0
+  junções, resultado idêntico. (`governanca/aplicar_rely.py`)
 
 ## Genie
 
@@ -105,6 +113,10 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L37** Mudar o tipo de uma dimensão (`timestamp` → `date`) mudou o comportamento da Genie (filtro pela semana truncada) →
   rode a avaliação completa após qualquer mudança de tipo e corrija com descrição do campo e exemplo de SQL.
 - **L38** Mês incompleto distorce variação de fluxo → compare só meses completos (o painel usa `ultimo_mes_completo`).
+- **L73** A régua de 12 itens do Genie Workbench (genie-agent-scanner) só conta as descrições de coluna gravadas no
+  próprio espaço e ignora as do Unity Catalog, que a Genie usa; os itens 11 e 12 exigem uma rodada de otimização do
+  Workbench → sem o app o teto é 10/12; trate o item 3 como falso positivo quando o catálogo está descrito, e não
+  duplique descrições só para a régua. (`governanca/genie/scanner/TRIAGEM.md`)
 
 ## Regras de negócio (BDD)
 
@@ -175,3 +187,8 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   databricks-solutions não ganhou repositório, mas a opção Power BI levou `powerbi-analyzer` de baixa para alta → reveja o
   catálogo a cada fase nova do projeto e guarde a situação de cada um (aplicado, proposto, adiado, com o motivo).
   (`referencias/databricks_solutions/REVISAO_2026-11-22.md`)
+- **L71** Auditoria que não tem o dado de entrada aprova em branco: o `pba` aprovou as 10 regras de preparo de dados
+  com "No Power BI history" e as regras de desenho que dependem de visuais (RD-001, RD-010) sem ler um visual (o
+  leitor de PBIP não extrai visuais) → leia o resumo
+  de cada aprovação; "sem histórico" ou "nada encontrado" é "não avaliado", e vai para a triagem como lacuna.
+  (`paineis_financeiros/powerbi/auditoria/README.md`)

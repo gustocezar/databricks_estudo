@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 22/11/2026 20:27. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 22/11/2026 20:49. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -19,6 +19,7 @@
 | `dqx_studio/regras` | `registro_studio.py` | Leva as regras do pos_venda para o Registro de Regras e as Tabelas Monitoradas do DQX Studio (o que o menu do app mostra). |
 | `dqx_studio/regras` | `rodar_ciclos.py` | Roda ciclos de carga (1 semana por ciclo) e, depois de cada um, executa as regras no DQX Studio. |
 | `governanca` | `aplicar_descricoes.py` | Grava a descrição de cada coluna das camadas principais do pos_venda (dicionário descricoes_colunas.py). |
+| `governanca` | `aplicar_rely.py` | RELY nas 14 chaves primárias da gold, com prova de unicidade e medição antes/depois. |
 | `governanca` | `aplicar_semantica.py` | Aplica a camada semântica do domínio Pós-venda no Unity Catalog (Discover), a partir de ontologia.py. |
 | `governanca` | `aplicar_sql.py` | Executa uma lista de comandos SQL (arquivo .json com lista de strings) no warehouse do projeto. |
 | `governanca` | `auditar_metadados.py` | Audita os metadados do catálogo pos_venda no Unity Catalog: descrições (tabelas e colunas) e tags (catálogo, |
@@ -33,6 +34,7 @@
 | `governanca` | `sql_util.py` | Execução de SQL no warehouse do projeto pelo CLI (perfil dbx-workshop), com detecção da cota diária do Free Edition. |
 | `medalhao` | `gerar_sql.py` | Gera o SQL do medalhão pos_venda (bronze -> silver -> gold/star schema) nas DUAS abordagens: |
 | `paineis_financeiros` | `gerar_paineis.py` | Gera os painéis AI/BI de KPIs financeiros do Pós-venda a partir das metric views (pos_venda.ontologia.mv_*). |
+| `paineis_financeiros/powerbi/auditoria` | `pba_oauth.py` | Roda o powerbi-analyzer (pba) com um perfil OAuth do Databricks CLI. |
 | `paineis_financeiros/powerbi` | `gerar_powerbi.py` | Opção Power BI dos painéis financeiros do Pós-venda (para comparar com os painéis AI/BI do Databricks). |
 | `regras/features` | `environment.py` | Ganchos do behave: deixa `uc` importável e confere, antes do primeiro cenário, que as funções existem. |
 | `regras/features/steps` | `regras_steps.py` | Passos dos cenários: traduzem a frase de negócio em uma chamada à função do Unity Catalog e conferem a resposta. |

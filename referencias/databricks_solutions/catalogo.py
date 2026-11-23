@@ -850,19 +850,19 @@ REVISAO = {
         fn="`pba pbix` lê .pbip sem credencial (roda no Mac); `pba databricks` lê system.query.history, legível neste workspace.",
         b="Audita o projeto Power BI do pos_venda e o lado Databricks contra as 42 regras da cheat sheet; cobre parte do "
           "que hoje só o Power BI Desktop verificaria e dá um relatório de boas práticas para a avaliação das duas ferramentas.",
-        s="proposto", sn="Proposta 1 da revisão de 22/11."),
+        s="aplicado", sn="Proposta 1, aplicada em 22/11 (paineis_financeiros/powerbi/auditoria/): modelo 80/100, Databricks 75/100. O leitor de PBIP só aceita model.bim (o gerador ganhou a saída bim) e as regras de preparo de dados passam sem avaliar enquanto o Power BI não consultar o warehouse."),
     "power-bi-on-databricks-quickstarts": dict(
         r="M", fe="S",
         b="Referência das regras que o powerbi-analyzer verifica. Com importação (942 mil linhas na maior tabela) valem "
           "parâmetros de conexão (já usados), chaves com RELY (07), integridade referencial (16) e OAuth M2M (13) para "
           "atualizar no serviço; os de DirectQuery e agregações valem se a carteira for consultada ao vivo.",
-        s="proposto", sn="Proposta 3 da revisão de 22/11: RELY nas 14 PKs da gold (não na FK de forma de pagamento, que tem órfãs de propósito)."),
+        s="aplicado", sn="Proposta 3, aplicada em 22/11 (governanca/aplicar_rely.py): RELY nas 14 PKs da gold, FKs sem RELY; saldo por dia na metric view passou de 9 junções para 0, com o mesmo resultado."),
     "technical-services-solutions": dict(
         r="A",
         b="genie/genie-agent-scanner aplica a régua de 12 itens do Genie Workbench sem app, Lakebase ou LLM aos dois "
           "espaços Genie. data-warehousing/pbi-aibi-converter e aibi-migration convertem .pbip em painel AI/BI com LLM "
           "(Claude, ausente no Free Edition); servem só de referência, porque os dois painéis já saem do mesmo gerador.",
-        s="proposto", sn="Proposta 2 da revisão de 22/11 (genie-agent-scanner)."),
+        s="aplicado", sn="Proposta 2, aplicada em 22/11 (governanca/genie/scanner/): 8/12 nos dois espaços; teto de 10/12 sem o Workbench; itens 4, 7 e 8 ficam como ajuste proposto."),
     "regulatory_data_governance": dict(
         b="Arquitetura mais próxima do pos_venda (medallion, DQX Studio, AI/BI, Genie, em português), mas para a "
           "Resolução BACEN nº 18; o pós-venda segue a SUSEP. Não instalar: reaproveitar a dimensão de qualidade em "

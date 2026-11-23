@@ -341,13 +341,58 @@ def tmdl_tabela(t) -> str:
             L.append("\t\tisHidden")
         L += [f"\t\tlineageTag: {guid('c', t['nome'], nome)}", "\t\tsummarizeBy: none", f"\t\tsourceColumn: {origem}", "",
               "\t\tannotation SummarizationSetBy = Automatic", ""]
-    m = (f'let\n    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),\n'
-         f'    Catalogo = Fonte{{[Name = "{CATALOGO}", Kind = "Database"]}}[Data],\n'
-         f'    Esquema = Catalogo{{[Name = "{SCHEMA}", Kind = "Schema"]}}[Data],\n'
-         f'    Dados = Esquema{{[Name = "{t["visao"]}"]}}[Data]\nin\n    Dados')
-    L += [f"\tpartition {nome_tmdl(t['nome'])} = m", "\t\tmode: import", "\t\tsource =", bloco(m, 4), "",
+    L += [f"\tpartition {nome_tmdl(t['nome'])} = m", "\t\tmode: import", "\t\tsource =", bloco(m_tabela(t), 4), "",
           "\tannotation PBI_ResultType = Table", ""]
     return "\n".join(L)
+
+
+def m_tabela(t) -> str:
+    """Consulta Power Query (M) da tabela: a visão de pos_venda.bi pelo conector Databricks."""
+    return (f'let\n    Fonte = DatabricksMultiCloud.Catalogs(Host, HttpPath, [Catalog = null, Database = null, EnableAutomaticProxyDiscovery = null]),\n'
+            f'    Catalogo = Fonte{{[Name = "{CATALOGO}", Kind = "Database"]}}[Data],\n'
+            f'    Esquema = Catalogo{{[Name = "{SCHEMA}", Kind = "Schema"]}}[Data],\n'
+            f'    Dados = Esquema{{[Name = "{t["visao"]}"]}}[Data]\nin\n    Dados')
+
+
+def modelo_bim() -> dict:
+    """O mesmo modelo em TMSL (model.bim), só para ferramentas que não leem TMDL, como o powerbi-analyzer (pba).
+
+    Não vai para projeto/: o Power BI Desktop usa a pasta definition/ (TMDL)."""
+    tabelas = []
+    for t in TABELAS:
+        cols = []
+        for nome, origem, tipo, op in t["colunas"]:
+            c = {"name": nome, "dataType": tipo, "sourceColumn": origem, "summarizeBy": "none"}
+            fmt = op.get("formato") or {"decimal": BRL, "int64": INT}.get(tipo)
+            if fmt:
+                c["formatString"] = fmt
+            if op.get("chave"):
+                c["isKey"] = True
+            if op.get("oculta"):
+                c["isHidden"] = True
+            cols.append(c)
+        medidas = []
+        for nome, dax, fmt, pasta, desc, oculta in t["medidas"]:
+            m = {"name": nome, "expression": dax, "displayFolder": pasta}
+            if fmt:
+                m["formatString"] = fmt
+            if desc:
+                m["description"] = desc
+            if oculta:
+                m["isHidden"] = True
+            medidas.append(m)
+        tab = {"name": t["nome"], "description": t["descricao"], "columns": cols, "measures": medidas,
+               "partitions": [{"name": t["nome"], "mode": "import", "source": {"type": "m", "expression": m_tabela(t)}}]}
+        if t.get("datas"):
+            tab["dataCategory"] = "Time"
+        tabelas.append(tab)
+    relacoes = [{"name": guid("r", t, c), "fromTable": t, "fromColumn": c, "toTable": d, "toColumn": k} for t, c, d, k in RELACOES]
+    expressoes = [{"name": n, "kind": "m",
+                   "expression": f'"{v}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]'}
+                  for n, v in (("Host", HOST), ("HttpPath", HTTP_PATH))]
+    return {"name": "pos_venda", "compatibilityLevel": 1600,
+            "model": {"culture": "pt-BR", "discourageImplicitMeasures": True, "tables": tabelas,
+                      "relationships": relacoes, "expressions": expressoes}}
 
 
 def escrever_modelo():
@@ -890,6 +935,10 @@ if __name__ == "__main__":
         sys.exit(referencia())
     elif acao == "ddl":
         print(";\n\n".join(ddl_visoes()) + ";")
+    elif acao == "bim":
+        destino = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else AQUI / "auditoria" / "modelo_bim"
+        js(destino / "model.bim", modelo_bim())
+        print(f"{destino / 'model.bim'}: {len(TABELAS)} tabelas, {sum(len(t['medidas']) for t in TABELAS)} medidas, {len(RELACOES)} relações")
     else:
         gerar()
         n_vis = sum(len(v) for _, (_, pgs, _) in RELATORIOS.items() for _, v in pgs)

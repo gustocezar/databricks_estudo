@@ -87,10 +87,13 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
 
 - **Quando usar:** perfis A, B, C, D.
 - **Passos:** dimensões com chave `xxhash64(chave de negócio)`; membro `NAO_INFORMADO`; fato no grão do perfil (snapshot diária
-  ou transacional); PK e FK declaradas; `dim_data` com papéis.
-- **Modelo:** notebooks `20_gold_dims` e `30_fato_snapshot`.
-- **Critério de saída:** nenhuma FK órfã fora dos incidentes conhecidos (`gold.dq_fato_orfas_diarias`).
-- **Armadilhas:** chave substituta sequencial quebra a fato histórica quando a dimensão é reescrita.
+  ou transacional); PK e FK declaradas, a PK com `RELY` depois de provar unicidade e ausência de nulos (FK sem `RELY` quando
+  houver órfãs de propósito); `dim_data` com papéis.
+- **Modelo:** notebooks `20_gold_dims` e `30_fato_snapshot`; `governanca/aplicar_rely.py` para tabelas que já existem.
+- **Critério de saída:** nenhuma FK órfã fora dos incidentes conhecidos (`gold.dq_fato_orfas_diarias`);
+  `aplicar_rely.py conferir` = 14 PK com `RELY` e 15 FK sem; o plano de uma consulta que não usa a dimensão não lê a dimensão.
+- **Armadilhas:** chave substituta sequencial quebra a fato histórica quando a dimensão é reescrita; não existe `ALTER
+  CONSTRAINT ... RELY`: a PK é removida e declarada de novo, e o `CASCADE` apaga as FKs que apontam para ela (L72).
 
 ### M5 · Qualidade: métricas, DQX Studio e janelas
 
@@ -164,8 +167,11 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
   5. prontidão da ontologia com o app genie-ontology-readiness, com a identidade do usuário (escopo `sql`) e os espaços
      Genie compartilhados com o app; registre a nota por pilar e as lacunas aceitas;
   6. histórico das avaliações no Lakebase: `implantar_app.py` (database própria no projeto Lakebase existente, versão
-     fixa do app) e `avaliar.py rodar <rótulo>` antes e depois de cada mudança de governança, para comparar no app.
-- **Modelo:** `governanca/genie/avaliacao_boas_praticas/`, `governanca/ontologia_readiness/` (`RESULTADO.md`, `implantar_app.py`, `avaliar.py`).
+     fixa do app) e `avaliar.py rodar <rótulo>` antes e depois de cada mudança de governança, para comparar no app;
+  7. régua de 12 itens do Genie Workbench sem o app (`genie-agent-scanner`, só leitura) e auditoria Power BI on Databricks
+     (`pba`), com triagem: aprovação sem dado de entrada não é aprovação (L71, L73).
+- **Modelo:** `governanca/genie/avaliacao_boas_praticas/`, `governanca/ontologia_readiness/` (`RESULTADO.md`, `implantar_app.py`, `avaliar.py`),
+  `governanca/genie/scanner/TRIAGEM.md`, `paineis_financeiros/powerbi/auditoria/README.md`.
 - **Critério de saída:** triagem registrada; achados que procedem aplicados ou justificados; prontidão ≥ 90 ou lacunas
   justificadas (no pos_venda: 92,7).
 

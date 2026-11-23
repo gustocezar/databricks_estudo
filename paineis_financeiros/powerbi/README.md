@@ -54,6 +54,7 @@ cd pos_venda/paineis_financeiros/powerbi
 python3 ../../governanca/aplicar_semantica.py --so-tags      # só se alguma visão foi recriada (recriar apaga as tags)
 python3 gerar_powerbi.py                                     # projeto/ + conferência contra os esquemas oficiais
 ../../regras/.venv/bin/python gerar_powerbi.py referencia   # paridade Databricks x lógica DAX; grava VALORES_DE_REFERENCIA.md
+python3 gerar_powerbi.py bim                                 # model.bim (TMSL) só para a auditoria do pba; ver auditoria/README.md
 ```
 
 A conferência valida os 102 arquivos JSON contra os esquemas oficiais da Microsoft (relatório 3.0.0, página 2.0.0,
@@ -67,6 +68,7 @@ visões. Os esquemas são baixados para `.esquemas/` na primeira vez.
 | Esquemas oficiais (PBIP, PBIR) | 102 arquivos válidos; o teste negativo (campo faltando, propriedade inventada, medida inexistente) é detectado |
 | Visões `pos_venda.bi` | criadas; 0 chave de fato sem dimensão (produto, canal, forma, calendário) |
 | Paridade dos números | **21/21** indicadores iguais ao painel do Databricks (foto de 25/12/2026), calculando em SQL a mesma lógica das medidas DAX |
+| Auditoria Power BI on Databricks (`pba`) | modelo **80/100** (2 achados informativos, 1 falso positivo); lado Databricks **75/100** (limites do warehouse do Free Edition). As regras que dependem de visuais (RD-001, RD-010) e as de preparo de dados não foram avaliadas de fato: ver [auditoria/README.md](auditoria/README.md) |
 | Abrir no Power BI Desktop | **não feito aqui** (não há Windows nesta máquina): a sintaxe TMDL e o DAX só são executados de verdade no Desktop ou no Fabric |
 
 Se o Desktop apontar erro ao abrir, a mensagem diz o arquivo e a linha; corrija em `gerar_powerbi.py` (não no arquivo

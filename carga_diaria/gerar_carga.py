@@ -448,7 +448,9 @@ NB_DIMS = r'''# Databricks notebook source
 # MAGIC %md
 # MAGIC # pos_venda · 20 · Gold · dimensões do star schema
 # MAGIC Atualiza as dimensões a partir da `silver.pendencia_atual`. Na primeira execução cria cada tabela e declara a **PRIMARY KEY**
-# MAGIC (informativa no Unity Catalog); nas seguintes faz `INSERT OVERWRITE`, que mantém a tabela e as constraints.
+# MAGIC (informativa no Unity Catalog) com **RELY**: a chave é única por construção (`xxhash64` da chave de negócio, conferido por
+# MAGIC `governanca/aplicar_rely.py verificar`), e o RELY deixa o otimizador eliminar junções com dimensões que a consulta não usa.
+# MAGIC Nas execuções seguintes faz `INSERT OVERWRITE`, que mantém a tabela e as constraints.
 # MAGIC As chaves substitutas são `xxhash64(chave de negócio)`: estáveis entre execuções, então a fato histórica continua válida.
 
 # COMMAND ----------
@@ -464,7 +466,7 @@ for nome, pk, comentario, sql in DIMS:
         spark.sql(f"CREATE TABLE {fq} COMMENT '{comentario}' AS {sql}")
         for c in [x.strip() for x in pk.split(",")]:
             spark.sql(f"ALTER TABLE {fq} ALTER COLUMN {c} SET NOT NULL")
-        spark.sql(f"ALTER TABLE {fq} ADD CONSTRAINT pk_{nome} PRIMARY KEY ({pk})")
+        spark.sql(f"ALTER TABLE {fq} ADD CONSTRAINT pk_{nome} PRIMARY KEY ({pk}) RELY")
         acao = "criada"
     else:
         spark.sql(f"INSERT OVERWRITE TABLE {fq} {sql}")
@@ -511,7 +513,7 @@ CREATE TABLE IF NOT EXISTS {FACT} (
   qtd_pendencias INT, valor_parcela DECIMAL(14,2), valor_multa DECIMAL(14,2), valor_juros DECIMAL(14,2),
   valor_total_pendente DECIMAL(14,2), dias_atraso INT, tentativas_cobranca INT,
   _carga_ts TIMESTAMP,
-  CONSTRAINT pk_fact_pagamento_pendente_snapshot PRIMARY KEY (data_referencia_sk, pendencia_id)
+  CONSTRAINT pk_fact_pagamento_pendente_snapshot PRIMARY KEY (data_referencia_sk, pendencia_id) RELY
 )
 CLUSTER BY (data_referencia_sk)
 COMMENT 'Fato historica (snapshot diario): pendencias de pagamento em aberto por dia. Grao: pendencia x dia.'
@@ -564,7 +566,8 @@ SELECT
 FROM c
 """)
 
-# chaves estrangeiras (informativas) para as dimensoes; criadas uma vez
+# chaves estrangeiras (informativas) para as dimensoes; criadas uma vez e SEM RELY: a de forma de pagamento tem orfas de
+# proposito (NAO_CADASTRADA), e RELY numa estrangeira deixaria o otimizador trocar LEFT JOIN por INNER JOIN
 FKS = [("cliente_sk", "dim_cliente", "cliente_sk"), ("apolice_sk", "dim_apolice", "apolice_sk"), ("produto_sk", "dim_produto", "produto_sk"),
        ("corretor_sk", "dim_corretor", "corretor_sk"), ("ponto_venda_sk", "dim_ponto_venda", "ponto_venda_sk"),
        ("periodicidade_sk", "dim_periodicidade", "periodicidade_sk"), ("forma_pagamento_sk", "dim_forma_pagamento", "forma_pagamento_sk"),

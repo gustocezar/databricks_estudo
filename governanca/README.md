@@ -76,6 +76,7 @@ NAO_CADASTRADA quitadas antes de 24/12). Os painéis usam o grão produto x cana
 | `gerar_ontologia_sql.py` | gera `ontologia.sql` (leitura) e `ontologia_sql.json` (execução) |
 | `aplicar_sql.py`, `sql_util.py` | executa SQL no warehouse e detecta a cota esgotada |
 | `aplicar_descricoes.py` | COMMENT nas colunas (lote por tabela; por coluna quando o tipo de objeto exige) |
+| `aplicar_rely.py` | `RELY` nas 14 PKs da gold: prova unicidade, mede o plano antes e depois (`rely/`), recria as 15 FKs sem `RELY` |
 
 ## Regras seguidas
 

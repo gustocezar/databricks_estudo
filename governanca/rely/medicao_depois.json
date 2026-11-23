@@ -1,0 +1,36 @@
+{
+  "rotulo": "depois",
+  "quando": "2026-11-22 20:46:41",
+  "consultas": {
+    "saldo_por_dia (metric view, sem dimensões)": {
+      "juncoes": 0,
+      "dimensoes_lidas": [],
+      "segundos": 1.5,
+      "linhas": 221,
+      "assinatura": "16231814914"
+    },
+    "saldo_por_produto (metric view, 1 dimensão)": {
+      "juncoes": 1,
+      "dimensoes_lidas": [
+        "dim_produto"
+      ],
+      "segundos": 1.4,
+      "linhas": 8,
+      "assinatura": "-3277390049"
+    },
+    "bi.carteira_diaria (fonte do Power BI)": {
+      "juncoes": 6,
+      "dimensoes_lidas": [
+        "dim_faixa_atraso",
+        "dim_forma_pagamento",
+        "dim_motivo_pendencia",
+        "dim_ponto_venda",
+        "dim_produto",
+        "dim_status_cobranca"
+      ],
+      "segundos": 1.5,
+      "linhas": 942248,
+      "assinatura": "-1929825304090"
+    }
+  }
+}

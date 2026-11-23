@@ -2,7 +2,9 @@
 # MAGIC %md
 # MAGIC # pos_venda · 20 · Gold · dimensões do star schema
 # MAGIC Atualiza as dimensões a partir da `silver.pendencia_atual`. Na primeira execução cria cada tabela e declara a **PRIMARY KEY**
-# MAGIC (informativa no Unity Catalog); nas seguintes faz `INSERT OVERWRITE`, que mantém a tabela e as constraints.
+# MAGIC (informativa no Unity Catalog) com **RELY**: a chave é única por construção (`xxhash64` da chave de negócio, conferido por
+# MAGIC `governanca/aplicar_rely.py verificar`), e o RELY deixa o otimizador eliminar junções com dimensões que a consulta não usa.
+# MAGIC Nas execuções seguintes faz `INSERT OVERWRITE`, que mantém a tabela e as constraints.
 # MAGIC As chaves substitutas são `xxhash64(chave de negócio)`: estáveis entre execuções, então a fato histórica continua válida.
 
 # COMMAND ----------
@@ -138,7 +140,7 @@ for nome, pk, comentario, sql in DIMS:
         spark.sql(f"CREATE TABLE {fq} COMMENT '{comentario}' AS {sql}")
         for c in [x.strip() for x in pk.split(",")]:
             spark.sql(f"ALTER TABLE {fq} ALTER COLUMN {c} SET NOT NULL")
-        spark.sql(f"ALTER TABLE {fq} ADD CONSTRAINT pk_{nome} PRIMARY KEY ({pk})")
+        spark.sql(f"ALTER TABLE {fq} ADD CONSTRAINT pk_{nome} PRIMARY KEY ({pk}) RELY")
         acao = "criada"
     else:
         spark.sql(f"INSERT OVERWRITE TABLE {fq} {sql}")

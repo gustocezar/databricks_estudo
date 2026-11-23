@@ -43,6 +43,7 @@ base, use o [playbook](02_PLAYBOOK.md); esta trilha é para entender o porquê.
 | 19 | Regras de negócio testadas (BDD) | `regras/` |
 | 20 | Painéis por fato e opção Power BI | `paineis_financeiros/` |
 | 21 | Projeto versionado no GitHub | `.gitignore`, `README.md` |
+| 22 | Auditorias externas e RELY nas chaves | `paineis_financeiros/powerbi/auditoria/`, `governanca/genie/scanner/`, `governanca/aplicar_rely.py` |
 
 ---
 
@@ -447,3 +448,36 @@ que aponta para a documentação.
 - Repositório público é publicação: varra segredos e dados pessoais antes do primeiro envio e deixe a decisão do que
   publicar explícita (L70).
 - Com o projeto no Git, o pré-requisito do CI/CD (`databricks-dab-examples`) deixou de faltar.
+
+## Fase 22 · Auditorias externas e RELY nas chaves
+
+**Objetivo:** aplicar as três propostas pequenas da revisão do catálogo databricks-solutions (fase 12, revisão de 22/11).
+
+**O que fizemos (22/11/2026):**
+- **Power BI:** auditamos o modelo e o lado Databricks com o `powerbi-analyzer` (`pba`). O `pba` só lê PBIP em
+  `model.bim`, então o gerador ganhou a saída `bim`. O perfil OAuth precisou de um invólucro.
+- **Genie:** pontuamos os dois espaços com o `genie-agent-scanner`, a régua de 12 itens do Genie Workbench, sem instalar
+  o app.
+- **Gold:** declaramos `RELY` nas 14 chaves primárias, depois de provar unicidade e ausência de nulos. As 15 estrangeiras
+  foram recriadas sem `RELY`, e a carga diária passou a criar as chaves já com `RELY`.
+
+**Onde está:** [auditoria Power BI](../paineis_financeiros/powerbi/auditoria/README.md),
+[triagem da Genie](../governanca/genie/scanner/TRIAGEM.md), `governanca/aplicar_rely.py` e `governanca/rely/`.
+
+**Resultado:**
+
+| Proposta | Resultado |
+|---|---|
+| `pba` | modelo 80/100; lado Databricks 75/100, com achados só do warehouse do Free Edition |
+| Scanner da Genie | 8/12 nos dois espaços, com teto de 10/12 sem o Workbench |
+| `RELY` | consulta "saldo por dia" de 9 para 0 junções; "saldo por produto" de 9 para 1; fonte do Power BI de 9 para 6; os três resultados idênticos e o tempo igual (~1,5 s) |
+
+**Como conferir:** `python3 governanca/aplicar_rely.py conferir` (14 PK com `RELY`, 15 FK sem) e os JSON de medição em
+`governanca/rely/`.
+
+**O que aprendemos:**
+- Uma auditoria sem o dado de entrada aprova em branco. "Sem histórico" quer dizer "não avaliado" (L71).
+- `RELY` exige remover e declarar a chave de novo, e o `CASCADE` leva as estrangeiras junto. O ganho aparece no plano antes
+  de aparecer no relógio (L72).
+- A régua da Genie não lê as descrições do Unity Catalog. Por isso o item 3 é falso positivo aqui (L73).
+- O deploy do bundle segue o `.gitignore` (L74).

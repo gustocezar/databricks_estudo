@@ -19,7 +19,8 @@ Documentos de cada bloco continuam nas pastas: [medalhao](../medalhao/README.md)
 [roteiro da demonstração](../dqx_studio/demo/ROTEIRO.md), [governança](../governanca/README.md),
 [triagem da avaliação da Genie](../governanca/genie/avaliacao_boas_praticas/TRIAGEM.md),
 [regras de negócio (BDD)](../regras/README.md), [prontidão da ontologia](../governanca/ontologia_readiness/RESULTADO.md),
-[painéis financeiros e opção Power BI](../paineis_financeiros/README.md).
+[painéis financeiros e opção Power BI](../paineis_financeiros/README.md),
+[auditoria Power BI (pba)](../paineis_financeiros/powerbi/auditoria/README.md), [régua da Genie (scanner)](../governanca/genie/scanner/TRIAGEM.md).
 
 ## Situação em 22/11/2026
 
@@ -34,6 +35,7 @@ Documentos de cada bloco continuam nas pastas: [medalhao](../medalhao/README.md)
 | Ontologia sem identificadores pessoais | pronto: nenhum `cliente_id` no schema `ontologia` (ligações por `cliente_sk`) |
 | Regras de negócio (BDD) | pronto: 5 funções em `pos_venda.regras`, 36/36 cenários, portão no job diário, silver/barreira/gold/Genie/DQX Studio usando as funções, paridade 100% |
 | Prontidão para a Genie Ontology | **92,7 (Optimized)**, com histórico no Lakebase (`avaliar.py`); domínio e responsável por tags padrão; schemas legados descritos (682/682) e com dado pessoal marcado; histórico: ids 1–3 |
+| Auditorias externas e RELY (22/11) | `pba`: modelo Power BI 80/100, lado Databricks 75/100 (só limites do warehouse); scanner da Genie 8/12 nos dois espaços (teto 10/12 sem o Workbench; ajustes nos itens 4, 7 e 8 propostos, não feitos); `RELY` em 14/14 PKs da gold, FKs sem `RELY` |
 | Versionamento | no GitHub: [gustocezar/databricks_estudo](https://github.com/gustocezar/databricks_estudo) (público, branch `main`); depois de cada mudança, `git add -A && git commit && git push` |
 
 ## Como manter esta documentação (incremental)

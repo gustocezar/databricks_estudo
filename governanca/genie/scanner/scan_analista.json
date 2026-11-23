@@ -1,0 +1,275 @@
+{
+  "space_id": "01f1e4772cf610a8baf0c236595c284b",
+  "score": 8,
+  "total": 12,
+  "maturity": "Not Ready",
+  "uc_available": true,
+  "uc_status": "full",
+  "uc_missing": [],
+  "checks": [
+    {
+      "id": 1,
+      "name": "Data sources exist",
+      "passed": true,
+      "severity": "pass",
+      "threshold": ">=1 table or metric view",
+      "evidence": "2 table(s), 4 metric view(s) configured",
+      "fixable": false,
+      "levers": []
+    },
+    {
+      "id": 2,
+      "name": "Table descriptions",
+      "passed": true,
+      "severity": "pass",
+      "threshold": ">=80% of tables described",
+      "evidence": "2/2 tables have descriptions (100%)",
+      "fixable": true,
+      "levers": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Column descriptions",
+      "passed": false,
+      "severity": "fail",
+      "threshold": ">=50% of columns described",
+      "evidence": "0/32 configured columns have descriptions (0%) - 50%+ required - advisory: no column synonyms defined",
+      "fixable": true,
+      "levers": [
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Text instructions",
+      "passed": true,
+      "severity": "warning",
+      "threshold": ">=1 block, >50 chars",
+      "evidence": "2086 chars of instructions - consider trimming below 2000",
+      "fixable": true,
+      "levers": [
+        5
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Join specifications",
+      "passed": false,
+      "severity": "fail",
+      "threshold": ">=1 join when multiple data sources",
+      "evidence": "0 join spec(s) for 6 data sources - define at least one join",
+      "fixable": true,
+      "levers": [
+        4
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Data source count 1-12",
+      "passed": true,
+      "severity": "pass",
+      "threshold": "1 <= data sources <= 12",
+      "evidence": "6 data source(s)",
+      "fixable": false,
+      "levers": []
+    },
+    {
+      "id": 7,
+      "name": "8+ example SQLs",
+      "passed": true,
+      "severity": "warning",
+      "threshold": ">=8 example question/SQL pairs",
+      "evidence": "8 example SQL(s) - 10-15 is the sweet spot - advisory: 8/8 lack usage_guidance",
+      "fixable": true,
+      "levers": [
+        6
+      ]
+    },
+    {
+      "id": 8,
+      "name": "SQL snippets",
+      "passed": true,
+      "severity": "warning",
+      "threshold": ">=1 filter/expression/measure/function",
+      "evidence": "0 filter(s), 0 measure(s), 0 expression(s), 4 function(s) - consider adding filters and measures",
+      "fixable": true,
+      "levers": [
+        6
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Entity/format matching",
+      "passed": true,
+      "severity": "pass",
+      "threshold": ">=1 column with entity/format matching",
+      "evidence": "32 column(s) with entity/format matching enabled (RLS-tainted tables not evaluated offline)",
+      "fixable": true,
+      "levers": [
+        1
+      ]
+    },
+    {
+      "id": 10,
+      "name": "10+ benchmark questions",
+      "passed": true,
+      "severity": "pass",
+      "threshold": ">=10 benchmark questions",
+      "evidence": "14 benchmark question(s)",
+      "fixable": false,
+      "levers": []
+    },
+    {
+      "id": 11,
+      "name": "Optimization workflow completed",
+      "passed": false,
+      "severity": "fail",
+      "threshold": "an optimization_run exists",
+      "evidence": "No optimization_run found - run an optimization workflow",
+      "fixable": false,
+      "levers": []
+    },
+    {
+      "id": 12,
+      "name": "Optimization accuracy >= 85%",
+      "passed": false,
+      "severity": "fail",
+      "threshold": "accuracy >= 85%",
+      "evidence": "No optimization accuracy available",
+      "fixable": false,
+      "levers": []
+    }
+  ],
+  "findings": [
+    {
+      "check_id": 3,
+      "name": "Column descriptions",
+      "severity": "fail",
+      "evidence": "0/32 configured columns have descriptions (0%) - 50%+ required - advisory: no column synonyms defined"
+    },
+    {
+      "check_id": 5,
+      "name": "Join specifications",
+      "severity": "fail",
+      "evidence": "0 join spec(s) for 6 data sources - define at least one join"
+    },
+    {
+      "check_id": 11,
+      "name": "Optimization workflow completed",
+      "severity": "fail",
+      "evidence": "No optimization_run found - run an optimization workflow"
+    },
+    {
+      "check_id": 12,
+      "name": "Optimization accuracy >= 85%",
+      "severity": "fail",
+      "evidence": "No optimization accuracy available"
+    },
+    {
+      "check_id": 4,
+      "name": "Text instructions",
+      "severity": "warning",
+      "evidence": "2086 chars of instructions - consider trimming below 2000"
+    },
+    {
+      "check_id": 7,
+      "name": "8+ example SQLs",
+      "severity": "warning",
+      "evidence": "8 example SQL(s) - 10-15 is the sweet spot - advisory: 8/8 lack usage_guidance"
+    },
+    {
+      "check_id": 8,
+      "name": "SQL snippets",
+      "severity": "warning",
+      "evidence": "0 filter(s), 0 measure(s), 0 expression(s), 4 function(s) - consider adding filters and measures"
+    }
+  ],
+  "next_steps": [
+    {
+      "check_id": 3,
+      "name": "Column descriptions",
+      "severity": "fail",
+      "fixable": true,
+      "levers": [
+        1
+      ],
+      "lever_names": [
+        "Tables & Columns"
+      ],
+      "action": "Add column descriptions and synonyms (Lever 1: Tables & Columns)."
+    },
+    {
+      "check_id": 5,
+      "name": "Join specifications",
+      "severity": "fail",
+      "fixable": true,
+      "levers": [
+        4
+      ],
+      "lever_names": [
+        "Join Specifications"
+      ],
+      "action": "Add join specifications between related tables (Lever 4: Joins)."
+    },
+    {
+      "check_id": 11,
+      "name": "Optimization workflow completed",
+      "severity": "fail",
+      "fixable": false,
+      "levers": [],
+      "lever_names": [],
+      "action": "Run an optimization workflow. Not a config lever."
+    },
+    {
+      "check_id": 12,
+      "name": "Optimization accuracy >= 85%",
+      "severity": "fail",
+      "fixable": false,
+      "levers": [],
+      "lever_names": [],
+      "action": "Raise optimization accuracy to >=85% by iterating. Not a config lever."
+    },
+    {
+      "check_id": 4,
+      "name": "Text instructions",
+      "severity": "warning",
+      "fixable": true,
+      "levers": [
+        5
+      ],
+      "lever_names": [
+        "Genie Space Instructions"
+      ],
+      "action": "Add or expand text instructions (Lever 5: Instructions)."
+    },
+    {
+      "check_id": 7,
+      "name": "8+ example SQLs",
+      "severity": "warning",
+      "fixable": true,
+      "levers": [
+        6
+      ],
+      "lever_names": [
+        "SQL Expressions"
+      ],
+      "action": "Add curated example question/SQL pairs (Lever 6: SQL Expressions)."
+    },
+    {
+      "check_id": 8,
+      "name": "SQL snippets",
+      "severity": "warning",
+      "fixable": true,
+      "levers": [
+        6
+      ],
+      "lever_names": [
+        "SQL Expressions"
+      ],
+      "action": "Add reusable SQL snippets: filters, measures, expressions (Lever 6)."
+    }
+  ],
+  "scanned_at": null
+}

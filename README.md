@@ -12,7 +12,7 @@ Os dados de clientes são **sintéticos**, gerados com o [dbldatagen](https://gi
 | Documento | Responde |
 |---|---|
 | [docs/README.md](docs/README.md) | mapa da documentação e situação de cada bloco |
-| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 21) |
+| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 22) |
 | [Playbook](docs/02_PLAYBOOK.md) | como recriar a estrutura ou aplicá-la a outra base |
 | [Lições aprendidas](docs/03_LICOES_APRENDIDAS.md) | armadilhas reais e a regra que ficou (`L##`) |
 | [CHANGELOG](docs/CHANGELOG.md) | o que mudou, quando e como foi conferido |
