@@ -17,6 +17,23 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 22/11/2026
 
+### Framework das práticas aplicadas, documento e apresentação
+- **O que mudou:** `docs/04_FRAMEWORK.md` reúne as 29 práticas (P01 a P29) em 8 camadas. Cada prática traz a origem
+  (documentação, acelerador, Databricks Labs, Microsoft, Kimball, LGPD ou lição `L##`), como aplicamos, por quê, quando
+  reaplicar e a prova. O documento traz ainda os 5 passos para reaplicar, o mapa de gatilhos e as 39 fontes. Do mesmo
+  conteúdo saíram um documento compartilhável e uma apresentação de 16 slides, ambos no claude.ai e privados.
+- **Por quê:** pedido do usuário: um framework, um documento e uma apresentação com tudo o que foi aplicado e por quê,
+  para reaplicar em cases parecidos, com as fontes e a origem.
+- **Onde:** `docs/04_FRAMEWORK.md`; `docs/README.md` e `README.md` (link na tabela "O que ler").
+- **Conferência:**
+  - As 41 URLs candidatas responderam HTTP 200 em 22/11/2026, e 39 fontes entraram no framework.
+  - Cada linha "Prova" foi conferida contra a trilha e o CHANGELOG, e quatro foram reescritas para não dizer mais do que
+    o projeto verificou.
+  - O diagrama das camadas foi conferido por captura de tela no documento.
+  - A apresentação não foi pré-visualizada: o Playwright não está instalado nesta máquina. A altura de cada slide foi
+    estimada; a mais cheia, Camadas, dá cerca de 764 px dos 824 px úteis.
+- **Docs atualizadas:** framework (novo) · `docs/README.md` · `README.md` · inventário
+
 ### Propostas 1 a 3 da revisão: auditoria Power BI, régua da Genie e RELY nas chaves
 - **O que mudou:**
   - (1) **Auditoria do Power BI com o `powerbi-analyzer` (`pba`):** o modelo tirou 80/100 e o lado Databricks, 75/100.

@@ -15,6 +15,7 @@ Os dados de clientes são **sintéticos**, gerados com o [dbldatagen](https://gi
 | [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 22) |
 | [Playbook](docs/02_PLAYBOOK.md) | como recriar a estrutura ou aplicá-la a outra base |
 | [Lições aprendidas](docs/03_LICOES_APRENDIDAS.md) | armadilhas reais e a regra que ficou (`L##`) |
+| [Framework](docs/04_FRAMEWORK.md) | as 29 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
 | [CHANGELOG](docs/CHANGELOG.md) | o que mudou, quando e como foi conferido |
 | [Inventário](docs/INVENTARIO.md) | retrato atual de scripts, bundles, objetos, painéis e jobs (gerado) |
 

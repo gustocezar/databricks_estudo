@@ -11,6 +11,7 @@ views, Genie para o financeiro e painéis AI/BI.
 | [01 · Trilha de aprendizagem](01_TRILHA_DE_APRENDIZAGEM.md) | quem quer entender o projeto | o que fizemos, em que ordem, por quê e o que aprendemos em cada fase |
 | [02 · Playbook](02_PLAYBOOK.md) | quem vai recriar ou construir outro domínio | perfil da base, módulos com critério de saída, matriz de resiliência, roteiro de reconstrução |
 | [03 · Lições aprendidas](03_LICOES_APRENDIDAS.md) | quem vai mexer no código | armadilhas reais e a regra que ficou (códigos `L##`) |
+| [04 · Framework](04_FRAMEWORK.md) | quem vai aplicar em outro case | as 29 práticas (`P##`): origem, como aplicamos, por quê, quando reaplicar e a prova, com as fontes |
 | [CHANGELOG](CHANGELOG.md) | todos | o que mudou, quando e como foi conferido |
 | [Inventário](INVENTARIO.md) | todos | retrato atual: scripts, bundles, objetos do catálogo, painéis, Genie, jobs, apps e cobertura de metadados (gerado) |
 
