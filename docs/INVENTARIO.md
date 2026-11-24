@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 23/11/2026 21:07. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 24/11/2026 08:49. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -102,8 +102,8 @@
 
 | App | Estado |
 |---|---|
-| dqx-studio | ACTIVE |
-| genie-ontology-readiness | ACTIVE |
+| dqx-studio | STOPPED |
+| genie-ontology-readiness | STOPPED |
 
 ## Metadados (última auditoria)
 

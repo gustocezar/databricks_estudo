@@ -34,6 +34,7 @@ Atalhos:
 | [Playbook](docs/02_PLAYBOOK.md) | como recriar a estrutura ou aplicá-la a outra base |
 | [Lições aprendidas](docs/03_LICOES_APRENDIDAS.md) | armadilhas reais e a regra que ficou (`L##`) |
 | [Framework](docs/04_FRAMEWORK.md) | as 37 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
+| [Skills e ganhos](docs/05_SKILLS_E_GANHOS.md) | as skills consultadas, onde entraram, o ganho de cada uma e o plano de ação para os dados ruins |
 | [CHANGELOG](docs/CHANGELOG.md) | o que mudou, quando e como foi conferido |
 | [Inventário](docs/INVENTARIO.md) | retrato atual de scripts, bundles, objetos, painéis e jobs (gerado) |
 

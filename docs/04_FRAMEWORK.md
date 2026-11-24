@@ -20,6 +20,7 @@ Os outros documentos complementam este:
 | [Playbook](02_PLAYBOOK.md) | o **passo a passo**: perfil da base, módulos M1 a M12 com critério de saída, matriz de resiliência, roteiro de reconstrução |
 | [Lições aprendidas](03_LICOES_APRENDIDAS.md) | as **armadilhas**, com o código `L##` |
 | Este framework | o **porquê de cada escolha** e a fonte de cada uma |
+| [Skills e ganhos](05_SKILLS_E_GANHOS.md) | a **linhagem**: que skill foi consultada em cada prática e o ganho medido |
 
 ```
  Fundação ─► Dados ─► Qualidade ─► Governança ─► Semântica ─► Consumo ─► Avaliação

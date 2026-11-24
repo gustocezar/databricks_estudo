@@ -12,6 +12,7 @@ views, Genie para o financeiro e painéis AI/BI.
 | [02 · Playbook](02_PLAYBOOK.md) | quem vai recriar ou construir outro domínio | perfil da base, módulos com critério de saída, matriz de resiliência, roteiro de reconstrução |
 | [03 · Lições aprendidas](03_LICOES_APRENDIDAS.md) | quem vai mexer no código | armadilhas reais e a regra que ficou (códigos `L##`) |
 | [04 · Framework](04_FRAMEWORK.md) | quem vai aplicar em outro case | as 37 práticas (`P##`): origem, como aplicamos, por quê, quando reaplicar e a prova, com as fontes |
+| [05 · Skills e ganhos](05_SKILLS_E_GANHOS.md) | quem quer a linhagem do estudo ou vai reaplicar com um agente de código | as 11 skills consultadas, onde entraram (fase, prática, pasta), o ganho de cada uma e como ajudam na governança, nas métricas de qualidade, no plano de ação e na Genie |
 | [FinOps](../finops/README.md) | plataforma, squads e quem avalia custo | custo e uso no padrão FOCUS: por funcionalidade, projeto e time, com boas práticas medidas |
 | [Conformidade](../conformidade/README.md) | squad, plataforma e quem audita | se os dados seguem as regras (descrições, tags governadas, LGPD, estrutura, uso, jobs e alertas), com meta, histórico e a [avaliação da observabilidade](../conformidade/AVALIACAO_OBSERVABILIDADE.md) |
 | [AGENTS.md](../AGENTS.md) | LLMs e agentes de código | ordem de leitura, onde está cada resposta, decisões já tomadas, fonte × gerado e o que registrar a cada mudança |

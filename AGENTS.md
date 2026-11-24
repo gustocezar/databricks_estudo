@@ -1,7 +1,7 @@
 # AGENTS.md · como uma LLM ou um agente deve ler e mudar este repositório
 
 > Para qualquer LLM ou agente de código (Claude Code, Codex, Cursor e outros). Pessoas: comecem pelo
-> [README](README.md). Última atualização: **23/11/2026**.
+> [README](README.md). Última atualização: **24/11/2026**.
 
 **O que é:** o domínio pós-venda de seguro de vida (parcelas pendentes de pagamento), construído de ponta a ponta no
 **Databricks Free Edition** com dados sintéticos. Tudo é código: scripts Python geram SQL, notebooks, painéis,
@@ -25,6 +25,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 |---|---|
 | Qual acelerador databricks-solutions usar? | [OPCOES_PARA_LLM.md](referencias/databricks_solutions/OPCOES_PARA_LLM.md) ([opcoes.json](referencias/databricks_solutions/opcoes.json)): aplique as 9 regras de escolha e cite os campos |
 | Como reaplicar em outro case? | Passo 0 do [playbook](docs/02_PLAYBOOK.md) + mapa de gatilhos do [framework](docs/04_FRAMEWORK.md) |
+| Que skill usar, linhagem do estudo, ganho de cada skill; plano de ação para dado ruim; como a qualidade chega à Genie | [docs/05_SKILLS_E_GANHOS.md](docs/05_SKILLS_E_GANHOS.md) |
 | Por que foi feito assim? | Framework (`P##`) e [lições](docs/03_LICOES_APRENDIDAS.md) (`L##`); a história na [trilha](docs/01_TRILHA_DE_APRENDIZAGEM.md) |
 | Qual é o estado atual e os números? | Tabela "Situação" de [docs/README.md](docs/README.md), [CHANGELOG](docs/CHANGELOG.md) e [inventário](docs/INVENTARIO.md) |
 | Algo falhou (cota, token, app parado, view sem tags) | Matriz de resiliência do [playbook](docs/02_PLAYBOOK.md) e as lições |

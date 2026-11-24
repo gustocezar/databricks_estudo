@@ -15,6 +15,34 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ---
 
+## 24/11/2026
+
+### Mapa de skills, plano de ação e qualidade na Genie (documento 05 e apresentação para o diretor)
+- **O que mudou:**
+  - Documento novo [`05_SKILLS_E_GANHOS.md`](05_SKILLS_E_GANHOS.md):
+    - as 11 skills Databricks consultadas, com fase, prática, pasta e ganho medido de cada uma;
+    - como ajudam na governança, nas métricas de qualidade, no plano de ação para os dados ruins e na Genie;
+    - a ordem das skills para reaplicar em outro domínio e os limites do mapa.
+  - Apresentação "Pós-venda: entrega final" para o Diretor de Dados (claude.ai, privada), com 20 slides:
+    - os fluxos de dados, de qualidade (DQX) e de observabilidade;
+    - o plano de ação, a qualidade na Genie e o slide de skills.
+  - `docs/README.md`, `README.md`, `AGENTS.md` e o quadro de documentos do framework apontam para o 05.
+- **Por quê:** pedido do usuário: mapear as skills usadas e consultadas para mostrar a linhagem do estudo, a
+  aplicação e os ganhos. Explicar também como ajudam na governança, nas métricas de qualidade, no plano de ação
+  para os dados ruins e na Genie.
+- **Onde:** `docs/05_SKILLS_E_GANHOS.md`, `docs/README.md`, `README.md`, `AGENTS.md`, `docs/04_FRAMEWORK.md`.
+- **Conferência:**
+  - **Skills:** as chamadas registradas nas conversas do projeto listam 11 skills Databricks. As referências mais lidas
+    são as de genie-agents, aibi-dashboards e metric-views.
+  - **Conformidade:** consulta em `pos_venda.conformidade.boas_praticas_dados` em 24/11 deu 13 regras que atendem,
+    12 em atenção e 3 críticas. Entre as críticas, TAG01 tem 17 ativos sem `subject_area` e USO03 tem 22 views
+    quebradas.
+  - **Genie:** em `governanca/genie/avaliacao.json`, 3 das 29 perguntas são sobre qualidade, e as 3 acertaram.
+  - **Apresentação:** os 20 slides, renderizados no Chrome headless, cabem na área útil. Os links relativos do 05
+    resolvem.
+- **Docs atualizadas:** framework (quadro de documentos) · `docs/README.md` · README · AGENTS.md · trilha, playbook e
+  lições: nenhuma
+
 ## 23/11/2026
 
 ### Últimos casos do catálogo de qualidade (09/01/2027)
