@@ -17,13 +17,17 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 24/11/2026
 
-### E-mail do autor fora do README do DQX Studio
-- **O que mudou:** em `dqx_studio/README.md`, o caminho do bundle passou a usar `<seu-usuario>` no lugar do e-mail.
+### E-mail do autor fora do repositório (README e evidências do DQX Studio)
+- **O que mudou:** o e-mail do autor virou `<seu-usuario>` em `dqx_studio/README.md` (caminho do bundle) e nos 2
+  arquivos de evidência do Studio em `dqx_studio/regras/resultados/`.
 - **Por quê:** pedido do usuário. O repositório é público, e o e-mail não precisa aparecer na documentação (L70).
-- **Onde:** `dqx_studio/README.md`.
+- **Onde:** `dqx_studio/README.md`, `dqx_studio/regras/resultados/backup_regras_tabela_unica_12_tabelas.json`,
+  `dqx_studio/regras/resultados/agendamento_antigo_pos_venda_janela_diaria.json`.
 - **Conferência:**
   - `git grep` confirma que o e-mail saiu da documentação.
-  - Ele continua em 2 arquivos de evidência de `dqx_studio/regras/resultados/`, que pelo AGENTS.md não se editam.
+  - Nos 2 arquivos de evidência de `dqx_studio/regras/resultados/` (390 ocorrências nos campos `created_by` e
+    `updated_by`), a troca foi feita com autorização do usuário, como exceção à regra do AGENTS.md. Nenhum script lê
+    esses arquivos, e os dois continuam JSON válido.
   - Ele continua também no histórico do Git.
 - **Docs atualizadas:** nenhuma além do README do DQX Studio
 
