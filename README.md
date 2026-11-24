@@ -33,7 +33,9 @@ que já está no Databricks.
 
 1. Abra o repositório no VS Code com o GitHub Copilot Chat em modo agente. Ele lê sozinho as
    [instruções](.github/copilot-instructions.md).
-2. No chat, rode `/aplicar-base-bruta` e informe a tabela, o perfil do CLI e o destino.
+2. No chat, rode `/aplicar-base-bruta` e informe a tabela, o perfil do CLI e o nome da base. O agente segue o
+   [spec](specs/aplicar-base-bruta/SPEC.md) e registra a ficha, o mapeamento, as decisões e o progresso em
+   `specs/<nome-da-base>/`.
 3. O agente começa pelas permissões e escolhe a trilha da qualidade:
    - **A · DQX como código** ([`dqx_codigo/`](dqx_codigo/README.md)): biblioteca num job, sem app e sem conceder
      privilégio no catálogo;

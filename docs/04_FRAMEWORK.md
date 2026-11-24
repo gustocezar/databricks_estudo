@@ -691,13 +691,20 @@ Os outros documentos complementam este:
     skill e critério de saída. O guia traz também a ficha da base, o mapeamento para o modelo e a tabela "o que muda
     quando o cenário é diferente".
   - **Instruções do Copilot:** `.github/copilot-instructions.md` aponta para o AGENTS.md e para o guia.
-  - **Prompt:** `.github/prompts/aplicar-base-bruta.prompt.md` conduz etapa por etapa. Até a aprovação, só roda leitura.
+  - **Spec:** [`specs/aplicar-base-bruta/SPEC.md`](../specs/aplicar-base-bruta/SPEC.md) é o contrato que o agente
+    executa. Traz objetivo, escopo, entradas e saídas, as restrições R1 a R8, os critérios de aceite por etapa e os
+    gates G1 a G9. Os modelos de tarefas, ficha, mapeamento e decisões são copiados para `specs/<nome-da-base>/`, que
+    guarda o progresso e permite retomar.
+  - **Prompt:** `.github/prompts/aplicar-base-bruta.prompt.md` segue o spec tarefa por tarefa. Até cada aprovação, só
+    roda leitura.
 - **Por quê:** o que o projeto aprendeu precisa sair do histórico e virar passos que outro agente siga. Assim ele não
-  reinventa o que já foi resolvido e não gasta cota sem pedir.
+  reinventa o que já foi resolvido e não gasta cota sem pedir. O guia explica, e o spec torna verificável: cada tarefa
+  tem um comando que prova que terminou, e o agente não decide sozinho que acabou.
 - **Reaplique quando:** o framework vai ser aplicado por outra pessoa ou por um agente, em outra base ou workspace.
 - **Prova:**
   - os links do guia resolvem;
-  - o guia cobre os 12 módulos e as duas trilhas de qualidade.
+  - o guia cobre os 12 módulos e as duas trilhas de qualidade;
+  - o spec tem 37 tarefas, cada uma com verificação, e 9 gates de aprovação.
   - Ainda não foi testado com o Copilot numa base real (24/11).
 
 ---

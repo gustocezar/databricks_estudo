@@ -17,6 +17,30 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 24/11/2026
 
+### Spec executável para aplicar o framework a outra base
+- **O que mudou:**
+  - [`specs/aplicar-base-bruta/SPEC.md`](../specs/aplicar-base-bruta/SPEC.md) é o contrato que o agente executa. Traz
+    objetivo, escopo e fora de escopo, entradas e saídas, as restrições R1 a R8, os critérios de aceite por etapa
+    (E0 a E7, com E4A e E4B separados), os gates G1 a G9, a regra de escolha da trilha do DQX e os riscos conhecidos.
+  - Os modelos em `specs/aplicar-base-bruta/modelos/` são copiados para `specs/<nome-da-base>/`:
+    - `TAREFAS.md`: 37 tarefas com verificação, saída e linha de resultado;
+    - `FICHA.md`, `MAPEAMENTO.md` e `DECISOES.md`, com o plano de ação.
+  - O prompt `/aplicar-base-bruta` passou a seguir o spec tarefa por tarefa e a retomar da primeira sem `[x]`.
+  - O guia 06, as instruções do Copilot, o framework (P39), o README, o AGENTS.md e `docs/README.md` apontam para o
+    spec.
+- **Por quê:** pedido do usuário. Além do guia, que explica, o Copilot no VS Code precisa de um contrato verificável:
+  cada tarefa com um comando que prova que terminou, pontos de aprovação explícitos e progresso salvo no repositório
+  para retomar.
+- **Onde:** `specs/aplicar-base-bruta/`, `.github/prompts/aplicar-base-bruta.prompt.md`,
+  `.github/copilot-instructions.md`, `docs/06_GUIA_BASE_BRUTA.md`, `docs/04_FRAMEWORK.md`, `README.md`, `AGENTS.md`,
+  `docs/README.md`.
+- **Conferência:**
+  - **Tarefas e gates:** 37 tarefas no modelo e 9 gates no spec.
+  - **Links:** os links do spec e dos documentos alterados resolvem. Os dos modelos resolvem a partir de
+    `specs/<nome-da-base>/`, conferidos numa cópia de teste.
+  - **Uso real:** o spec ainda não foi executado pelo Copilot numa base real.
+- **Docs atualizadas:** framework (P39) · guia 06 · `docs/README.md` · README · AGENTS.md
+
 ### Reconferência da Genie e do Power BI; guia para outra base com o Copilot; DQX em duas trilhas
 - **O que mudou:**
   - **Reconferência com os dados até 09/01/2027:**

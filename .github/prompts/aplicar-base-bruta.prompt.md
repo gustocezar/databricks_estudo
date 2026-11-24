@@ -1,29 +1,31 @@
 ---
-description: Aplicar o framework do pos_venda a uma base bruta de pendências de pagamento no Databricks
+description: Aplicar o framework do pos_venda a uma base bruta de pendências de pagamento no Databricks, seguindo o spec
 ---
 
-Você vai aplicar o framework deste repositório a uma base bruta de pendências de pagamento que já está no Databricks.
+Você vai aplicar o framework deste repositório a uma base bruta de pendências de pagamento que já está no Databricks,
+seguindo o contrato [specs/aplicar-base-bruta/SPEC.md](../../specs/aplicar-base-bruta/SPEC.md).
 
-Antes de tudo, leia [AGENTS.md](../../AGENTS.md) e [docs/06_GUIA_BASE_BRUTA.md](../../docs/06_GUIA_BASE_BRUTA.md).
-Depois, pergunte o que faltar destes dados:
+1. Leia o [AGENTS.md](../../AGENTS.md), o [SPEC](../../specs/aplicar-base-bruta/SPEC.md) e, para o porquê de cada passo, o
+   [guia 06](../../docs/06_GUIA_BASE_BRUTA.md).
+2. Pergunte o que faltar destes dados:
+   - a tabela da base bruta (`catalogo.schema.tabela`);
+   - o perfil do Databricks CLI;
+   - o nome curto da base.
+3. Se `specs/<nome>/` ainda não existe, crie a pasta copiando `specs/aplicar-base-bruta/modelos/*.md`. Se já existe,
+   retome da primeira tarefa sem `[x]` em `specs/<nome>/TAREFAS.md`.
+4. Execute **uma tarefa por vez**:
+   - rode a verificação dela;
+   - anote o resultado na linha "Resultado";
+   - só então marque `[x]`.
+5. Numa tarefa com **G#**, pare antes de executar. Mostre o que vai fazer e o que já foi decidido, e espere a aprovação.
+6. Ao fim de cada etapa (E0 a E7), mostre o critério de aceite do SPEC § 6 e diga se passou.
 
-- a tabela da base bruta (`catalogo.schema.tabela`);
-- o perfil do Databricks CLI;
-- o catálogo e o prefixo dos schemas de destino.
-
-Siga as etapas 0 a 7 do guia, **uma por vez**:
-
-1. **Etapa 0 (permissões):** rode só comandos de leitura (`current-user me`, `SHOW GRANTS`). Diga o que pode e o que
-   não pode ser feito e recomende a trilha de qualidade: **A** (DQX como código, `dqx_codigo/`) ou **B** (DQX Studio
-   como app, `dqx_studio/`). Se não houver permissão para conceder `USE CATALOG` e `CREATE SCHEMA` ao service
-   principal de um app, a trilha é A.
-2. **Etapa 1 (ficha):** perfile a base com SQL de leitura e preencha a ficha do guia. Pare e mostre.
-3. **Etapa 2 (mapeamento):** proponha o de-para de cada conceito e a decisão para o que falta. Pare e mostre.
-4. **Etapas 3 a 7:** gere ou adapte o código a partir dos modelos do repositório. Mostre o critério de saída de cada
-   etapa antes de passar para a próxima.
-
-Regras:
-- Nunca escreva na base bruta nem no schema dela.
-- Peça aprovação antes de criar objeto, rodar job, fazer deploy, ligar agenda, instalar app, commit ou push.
-- Cite a prática (`P##`), o módulo (`M#`) ou a lição (`L##`) em cada decisão.
-- Se o repositório não responde, diga isso.
+Regras do SPEC § 5, sempre:
+- não escreva na base bruta (R1);
+- pare nos gates (R2);
+- não marque tarefa sem verificação (R3);
+- cite a origem `P##`, `M#` ou `L##` de cada decisão (R4);
+- copie os módulos em vez de editá-los (R5);
+- varra o que for commitar (R6);
+- agendas nascem pausadas (R7);
+- pare se a cota ou a permissão acabar (R8).

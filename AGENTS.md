@@ -26,7 +26,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Qual acelerador databricks-solutions usar? | [OPCOES_PARA_LLM.md](referencias/databricks_solutions/OPCOES_PARA_LLM.md) ([opcoes.json](referencias/databricks_solutions/opcoes.json)): aplique as 9 regras de escolha e cite os campos |
 | Como reaplicar em outro case? | Passo 0 do [playbook](docs/02_PLAYBOOK.md) + mapa de gatilhos do [framework](docs/04_FRAMEWORK.md) |
 | Que skill usar, linhagem do estudo, ganho de cada skill; plano de ação para dado ruim; como a qualidade chega à Genie | [docs/05_SKILLS_E_GANHOS.md](docs/05_SKILLS_E_GANHOS.md) |
-| Aplicar o framework a outra base (base bruta de pendências no Databricks), com Copilot ou outro agente | [docs/06_GUIA_BASE_BRUTA.md](docs/06_GUIA_BASE_BRUTA.md), etapas 0 a 7; prompt em `.github/prompts/aplicar-base-bruta.prompt.md` |
+| Aplicar o framework a outra base (base bruta de pendências no Databricks), com Copilot ou outro agente | execute o [spec](specs/aplicar-base-bruta/SPEC.md) (tarefas, verificações e gates, com o progresso em `specs/<nome-da-base>/`); o porquê está no [guia 06](docs/06_GUIA_BASE_BRUTA.md); prompt em `.github/prompts/aplicar-base-bruta.prompt.md` |
 | DQX sem o app (sem privilégio no catálogo) ou com o app | trilha A: [dqx_codigo/](dqx_codigo/README.md); trilha B: [dqx_studio/](dqx_studio/README.md); escolha pela etapa 0 do guia 06 (P38) |
 | Por que foi feito assim? | Framework (`P##`) e [lições](docs/03_LICOES_APRENDIDAS.md) (`L##`); a história na [trilha](docs/01_TRILHA_DE_APRENDIZAGEM.md) |
 | Qual é o estado atual e os números? | Tabela "Situação" de [docs/README.md](docs/README.md), [CHANGELOG](docs/CHANGELOG.md) e [inventário](docs/INVENTARIO.md) |

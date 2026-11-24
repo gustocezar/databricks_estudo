@@ -4,6 +4,10 @@
 > tudo o que foi aplicado no pos_venda para uma **base bruta de pendências de pagamento que já está no Databricks**,
 > num cenário que pode ser diferente. A qualidade tem dois caminhos separados: **DQX como código** e **DQX Studio
 > como app**.
+>
+> **Guia × spec.** Este guia explica o porquê de cada passo. O contrato que o agente executa é o
+> [spec](../specs/aplicar-base-bruta/SPEC.md): tarefas com verificação, saídas, gates de aprovação e o progresso
+> registrado em `specs/<nome-da-base>/` (ficha, mapeamento, decisões e tarefas).
 
 ## Como usar com o Copilot
 
@@ -12,8 +16,8 @@
    ler o [AGENTS.md](../AGENTS.md) e este guia.
 3. No chat, digite `/aplicar-base-bruta`, o prompt de [`.github/prompts/`](../.github/prompts/aplicar-base-bruta.prompt.md).
    Se o comando não aparecer, cole o [prompt inicial](#prompt-inicial-para-colar-no-copilot) do fim deste guia.
-4. Responda à ficha da base (etapa 1). Depois aprove cada etapa: o agente para no fim de cada uma e mostra o critério
-   de saída.
+4. O agente cria `specs/<nome-da-base>/` a partir dos modelos e segue `TAREFAS.md`. Ele para em cada gate (G1 a G9)
+   e, no fim de cada etapa, mostra o critério de aceite. Para retomar outro dia, rode o prompt de novo.
 
 **Regras para o agente** (as mesmas do [AGENTS.md](../AGENTS.md)):
 - **Peça antes de gastar cota ou mudar o workspace:** rodar job, criar ou recriar objeto, deploy, ligar agenda,

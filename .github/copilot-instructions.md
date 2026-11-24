@@ -6,7 +6,9 @@ antes de responder ou mudar código. Os pontos que mais importam:
 - **Idioma:** português do Brasil em documentos, código, comentários e mensagens de commit.
 - **Aplicar o framework a outra base** (por exemplo, uma base bruta de pendências de pagamento no Databricks): siga
   [docs/06_GUIA_BASE_BRUTA.md](../docs/06_GUIA_BASE_BRUTA.md), etapa por etapa, com o critério de saída de cada uma.
-  O prompt pronto é `/aplicar-base-bruta` ([prompts/aplicar-base-bruta.prompt.md](prompts/aplicar-base-bruta.prompt.md)).
+  O contrato executável é o [spec](../specs/aplicar-base-bruta/SPEC.md): tarefas com verificação, saídas e gates de
+  aprovação, registradas em `specs/<nome-da-base>/`. O prompt pronto é `/aplicar-base-bruta`
+  ([prompts/aplicar-base-bruta.prompt.md](prompts/aplicar-base-bruta.prompt.md)).
 - **Qualidade com DQX:** há duas trilhas separadas. A trilha A é o DQX como código ([dqx_codigo/](../dqx_codigo/README.md)),
   sem app e sem conceder privilégio no catálogo. A trilha B é o DQX Studio como app ([dqx_studio/](../dqx_studio/README.md)).
   Escolha pela etapa 0 do guia.
