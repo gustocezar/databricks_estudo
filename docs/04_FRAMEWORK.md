@@ -207,14 +207,15 @@ Os outros documentos complementam este:
   6. catálogo de erros e avisos: voltam os incidentes e entram os que faltavam para cada regra de origem;
   7. catálogo de vazamentos: cadastro ruim, código novo e chave corrigida depois chegam às dimensões e à fato.
 
-  Os 34 incidentes (I01 a I34) vivem no gerador de eventos (`carga_diaria/gerar_carga.py`) e entram pelo fluxo normal:
+  Os 38 incidentes (I01 a I38) vivem no gerador de eventos (`carga_diaria/gerar_carga.py`) e entram pelo fluxo normal:
   bronze, barreira, silver, dimensões e fato.
 - **Por quê:** um dia sem incidente prova que a regra não reprova evento bom, não que ela pega erro.
 - **Reaplique quando:** a qualidade precisa ser demonstrada ou homologada.
 - **Prova:**
   - roteiro em [dqx_studio/demo/ROTEIRO.md](../dqx_studio/demo/ROTEIRO.md);
-  - nas semanas 6 e 7, 133 das 224 regras do DQX Studio (13 tabelas) têm exemplo; antes eram cerca de 32;
-  - das 91 em zero, 86 são garantias da arquitetura (L84): chave por hash, chave única, valores recalculados pelas
+  - com as semanas 6 e 7 e o dia 09/01, 138 das 224 regras do DQX Studio (13 tabelas) têm exemplo; antes eram
+    cerca de 32;
+  - as 86 em zero são todas garantias da arquitetura (L84): chave por hash, chave única, valores recalculados pelas
     funções e o que a barreira já tira.
 
 ### P11 · Monitoramento contínuo com DQX Studio, em janelas com todas as linhas
@@ -223,7 +224,7 @@ Os outros documentos complementam este:
 - **Como aplicamos:**
   - Studio instalado como app, com estado no Lakebase.
   - Registro de Regras com 69 modelos, 12 tabelas monitoradas e 194 checagens aprovadas.
-  - Views de janela (`dq.v_*_janela`) e replay das 7 semanas.
+  - Views de janela (`dq.v_*_janela`) e replay das 8 semanas.
   - Agendamento às 06:30, depois da carga; a tarefa `ligar_dqx_studio` liga o app.
   - A regra de cálculo foi espelhada no Studio (P20).
 - **Por quê:**

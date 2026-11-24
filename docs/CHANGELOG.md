@@ -17,6 +17,26 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 23/11/2026
 
+### Últimos casos do catálogo de qualidade (09/01/2027)
+- **O que mudou:**
+  - O gerador ganhou 4 incidentes para o dia 09/01/2027:
+    - I35: atraso zerado, que a barreira barra;
+    - I36: cliente sem data de nascimento;
+    - I37: produto sem código, como `PRODUTO SEM CODIGO`;
+    - I38: ponto de venda sem código, como `PONTO SEM CODIGO`.
+  - O ciclo 8 (08/01 a 14/01) entrou em `rodar_ciclos.py`, e o painel de qualidade fala da semana 8.
+- **Por quê:** pedido do usuário: carregar mais um dia para as 5 regras que ainda não tinham exemplo.
+- **Onde:** `carga_diaria/gerar_carga.py` (e o notebook gerado), `dqx_studio/regras/rodar_ciclos.py`,
+  `dqx_studio/painel/gerar_painel.py`, `dqx_studio/demo/ROTEIRO.md`.
+- **Conferência:**
+  - **Job:** SUCCESS; portão 36/36; 7.756 eventos em 09/01; 265.252 linhas na fato.
+  - **Os 5 casos apareceram:** 77 atrasos zerados na bronze, todos barrados na quarentena; 46 clientes sem nascimento
+    na `dim_cliente`; 1 linha sem código na `dim_produto` e 1 na `dim_ponto_venda`.
+  - **Studio:** 13 execuções SUCCESS (semana 8 e 8 tabelas inteiras). Cobertura final: 138 das 224 regras com
+    exemplo; as 86 em zero são todas garantias da arquitetura (L84).
+  - **Painel de qualidade:** 6/6 e 5/5, com 40 execuções (8 semanas); implantado.
+- **Docs atualizadas:** framework (P10, P11) · trilha (fase 25) · playbook · `docs/README.md` · roteiro da demo
+
 ### Catálogo de exemplos de qualidade: semanas 6 e 7 pelo fluxo normal
 - **O que mudou:**
   - **Gerador de eventos** (`carga_diaria/gerar_carga.py`):

@@ -1,88 +1,94 @@
 {
   "pos_venda.gold.dim_cliente": {
-    "run_id": "18df5162e70d4c21",
+    "run_id": "179c66ee8eb24b1d",
     "estado": "SUCCESS",
-    "total": 107809,
-    "erro": 334,
-    "aviso": 11822,
+    "total": 107848,
+    "erro": 351,
+    "aviso": 11672,
     "regras_violadas": [
       {
         "regra": "rg_preenchido",
-        "linhas": 5433,
+        "linhas": 5430,
         "erro": 0,
-        "aviso": 5433
+        "aviso": 5430
       },
       {
         "regra": "email_preenchido",
-        "linhas": 3638,
+        "linhas": 3587,
         "erro": 0,
-        "aviso": 3638
+        "aviso": 3587
       },
       {
         "regra": "cpf_valido",
-        "linhas": 2305,
+        "linhas": 2274,
         "erro": 0,
-        "aviso": 2305
+        "aviso": 2274
       },
       {
         "regra": "cep_8_digitos",
-        "linhas": 845,
+        "linhas": 775,
         "erro": 0,
-        "aviso": 845
+        "aviso": 775
       },
       {
         "regra": "renda_faixa_valida",
-        "linhas": 70,
-        "erro": 70,
+        "linhas": 65,
+        "erro": 65,
         "aviso": 0
       },
       {
         "regra": "email_valido",
-        "linhas": 65,
+        "linhas": 62,
         "erro": 0,
-        "aviso": 65
-      },
-      {
-        "regra": "celular_11_digitos",
-        "linhas": 61,
-        "erro": 0,
-        "aviso": 61
-      },
-      {
-        "regra": "estado_civil_valido",
-        "linhas": 60,
-        "erro": 60,
-        "aviso": 0
+        "aviso": 62
       },
       {
         "regra": "sexo_valido",
-        "linhas": 58,
-        "erro": 58,
+        "linhas": 55,
+        "erro": 55,
         "aviso": 0
       },
       {
+        "regra": "estado_civil_valido",
+        "linhas": 55,
+        "erro": 55,
+        "aviso": 0
+      },
+      {
+        "regra": "celular_11_digitos",
+        "linhas": 55,
+        "erro": 0,
+        "aviso": 55
+      },
+      {
         "regra": "rg_emitido_depois_do_nascimento",
-        "linhas": 56,
-        "erro": 56,
+        "linhas": 50,
+        "erro": 50,
         "aviso": 0
       },
       {
         "regra": "cliente_nome_nao_nulo",
-        "linhas": 54,
-        "erro": 54,
+        "linhas": 48,
+        "erro": 48,
+        "aviso": 0
+      },
+      {
+        "regra": "cliente_data_nascimento_nao_nulo",
+        "linhas": 46,
+        "erro": 46,
         "aviso": 0
       },
       {
         "regra": "cliente_cpf_nao_nulo",
-        "linhas": 35,
-        "erro": 35,
+        "linhas": 31,
+        "erro": 31,
         "aviso": 0
       },
       {
         "regra": "cpf_11_digitos",
-        "linhas": 26,
+        "linhas": 24,
         "erro": 0,
-        "aviso": 26
+        "aviso": 24
       },
       {
         "regra": "cliente_id_nao_nulo",
@@ -93,82 +99,82 @@
     ]
   },
   "pos_venda.gold.dim_apolice": {
-    "run_id": "44c22e35942e484b",
+    "run_id": "377cc356f7d44425",
     "estado": "SUCCESS",
-    "total": 160641,
-    "erro": 413,
-    "aviso": 46,
+    "total": 160724,
+    "erro": 379,
+    "aviso": 41,
     "regras_violadas": [
       {
-        "regra": "ao_menos_uma_cobertura",
-        "linhas": 50,
-        "erro": 50,
-        "aviso": 0
-      },
-      {
         "regra": "premio_positivo",
-        "linhas": 49,
-        "erro": 49,
-        "aviso": 0
-      },
-      {
-        "regra": "status_apolice_nao_nulo",
-        "linhas": 48,
-        "erro": 48,
-        "aviso": 0
-      },
-      {
-        "regra": "fim_vigencia_depois_do_inicio",
-        "linhas": 47,
-        "erro": 47,
-        "aviso": 0
-      },
-      {
-        "regra": "dia_vencimento_entre_1_e_28",
         "linhas": 46,
         "erro": 46,
         "aviso": 0
       },
       {
-        "regra": "capital_total_maior_ou_igual_ao_principal",
-        "linhas": 46,
-        "erro": 46,
-        "aviso": 0
-      },
-      {
-        "regra": "endosso_tem_numero",
-        "linhas": 46,
-        "erro": 0,
-        "aviso": 46
-      },
-      {
-        "regra": "status_apolice_valido",
+        "regra": "ao_menos_uma_cobertura",
         "linhas": 45,
         "erro": 45,
         "aviso": 0
       },
       {
-        "regra": "beneficiarios_entre_1_e_4",
+        "regra": "fim_vigencia_depois_do_inicio",
+        "linhas": 45,
+        "erro": 45,
+        "aviso": 0
+      },
+      {
+        "regra": "status_apolice_valido",
+        "linhas": 43,
+        "erro": 43,
+        "aviso": 0
+      },
+      {
+        "regra": "capital_total_maior_ou_igual_ao_principal",
         "linhas": 42,
         "erro": 42,
         "aviso": 0
       },
       {
-        "regra": "data_fim_vigencia_atual_nao_nulo",
+        "regra": "dia_vencimento_entre_1_e_28",
+        "linhas": 41,
+        "erro": 41,
+        "aviso": 0
+      },
+      {
+        "regra": "endosso_tem_numero",
+        "linhas": 41,
+        "erro": 0,
+        "aviso": 41
+      },
+      {
+        "regra": "status_apolice_nao_nulo",
+        "linhas": 40,
+        "erro": 40,
+        "aviso": 0
+      },
+      {
+        "regra": "beneficiarios_entre_1_e_4",
         "linhas": 39,
         "erro": 39,
         "aviso": 0
       },
       {
+        "regra": "data_fim_vigencia_atual_nao_nulo",
+        "linhas": 37,
+        "erro": 37,
+        "aviso": 0
+      },
+      {
         "regra": "data_emissao_nao_nulo",
-        "linhas": 29,
-        "erro": 29,
+        "linhas": 23,
+        "erro": 23,
         "aviso": 0
       },
       {
         "regra": "data_inicio_vigencia_nao_nulo",
-        "linhas": 16,
-        "erro": 16,
+        "linhas": 15,
+        "erro": 15,
         "aviso": 0
       },
       {
@@ -180,9 +186,9 @@
     ]
   },
   "pos_venda.gold.dim_corretor": {
-    "run_id": "ab1a5716bd554bbd",
+    "run_id": "a895c63b2d22468a",
     "estado": "SUCCESS",
-    "total": 2534,
+    "total": 2526,
     "erro": 3,
     "aviso": 0,
     "regras_violadas": [
@@ -207,16 +213,22 @@
     ]
   },
   "pos_venda.gold.dim_ponto_venda": {
-    "run_id": "acf4eb69a1084f49",
+    "run_id": "bfddd9b4cc2444b0",
     "estado": "SUCCESS",
     "total": 1187,
-    "erro": 4,
+    "erro": 5,
     "aviso": 0,
     "regras_violadas": [
       {
         "regra": "tipo_coerente_com_canal",
         "linhas": 3,
         "erro": 3,
+        "aviso": 0
+      },
+      {
+        "regra": "ponto_venda_codigo_nao_nulo",
+        "linhas": 1,
+        "erro": 1,
         "aviso": 0
       },
       {
@@ -240,101 +252,101 @@
     ]
   },
   "pos_venda.silver.pendencia_atual": {
-    "run_id": "2140b031949a4e6c",
+    "run_id": "54194fef165f488a",
     "estado": "SUCCESS",
-    "total": 646449,
-    "erro": 1762,
-    "aviso": 63472,
+    "total": 649527,
+    "erro": 1698,
+    "aviso": 63658,
     "regras_violadas": [
       {
         "regra": "rg_preenchido",
-        "linhas": 32158,
+        "linhas": 32315,
         "erro": 0,
-        "aviso": 32158
+        "aviso": 32315
       },
       {
         "regra": "email_preenchido",
-        "linhas": 19011,
+        "linhas": 19059,
         "erro": 0,
-        "aviso": 19011
+        "aviso": 19059
       },
       {
         "regra": "cpf_valido",
-        "linhas": 11902,
+        "linhas": 11928,
         "erro": 0,
-        "aviso": 11902
+        "aviso": 11928
       },
       {
         "regra": "cep_8_digitos",
-        "linhas": 2027,
+        "linhas": 2007,
         "erro": 0,
-        "aviso": 2027
+        "aviso": 2007
       },
       {
         "regra": "canal_corretor_tem_corretor",
-        "linhas": 649,
+        "linhas": 638,
         "erro": 0,
-        "aviso": 649
+        "aviso": 638
       },
       {
         "regra": "forma_pagamento_cadastrada",
-        "linhas": 644,
-        "erro": 644,
+        "linhas": 626,
+        "erro": 626,
         "aviso": 0
       },
       {
         "regra": "motivo_pendencia_cadastrado",
-        "linhas": 385,
-        "erro": 385,
+        "linhas": 364,
+        "erro": 364,
         "aviso": 0
       },
       {
         "regra": "faixa_atraso_valida",
-        "linhas": 207,
-        "erro": 207,
+        "linhas": 202,
+        "erro": 202,
         "aviso": 0
       },
       {
         "regra": "tentativas_entre_1_e_10",
-        "linhas": 191,
-        "erro": 191,
+        "linhas": 188,
+        "erro": 188,
         "aviso": 0
       },
       {
         "regra": "numero_apolice_nao_nulo",
-        "linhas": 106,
-        "erro": 106,
+        "linhas": 101,
+        "erro": 101,
         "aviso": 0
       },
       {
         "regra": "cliente_id_nao_nulo",
-        "linhas": 100,
-        "erro": 100,
+        "linhas": 92,
+        "erro": 92,
         "aviso": 0
       },
       {
         "regra": "email_valido",
-        "linhas": 85,
+        "linhas": 82,
         "erro": 0,
-        "aviso": 85
+        "aviso": 82
       },
       {
         "regra": "numero_parcela_nao_nulo",
-        "linhas": 84,
-        "erro": 84,
+        "linhas": 80,
+        "erro": 80,
         "aviso": 0
       },
       {
         "regra": "celular_11_digitos",
-        "linhas": 78,
+        "linhas": 73,
         "erro": 0,
-        "aviso": 78
+        "aviso": 73
       },
       {
         "regra": "telefone_fixo_10_digitos",
-        "linhas": 45,
+        "linhas": 44,
         "erro": 0,
-        "aviso": 45
+        "aviso": 44
       },
       {
         "regra": "paga_tem_data_baixa",
@@ -344,25 +356,31 @@
       },
       {
         "regra": "data_vencimento_nao_nulo",
-        "linhas": 23,
-        "erro": 23,
+        "linhas": 21,
+        "erro": 21,
         "aviso": 0
       },
       {
         "regra": "rg_formato",
-        "linhas": 22,
+        "linhas": 21,
         "erro": 0,
-        "aviso": 22
+        "aviso": 21
       }
     ]
   },
   "pos_venda.gold.dim_produto": {
-    "run_id": "4e05a10ed5ee4420",
+    "run_id": "b77fcd0bd1074044",
     "estado": "SUCCESS",
-    "total": 20,
-    "erro": 3,
+    "total": 21,
+    "erro": 4,
     "aviso": 0,
     "regras_violadas": [
+      {
+        "regra": "produto_codigo_nao_nulo",
+        "linhas": 1,
+        "erro": 1,
+        "aviso": 0
+      },
       {
         "regra": "produto_nome_nao_nulo",
         "linhas": 1,
@@ -384,7 +402,7 @@
     ]
   },
   "pos_venda.gold.dim_data": {
-    "run_id": "7589689f213a43ea",
+    "run_id": "1706087fc31e4185",
     "estado": "SUCCESS",
     "total": 5844,
     "erro": 0,
@@ -392,22 +410,22 @@
     "regras_violadas": []
   },
   "pos_venda.gold.bridge_apolice_cobertura": {
-    "run_id": "8bb916ed75d44598",
+    "run_id": "774b79afe830490f",
     "estado": "SUCCESS",
-    "total": 425654,
-    "erro": 125,
+    "total": 425857,
+    "erro": 117,
     "aviso": 0,
     "regras_violadas": [
       {
         "regra": "fk_cobertura_sk",
-        "linhas": 63,
-        "erro": 63,
+        "linhas": 59,
+        "erro": 59,
         "aviso": 0
       },
       {
         "regra": "pk_unica_apolice_sk_cobertura_sk",
-        "linhas": 62,
-        "erro": 62,
+        "linhas": 58,
+        "erro": 58,
         "aviso": 0
       }
     ]

@@ -31,7 +31,7 @@ import janela_avaliacao as ja  # noqa: E402
 import views_preservadas as vp  # noqa: E402
 CICLOS = {1: ("2026-11-20", "2026-11-26"), 2: ("2026-11-27", "2026-12-03"), 3: ("2026-12-04", "2026-12-10"),
           4: ("2026-12-11", "2026-12-17"), 5: ("2026-12-18", "2026-12-24"),
-          6: ("2026-12-25", "2026-12-31"), 7: ("2027-01-01", "2027-01-07")}
+          6: ("2026-12-25", "2026-12-31"), 7: ("2027-01-01", "2027-01-07"), 8: ("2027-01-08", "2027-01-14")}
 # 6 e 7: catálogo de exemplos de todas as regras; seguem a grade semanal do painel (semanas a partir de 20/11)
 G = "pos_venda.gold"
 ALVOS = {   # o que o Studio executa  ->  de qual tabela vem o conjunto de regras

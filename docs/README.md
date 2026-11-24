@@ -30,8 +30,8 @@ Documentos de cada bloco continuam nas pastas: [medalhao](../medalhao/README.md)
 
 | Bloco | Situação |
 |---|---|
-| Dados, medalhão e carga diária | pronto; job `pos_venda_carga_diaria` implantado e **pausado**; dados até **08/01/2027** (semanas 6 e 7 carregadas em 23/11 com o catálogo de incidentes I16 a I34) |
-| Qualidade (barreira, DQX Studio, painel) | pronto; 7 semanas no histórico do Studio (35 execuções completas); 133 de 224 regras com exemplo, e as 91 em zero explicadas no roteiro; o app `dqx-studio` para sozinho após 24 h: `databricks apps start dqx-studio` e esperar "Application startup complete" antes de demonstrar |
+| Dados, medalhão e carga diária | pronto; job `pos_venda_carga_diaria` implantado e **pausado**; dados até **09/01/2027** (semanas 6 a 8 carregadas em 23/11 com o catálogo de incidentes I16 a I38) |
+| Qualidade (barreira, DQX Studio, painel) | pronto; 8 semanas no histórico do Studio (40 execuções completas); 138 de 224 regras com exemplo, e as 86 em zero (todas garantias da arquitetura) explicadas no roteiro; o app `dqx-studio` para sozinho após 24 h: `databricks apps start dqx-studio` e esperar "Application startup complete" antes de demonstrar |
 | Avaliação contínua do Studio | pronto e **pausado**: 12 tabelas às 06:30; ligar junto com o job (`registro_studio.py ligar`); o job liga o app |
 | Governança e metadados | pronto; 1.977 de 1.977 colunas principais (com o schema `bi`) e 682 de 682 legadas descritas; `dado_pessoal` em 380 colunas principais e 152 legadas, 0 sem tag (sem máscara, por decisão: a validação usa os valores reais); auditoria em 28 s |
 | Ontologia, metric views, Genie e painéis financeiros | pronto; Genie 29/29 nas perguntas de avaliação (com simulações pelas funções de regra); painéis da diretoria e do time de negócio com **uma página por fato** |

@@ -180,7 +180,8 @@ p1 = [
         "e vira chave órfã na fato. Na **semana 5** os incidentes caem até zerar, mas as órfãs ficam enquanto as pendências "
         "seguem abertas. As **semanas 6 e 7** são o catálogo de exemplos: na 6 voltam todos os erros de origem e avisos; na 7 "
         "passam pela barreira os vazamentos que chegam às dimensões e à fato (cadastro ruim, código novo, chave corrigida "
-        "depois)."], pos(0, 0, 12, 3)),
+        "depois). Em **09/01 (semana 8)** entram os últimos casos: atraso zerado, nascimento nulo e produto e ponto de "
+        "venda sem código."], pos(0, 0, 12, 3)),
     contador("kpi_recebidos", "ds_diario", agg("sum", "eventos_recebidos"), "Eventos recebidos", pos(0, 3, 3, 3), INT, DIA,
              rotulo="Recebidos", descricao="Bronze, no período filtrado"),
     contador("kpi_barrados", "ds_diario", agg("sum", "eventos_barrados"), "Eventos barrados", pos(3, 3, 3, 3), INT, DIA,
@@ -193,7 +194,8 @@ p1 = [
             x_rotulo="Dia", y_rotulo="Eventos barrados",
             anotacoes=[anotacao("2026-11-27", "Semana 2: só avisos", AVISO), anotacao("2026-12-04", "Semana 3: chegam os erros", RUIM),
                        anotacao("2026-12-13", "Forma de pagamento nova vaza", "#7A5195"),
-                       anotacao("2026-12-26", "Semana 6: catálogo de erros", RUIM), anotacao("2027-01-01", "Semana 7: vazamentos", "#7A5195")],
+                       anotacao("2026-12-26", "Semana 6: catálogo de erros", RUIM), anotacao("2027-01-01", "Semana 7: vazamentos", "#7A5195"),
+                       anotacao("2027-01-09", "09/01: últimos casos", RUIM)],
             descricao="Quantos eventos a barreira de qualidade segurou a cada dia"),
     barras_horizontais("barrados_por_motivo", "ds_barrados", campo("motivo_rejeicao"), agg("sum", "eventos"),
                        "Barrados por motivo", pos(8, 6, 4, 6), "Eventos", descricao="Primeira regra de erro violada"),

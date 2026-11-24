@@ -287,7 +287,7 @@ Ordem para recriar tudo do zero num workspace (perfil `dbx-workshop`). Cada pass
 | 3 | Carga diária: gerar e implantar | `cd carga_diaria && python3 gerar_carga.py && databricks bundle deploy -t dev` | validate OK, job PAUSED |
 | 4 | Setup e backfill | `databricks bundle run carga_setup -t dev` e `bundle run carga_diaria -t dev --params data_inicio=2026-05-19,data_fim=2026-11-18` | silver e fato preenchidas |
 | 5 | DQX Studio | instalar pelo bundle oficial com o patch do warehouse ([dqx_studio/README.md](../dqx_studio/README.md)) | app RUNNING, setup `ready` |
-| 6 | Ciclos com incidentes e histórico | `cd dqx_studio/regras && python3 definir_regras.py && python3 -u rodar_ciclos.py 2 3 4 5` e depois `rodar_ciclos.py 1 2 3 4 5 --replay`; o catálogo de exemplos: carga de 26/12 a 08/01 e `rodar_ciclos.py 6 7 --replay` e `--dims` | 35 execuções completas no histórico (7 semanas) |
+| 6 | Ciclos com incidentes e histórico | `cd dqx_studio/regras && python3 definir_regras.py && python3 -u rodar_ciclos.py 2 3 4 5` e depois `rodar_ciclos.py 1 2 3 4 5 --replay`; o catálogo de exemplos: carga de 26/12 a 09/01 e `rodar_ciclos.py 6 7 8 --replay` e `--dims` | 40 execuções completas no histórico (8 semanas) |
 | 7 | Registro de Regras | `python3 registro_studio.py aplicar && python3 registro_studio.py executar` (depois do passo 18: uma regra chama `pos_venda.regras`) | 70 modelos, 12 tabelas, execuções SUCCESS com nota |
 | 8 | Painel de qualidade | `cd dqx_studio/painel && python3 aplicar_e_testar.py && python3 gerar_painel.py && databricks bundle deploy -t dev` | "RESULTADO: tudo certo" |
 | 9 | Ontologia e metric views | `cd governanca && python3 gerar_ontologia_sql.py && python3 aplicar_sql.py ontologia_sql.json` | 21 comandos ok |

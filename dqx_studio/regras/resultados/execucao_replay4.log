@@ -1,0 +1,13 @@
+pos_venda.dq.v_bronze_eventos_janela igual
+pos_venda.dq.v_silver_eventos_aptos_janela igual
+pos_venda.dq.v_silver_hist_janela igual
+pos_venda.dq.v_fato_snapshot_janela igual
+pos_venda.dq.v_quarentena_janela igual
+=== REPLAY CICLO 8: janela 2027-01-08 -> 2027-01-14 (todas as linhas) ===
+  [studio] ciclo 8: 5 execucoes concluidas, 0 pendentes
+     v_bronze_eventos_janela        SUCCESS  total=15453 erro=182 aviso=666  email_preenchido=377; evento_unico_por_dia_pendencia_tipo=162; uf_em_maiusculas=124
+     v_silver_eventos_aptos_janela  SUCCESS  total=15344 erro=76 aviso=1487  rg_preenchido=746; email_preenchido=375; cpf_valido=242
+     v_quarentena_janela            SUCCESS  total=109 erro=109 aviso=3  valores_seguem_regras_de_calculo=90; atraso_confere_com_as_datas=83; dias_atraso_minimo_1=77
+     v_silver_hist_janela           SUCCESS  total=15263 erro=0 aviso=0  
+     v_fato_snapshot_janela         SUCCESS  total=529293 erro=2161 aviso=0  fk_forma_pagamento_sk=736; canal_contato_valido=627; fk_motivo_pendencia_sk=491
+janela devolvida aos ultimos 7 dias carregados

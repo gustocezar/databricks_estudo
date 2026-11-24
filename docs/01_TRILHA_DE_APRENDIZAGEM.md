@@ -571,16 +571,17 @@ fluxo que já existe: gerador de eventos, barreira, silver, dimensões e fato.
   - a 6, de erros e avisos;
   - a 7, de vazamentos: cadastro ruim, código novo de produto, ponto de venda e corretor, chave digitada errado e
     corrigida depois.
-- **Carga mínima.** 14 dias (26/12/2026 a 08/01/2027): 102.612 eventos, 3,6 milhões de linhas novas na fato.
-- **Studio.** Replay das semanas 6 e 7 com todas as linhas, mais as 8 tabelas inteiras.
+- **Carga mínima.** 15 dias (26/12/2026 a 09/01/2027): 110.368 eventos e 3,9 milhões de linhas novas na fato. O dia
+  09/01 trouxe os incidentes I35 a I38 para as 5 regras que ainda faltavam.
+- **Studio.** Replay das semanas 6 a 8 com todas as linhas, mais as 8 tabelas inteiras.
 - **Guarda corrigida.** A guarda de idempotência do gerador não trava mais com data nula (L82).
 - **Painel de qualidade.** Ganhou as semanas 6 e 7, e as checagens deixaram de usar números fixos.
 
 **Onde está:** [dqx_studio/demo/ROTEIRO.md](../dqx_studio/demo/ROTEIRO.md) (semanas 6 e 7 e a cobertura das regras).
 
 **Resultado:**
-- **Regras com exemplo.** 133 das 224 regras das 13 tabelas avaliadas têm exemplo; antes eram cerca de 32.
-- **Regras em zero.** 86 das 91 em zero são garantias da arquitetura (L84). As outras 5 pedem mais um dia de carga.
+- **Regras com exemplo.** 138 das 224 regras das 13 tabelas avaliadas têm exemplo; antes eram cerca de 32.
+- **Regras em zero.** As 86 restantes são todas garantias da arquitetura (L84).
 - **Quarentena.** Os 11 motivos aparecem (3.596 eventos barrados nas semanas novas).
 - **Fato.** Todas as faixas e todos os status em aberto têm pendências na foto de 08/01/2027; as chaves órfãs
   aparecem para cliente, apólice, produto, corretor, ponto de venda, forma de pagamento, motivo e periodicidade.

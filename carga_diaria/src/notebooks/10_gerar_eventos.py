@@ -123,6 +123,14 @@ JANELAS.update({
     "I33": [(*S7, 0.006)],                  # corretor novo inconsistente (dim_corretor)
     "I34": [(*S7, 0.02)],                   # chave digitada errado na NOVA e corrigida depois (chave orfa na fato)
 })
+# Dia 09/01/2027: os ultimos casos do catalogo (regras que ainda nao tinham exemplo depois das semanas 6 e 7)
+S8 = ("2027-01-09", "2027-01-09")
+JANELAS.update({
+    "I35": [(*S8, 0.01)],                   # dias de atraso zerados (a barreira barra: atraso nao confere)
+    "I36": [(*S8, 0.005)],                  # cliente sem data de nascimento (passa a barreira e chega a dim_cliente)
+    "I37": [(*S8, 0.003)],                  # produto sem codigo (chega a dim_produto como PRODUTO SEM CODIGO)
+    "I38": [(*S8, 0.003)],                  # ponto de venda sem codigo (chega a dim_ponto_venda como PONTO SEM CODIGO)
+})
 ORDEM_INC = list(JANELAS)
 
 
@@ -228,6 +236,13 @@ mod("numero_apolice", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 1", "concat(n
 mod("produto_codigo", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 2", "concat(produto_codigo, '-ERR')")
 mod("corretor_id", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 3 AND corretor_id IS NOT NULL", "concat(corretor_id, '-ERR')")
 mod("ponto_venda_codigo", f"ap_I34 AND tipo_evento = 'NOVA' AND {P5} = 4", "concat(ponto_venda_codigo, '-ERR')")
+mod("dias_atraso", "ap_I35", "0")
+mod("cliente_data_nascimento", "ap_I36", "CAST(NULL AS DATE)")
+mod("cliente_idade", "ap_I36", "CAST(NULL AS INT)")
+mod("produto_codigo", "ap_I37", "CAST(NULL AS STRING)")
+mod("produto_nome", "ap_I37", "'PRODUTO SEM CODIGO'")
+mod("ponto_venda_codigo", "ap_I38", "CAST(NULL AS STRING)")
+mod("ponto_venda_nome", "ap_I38", "'PONTO SEM CODIGO'")
 FLAGS_SQL = (",\n    " + FLAGS) if INCIDENTES_ON else ""
 saida = ",\n  ".join(f"{MOD[c]} AS {c}" if (INCIDENTES_ON and c in MOD) else c for c in OUT_COLS)
 TAXA_DUP = f"(0.005 + {taxa('I02')})" if INCIDENTES_ON else "0.005"
