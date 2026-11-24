@@ -165,3 +165,18 @@
 - [ ] **T7.4 · G9** Ligar as agendas e fazer commit e push, com varredura (R6).
   - Verificação: varredura limpa; CHANGELOG com as conferências.
   - Resultado:
+
+## E8 · Sustentação (faça antes do T7.4, que liga as agendas)
+
+- [ ] **T8.1** Adaptar `sustentacao/gerar_sustentacao.py` (job da carga, pipeline, `SLA`, `TAREFAS`, tabelas de volume) e rodar `testar` (P40).
+  - Verificação: `testar` passa sem criar objeto.
+  - Resultado:
+- [ ] **T8.2 · G5** Aplicar as visões de sustentação e rodar `conferir`.
+  - Verificação: execuções e updates = tabelas de sistema; volume por execução = tabelas; toda coluna descrita.
+  - Resultado:
+- [ ] **T8.3 · G6** Implantar o painel e o alerta de sustentação, com o alerta pausado.
+  - Verificação: `bundle validate` ok; alerta PAUSED; até 4 disparos por dia (PLT06).
+  - Resultado:
+- [ ] **T8.4** Escrever o manual de sustentação da base a partir de `docs/07_SUSTENTACAO.md`: catálogo, SLAs, rotina, runbooks, RACI e indicadores.
+  - Verificação: cada tarefa do job com runbook; metas da base curta marcadas como provisórias; links resolvem.
+  - Resultado:

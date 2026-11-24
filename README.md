@@ -24,7 +24,8 @@ Atalhos:
 | Como reaplicar em outro case? | Passo 0 do [playbook](docs/02_PLAYBOOK.md) e o mapa de gatilhos do [framework](docs/04_FRAMEWORK.md) |
 | Por que foi feito assim? | [Framework](docs/04_FRAMEWORK.md) (`P##`) e [lições](docs/03_LICOES_APRENDIDAS.md) (`L##`) |
 | Qual é o estado atual? | Tabela "Situação" de [docs/README.md](docs/README.md) e o [CHANGELOG](docs/CHANGELOG.md) |
-| Como aplicar numa base bruta de pendências no Databricks? | [Guia 06](docs/06_GUIA_BASE_BRUTA.md), etapas 0 a 7; no Copilot, o prompt `/aplicar-base-bruta` |
+| Como aplicar numa base bruta de pendências no Databricks? | [Guia 06](docs/06_GUIA_BASE_BRUTA.md), etapas 0 a 8; no Copilot, o prompt `/aplicar-base-bruta` |
+| Algo falhou ou está lento? O que fazer no dia a dia? | [Manual de sustentação](docs/07_SUSTENTACAO.md): runbooks, rotina, SLAs e reprocessamento |
 
 ## Aplicar numa base sua (com o Copilot)
 
@@ -48,12 +49,13 @@ que já está no Databricks.
 | Documento | Responde |
 |---|---|
 | [docs/README.md](docs/README.md) | mapa da documentação e situação de cada bloco |
-| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 26) |
+| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 27) |
 | [Playbook](docs/02_PLAYBOOK.md) | como recriar a estrutura ou aplicá-la a outra base |
 | [Lições aprendidas](docs/03_LICOES_APRENDIDAS.md) | armadilhas reais e a regra que ficou (`L##`) |
-| [Framework](docs/04_FRAMEWORK.md) | as 39 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
+| [Framework](docs/04_FRAMEWORK.md) | as 40 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
 | [Skills e ganhos](docs/05_SKILLS_E_GANHOS.md) | as skills consultadas, onde entraram, o ganho de cada uma e o plano de ação para os dados ruins |
 | [Guia para outra base](docs/06_GUIA_BASE_BRUTA.md) | como aplicar tudo numa base bruta de pendências no Databricks, com o Copilot, e as duas trilhas do DQX (código ou app) |
+| [Manual de sustentação](docs/07_SUSTENTACAO.md) | o que roda, metas, onde olhar, rotina, runbooks, reprocessamento, deploy, RACI e indicadores |
 | [CHANGELOG](docs/CHANGELOG.md) | o que mudou, quando e como foi conferido |
 | [Inventário](docs/INVENTARIO.md) | retrato atual de scripts, bundles, objetos, painéis e jobs (gerado) |
 
@@ -72,6 +74,7 @@ que já está no Databricks.
 | [`paineis_financeiros/`](paineis_financeiros/README.md) | painéis AI/BI e projeto Power BI (PBIP) |
 | [`finops/`](finops/README.md) | custo e uso do workspace no padrão FOCUS: por funcionalidade, projeto, time de plataforma e squad, com boas práticas |
 | [`conformidade/`](conformidade/README.md) | conformidade dos dados e do workspace (descrições, tags governadas, LGPD, estrutura, uso, jobs e alertas) e a avaliação da observabilidade existente |
+| [`sustentacao/`](sustentacao/README.md) | sustentação em produção: tempo de execução dos jobs e do pipeline diários, linha de base, desvios, SLA, volume, matriz por tarefa, painel e alerta |
 | [`referencias/`](referencias/databricks_solutions/OPCOES_PARA_LLM.md) | catálogo dos 147 repositórios databricks-solutions e o guia de opções para LLM (qual usar a seguir) |
 
 ## Para rodar no seu workspace

@@ -49,7 +49,8 @@ AS SELECT * FROM VALUES
     ('gold_ldp', 'gold', 'legado'),
     ('finops', 'monitoramento', 'apoio'),
     ('conformidade', 'monitoramento', 'apoio'),
-    ('dqx_codigo', 'qualidade', 'apoio')
+    ('dqx_codigo', 'qualidade', 'apoio'),
+    ('sustentacao', 'monitoramento', 'apoio')
   AS t(esquema, camada, papel);
 
 CREATE OR REPLACE VIEW pos_venda.conformidade.config_regras (
@@ -294,7 +295,10 @@ SELECT 'alerta', '250698304652421', '[Observabilidade] Alerta - Recursos sem Tag
   1, 'alerta SQL', TIMESTAMP '2026-07-03 23:43:35'
 UNION ALL
 SELECT 'alerta', '3609132029342407', '[Observabilidade] Alerta - Trafego Detectado no Unity AI Gateway', NULL, NULL, NULL, true, NULL, false, NULL,
-  1, 'alerta SQL', TIMESTAMP '2026-07-30 19:54:16';
+  1, 'alerta SQL', TIMESTAMP '2026-07-30 19:54:16'
+UNION ALL
+SELECT 'alerta', '3507795912731880', 'pos_venda · Sustentação: SLA ou desvio da carga', NULL, NULL, NULL, true, NULL, true, NULL,
+  1, 'alerta SQL', TIMESTAMP '2026-11-24 19:19:37';
 
 CREATE OR REPLACE VIEW pos_venda.conformidade.achados (
   regra_id COMMENT 'Código da regra de conformidade (DOC, TAG, LGPD, EST, USO, OTM, PLT).',

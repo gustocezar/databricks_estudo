@@ -18,7 +18,7 @@ seguindo o contrato [specs/aplicar-base-bruta/SPEC.md](../../specs/aplicar-base-
    - anote o resultado na linha "Resultado";
    - só então marque `[x]`.
 5. Numa tarefa com **G#**, pare antes de executar. Mostre o que vai fazer e o que já foi decidido, e espere a aprovação.
-6. Ao fim de cada etapa (E0 a E7), mostre o critério de aceite do SPEC § 6 e diga se passou.
+6. Ao fim de cada etapa (E0 a E8), mostre o critério de aceite do SPEC § 6 e diga se passou.
 
 Regras do SPEC § 5, sempre:
 - não escreva na base bruta (R1);

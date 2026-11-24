@@ -52,7 +52,7 @@ TAGS_SCHEMA = ["domain", "camada"]
 
 # papel de cada schema do domínio: principal = fluxo diário (ontologia, Genie, painéis e Power BI leem daqui);
 # legado = medalhão estático da primeira versão (SQL e Lakeflow), sem carga diária e só com tags de dado pessoal;
-# apoio = monitoramento gerado por código (FinOps, esta conformidade e o DQX como código)
+# apoio = monitoramento gerado por código (FinOps, esta conformidade, o DQX como código e a sustentação)
 CAMADAS = [
     ("landing", "landing", "principal"), ("fonte", "fonte", "principal"), ("bronze", "bronze", "principal"),
     ("silver", "silver", "principal"), ("gold", "gold", "principal"), ("dq", "qualidade", "principal"),
@@ -61,6 +61,7 @@ CAMADAS = [
     ("bronze_ldp", "bronze", "legado"), ("silver_ldp", "silver", "legado"), ("gold_ldp", "gold", "legado"),
     ("finops", "monitoramento", "apoio"), ("conformidade", "monitoramento", "apoio"),
     ("dqx_codigo", "qualidade", "apoio"),   # DQX como código (trilha A, P38): válidos, quarentena e métricas por regra
+    ("sustentacao", "monitoramento", "apoio"),   # tempo de execução, linha de base, desvios e SLA dos jobs diários (P40)
 ]
 
 # regra de governanca/auditar_metadados.py: nome de coluna que indica dado pessoal, e as exceções; aqui, mais as

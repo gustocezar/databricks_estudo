@@ -1,0 +1,903 @@
+{
+ "conferido_em": "2026-11-24",
+ "visoes": {
+  "config_sustentacao": 1,
+  "config_sla": 1,
+  "jobs_monitorados": 6,
+  "execucoes_job": 186,
+  "execucoes_tarefa": 249,
+  "atualizacoes_pipeline": 13,
+  "volume_diario": 236,
+  "volume_execucao": 13,
+  "linha_base": 20,
+  "desvios": 50,
+  "sla_diario": 30,
+  "ultima_execucao": 6,
+  "matriz_tarefas": 7,
+  "alerta_sustentacao": 0
+ },
+ "conjuntos_painel": {
+  "ds_resumo": 1,
+  "ds_tarefas": 63,
+  "ds_base": 9,
+  "ds_volume": 12,
+  "ds_desvios": 10,
+  "ds_sla": 30,
+  "ds_pipeline": 12,
+  "ds_matriz": 7,
+  "ds_ultima": 6,
+  "ds_alerta": 0
+ },
+ "contagens": {
+  "runs_sistema": 186,
+  "runs_visao": 186,
+  "tarefas_sistema": 249,
+  "tarefas_visao": 249,
+  "updates_sistema": 13,
+  "updates_visao": 13,
+  "updates_sem_tarefa": 0,
+  "linhas_bronze": 1718895,
+  "bronze_volume_diario": 1718895,
+  "bronze_volume_execucao": 1718895,
+  "linhas_fato": 34026469,
+  "fato_volume_diario": 34026469,
+  "fato_volume_execucao": 34026469,
+  "execucoes_carga": 13,
+  "sucessos_carga": 12,
+  "base_carga": 12,
+  "maior_base": 20,
+  "desvios_invalidos": 0,
+  "tarefas_carga": 7,
+  "tarefas_na_matriz": 7,
+  "linhas_sla": 30,
+  "jobs_com_sla": 1,
+  "colunas_sem_descricao": 0,
+  "visoes_sem_descricao": 0,
+  "alerta_30_dias": 2,
+  "alerta_agora": 0
+ },
+ "checks": [
+  {
+   "check": "execuções de job = run_id da tabela de sistema",
+   "ok": true,
+   "detalhe": "186 = 186"
+  },
+  {
+   "check": "execuções de tarefa = run_id da tabela de sistema",
+   "ok": true,
+   "detalhe": "249 = 249"
+  },
+  {
+   "check": "updates do pipeline = update_id da tabela de sistema",
+   "ok": true,
+   "detalhe": "13 = 13"
+  },
+  {
+   "check": "todo update disparado por job tem a tarefa",
+   "ok": true,
+   "detalhe": "0 sem tarefa"
+  },
+  {
+   "check": "bronze: volume por dia = volume por execução = tabela",
+   "ok": true,
+   "detalhe": "1718895 = 1718895 = 1718895"
+  },
+  {
+   "check": "fato: volume por dia = volume por execução = tabela",
+   "ok": true,
+   "detalhe": "34026469 = 34026469 = 34026469"
+  },
+  {
+   "check": "linha de base da carga = sucessos (até N)",
+   "ok": true,
+   "detalhe": "12 = min(12, 20); maior base 20"
+  },
+  {
+   "check": "medianas por tarefa = cálculo direto na tabela de sistema",
+   "ok": true,
+   "detalhe": "7 tarefas comparadas"
+  },
+  {
+   "check": "desvios só com base suficiente e acima do limite",
+   "ok": true,
+   "detalhe": "0 fora da regra"
+  },
+  {
+   "check": "toda tarefa da carga tem sintoma e ação na matriz",
+   "ok": true,
+   "detalhe": "7 de 7"
+  },
+  {
+   "check": "SLA: um dia por linha no calendário",
+   "ok": true,
+   "detalhe": "30 = 30 × 1"
+  },
+  {
+   "check": "toda coluna e toda visão descritas",
+   "ok": true,
+   "detalhe": "0 colunas e 0 visões sem descrição"
+  },
+  {
+   "check": "alerta: a consulta responde (e com 30 dias acharia ocorrências)",
+   "ok": true,
+   "detalhe": "agora 0; com 30 dias 2"
+  }
+ ],
+ "medianas_por_tarefa": [
+  {
+   "task_key": "dq_metricas",
+   "direto": "23.5",
+   "visao": "23.5",
+   "n": "8",
+   "execucoes_base": "8"
+  },
+  {
+   "task_key": "gerar_eventos",
+   "direto": "183.1",
+   "visao": "183.1",
+   "n": "12",
+   "execucoes_base": "12"
+  },
+  {
+   "task_key": "gold_dimensoes",
+   "direto": "218.7",
+   "visao": "218.7",
+   "n": "11",
+   "execucoes_base": "11"
+  },
+  {
+   "task_key": "gold_fato_snapshot",
+   "direto": "23.7",
+   "visao": "23.8",
+   "n": "12",
+   "execucoes_base": "12"
+  },
+  {
+   "task_key": "ligar_dqx_studio",
+   "direto": "6.7",
+   "visao": "6.7",
+   "n": "3",
+   "execucoes_base": "3"
+  },
+  {
+   "task_key": "portao_regras",
+   "direto": "215.2",
+   "visao": "215.2",
+   "n": "4",
+   "execucoes_base": "4"
+  },
+  {
+   "task_key": "silver_lakeflow",
+   "direto": "408.3",
+   "visao": "408.4",
+   "n": "12",
+   "execucoes_base": "12"
+  }
+ ],
+ "linha_base_carga": [
+  {
+   "tipo": "job",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "(job inteiro)",
+   "execucoes_base": "12",
+   "mediana_min": "14.53",
+   "p95_min": "16.05",
+   "mediana_setup_s": "0.0",
+   "mediana_execucao_s": "0.0",
+   "base_suficiente": "true"
+  },
+  {
+   "tipo": "pipeline",
+   "job": "pos_venda_carga_silver_lakeflow",
+   "tarefa": "(update)",
+   "execucoes_base": "12",
+   "mediana_min": "5.21",
+   "p95_min": "5.75",
+   "mediana_setup_s": null,
+   "mediana_execucao_s": null,
+   "base_suficiente": "true"
+  },
+  {
+   "tipo": "tarefa",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "dq_metricas",
+   "execucoes_base": "8",
+   "mediana_min": "0.39",
+   "p95_min": "0.65",
+   "mediana_setup_s": "1.5",
+   "mediana_execucao_s": "21.5",
+   "base_suficiente": "true"
+  },
+  {
+   "tipo": "tarefa",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "gerar_eventos",
+   "execucoes_base": "12",
+   "mediana_min": "3.05",
+   "p95_min": "4.37",
+   "mediana_setup_s": "160.0",
+   "mediana_execucao_s": "23.5",
+   "base_suficiente": "true"
+  },
+  {
+   "tipo": "tarefa",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "gold_dimensoes",
+   "execucoes_base": "11",
+   "mediana_min": "3.65",
+   "p95_min": "4.17",
+   "mediana_setup_s": "165.0",
+   "mediana_execucao_s": "47.0",
+   "base_suficiente": "true"
+  },
+  {
+   "tipo": "tarefa",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "gold_fato_snapshot",
+   "execucoes_base": "12",
+   "mediana_min": "0.4",
+   "p95_min": "2.09",
+   "mediana_setup_s": "2.0",
+   "mediana_execucao_s": "21.0",
+   "base_suficiente": "true"
+  },
+  {
+   "tipo": "tarefa",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "ligar_dqx_studio",
+   "execucoes_base": "3",
+   "mediana_min": "0.11",
+   "p95_min": "2.11",
+   "mediana_setup_s": "2.0",
+   "mediana_execucao_s": "4.0",
+   "base_suficiente": "false"
+  },
+  {
+   "tipo": "tarefa",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "portao_regras",
+   "execucoes_base": "4",
+   "mediana_min": "3.59",
+   "p95_min": "3.73",
+   "mediana_setup_s": "167.0",
+   "mediana_execucao_s": "45.5",
+   "base_suficiente": "false"
+  },
+  {
+   "tipo": "tarefa",
+   "job": "pos_venda_carga_diaria",
+   "tarefa": "silver_lakeflow",
+   "execucoes_base": "12",
+   "mediana_min": "6.81",
+   "p95_min": "7.39",
+   "mediana_setup_s": "0.0",
+   "mediana_execucao_s": "408.0",
+   "base_suficiente": "true"
+  }
+ ],
+ "ultima_execucao_carga": [
+  {
+   "job_id": "288828593679314",
+   "job": "pos_venda_carga_diaria",
+   "hora_agenda": "05:00",
+   "agenda_pausada": "true",
+   "hora_meta": "06:15",
+   "timeout_min": "0.0",
+   "timeout_sugerido_min": "33",
+   "job_run_id": "221373926959184",
+   "gatilho": "ONETIME",
+   "inicio_local": "2026-11-23T20:41:36.925",
+   "fim_local": "2026-11-23T20:57:12.832",
+   "duracao_min": "15.60",
+   "resultado": "SUCCEEDED",
+   "dias_desde_ultima": "1",
+   "execucoes_base": "12",
+   "mediana_min": "14.53",
+   "p95_min": "16.05",
+   "base_suficiente": "true",
+   "acima_mediana_min": "1.07",
+   "atraso_meta_min": null,
+   "folga_projetada_min": "59.0"
+  }
+ ],
+ "desvios": [
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-18T23:59:20.849",
+   "duracao_s": "217.7",
+   "mediana_base_s": "164.8",
+   "p95_base_s": "215.7",
+   "excesso_s": "2.0",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-18T23:59:20.882",
+   "duracao_s": "217.3",
+   "mediana_base_s": "164.4",
+   "p95_base_s": "215.3",
+   "excesso_s": "2.0",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T00:55:41.381",
+   "duracao_s": "224.7",
+   "mediana_base_s": "160.6",
+   "p95_base_s": "218.2",
+   "excesso_s": "6.5",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T00:55:41.415",
+   "duracao_s": "224.4",
+   "mediana_base_s": "160.1",
+   "p95_base_s": "217.8",
+   "excesso_s": "6.6",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T00:55:56.287",
+   "duracao_s": "229.0",
+   "mediana_base_s": "165.7",
+   "p95_base_s": "218.0",
+   "excesso_s": "11.0",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T00:55:56.326",
+   "duracao_s": "228.6",
+   "mediana_base_s": "165.3",
+   "p95_base_s": "217.7",
+   "excesso_s": "10.9",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T01:32:44.504",
+   "duracao_s": "184.6",
+   "mediana_base_s": "120.0",
+   "p95_base_s": "215.5",
+   "excesso_s": "4.6",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T01:32:44.546",
+   "duracao_s": "184.2",
+   "mediana_base_s": "119.6",
+   "p95_base_s": "215.1",
+   "excesso_s": "4.9",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T01:32:59.816",
+   "duracao_s": "190.0",
+   "mediana_base_s": "120.0",
+   "p95_base_s": "184.8",
+   "excesso_s": "10.0",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T01:32:59.860",
+   "duracao_s": "189.4",
+   "mediana_base_s": "119.6",
+   "p95_base_s": "184.4",
+   "excesso_s": "10.1",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T01:36:21.995",
+   "duracao_s": "883.9",
+   "mediana_base_s": "848.3",
+   "p95_base_s": "872.3",
+   "excesso_s": "11.6",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "silver_lakeflow",
+   "inicio_local": "2026-11-19T01:39:37.860",
+   "duracao_s": "443.7",
+   "mediana_base_s": "353.1",
+   "p95_base_s": "438.4",
+   "excesso_s": "5.3",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "pipeline",
+   "tarefa": "(update)",
+   "inicio_local": "2026-11-19T01:41:08.913",
+   "duracao_s": "345.5",
+   "mediana_base_s": "257.5",
+   "p95_base_s": "340.0",
+   "excesso_s": "5.5",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T01:52:33.948",
+   "duracao_s": "184.7",
+   "mediana_base_s": "112.5",
+   "p95_base_s": "184.9",
+   "excesso_s": "15.9",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T01:52:33.983",
+   "duracao_s": "184.3",
+   "mediana_base_s": "112.0",
+   "p95_base_s": "184.5",
+   "excesso_s": "16.3",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T02:18:07.262",
+   "duracao_s": "947.8",
+   "mediana_base_s": "860.5",
+   "p95_base_s": "880.6",
+   "excesso_s": "67.2",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T02:36:16.548",
+   "duracao_s": "188.5",
+   "mediana_base_s": "115.0",
+   "p95_base_s": "171.1",
+   "excesso_s": "17.4",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T02:36:16.590",
+   "duracao_s": "188.2",
+   "mediana_base_s": "114.4",
+   "p95_base_s": "170.8",
+   "excesso_s": "17.4",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T02:46:39.613",
+   "duracao_s": "367.2",
+   "mediana_base_s": "94.7",
+   "p95_base_s": "171.3",
+   "excesso_s": "225.2",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T02:46:39.650",
+   "duracao_s": "366.8",
+   "mediana_base_s": "94.3",
+   "p95_base_s": "171.0",
+   "excesso_s": "225.4",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T03:01:47.040",
+   "duracao_s": "143.1",
+   "mediana_base_s": "90.8",
+   "p95_base_s": "134.8",
+   "excesso_s": "8.3",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T03:01:47.080",
+   "duracao_s": "142.7",
+   "mediana_base_s": "90.3",
+   "p95_base_s": "134.4",
+   "excesso_s": "8.3",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T03:04:43.072",
+   "duracao_s": "144.4",
+   "mediana_base_s": "91.4",
+   "p95_base_s": "154.3",
+   "excesso_s": "7.4",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T03:04:43.116",
+   "duracao_s": "143.9",
+   "mediana_base_s": "90.9",
+   "p95_base_s": "153.9",
+   "excesso_s": "7.6",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T03:18:41.613",
+   "duracao_s": "161.1",
+   "mediana_base_s": "92.1",
+   "p95_base_s": "143.2",
+   "excesso_s": "23.0",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T03:18:41.653",
+   "duracao_s": "160.7",
+   "mediana_base_s": "91.6",
+   "p95_base_s": "142.8",
+   "excesso_s": "23.4",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T03:18:46.323",
+   "duracao_s": "170.8",
+   "mediana_base_s": "92.1",
+   "p95_base_s": "145.2",
+   "excesso_s": "32.7",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T03:18:46.361",
+   "duracao_s": "170.3",
+   "mediana_base_s": "91.6",
+   "p95_base_s": "144.7",
+   "excesso_s": "33.0",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T03:18:51.149",
+   "duracao_s": "152.6",
+   "mediana_base_s": "92.1",
+   "p95_base_s": "161.6",
+   "excesso_s": "14.5",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T03:18:51.196",
+   "duracao_s": "152.1",
+   "mediana_base_s": "91.6",
+   "p95_base_s": "161.2",
+   "excesso_s": "14.8",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T22:21:54.518",
+   "duracao_s": "181.5",
+   "mediana_base_s": "100.5",
+   "p95_base_s": "161.6",
+   "excesso_s": "30.8",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T22:21:54.548",
+   "duracao_s": "181.1",
+   "mediana_base_s": "100.1",
+   "p95_base_s": "161.2",
+   "excesso_s": "31.0",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T22:22:18.042",
+   "duracao_s": "185.2",
+   "mediana_base_s": "109.9",
+   "p95_base_s": "171.3",
+   "excesso_s": "20.3",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T22:22:18.079",
+   "duracao_s": "184.7",
+   "mediana_base_s": "109.5",
+   "p95_base_s": "170.8",
+   "excesso_s": "20.4",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T22:22:37.507",
+   "duracao_s": "219.1",
+   "mediana_base_s": "121.8",
+   "p95_base_s": "181.7",
+   "excesso_s": "37.4",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T22:22:37.545",
+   "duracao_s": "218.6",
+   "mediana_base_s": "121.3",
+   "p95_base_s": "181.3",
+   "excesso_s": "37.3",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T22:22:43.323",
+   "duracao_s": "231.6",
+   "mediana_base_s": "129.6",
+   "p95_base_s": "186.9",
+   "excesso_s": "44.7",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T22:22:43.365",
+   "duracao_s": "231.2",
+   "mediana_base_s": "129.2",
+   "p95_base_s": "186.4",
+   "excesso_s": "44.8",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-19T22:22:48.986",
+   "duracao_s": "205.4",
+   "mediana_base_s": "129.6",
+   "p95_base_s": "219.7",
+   "excesso_s": "11.0",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-19T22:22:49.026",
+   "duracao_s": "205.0",
+   "mediana_base_s": "129.2",
+   "p95_base_s": "219.2",
+   "excesso_s": "11.2",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "gold_fato_snapshot",
+   "inicio_local": "2026-11-22T11:40:25.840",
+   "duracao_s": "201.3",
+   "mediana_base_s": "23.8",
+   "p95_base_s": "50.1",
+   "excesso_s": "165.7",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-22T15:39:04.208",
+   "duracao_s": "958.5",
+   "mediana_base_s": "860.5",
+   "p95_base_s": "922.2",
+   "excesso_s": "36.3",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "dq_metricas",
+   "inicio_local": "2026-11-22T15:54:18.450",
+   "duracao_s": "36.9",
+   "mediana_base_s": "22.6",
+   "p95_base_s": "23.6",
+   "excesso_s": "13.3",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-23T20:02:21.340",
+   "duracao_s": "968.8",
+   "mediana_base_s": "865.5",
+   "p95_base_s": "953.7",
+   "excesso_s": "15.1",
+   "provavel_causa": "volume maior: 14 dias no intervalo (base: 7)"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "dq_metricas",
+   "inicio_local": "2026-11-23T20:15:28.860",
+   "duracao_s": "40.2",
+   "mediana_base_s": "23.0",
+   "p95_base_s": "33.6",
+   "excesso_s": "6.6",
+   "provavel_causa": "volume maior: 14 dias no intervalo (base: 7)"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-23T20:30:06.370",
+   "duracao_s": "163.7",
+   "mediana_base_s": "107.9",
+   "p95_base_s": "167.6",
+   "excesso_s": "1.8",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-23T20:30:06.417",
+   "duracao_s": "163.2",
+   "mediana_base_s": "107.4",
+   "p95_base_s": "167.1",
+   "excesso_s": "2.1",
+   "provavel_causa": "espera por computação (setup)"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "silver_lakeflow",
+   "inicio_local": "2026-11-23T20:45:38.346",
+   "duracao_s": "443.6",
+   "mediana_base_s": "393.3",
+   "p95_base_s": "443.5",
+   "excesso_s": "0.1",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "job",
+   "tarefa": "(job inteiro)",
+   "inicio_local": "2026-11-23T21:02:14.529",
+   "duracao_s": "144.9",
+   "mediana_base_s": "95.4",
+   "p95_base_s": "155.5",
+   "excesso_s": "1.8",
+   "provavel_causa": "lentidão com o mesmo volume"
+  },
+  {
+   "tipo": "tarefa",
+   "tarefa": "run_task",
+   "inicio_local": "2026-11-23T21:02:14.569",
+   "duracao_s": "144.5",
+   "mediana_base_s": "95.0",
+   "p95_base_s": "155.0",
+   "excesso_s": "2.1",
+   "provavel_causa": "espera por computação (setup)"
+  }
+ ],
+ "volume_por_execucao": [
+  {
+   "inicio_local": "2026-11-18T21:14:43.929",
+   "dias_processados": "184",
+   "eventos_gravados": "1304869",
+   "linhas_fato_gravadas": "21532176",
+   "duracao_min": "14.51",
+   "segundos_por_dia_processado": "4.7"
+  },
+  {
+   "inicio_local": "2026-11-18T21:30:23.767",
+   "dias_processados": "1",
+   "eventos_gravados": "8472",
+   "linhas_fato_gravadas": "0",
+   "duracao_min": "14.34",
+   "segundos_por_dia_processado": "860.5"
+  },
+  {
+   "inicio_local": "2026-11-18T21:45:43.138",
+   "dias_processados": "1",
+   "eventos_gravados": "0",
+   "linhas_fato_gravadas": "214201",
+   "duracao_min": "13.93",
+   "segundos_por_dia_processado": "836.0"
+  },
+  {
+   "inicio_local": "2026-11-19T00:02:59.869",
+   "dias_processados": "7",
+   "eventos_gravados": "59756",
+   "linhas_fato_gravadas": "1535030",
+   "duracao_min": "14.55",
+   "segundos_por_dia_processado": "124.7"
+  },
+  {
+   "inicio_local": "2026-11-19T01:00:54.028",
+   "dias_processados": "7",
+   "eventos_gravados": "52374",
+   "linhas_fato_gravadas": "1574102",
+   "duracao_min": "12.93",
+   "segundos_por_dia_processado": "110.8"
+  },
+  {
+   "inicio_local": "2026-11-19T01:18:30.945",
+   "dias_processados": "7",
+   "eventos_gravados": "55616",
+   "linhas_fato_gravadas": "1616408",
+   "duracao_min": "13.12",
+   "segundos_por_dia_processado": "112.4"
+  },
+  {
+   "inicio_local": "2026-11-19T01:36:21.995",
+   "dias_processados": "7",
+   "eventos_gravados": "59053",
+   "linhas_fato_gravadas": "1678586",
+   "duracao_min": "14.73",
+   "segundos_por_dia_processado": "126.3"
+  },
+  {
+   "inicio_local": "2026-11-19T02:18:07.262",
+   "dias_processados": "7",
+   "eventos_gravados": "59828",
+   "linhas_fato_gravadas": "0",
+   "duracao_min": "15.80",
+   "segundos_por_dia_processado": "135.4"
+  },
+  {
+   "inicio_local": "2026-11-22T11:30:07.038",
+   "dias_processados": "7",
+   "eventos_gravados": "0",
+   "linhas_fato_gravadas": "1743052",
+   "duracao_min": "13.68",
+   "segundos_por_dia_processado": "117.2"
+  },
+  {
+   "inicio_local": "2026-11-22T15:39:04.208",
+   "dias_processados": "1",
+   "eventos_gravados": "8559",
+   "linhas_fato_gravadas": "253914",
+   "duracao_min": "15.98",
+   "segundos_por_dia_processado": "958.5"
+  },
+  {
+   "inicio_local": "2026-11-23T20:02:21.340",
+   "dias_processados": "14",
+   "eventos_gravados": "102612",
+   "linhas_fato_gravadas": "3613748",
+   "duracao_min": "16.15",
+   "segundos_por_dia_processado": "69.2"
+  },
+  {
+   "inicio_local": "2026-11-23T20:41:36.925",
+   "dias_processados": "1",
+   "eventos_gravados": "7756",
+   "linhas_fato_gravadas": "265252",
+   "duracao_min": "15.60",
+   "segundos_por_dia_processado": "935.9"
+  }
+ ]
+}

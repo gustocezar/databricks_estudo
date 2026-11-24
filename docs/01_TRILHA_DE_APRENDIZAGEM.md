@@ -638,3 +638,62 @@ duas trilhas.
 - Chave órfã precisa de membro explícito, senão um filtro de nulo esconde dinheiro (L87).
 - Reconfira o consumo depois de toda carga que traga grupos ou chaves novas.
 - No DQX, domínio de texto vai em `sql_expression` com `IN` (L88).
+
+## Fase 27 · Sustentação: tempo de execução dos jobs diários
+
+**Objetivo:** responder, para quem sustenta a carga em produção, quanto tempo cada execução, tarefa e update do
+pipeline levou, o que é normal, o que passou do normal e por quê, e se a carga termina antes da hora meta.
+
+**O que fizemos (24/11/2026):**
+- **Ponto de partida.** Só havia a duração média por job e dia, as falhas e o custo, em
+  `pos_venda.finops.uso_jobs_diario`, e as regras USO01 (frescor) e PLT03 (timeout) na conformidade.
+- **Sondagem das tabelas de sistema.** Usamos `job_run_timeline`, `job_task_run_timeline` e
+  `pipeline_update_timeline`, que trazem setup, execução, parâmetros e a tarefa que disparou o update, além do bronze
+  e da fato. Três achados viraram lições:
+  - a duração não acompanha o volume (L89);
+  - a execução que passa da hora vem em fatias (L90);
+  - com a agenda pausada, o SLA não se mede em execução manual (L91).
+- **Schema novo `pos_venda.sustentacao`.** Gerado por `sustentacao/gerar_sustentacao.py`, tem 14 visões:
+  - execuções por job, tarefa e pipeline;
+  - volume por dia e por execução;
+  - linha de base, desvios com a causa provável e SLA dia a dia;
+  - a última execução de cada job;
+  - a matriz de resiliência por tarefa (P28);
+  - o que o alerta avisa.
+
+  A atribuição dos jobs vem da FinOps, sem lista nova.
+- **Painel e alerta.** O bundle `sustentacao/` traz o painel "pos_venda · Sustentação", com a página "Sustentação", e
+  o alerta SQL diário das 06:20, pausado (P02, PLT06).
+- **Conformidade.** O schema `sustentacao` entrou em `CAMADAS` como "apoio".
+
+**Onde está:** [sustentacao/README.md](../sustentacao/README.md).
+
+**Resultado:**
+- **Base.** 13 execuções da carga (12 com sucesso). A mediana é de 6,81 min na `silver_lakeflow` e de 3,65 min na
+  `gold_dimensoes`.
+- **Volume.** Um backfill de 184 dias levou 14,5 min; 1 dia, cerca de 14 min. O tempo é setup da computação
+  serverless e subida do pipeline, não volume.
+- **SLA.** Com a agenda pausada, todos os dias aparecem como "agenda pausada". A folga projetada mostra se a meta das
+  06:15 cabe.
+- **Conferência.**
+  - `conferir`: 13 de 13 checagens. O volume por execução soma o bronze e a fato.
+  - Carga: mediana de 14,53 min, p95 de 16,05 min e folga projetada de 59,0 min (provisórios).
+  - Implantação: painel publicado e alerta pausado.
+  - Conformidade: nenhuma pendência nova.
+- **Alerta.** Na primeira conferência, avisaria 3 vezes por ruído. Com o piso de 60 s e sem desvio explicado por
+  volume, avisaria 2 casos reais em 30 dias (L92).
+
+**Como conferir:** `python3 sustentacao/gerar_sustentacao.py conferir`. As checagens confirmam que:
+- as execuções e os updates batem com as tabelas de sistema;
+- o volume por execução soma o bronze e a fato;
+- as medianas são iguais ao cálculo direto;
+- toda tarefa está na matriz;
+- toda coluna tem descrição.
+
+Para o painel e o alerta, `databricks bundle validate` em `sustentacao/`.
+
+**O que aprendemos:**
+- Separe setup de execução, e meça o volume, antes de chamar algo de lentidão (L89).
+- Junte as fatias por `run_id` e tire as tarefas `SKIPPED` da linha de base (L90).
+- O SLA vale para a execução da agenda. Antes de ligar a agenda, olhe a folga projetada (L91).
+- Com a base curta, o alerta precisa de um piso, ou dispara por segundos acima do p95 (L92).

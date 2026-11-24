@@ -3,7 +3,7 @@
 > Documento incremental. Última atualização: **24/11/2026**. Cada prática tem um código (`P##`) que não muda.
 > Fontes conferidas em 22 e 23/11/2026 (todos os links responderam).
 
-Este framework reúne as **39 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 26 da
+Este framework reúne as **40 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 27 da
 [trilha](01_TRILHA_DE_APRENDIZAGEM.md)), cada uma com:
 
 - **Origem:** de onde veio. Pode ser documentação oficial, acelerador da Databricks, Databricks Labs, Microsoft,
@@ -17,11 +17,12 @@ Os outros documentos complementam este:
 
 | Documento | O que dá |
 |---|---|
-| [Playbook](02_PLAYBOOK.md) | o **passo a passo**: perfil da base, módulos M1 a M12 com critério de saída, matriz de resiliência, roteiro de reconstrução |
+| [Playbook](02_PLAYBOOK.md) | o **passo a passo**: perfil da base, módulos M1 a M13 com critério de saída, matriz de resiliência, roteiro de reconstrução |
 | [Lições aprendidas](03_LICOES_APRENDIDAS.md) | as **armadilhas**, com o código `L##` |
 | Este framework | o **porquê de cada escolha** e a fonte de cada uma |
 | [Skills e ganhos](05_SKILLS_E_GANHOS.md) | a **linhagem**: que skill foi consultada em cada prática e o ganho medido |
 | [Guia para outra base](06_GUIA_BASE_BRUTA.md) | o **caminho para reaplicar** numa base bruta, com um agente de código e as duas trilhas do DQX |
+| [Manual de sustentação](07_SUSTENTACAO.md) | o **dia a dia em produção**: o que roda, SLAs, onde olhar, rotina, runbooks, reprocessamento, deploy, RACI e indicadores |
 
 ```
  Fundação ─► Dados ─► Qualidade ─► Governança ─► Semântica ─► Consumo ─► Avaliação
@@ -30,6 +31,7 @@ Os outros documentos complementam este:
                     Custo e uso · FinOps (P30–P34), sobre o workspace inteiro
               Conformidade e observabilidade (P35–P37), sobre o workspace inteiro
          Reaplicação em outra base (P38–P39): DQX em duas trilhas e guia para agente
+       Sustentação em produção (P40): tempo de execução, linha de base, desvio, SLA e volume
 ```
 
 ---
@@ -40,7 +42,7 @@ Os outros documentos complementam este:
    os dados chegam, o que muda no tempo, a natureza das medidas, dado pessoal, quem consome, regulação e onde roda.
 2. **Escolha as práticas** pelo [mapa de gatilhos](#mapa-de-gatilhos) abaixo. Cada resposta do perfil aponta para as
    práticas que valem.
-3. **Construa na ordem das camadas**, usando os módulos do playbook (M1 a M12). Não avance sem o critério de saída do
+3. **Construa na ordem das camadas**, usando os módulos do playbook (M1 a M13). Não avance sem o critério de saída do
    módulo.
 4. **Avalie com réguas de fora** (P24 a P26) e faça a triagem de cada achado antes de mudar qualquer coisa.
 5. **Registre:** CHANGELOG, trilha, lições e a situação de cada acelerador (P27, P29).
@@ -72,6 +74,7 @@ Os outros documentos complementam este:
 | Views sobre tabelas de sistema ou sobre schemas de outro time | P37 |
 | Sem permissão para conceder privilégio no catálogo a um app, ou sem vaga de app | P38 |
 | Aplicar o framework a outra base com um agente de código (Copilot, Claude Code, Codex) | P39, P38 |
+| Job diário com consumidor em hora marcada, ou "por que a carga demorou hoje?" | P40, P28 |
 
 ---
 
@@ -475,7 +478,7 @@ Os outros documentos complementam este:
 
 ### P28 · Matriz de resiliência
 - **Origem:** prática do projeto (princípio 7 do playbook).
-- **Como aplicamos:** a [matriz de resiliência](02_PLAYBOOK.md#matriz-de-resiliência) tem 15 falhas, cada uma com o
+- **Como aplicamos:** a [matriz de resiliência](02_PLAYBOOK.md#matriz-de-resiliência) tem 20 falhas, cada uma com o
   sintoma e a resposta. Exemplos: cota esgotada, token expirado, Lakebase desligado, app parado, recriação de view, dia
   novo carregado.
 - **Por quê:** no Free Edition, as falhas são rotina. Ter a resposta escrita encurta a recuperação.
@@ -490,7 +493,7 @@ Os outros documentos complementam este:
 - **Por quê:** quem chega depois entende o porquê de cada escolha. Uma mudança só está pronta quando a conferência está
   registrada.
 - **Reaplique quando:** sempre.
-- **Prova:** 27 fases (0 a 26), 88 lições, inventário regenerado a cada mudança.
+- **Prova:** 28 fases (0 a 27), 92 lições, inventário regenerado a cada mudança.
 
 ---
 
@@ -690,7 +693,7 @@ Os outros documentos complementam este:
   - a convenção `AGENTS.md`;
   - P29 (documentação junto com o código).
 - **Como aplicamos:**
-  - **Guia:** [`06_GUIA_BASE_BRUTA.md`](06_GUIA_BASE_BRUTA.md) tem as etapas 0 a 7. Cada etapa tem módulo, práticas,
+  - **Guia:** [`06_GUIA_BASE_BRUTA.md`](06_GUIA_BASE_BRUTA.md) tem as etapas 0 a 8. Cada etapa tem módulo, práticas,
     skill e critério de saída. O guia traz também a ficha da base, o mapeamento para o modelo e a tabela "o que muda
     quando o cenário é diferente".
   - **Instruções do Copilot:** `.github/copilot-instructions.md` aponta para o AGENTS.md e para o guia.
@@ -707,8 +710,50 @@ Os outros documentos complementam este:
 - **Prova:**
   - os links do guia resolvem;
   - o guia cobre os 12 módulos e as duas trilhas de qualidade;
-  - o spec tem 37 tarefas, cada uma com verificação, e 9 gates de aprovação.
+  - o spec tem 41 tarefas (com a etapa E8, de sustentação), cada uma com verificação, e 9 gates de aprovação.
   - Ainda não foi testado com o Copilot numa base real (24/11).
+
+---
+
+## Sustentação em produção
+
+### P40 · Tempo de execução com linha de base, desvio, SLA e volume, a partir das tabelas de sistema
+- **Origem:**
+  - as tabelas de sistema de jobs e pipelines ([jobs](https://docs.databricks.com/aws/en/admin/system-tables/jobs):
+    `job_run_timeline`, `job_task_run_timeline`, `pipeline_update_timeline`);
+  - os [alertas SQL](https://docs.databricks.com/aws/en/sql/user/alerts/);
+  - a pergunta do dono sobre a sustentação em produção. Até então, só havia a duração média por job e dia, as falhas
+    e o custo, em `pos_venda.finops.uso_jobs_diario`;
+  - P28 (matriz de resiliência), P02 (agendas pausadas) e a regra PLT06 (até 4 disparos por dia).
+- **Como aplicamos:** o schema `pos_venda.sustentacao`, gerado por
+  [`sustentacao/gerar_sustentacao.py`](../sustentacao/README.md), tem 14 visões:
+  - **Execuções.** Por job, por tarefa e por update do pipeline. As fatias de hora em hora são juntadas por `run_id`
+    (L90), com o setup separado da execução (L89).
+  - **Linha de base.** Mediana e p95 das últimas 20 execuções com sucesso, com o mínimo de 5 para valer.
+  - **Desvios.** Execução acima do p95 ou de 1,5 vez a mediana das 20 anteriores, com o excesso e a causa provável:
+    espera por computação, volume maior ou lentidão com o mesmo volume.
+  - **SLA.** Só a execução da agenda conta, e a meta é 06:15, antes do DQX Studio às 06:30. Com a agenda pausada, a
+    página mostra a folga projetada (L91).
+  - **Volume.** Eventos do bronze e linhas da fato por execução, ligados pelo momento da gravação.
+  - **Matriz por tarefa.** Sintoma e ação na falha e na lentidão, ligados à matriz do playbook (P28).
+
+  Junto vão um painel AI/BI gerado por código (página "Sustentação") e um alerta SQL diário, às 06:20 e pausado. A
+  O [manual de sustentação](07_SUSTENTACAO.md) usa essas visões na rotina diária, semanal e mensal, nos runbooks,
+  no RACI e nos indicadores.
+  atribuição dos jobs ao projeto vem da FinOps; o custo continua em `uso_jobs_diario`; frescor e timeout continuam na
+  conformidade (USO01, PLT03).
+- **Por quê:** a média diária esconde a tarefa que ficou lenta e mistura backfill com carga de um dia. Sem linha de
+  base, não há como dizer o que é "lento". Sem SLA, ninguém sabe se a foto do dia chega antes de quem a usa.
+- **Reaplique quando:** um job diário tem consumidores com hora marcada (avaliação de qualidade, painel, extrato), ou
+  quando alguém precisa responder "por que a carga demorou hoje?".
+- **Prova:**
+  - **`conferir`:** 13 checagens ok. As execuções e os updates batem com as tabelas de sistema (186, 249 e 13); o
+    volume por execução soma o bronze (1.718.895) e a fato (34.026.469); as medianas são iguais ao cálculo direto.
+  - **Carga:** mediana de 14,53 min, p95 de 16,05 min e folga projetada de 59,0 min até 06:15. São provisórios: 12
+    execuções manuais com as agendas pausadas.
+  - **Volume:** a duração não acompanha o volume. 184 dias levaram 14,5 min, e 1 dia, cerca de 14 (L89).
+  - **Implantação:** o painel está publicado e o alerta está pausado.
+  - **Alerta:** com o piso (L92), avisaria 2 casos reais em 30 dias, em vez de ruído.
 
 ---
 
@@ -816,6 +861,9 @@ painéis; qual opção databricks-solutions usar no pos_venda?". As regras levam
 **Reaplicação em outra base**
 - DQX: [instalação](https://databrickslabs.github.io/dqx/docs/installation/), [definição de checagens](https://databrickslabs.github.io/dqx/docs/guide/quality_checks_definition/), [aplicação](https://databrickslabs.github.io/dqx/docs/guide/quality_checks_apply/) e o [pacote no PyPI](https://pypi.org/project/databricks-labs-dqx/) (P38)
 - GitHub Copilot: [instruções de repositório](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot) e [arquivos de prompt do VS Code](https://code.visualstudio.com/docs/copilot/customization/prompt-files) (P39)
+
+**Sustentação em produção**
+- [Tabelas de sistema de jobs](https://docs.databricks.com/aws/en/admin/system-tables/jobs) (`job_run_timeline`, `job_task_run_timeline`, `pipeline_update_timeline`) e [alertas SQL](https://docs.databricks.com/aws/en/sql/user/alerts/) (P40)
 
 **Do próprio projeto:** [trilha](01_TRILHA_DE_APRENDIZAGEM.md), [playbook](02_PLAYBOOK.md),
 [lições](03_LICOES_APRENDIDAS.md), [CHANGELOG](CHANGELOG.md) e

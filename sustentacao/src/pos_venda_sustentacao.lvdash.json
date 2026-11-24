@@ -1,0 +1,1481 @@
+{
+ "datasets": [
+  {
+   "name": "ds_resumo",
+   "displayName": "Resumo da carga diária",
+   "queryLines": [
+    "SELECT\n",
+    "  (SELECT count(*) FROM execucoes_job WHERE job = 'pos_venda_carga_diaria') AS execucoes_carga,\n",
+    "  (SELECT execucoes_base FROM linha_base WHERE tipo = 'job' AND job = 'pos_venda_carga_diaria') AS execucoes_base,\n",
+    "  (SELECT mediana_min FROM linha_base WHERE tipo = 'job' AND job = 'pos_venda_carga_diaria') AS mediana_min,\n",
+    "  (SELECT p95_min FROM linha_base WHERE tipo = 'job' AND job = 'pos_venda_carga_diaria') AS p95_min,\n",
+    "  (SELECT folga_projetada_min FROM ultima_execucao WHERE job = 'pos_venda_carga_diaria') AS folga_projetada_min,\n",
+    "  (SELECT count(*) FROM desvios WHERE dia_local >= date_sub(current_date(), 30) AND job IN ('pos_venda_carga_diaria', 'pos_venda_carga_silver_lakeflow')) AS desvios_30d,\n",
+    "  (SELECT count(*) FROM alerta_sustentacao) AS ocorrencias_alerta\n"
+   ]
+  },
+  {
+   "name": "ds_tarefas",
+   "displayName": "Duração por tarefa em cada execução da carga",
+   "queryLines": [
+    "SELECT date_format(e.inicio_local, 'yyyy-MM-dd HH:mm') AS execucao, t.tarefa,\n",
+    "  t.duracao_min, t.setup_s, t.execucao_s, t.resultado\n",
+    "FROM execucoes_tarefa t JOIN execucoes_job e ON e.job_run_id = t.job_run_id\n",
+    "WHERE t.job = 'pos_venda_carga_diaria' AND t.resultado <> 'SKIPPED'\n",
+    "ORDER BY execucao, t.inicio\n"
+   ]
+  },
+  {
+   "name": "ds_base",
+   "displayName": "Linha de base por tarefa",
+   "queryLines": [
+    "SELECT tipo, tarefa, execucoes_base, mediana_min, p95_min, round(limite_desvio_s / 60, 2) AS limite_min,\n",
+    "  mediana_setup_s, mediana_execucao_s, CASE WHEN base_suficiente THEN 'sim' ELSE 'não (poucas execuções)' END AS base_vale\n",
+    "FROM linha_base\n",
+    "WHERE job = 'pos_venda_carga_diaria' OR (tipo = 'pipeline' AND job = 'pos_venda_carga_silver_lakeflow')\n",
+    "ORDER BY CASE tipo WHEN 'job' THEN 0 WHEN 'pipeline' THEN 2 ELSE 1 END, mediana_min DESC\n"
+   ]
+  },
+  {
+   "name": "ds_volume",
+   "displayName": "Volume × duração por execução",
+   "queryLines": [
+    "SELECT inicio_local, concat(dias_processados, CASE WHEN dias_processados = 1 THEN ' dia' ELSE ' dias' END) AS intervalo,\n",
+    "  dias_processados, eventos_gravados, linhas_fato_gravadas, duracao_min, setup_s, segundos_por_dia_processado\n",
+    "FROM volume_execucao WHERE sucesso ORDER BY inicio_local\n"
+   ]
+  },
+  {
+   "name": "ds_desvios",
+   "displayName": "Desvios",
+   "queryLines": [
+    "SELECT inicio_local, tipo, tarefa, job, round(duracao_s / 60, 2) AS duracao_min, round(mediana_base_s / 60, 2) AS mediana_min,\n",
+    "  round(p95_base_s / 60, 2) AS p95_min, round(excesso_s / 60, 2) AS excesso_min, acima_mediana_pct, execucoes_base, provavel_causa\n",
+    "FROM desvios WHERE job IN ('pos_venda_carga_diaria', 'pos_venda_carga_silver_lakeflow') ORDER BY inicio_local DESC\n"
+   ]
+  },
+  {
+   "name": "ds_sla",
+   "displayName": "SLA diário",
+   "queryLines": [
+    "SELECT dia, job, hora_agenda, hora_meta, situacao, execucoes_agenda, execucoes_manuais, fim_agenda_local, atraso_min\n",
+    "FROM sla_diario ORDER BY dia DESC\n"
+   ]
+  },
+  {
+   "name": "ds_pipeline",
+   "displayName": "Updates do pipeline",
+   "queryLines": [
+    "SELECT date_format(inicio_local, 'yyyy-MM-dd HH:mm') AS update_local, round(espera_s / 60, 2) AS espera_min, duracao_min,\n",
+    "  resultado, refresh_completo\n",
+    "FROM atualizacoes_pipeline WHERE pipeline = 'pos_venda_carga_silver_lakeflow' ORDER BY update_local\n"
+   ]
+  },
+  {
+   "name": "ds_matriz",
+   "displayName": "Matriz por tarefa",
+   "queryLines": [
+    "SELECT ordem, tarefa, mediana_min, p95_min, ultima_situacao, sintoma_falha, acao_falha, sintoma_lentidao, acao_lentidao, referencia\n",
+    "FROM matriz_tarefas ORDER BY ordem\n"
+   ]
+  },
+  {
+   "name": "ds_ultima",
+   "displayName": "Última execução por job",
+   "queryLines": [
+    "SELECT job, inicio_local, duracao_min, resultado, gatilho, mediana_min, p95_min, acima_mediana_min, hora_agenda,\n",
+    "  CASE WHEN agenda_pausada THEN 'pausada' WHEN hora_agenda IS NULL THEN 'sem agenda' ELSE 'ligada' END AS agenda, hora_meta, atraso_meta_min,\n",
+    "  folga_projetada_min, timeout_min, timeout_sugerido_min, dias_desde_ultima\n",
+    "FROM ultima_execucao ORDER BY inicio_local DESC NULLS LAST\n"
+   ]
+  },
+  {
+   "name": "ds_alerta",
+   "displayName": "Ocorrências para o alerta",
+   "queryLines": [
+    "SELECT tipo_ocorrencia, job, tarefa, quando_local, detalhe, acao FROM alerta_sustentacao ORDER BY quando_local DESC\n"
+   ]
+  }
+ ],
+ "pages": [
+  {
+   "name": "sustentacao",
+   "displayName": "Sustentação",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layoutVersion": "GRID_V1",
+   "layout": [
+    {
+     "widget": {
+      "name": "titulo",
+      "multilineTextboxSpec": {
+       "lines": [
+        "## Sustentação · tempo de execução da carga diária"
+       ]
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 1
+     }
+    },
+    {
+     "widget": {
+      "name": "subtitulo",
+      "multilineTextboxSpec": {
+       "lines": [
+        "Execuções, tarefas e updates do pipeline a partir de `system.lakeflow`. Linha de base: mediana e p95 das últimas 20 execuções com sucesso (mínimo 5). Desvio: acima do p95 ou de 1.5 vez a mediana. Meta: a carga termina até 06:15 (horário de Brasília), antes da avaliação do DQX Studio às 06:30. **Histórico curto:** as agendas estão pausadas e as execuções foram manuais, em horários variados e com intervalos de 1 a 184 dias; trate a base como indicativa."
+       ]
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 1,
+      "width": 12,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "k_execucoes",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_resumo",
+         "fields": [
+          {
+           "name": "execucoes_carga",
+           "expression": "`execucoes_carga`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "execucoes_carga",
+         "displayName": "Execuções da carga"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Execuções da carga"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 3,
+      "width": 2,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "k_mediana",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_resumo",
+         "fields": [
+          {
+           "name": "mediana_min",
+           "expression": "`mediana_min`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "mediana_min",
+         "displayName": "Mediana da carga (min)",
+         "format": {
+          "type": "number",
+          "decimalPlaces": {
+           "type": "max",
+           "places": 1
+          }
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Mediana da carga (min)"
+       }
+      }
+     },
+     "position": {
+      "x": 2,
+      "y": 3,
+      "width": 2,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "k_p95",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_resumo",
+         "fields": [
+          {
+           "name": "p95_min",
+           "expression": "`p95_min`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "p95_min",
+         "displayName": "p95 da carga (min)",
+         "format": {
+          "type": "number",
+          "decimalPlaces": {
+           "type": "max",
+           "places": 1
+          }
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "p95 da carga (min)"
+       }
+      }
+     },
+     "position": {
+      "x": 4,
+      "y": 3,
+      "width": 2,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "k_folga",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_resumo",
+         "fields": [
+          {
+           "name": "folga_projetada_min",
+           "expression": "`folga_projetada_min`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "folga_projetada_min",
+         "displayName": "Folga projetada até 06:15 (min)",
+         "format": {
+          "type": "number",
+          "decimalPlaces": {
+           "type": "max",
+           "places": 1
+          }
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Folga projetada até 06:15 (min)",
+        "showDescription": true,
+        "description": "Meta menos a hora da agenda menos o p95. Vale para quando a agenda for ligada."
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 3,
+      "width": 2,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "k_desvios",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_resumo",
+         "fields": [
+          {
+           "name": "desvios_30d",
+           "expression": "`desvios_30d`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "desvios_30d",
+         "displayName": "Desvios em 30 dias"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Desvios em 30 dias"
+       }
+      }
+     },
+     "position": {
+      "x": 8,
+      "y": 3,
+      "width": 2,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "k_alerta",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_resumo",
+         "fields": [
+          {
+           "name": "ocorrencias_alerta",
+           "expression": "`ocorrencias_alerta`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "ocorrencias_alerta",
+         "displayName": "Ocorrências para o alerta"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Ocorrências para o alerta",
+        "showDescription": true,
+        "description": "SLA estourado hoje ou desvio da carga nas últimas 24 h, 60 s ou mais acima do limite e sem ser volume. É o que o alerta das 06:20 avisa."
+       }
+      }
+     },
+     "position": {
+      "x": 10,
+      "y": 3,
+      "width": 2,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "g_tarefas",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_tarefas",
+         "fields": [
+          {
+           "name": "execucao",
+           "expression": "`execucao`"
+          },
+          {
+           "name": "sum(duracao_min)",
+           "expression": "SUM(`duracao_min`)"
+          },
+          {
+           "name": "tarefa",
+           "expression": "`tarefa`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "execucao",
+         "scale": {
+          "type": "categorical",
+          "sort": {
+           "by": "alphabetical"
+          }
+         },
+         "displayName": "Execução (início, horário de Brasília)"
+        },
+        "y": {
+         "fieldName": "sum(duracao_min)",
+         "scale": {
+          "type": "quantitative"
+         },
+         "displayName": "Minutos",
+         "format": {
+          "type": "number",
+          "decimalPlaces": {
+           "type": "max",
+           "places": 1
+          }
+         }
+        },
+        "color": {
+         "fieldName": "tarefa",
+         "scale": {
+          "type": "categorical"
+         },
+         "displayName": "Tarefa"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Duração por tarefa em cada execução da carga",
+        "showDescription": true,
+        "description": "Barras empilhadas: cada cor é uma tarefa. Tarefas puladas (SKIPPED) ficam de fora."
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 6,
+      "width": 12,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "t_base",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_base",
+         "fields": [
+          {
+           "name": "tipo",
+           "expression": "`tipo`"
+          },
+          {
+           "name": "tarefa",
+           "expression": "`tarefa`"
+          },
+          {
+           "name": "execucoes_base",
+           "expression": "`execucoes_base`"
+          },
+          {
+           "name": "mediana_min",
+           "expression": "`mediana_min`"
+          },
+          {
+           "name": "p95_min",
+           "expression": "`p95_min`"
+          },
+          {
+           "name": "limite_min",
+           "expression": "`limite_min`"
+          },
+          {
+           "name": "mediana_setup_s",
+           "expression": "`mediana_setup_s`"
+          },
+          {
+           "name": "mediana_execucao_s",
+           "expression": "`mediana_execucao_s`"
+          },
+          {
+           "name": "base_vale",
+           "expression": "`base_vale`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "tipo",
+          "displayName": "Tipo"
+         },
+         {
+          "fieldName": "tarefa",
+          "displayName": "Tarefa"
+         },
+         {
+          "fieldName": "execucoes_base",
+          "displayName": "Execuções"
+         },
+         {
+          "fieldName": "mediana_min",
+          "displayName": "Mediana (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "p95_min",
+          "displayName": "p95 (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "limite_min",
+          "displayName": "Limite de desvio (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "mediana_setup_s",
+          "displayName": "Setup mediano (s)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "mediana_execucao_s",
+          "displayName": "Execução mediana (s)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "base_vale",
+          "displayName": "Base vale?"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Linha de base",
+        "showDescription": true,
+        "description": "Setup = subida da computação; execução = o código. Separar os dois mostra se a demora é espera ou trabalho."
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 12,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "g_volume",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_volume",
+         "fields": [
+          {
+           "name": "eventos_gravados",
+           "expression": "`eventos_gravados`"
+          },
+          {
+           "name": "duracao_min",
+           "expression": "`duracao_min`"
+          },
+          {
+           "name": "intervalo",
+           "expression": "`intervalo`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "scatter",
+       "encodings": {
+        "x": {
+         "fieldName": "eventos_gravados",
+         "scale": {
+          "type": "quantitative"
+         },
+         "displayName": "Eventos gravados no bronze",
+         "format": {
+          "type": "number",
+          "abbreviation": "compact",
+          "decimalPlaces": {
+           "type": "max",
+           "places": 1
+          }
+         }
+        },
+        "y": {
+         "fieldName": "duracao_min",
+         "scale": {
+          "type": "quantitative"
+         },
+         "displayName": "Duração (min)",
+         "format": {
+          "type": "number",
+          "decimalPlaces": {
+           "type": "max",
+           "places": 1
+          }
+         }
+        },
+        "color": {
+         "fieldName": "intervalo",
+         "scale": {
+          "type": "categorical"
+         },
+         "displayName": "Intervalo"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Volume × duração da carga",
+        "showDescription": true,
+        "description": "Cada ponto é uma execução com sucesso. Se a duração não sobe com o volume, o tempo é fixo (setup e subida do pipeline)."
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 12,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "t_desvios",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_desvios",
+         "fields": [
+          {
+           "name": "inicio_local",
+           "expression": "`inicio_local`"
+          },
+          {
+           "name": "tipo",
+           "expression": "`tipo`"
+          },
+          {
+           "name": "tarefa",
+           "expression": "`tarefa`"
+          },
+          {
+           "name": "duracao_min",
+           "expression": "`duracao_min`"
+          },
+          {
+           "name": "mediana_min",
+           "expression": "`mediana_min`"
+          },
+          {
+           "name": "p95_min",
+           "expression": "`p95_min`"
+          },
+          {
+           "name": "excesso_min",
+           "expression": "`excesso_min`"
+          },
+          {
+           "name": "acima_mediana_pct",
+           "expression": "`acima_mediana_pct`"
+          },
+          {
+           "name": "execucoes_base",
+           "expression": "`execucoes_base`"
+          },
+          {
+           "name": "provavel_causa",
+           "expression": "`provavel_causa`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "inicio_local",
+          "displayName": "Início"
+         },
+         {
+          "fieldName": "tipo",
+          "displayName": "Tipo"
+         },
+         {
+          "fieldName": "tarefa",
+          "displayName": "Tarefa"
+         },
+         {
+          "fieldName": "duracao_min",
+          "displayName": "Duração (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "mediana_min",
+          "displayName": "Mediana (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "p95_min",
+          "displayName": "p95 (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "excesso_min",
+          "displayName": "Passou do limite (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "acima_mediana_pct",
+          "displayName": "Acima da mediana (%)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "execucoes_base",
+          "displayName": "Execuções na base"
+         },
+         {
+          "fieldName": "provavel_causa",
+          "displayName": "Causa provável"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Desvios",
+        "showDescription": true,
+        "description": "Base móvel: as 20 execuções com sucesso anteriores a cada uma."
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 19,
+      "width": 12,
+      "height": 5
+     }
+    },
+    {
+     "widget": {
+      "name": "t_sla",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_sla",
+         "fields": [
+          {
+           "name": "dia",
+           "expression": "`dia`"
+          },
+          {
+           "name": "situacao",
+           "expression": "`situacao`"
+          },
+          {
+           "name": "hora_agenda",
+           "expression": "`hora_agenda`"
+          },
+          {
+           "name": "hora_meta",
+           "expression": "`hora_meta`"
+          },
+          {
+           "name": "execucoes_agenda",
+           "expression": "`execucoes_agenda`"
+          },
+          {
+           "name": "execucoes_manuais",
+           "expression": "`execucoes_manuais`"
+          },
+          {
+           "name": "fim_agenda_local",
+           "expression": "`fim_agenda_local`"
+          },
+          {
+           "name": "atraso_min",
+           "expression": "`atraso_min`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "dia",
+          "displayName": "Dia"
+         },
+         {
+          "fieldName": "situacao",
+          "displayName": "Situação"
+         },
+         {
+          "fieldName": "hora_agenda",
+          "displayName": "Agenda"
+         },
+         {
+          "fieldName": "hora_meta",
+          "displayName": "Meta"
+         },
+         {
+          "fieldName": "execucoes_agenda",
+          "displayName": "Da agenda"
+         },
+         {
+          "fieldName": "execucoes_manuais",
+          "displayName": "Manuais"
+         },
+         {
+          "fieldName": "fim_agenda_local",
+          "displayName": "Fim (agenda)"
+         },
+         {
+          "fieldName": "atraso_min",
+          "displayName": "Atraso (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "SLA dia a dia",
+        "showDescription": true,
+        "description": "Só a execução da agenda conta para o SLA. Com a agenda pausada, a situação é 'agenda pausada'."
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 24,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "g_pipeline",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_pipeline",
+         "fields": [
+          {
+           "name": "update_local",
+           "expression": "`update_local`"
+          },
+          {
+           "name": "sum(espera_min)",
+           "expression": "SUM(`espera_min`)"
+          },
+          {
+           "name": "sum(duracao_min)",
+           "expression": "SUM(`duracao_min`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "update_local",
+         "scale": {
+          "type": "categorical",
+          "sort": {
+           "by": "alphabetical"
+          }
+         },
+         "displayName": "Update (início)"
+        },
+        "y": {
+         "scale": {
+          "type": "quantitative"
+         },
+         "format": {
+          "type": "number",
+          "decimalPlaces": {
+           "type": "max",
+           "places": 1
+          }
+         },
+         "fields": [
+          {
+           "fieldName": "sum(espera_min)",
+           "displayName": "Espera antes do update"
+          },
+          {
+           "fieldName": "sum(duracao_min)",
+           "displayName": "Update"
+          }
+         ]
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Pipeline da silver: espera e update",
+        "showDescription": true,
+        "description": "Espera = da tarefa silver_lakeflow começar até o update começar (subida da computação do pipeline)."
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 24,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "t_matriz",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_matriz",
+         "fields": [
+          {
+           "name": "ordem",
+           "expression": "`ordem`"
+          },
+          {
+           "name": "tarefa",
+           "expression": "`tarefa`"
+          },
+          {
+           "name": "mediana_min",
+           "expression": "`mediana_min`"
+          },
+          {
+           "name": "p95_min",
+           "expression": "`p95_min`"
+          },
+          {
+           "name": "ultima_situacao",
+           "expression": "`ultima_situacao`"
+          },
+          {
+           "name": "sintoma_falha",
+           "expression": "`sintoma_falha`"
+          },
+          {
+           "name": "acao_falha",
+           "expression": "`acao_falha`"
+          },
+          {
+           "name": "sintoma_lentidao",
+           "expression": "`sintoma_lentidao`"
+          },
+          {
+           "name": "acao_lentidao",
+           "expression": "`acao_lentidao`"
+          },
+          {
+           "name": "referencia",
+           "expression": "`referencia`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "ordem",
+          "displayName": "#"
+         },
+         {
+          "fieldName": "tarefa",
+          "displayName": "Tarefa"
+         },
+         {
+          "fieldName": "mediana_min",
+          "displayName": "Mediana (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "p95_min",
+          "displayName": "p95 (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "ultima_situacao",
+          "displayName": "Última"
+         },
+         {
+          "fieldName": "sintoma_falha",
+          "displayName": "Sintoma de falha"
+         },
+         {
+          "fieldName": "acao_falha",
+          "displayName": "Ação na falha"
+         },
+         {
+          "fieldName": "sintoma_lentidao",
+          "displayName": "Lentidão: o que é normal"
+         },
+         {
+          "fieldName": "acao_lentidao",
+          "displayName": "Ação na lentidão"
+         },
+         {
+          "fieldName": "referencia",
+          "displayName": "Referência"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Matriz de resiliência por tarefa (P28)"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 31,
+      "width": 12,
+      "height": 8
+     }
+    },
+    {
+     "widget": {
+      "name": "t_ultima",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_ultima",
+         "fields": [
+          {
+           "name": "job",
+           "expression": "`job`"
+          },
+          {
+           "name": "inicio_local",
+           "expression": "`inicio_local`"
+          },
+          {
+           "name": "duracao_min",
+           "expression": "`duracao_min`"
+          },
+          {
+           "name": "resultado",
+           "expression": "`resultado`"
+          },
+          {
+           "name": "gatilho",
+           "expression": "`gatilho`"
+          },
+          {
+           "name": "mediana_min",
+           "expression": "`mediana_min`"
+          },
+          {
+           "name": "acima_mediana_min",
+           "expression": "`acima_mediana_min`"
+          },
+          {
+           "name": "agenda",
+           "expression": "`agenda`"
+          },
+          {
+           "name": "hora_meta",
+           "expression": "`hora_meta`"
+          },
+          {
+           "name": "atraso_meta_min",
+           "expression": "`atraso_meta_min`"
+          },
+          {
+           "name": "folga_projetada_min",
+           "expression": "`folga_projetada_min`"
+          },
+          {
+           "name": "timeout_min",
+           "expression": "`timeout_min`"
+          },
+          {
+           "name": "timeout_sugerido_min",
+           "expression": "`timeout_sugerido_min`"
+          },
+          {
+           "name": "dias_desde_ultima",
+           "expression": "`dias_desde_ultima`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "job",
+          "displayName": "Job"
+         },
+         {
+          "fieldName": "inicio_local",
+          "displayName": "Última execução"
+         },
+         {
+          "fieldName": "duracao_min",
+          "displayName": "Duração (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "resultado",
+          "displayName": "Resultado"
+         },
+         {
+          "fieldName": "gatilho",
+          "displayName": "Gatilho"
+         },
+         {
+          "fieldName": "mediana_min",
+          "displayName": "Mediana (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "acima_mediana_min",
+          "displayName": "Acima da mediana (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "agenda",
+          "displayName": "Agenda"
+         },
+         {
+          "fieldName": "hora_meta",
+          "displayName": "Meta"
+         },
+         {
+          "fieldName": "atraso_meta_min",
+          "displayName": "Atraso na meta (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "folga_projetada_min",
+          "displayName": "Folga projetada (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "timeout_min",
+          "displayName": "Timeout (min)",
+          "format": {
+           "type": "number",
+           "decimalPlaces": {
+            "type": "max",
+            "places": 1
+           }
+          }
+         },
+         {
+          "fieldName": "timeout_sugerido_min",
+          "displayName": "Timeout sugerido (min)"
+         },
+         {
+          "fieldName": "dias_desde_ultima",
+          "displayName": "Dias desde a última"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Última execução de cada job do projeto",
+        "showDescription": true,
+        "description": "Timeout sugerido = 2 × p95 (regra PLT03 da conformidade). Atraso na meta só para execução da agenda."
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 39,
+      "width": 12,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "t_alerta",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_alerta",
+         "fields": [
+          {
+           "name": "tipo_ocorrencia",
+           "expression": "`tipo_ocorrencia`"
+          },
+          {
+           "name": "job",
+           "expression": "`job`"
+          },
+          {
+           "name": "tarefa",
+           "expression": "`tarefa`"
+          },
+          {
+           "name": "quando_local",
+           "expression": "`quando_local`"
+          },
+          {
+           "name": "detalhe",
+           "expression": "`detalhe`"
+          },
+          {
+           "name": "acao",
+           "expression": "`acao`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "tipo_ocorrencia",
+          "displayName": "Tipo"
+         },
+         {
+          "fieldName": "job",
+          "displayName": "Job"
+         },
+         {
+          "fieldName": "tarefa",
+          "displayName": "Tarefa"
+         },
+         {
+          "fieldName": "quando_local",
+          "displayName": "Quando"
+         },
+         {
+          "fieldName": "detalhe",
+          "displayName": "Detalhe"
+         },
+         {
+          "fieldName": "acao",
+          "displayName": "Ação"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "O que o alerta avisaria agora",
+        "showDescription": true,
+        "description": "Vazio = nada a fazer."
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 45,
+      "width": 12,
+      "height": 4
+     }
+    }
+   ]
+  }
+ ],
+ "uiSettings": {
+  "theme": {
+   "canvasBackgroundColor": {
+    "light": "#FAFAFA",
+    "dark": "#1F272D"
+   },
+   "widgetBackgroundColor": {
+    "light": "#FFFFFF",
+    "dark": "#11171C"
+   },
+   "widgetBorderColor": {
+    "light": "#FFFFFF",
+    "dark": "#11171C"
+   },
+   "fontColor": {
+    "light": "#11171C",
+    "dark": "#E8ECF0"
+   },
+   "selectionColor": {
+    "light": "#2272B4",
+    "dark": "#8ACAFF"
+   },
+   "visualizationColors": [
+    "#0072B2",
+    "#E69F00",
+    "#009E73",
+    "#CC79A7",
+    "#D55E00",
+    "#56B4E9",
+    "#F0E442"
+   ],
+   "widgetHeaderAlignment": "LEFT"
+  }
+ }
+}

@@ -17,6 +17,84 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 24/11/2026
 
+### Manual de sustentação (docs/07) e etapa E8 do spec
+- **O que mudou:**
+  - **Manual novo:** [`07_SUSTENTACAO.md`](07_SUSTENTACAO.md) tem 12 partes:
+    - o catálogo do que roda, com a cadeia carga 05:00 → Studio 06:30 → painéis e Genie;
+    - SLAs e metas, onde olhar e a rotina diária, semanal e mensal;
+    - 12 runbooks (sintoma → onde ver → diagnóstico → ação → como confirmar);
+    - reprocessamento, mudança e deploy com rollback, e o RACI;
+    - capacidade e custo, indicadores e o modelo de incidente sem culpa;
+    - o que muda em produção.
+
+    As metas da base curta estão marcadas como provisórias.
+  - **Ligações:** a P40 e o M13 apontam para o manual.
+  - **Spec:** ganhou a etapa E8 (sustentação, antes de ligar as agendas), com o critério de aceite e as tarefas T8.1 a
+    T8.4. São 41 tarefas no total.
+  - **Guia 06:** ganhou a etapa 8.
+  - **Prompt do Copilot:** passou a ir até a E8.
+  - **Onde está cada resposta:** o AGENTS.md ganhou "Algo falhou ou está lento → docs/07_SUSTENTACAO.md".
+  - **READMEs:** o `docs/README.md` e o README citam o manual.
+- **Por quê:** pedido do usuário. As visões de sustentação dizem o que aconteceu; o manual diz o que fazer, quem faz e
+  como confirmar.
+- **Onde:** `docs/07_SUSTENTACAO.md`, `docs/04_FRAMEWORK.md`, `docs/02_PLAYBOOK.md`, `docs/06_GUIA_BASE_BRUTA.md`,
+  `specs/aplicar-base-bruta/SPEC.md`, `specs/aplicar-base-bruta/modelos/TAREFAS.md`,
+  `.github/prompts/aplicar-base-bruta.prompt.md`, `AGENTS.md`, `docs/README.md`, `README.md`.
+- **Conferência:**
+  - os links relativos e as âncoras dos documentos alterados resolvem (script de conferência, 12 arquivos);
+  - o modelo tem 41 tarefas;
+  - os números do manual vêm das tabelas de sistema e das visões de 24/11. Os da linha de base estão marcados como
+    provisórios.
+- **Docs atualizadas:** framework (P40, P39) · playbook (M13) · guia 06 (etapa 8) · spec (E8) · `docs/README.md` ·
+  README · AGENTS.md
+
+### Sustentação: tempo de execução dos jobs e do pipeline diários (P40)
+- **O que mudou:**
+  - **Gerador novo:** `sustentacao/gerar_sustentacao.py` gera o schema `pos_venda.sustentacao`, com 14 visões:
+    - execuções por job, tarefa e update do pipeline (`system.lakeflow.*_timeline`);
+    - volume por dia e por execução (bronze e fato);
+    - linha de base: mediana e p95 das últimas 20 execuções com sucesso, com mínimo de 5;
+    - desvios: acima do p95 ou de 1,5 vez a mediana, com o excesso e a causa provável;
+    - SLA com meta às 06:15, a última execução de cada job, a matriz de resiliência por tarefa e o que o alerta avisa.
+  - **Bundle `sustentacao/`:** o painel AI/BI "pos_venda · Sustentação", com a página "Sustentação", e o alerta SQL
+    diário das 06:20, pausado, com 1 disparo por dia (PLT06).
+  - **Conformidade:** o schema `sustentacao` entrou em `CAMADAS` como "apoio".
+  - **Reaproveitado, sem duplicar:** a atribuição de jobs e pipelines (`finops.config_atribuicao`), o custo
+    (`finops.uso_jobs_diario`), o frescor (USO01) e o timeout (PLT03).
+- **Por quê:** pedido do usuário. Para a sustentação em produção faltavam a visão por tarefa e por pipeline, a linha
+  de base, os desvios, o SLA, o volume, o alerta e o painel.
+- **Onde:** `sustentacao/` (gerador, SQL, painel, bundle e README), `conformidade/gerar_conformidade.py` e
+  `conformidade.sql`, `conformidade/README.md`, `docs/` (trilha, playbook, lições, framework e README),
+  `README.md`, `AGENTS.md`.
+- **Conferência:**
+  - **`testar`:** antes de criar, rodou sem criar nada as 14 visões e os 10 conjuntos do painel.
+  - **`aplicar`:** criou as 14 visões. Rodado de novo depois do piso do alerta, recriou só as 2 que mudaram.
+  - **`conferir`:** passou nas 13 checagens:
+    - 186 execuções de job, 249 de tarefa e 13 updates, iguais às tabelas de sistema;
+    - bronze de 1.718.895 eventos e fato de 34.026.469 linhas, iguais por dia, por execução e nas tabelas;
+    - as 7 medianas por tarefa iguais ao cálculo direto;
+    - 7 de 7 tarefas na matriz;
+    - 0 colunas sem descrição;
+    - os 10 conjuntos do painel respondem com o catálogo e o schema do bundle.
+  - **Linha de base:** carga com mediana de 14,53 min e p95 de 16,05 min; folga projetada de 59,0 min até 06:15;
+    timeout sugerido de 33 min (provisórios, 12 execuções manuais).
+  - **Desvios:** 50, dos quais 40 do task runner do DQX Studio e 10 da carga.
+  - **Alerta:** na primeira conferência, avisaria 3 vezes por ruído, com segundos acima de um p95 de base curta. Com o
+    piso de 60 s e sem desvio explicado por volume (L92), avisa 0 agora e 2 em 30 dias:
+    - o job inteiro 67 s acima do limite, com o mesmo volume;
+    - a fato em 22/11, 166 s acima, por espera de computação.
+  - **Deploy:** `databricks bundle deploy` criou o painel e o alerta (2 criados, 0 apagados). O painel está publicado e
+    o alerta está `PAUSED`, às 06:20, America/Sao_Paulo, 1 disparo por dia. O painel não foi aberto no navegador: o
+    workspace pediu login. Os conjuntos foram conferidos pela API.
+  - **Conformidade:**
+    - `alertas` leu 6 alertas e `aplicar` recriou `config_camadas` e `recursos`;
+    - as pendências por regra ficaram iguais antes e depois (nenhuma nova);
+    - `sustentacao` entrou como "apoio", e as 14 visões só aparecem em EST04 (dono pessoa, como todo ativo do Free
+      Edition);
+    - `conferir` passou nas 9 checagens, com 9.966 verificações e 370 pendências.
+- **Docs atualizadas:** trilha (fase 27) · playbook (módulo M13, 2 linhas na matriz, passo 20 do roteiro) · lições
+  (L89 a L92) · framework (P40) · `docs/README.md` · README · AGENTS.md · README da conformidade
+
 ### Pendências executadas: DQX como código, correções L86 e L87, Genie 29/29 e Power BI 21/21
 - **O que mudou:**
   - **DQX como código (trilha A):** rodou no workspace. O job passou a se chamar `pos_venda_dqx_codigo`, com tags

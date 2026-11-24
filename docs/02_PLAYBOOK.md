@@ -1,6 +1,6 @@
 # Playbook · domínio de dados com qualidade, governança e IA no Databricks
 
-> Documento incremental. Última atualização: **23/11/2026**. Cada módulo tem um **critério de saída** verificável;
+> Documento incremental. Última atualização: **24/11/2026**. Cada módulo tem um **critério de saída** verificável;
 > quando o projeto mudar, atualize o módulo afetado e registre no [CHANGELOG](CHANGELOG.md).
 
 Este playbook transforma o que foi feito no pos_venda num **framework reaproveitável**. Ele serve para duas coisas:
@@ -262,6 +262,37 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
   - checagem de cluster clássico que volta vazia no Free Edition (L81);
   - a sonda usa `DESCRIBE QUERY`: pega a view que não resolve, mas não um erro que só aparece ao executar.
 
+### M13 · Sustentação: tempo de execução, linha de base e SLA
+
+- **Quando usar:** quando um job diário vai para produção e alguém depende da hora em que ele termina, ou quando
+  precisa responder "por que a carga demorou hoje?".
+- **Passos:**
+  1. Junte as fatias de hora em hora das tabelas `system.lakeflow.*_timeline` por `run_id`, com o resultado e as
+     durações da última fatia (L90). Separe setup de execução (L89).
+  2. Ligue jobs e pipelines ao projeto pelas regras que já existem (`finops.config_atribuicao`), sem lista nova.
+  3. Defina a linha de base (mediana e p95 das últimas N execuções com sucesso, com um mínimo para valer) e o desvio
+     (acima do p95 ou de 1,5 vez a mediana das N anteriores).
+  4. Ligue o volume de cada execução pelo momento da gravação, para separar lentidão de volume.
+  5. Ponha a hora meta (SLA) e meça só a execução da agenda. Com a agenda pausada, use a folga projetada (L91).
+  6. Escreva o sintoma e a ação de cada tarefa, ligados à matriz de resiliência.
+  7. Gere o painel e o alerta. O alerta nasce pausado e dispara no máximo 4 vezes por dia (PLT06).
+  8. `testar` antes de criar; depois `aplicar` e `conferir`.
+- **Modelo:** `sustentacao/gerar_sustentacao.py`, `sustentacao/README.md` e o
+  [manual de sustentação](07_SUSTENTACAO.md) (rotina, runbooks, reprocessamento, RACI).
+- **Critério de saída:**
+  - cada visão responde e toda coluna tem descrição;
+  - execuções de job e de tarefa e updates do pipeline batem com as tabelas de sistema;
+  - o volume por execução soma o total do bronze e da fato;
+  - a mediana de cada tarefa é igual ao cálculo direto;
+  - toda tarefa tem linha na matriz;
+  - o alerta está implantado e pausado.
+- **Armadilhas:**
+  - contar fatias de hora como execuções (L90);
+  - chamar de lentidão a espera por computação ou o backfill (L89);
+  - medir o SLA em execução manual (L91);
+  - linha de base com tarefas `SKIPPED`, que têm duração 0;
+  - alerta que dispara por segundos acima de um p95 de base curta: ponha um piso no alerta (L92).
+
 ---
 
 ## Matriz de resiliência
@@ -285,6 +316,8 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
 | App do DQX Studio recém-ligado | as submissões do replay voltam HTTP 502, com o app em RUNNING | esperar "Application startup complete" em `databricks apps logs dqx-studio` (o app reinstala os pacotes ao subir) e rodar de novo (L85) |
 | View quebrada por mudança em tabela de sistema ou em outro schema | `DESCRIBE QUERY` falha; a regra USO03 da conformidade cai | `gerar_conformidade.py registrar` lista as quebradas em `sonda_views`; recriar a partir do código ou apagar (L76) |
 | Alerta SQL de hora em hora | warehouse acorda o dia todo; custo SQL "sem dono" | `databricks alerts-v2 list-alerts`; espaçar a agenda (regra PLT06, L79) |
+| Carga diária atrasada para a meta das 06:15 | `sla_diario` com "atrasada", "falhou" ou "sem execução da agenda"; o alerta de sustentação dispara às 06:20 | ver em `matriz_tarefas` a tarefa que travou, seguir a ação dela e avisar quem usa a foto do dia (o DQX Studio avalia às 06:30) |
+| Tarefa acima do normal | linha em `desvios` com a causa provável | espera por computação (setup): nada a corrigir no código; volume maior: conferir `volume_execucao`; lentidão com o mesmo volume: ler o log ou o event log da tarefa (L89) |
 | Projeto Power BI não abre no Desktop | erro de TMDL/PBIR com arquivo e linha | corrigir em `gerar_powerbi.py` (não no arquivo gerado), gerar de novo e rodar a conferência contra os esquemas oficiais |
 
 ---
@@ -315,6 +348,7 @@ Ordem para recriar tudo do zero num workspace (perfil `dbx-workshop`). Cada pass
 | 17 | Ligar as agendas (quando decidir) | `databricks bundle deploy -t dev --var="carga_schedule_status=UNPAUSED"` e `python3 registro_studio.py ligar` | job UNPAUSED e 12 agendamentos ativos |
 | 18 | Regras de negócio (BDD) | `cd regras && .venv/bin/python funcoes.py && .venv/bin/behave && .venv/bin/python paridade.py` (antes do passo 3 numa reconstrução: o job depende das funções) | 5 funções, 36/36 cenários, paridade 100% |
 | 19 | Prontidão com histórico (opcional) | `cd governanca/ontologia_readiness && python3 implantar_app.py && python3 avaliar.py rodar base` | `history_ready`, nota gravada |
+| 20 | Sustentação | `python3 sustentacao/gerar_sustentacao.py testar && python3 sustentacao/gerar_sustentacao.py aplicar && python3 sustentacao/gerar_sustentacao.py conferir`; depois `cd sustentacao && databricks bundle deploy -t dev` | conferência ok; painel publicado; alerta pausado |
 
 Todos os comandos `databricks` levam `--profile dbx-workshop`.
 

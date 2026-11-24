@@ -13,7 +13,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 
 1. [README.md](README.md): o mapa do repositório.
 2. [docs/README.md](docs/README.md): a situação de cada bloco e como manter a documentação.
-3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 39 práticas (`P##`), com a origem, como aplicamos e por quê.
+3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 40 práticas (`P##`), com a origem, como aplicamos e por quê.
 4. [docs/03_LICOES_APRENDIDAS.md](docs/03_LICOES_APRENDIDAS.md): as armadilhas (`L##`). Leia antes de mudar código.
 5. [docs/02_PLAYBOOK.md](docs/02_PLAYBOOK.md): o passo a passo, os critérios de saída e a matriz de resiliência.
 6. [docs/CHANGELOG.md](docs/CHANGELOG.md): o que mudou e como foi conferido, do mais recente para o mais antigo.
@@ -30,7 +30,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | DQX sem o app (sem privilégio no catálogo) ou com o app | trilha A: [dqx_codigo/](dqx_codigo/README.md); trilha B: [dqx_studio/](dqx_studio/README.md); escolha pela etapa 0 do guia 06 (P38) |
 | Por que foi feito assim? | Framework (`P##`) e [lições](docs/03_LICOES_APRENDIDAS.md) (`L##`); a história na [trilha](docs/01_TRILHA_DE_APRENDIZAGEM.md) |
 | Qual é o estado atual e os números? | Tabela "Situação" de [docs/README.md](docs/README.md), [CHANGELOG](docs/CHANGELOG.md) e [inventário](docs/INVENTARIO.md) |
-| Algo falhou (cota, token, app parado, view sem tags) | Matriz de resiliência do [playbook](docs/02_PLAYBOOK.md) e as lições |
+| Algo falhou ou está lento (cota, token, app parado, view sem tags, carga atrasada) | [docs/07_SUSTENTACAO.md](docs/07_SUSTENTACAO.md) (runbooks), a matriz de resiliência do [playbook](docs/02_PLAYBOOK.md) e as lições |
 | Regra de cálculo (faixa, multa, juros, total, CPF) | [regras/README.md](regras/README.md), `regras/funcoes.py` e os cenários em `regras/features/` |
 | Métrica, KPI ou camada semântica | `governanca/ontologia.py` e `governanca/gerar_ontologia_sql.py` (metric views) |
 | Genie | `governanca/genie.py` e [governanca/genie/scanner/TRIAGEM.md](governanca/genie/scanner/TRIAGEM.md) |
@@ -38,6 +38,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Conformidade: descrição, tags governadas, dado pessoal, chave, certificação, jobs e alertas; views quebradas; o que fazer com a observabilidade que já existe | [conformidade/README.md](conformidade/README.md), [AVALIACAO_OBSERVABILIDADE.md](conformidade/AVALIACAO_OBSERVABILIDADE.md) e as visões de `pos_venda.conformidade` (`boas_praticas_dados`, `pendencias`, `squad_por_schema`, `plataforma_por_catalogo`, `acoes_observabilidade`) |
 | Qualidade: quais incidentes existem, que regra cada um dispara, por que uma regra está em zero | [dqx_studio/demo/ROTEIRO.md](dqx_studio/demo/ROTEIRO.md) e os incidentes I01 a I34 em `carga_diaria/gerar_carga.py` (`JANELAS` e `mod`) |
 | Custo, uso, FinOps, FOCUS, quanto custa cada funcionalidade, custo de um squad ou da plataforma | [finops/README.md](finops/README.md) e as visões de `pos_venda.finops` (`focus_custo_uso`, `custo_por_funcionalidade`, `plataforma_*`, `squad_*`, `uso_*`, `boas_praticas_custo`) |
+| Tempo de execução, carga lenta ou atrasada, SLA, linha de base, desvio, volume por execução, o que fazer quando uma tarefa falha | [sustentacao/README.md](sustentacao/README.md) e as visões de `pos_venda.sustentacao` (`execucoes_tarefa`, `linha_base`, `desvios`, `sla_diario`, `volume_execucao`, `matriz_tarefas`); o custo das execuções continua em `pos_venda.finops.uso_jobs_diario` |
 
 Diga de onde tirou a resposta (arquivo, `P##`, `L##` ou entrada do CHANGELOG). Se o repositório não responde, diga
 isso; não invente número, prática nem fonte.
@@ -90,6 +91,7 @@ Não edite um arquivo gerado: mude a fonte e gere de novo.
 | `docs/INVENTARIO.md` | `docs/gerar_inventario.py` |
 | `finops/finops.sql`, `finops/ativos.json`, `finops/conferencia.json` e as visões de `pos_venda.finops` | `finops/gerar_finops.py` (regras de atribuição na lista `REGRAS`) |
 | `conformidade/conformidade.sql`, `politicas_tags.json`, `alertas.json`, `conferencia.json` e os objetos de `pos_venda.conformidade` | `conformidade/gerar_conformidade.py` (regras em `REGRAS`, papel dos schemas em `CAMADAS`, avaliação em `ACOES`) |
+| `sustentacao/sustentacao.sql`, `sustentacao/src/pos_venda_sustentacao.lvdash.json`, `sustentacao/resources/sustentacao.yml`, `sustentacao/conferencia.json` e as visões de `pos_venda.sustentacao` | `sustentacao/gerar_sustentacao.py` (meta em `SLA`, matriz em `TAREFAS`, parâmetros no topo) |
 | `governanca/auditoria_metadados.json`, `governanca/semantica_aplicada.json`, `governanca/rely/*.json` | `auditar_metadados.py`, `aplicar_semantica.py`, `aplicar_rely.py` |
 
 Logs (`*.log`) e resultados de execução (`dqx_studio/regras/resultados/`) são evidência: não edite, não apague.

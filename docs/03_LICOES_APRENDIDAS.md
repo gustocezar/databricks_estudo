@@ -39,6 +39,32 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   minuto. Nesse intervalo, todas as 18 submissões do replay voltaram HTTP 502, e o script terminou como se tivesse
   rodado → antes de submeter, espere "Application startup complete" em `databricks apps logs dqx-studio` e confira
   no log do replay que nenhuma linha diz "erro submeter". (`rodar_ciclos.py`)
+- **L89** A carga diária levou 14,5 min no backfill de 184 dias (1,3 milhão de eventos, 21,5 milhões de linhas na
+  fato) e cerca de 14 min com 1 dia (8 mil eventos). O tempo é quase todo fixo:
+  - 2,5 a 3 min de setup da computação serverless na primeira tarefa de notebook, e de novo na `gold_dimensoes`,
+    depois do pipeline;
+  - cerca de 1,5 min até o update do pipeline começar.
+
+  → Meça setup e execução separados (`setup_duration_seconds`, `execution_duration_seconds`) e o volume de cada
+  execução. Antes de chamar de lentidão, confira se o que subiu foi a espera por computação ou o volume.
+  (`sustentacao/`: `linha_base`, `volume_execucao`, `desvios.provavel_causa`)
+- **L90** Nas tabelas `system.lakeflow.*_timeline`, uma execução que passa da virada da hora vem em mais de uma linha,
+  e só a última traz o resultado. No task runner do DQX Studio, 197 linhas eram 174 execuções → junte por `run_id`,
+  com o menor início, o maior fim e o resultado e as durações da última fatia (`max_by(..., period_end_time)`). Tire
+  da linha de base as tarefas `SKIPPED`, que têm duração 0. (`sustentacao/gerar_sustentacao.py`)
+- **L91** Com a agenda pausada, toda execução da carga é manual (`ONETIME`), em qualquer hora: medir nela o SLA das
+  06:15 daria "atraso" de 14 horas numa execução das 20:41 → o SLA só vale para a execução da agenda (`CRON`). Para
+  saber se a meta cabe antes de ligar a agenda, use a folga projetada: meta − hora da agenda − p95.
+  (`sustentacao`: `sla_diario`, `ultima_execucao`)
+- **L92** Na primeira conferência, o alerta de sustentação teria disparado 3 vezes por ruído. Os três casos:
+  - a silver passou do p95 por 0,1 s;
+  - o job inteiro passou por 15 s;
+  - o `dq_metricas` passou por 6,6 s, numa execução de 14 dias.
+
+  Com poucas execuções, o p95 fica no máximo, e qualquer segundo a mais vira desvio → o desvio continua com a
+  definição (acima do p95 ou de 1,5 vez a mediana) e aparece no painel. O alerta só avisa o que passou do limite por
+  60 s ou mais e não é explicado por volume. Teste o alerta com 30 dias de histórico antes de ligar.
+  (`MIN_EXCESSO_ALERTA_S` em `sustentacao/gerar_sustentacao.py`)
 
 ## Custo e FinOps
 

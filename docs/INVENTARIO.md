@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 24/11/2026 11:01. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 24/11/2026 16:34. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -44,6 +44,7 @@
 | `regras` | `funcoes.py` | Regras de negócio do pós-venda como funções SQL do Unity Catalog (fonte única da regra). |
 | `regras` | `paridade.py` | Paridade: as funções de regra devolvem exatamente o que o pipeline já gravou? |
 | `regras` | `uc.py` | Cliente mínimo da Statement Execution API (SDK do Databricks), usado pelas funções, pelos cenários e pela paridade. |
+| `sustentacao` | `gerar_sustentacao.py` | Sustentação: tempo de execução dos jobs e pipelines diários do pos_venda, no schema pos_venda.sustentacao. |
 
 | Bundle | Arquivo |
 |---|---|
@@ -52,6 +53,7 @@
 | `pos_venda_painel_qualidade` | `dqx_studio/painel/databricks.yml` |
 | `pos_venda_medalhao` | `medalhao/databricks.yml` |
 | `pos_venda_paineis_financeiros` | `paineis_financeiros/databricks.yml` |
+| `pos_venda_sustentacao` | `sustentacao/databricks.yml` |
 
 ## Workspace (Unity Catalog e recursos)
 
@@ -76,6 +78,7 @@
 | `silver` | 0 | 0 | 0 | STREAMING_TABLE 4 |
 | `silver_ldp` | 0 | 0 | 0 | MATERIALIZED_VIEW 1 |
 | `silver_sql` | 1 | 0 | 0 | — |
+| `sustentacao` | 0 | 14 | 0 | — |
 
 ### Painéis AI/BI
 
@@ -84,6 +87,7 @@
 | pos_venda · KPIs financeiros · Analista | `01f1e47bee3a1c5ebd180bfff03034a7` |
 | pos_venda · KPIs financeiros · Diretoria | `01f1e47bee241a5da58e8c357f99d8f5` |
 | pos_venda · Qualidade de dados | `01f1e410f7f419f19ad6d416805a9bb2` |
+| pos_venda · Sustentação | `01f1e83bfd171f2ea51870ef4e8c6899` |
 
 ### Espaços Genie
 
@@ -111,4 +115,4 @@
 
 ## Metadados (última auditoria)
 
-Auditoria de 22/11/2026 16:18: 65 tabelas e views nas camadas principais, 1977 de 1977 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.
+Auditoria de 24/11/2026 10:48: 65 tabelas e views nas camadas principais, 1977 de 1977 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.

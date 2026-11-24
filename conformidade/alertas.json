@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-23",
+ "gerado_em": "2026-11-24",
  "alertas": [
   {
    "id": "250698304652422",
@@ -60,6 +60,18 @@
    "estado": "ACTIVE",
    "warehouse_id": "5f010b8396e591fb",
    "atualizado_em": "2026-07-30 19:54:16"
+  },
+  {
+   "id": "3507795912731880",
+   "nome": "pos_venda · Sustentação: SLA ou desvio da carga",
+   "agenda": "0 20 6 * * ?",
+   "fuso": "America/Sao_Paulo",
+   "pausado": true,
+   "disparos_dia": 1,
+   "descricao": true,
+   "estado": "ACTIVE",
+   "warehouse_id": "5f010b8396e591fb",
+   "atualizado_em": "2026-11-24 19:19:37"
   }
  ]
 }

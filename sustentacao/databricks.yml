@@ -1,0 +1,22 @@
+# Sustentação do pos_venda: painel AI/BI "pos_venda · Sustentação" e o alerta SQL diário de SLA e desvio.
+# Os recursos (resources/sustentacao.yml) e o JSON do painel (src/) são gerados por gerar_sustentacao.py.
+# As visões que o painel e o alerta leem ficam em pos_venda.sustentacao (python3 gerar_sustentacao.py aplicar).
+bundle:
+  name: pos_venda_sustentacao
+
+variables:
+  warehouse_id:
+    description: "SQL warehouse do painel e do alerta (o único do Free Edition)."
+    default: 5f010b8396e591fb
+  alerta_status:
+    description: "Agenda do alerta (06:20, 1 disparo por dia). PAUSED = desligado; UNPAUSED = ligado, junto com a agenda da carga."
+    default: PAUSED
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-15c48c79-7aa2.cloud.databricks.com

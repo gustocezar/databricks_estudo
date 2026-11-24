@@ -29,7 +29,7 @@ Cada passo tem critério de pronto conferível e aprovação humana nos pontos q
 ## 2 · Escopo
 
 **Dentro:**
-- as etapas 0 a 7 do guia 06;
+- as etapas 0 a 8 do guia 06;
 - a qualidade por uma de duas trilhas: **A**, DQX como código, ou **B**, DQX Studio como app;
 - os registros da base: ficha, mapeamento, decisões e tarefas.
 
@@ -87,6 +87,7 @@ Cada passo tem critério de pronto conferível e aprovação humana nos pontos q
 | **E5 · Governança e semântica** | 100% das colunas descritas e com tags; `dado_pessoal` marcado; ontologia sem identificadores e com membro explícito para chave órfã (L87); metric views com início e fechamento no total (L86) | P13 a P19 |
 | **E6 · Consumo** | Genie com perguntas de avaliação e gabarito em SQL, acerto igual ou acima da meta (G7); painel e BI batendo indicador a indicador | P21 a P26 |
 | **E7 · Operação** | matriz de resiliência preenchida; custo com tag de projeto e time; conformidade rodando com histórico; CHANGELOG com as conferências | P28 a P37 |
+| **E8 · Sustentação** (antes de ligar as agendas, T7.4) | execuções por job, tarefa e pipeline batem com as tabelas de sistema; linha de base com mínimo de execuções ou metas marcadas como provisórias; SLA com hora meta e consumidor; alerta pausado com até 4 disparos por dia; manual com runbook por tarefa | P28, P40 |
 
 ## 7 · Pontos de aprovação humana (gates)
 

@@ -43,6 +43,7 @@ flowchart LR
   B --> E5
   E5 --> E6[6 · Genie e painéis]
   E6 --> E7[7 · Operação, custo e conformidade]
+  E7 --> E8[8 · Sustentação]
 ```
 
 | Etapa | Módulos do playbook | Práticas | Skill para consultar antes |
@@ -55,6 +56,7 @@ flowchart LR
 | 5 · Governança e semântica | M6, M7 | P13 a P19 | `databricks-unity-catalog`, `databricks-metric-views` |
 | 6 · Genie e painéis | M8, M9 | P21 a P26 | `databricks-genie-agents`, `databricks-aibi-dashboards` |
 | 7 · Operação, custo e conformidade | M9, M11, M12 | P28 a P37 | `databricks-unity-catalog`, `databricks-jobs` |
+| 8 · Sustentação (antes de ligar as agendas) | M13 | P28, P40 | `databricks-jobs`, `databricks-aibi-dashboards` |
 
 O que cada skill rendeu aqui está em [05 · Skills e ganhos](05_SKILLS_E_GANHOS.md).
 
@@ -279,6 +281,22 @@ reconferência voltou a 29/29 e 21/21.
 
 ---
 
+## Etapa 8 · Sustentação (M13), antes de ligar as agendas
+
+- **Tempo de execução:** adapte `sustentacao/gerar_sustentacao.py`: o job da carga, o pipeline, a hora meta (`SLA`),
+  a matriz por tarefa (`TAREFAS`) e as tabelas de volume. Rode `testar` antes de criar qualquer coisa (P40).
+- **Base curta:** com poucas execuções, marque as metas como provisórias. Revise depois de 20 execuções da agenda.
+- **Alerta:** nasce pausado, com até 4 disparos por dia (PLT06), e liga junto com a agenda da carga.
+- **Manual:** escreva o manual da base a partir do [manual de sustentação](07_SUSTENTACAO.md): o que roda, metas, onde
+  olhar, rotina, runbooks por tarefa, RACI e indicadores.
+
+**Critério de saída:**
+- o `conferir` passa;
+- o painel está publicado, e o alerta está pausado;
+- cada tarefa do job tem runbook.
+
+---
+
 ## O que muda quando o cenário é diferente
 
 | Se a sua base... | Faça |
@@ -311,7 +329,7 @@ reconferência voltou a 29/29 e 21/21.
 
 ```text
 Você vai aplicar o framework deste repositório (pos_venda) a uma base bruta de pendências de pagamento que já
-está no Databricks. Leia AGENTS.md e docs/06_GUIA_BASE_BRUTA.md e siga as etapas 0 a 7, uma por vez.
+está no Databricks. Leia AGENTS.md e docs/06_GUIA_BASE_BRUTA.md e siga as etapas 0 a 8, uma por vez.
 - Base bruta: <catalogo.schema.tabela>  · Perfil do CLI: <perfil>  · Destino: <catalogo>.<prefixo>_*
 - Comece pela etapa 0 (permissões) e diga qual trilha de qualidade cabe: A (DQX como código) ou B (DQX Studio).
 - Na etapa 1, perfile a base com SQL de leitura e preencha a ficha; pare e me mostre.

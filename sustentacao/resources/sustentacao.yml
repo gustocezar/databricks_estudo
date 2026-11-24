@@ -1,0 +1,39 @@
+# Gerado por sustentacao/gerar_sustentacao.py: não edite à mão.
+resources:
+  dashboards:
+    painel_sustentacao:
+      display_name: "pos_venda · Sustentação"
+      file_path: ../src/pos_venda_sustentacao.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      # as consultas usam nomes simples de view; catálogo e schema vêm daqui
+      dataset_catalog: pos_venda
+      dataset_schema: sustentacao
+      embed_credentials: true
+
+  alerts:
+    alerta_sustentacao:
+      display_name: "pos_venda · Sustentação: SLA ou desvio da carga"
+      custom_summary: "Sustentação do pos_venda: SLA estourado ou desvio de duração"
+      custom_description: >-
+        A carga diária passou da meta das 06:15 (horário de Brasília) ou alguma execução passou do normal
+        (acima do p95 ou de 1.5 vez a mediana). Veja pos_venda.sustentacao.alerta_sustentacao e a página Sustentação do painel.
+      query_text: "SELECT count(*) AS ocorrencias FROM pos_venda.sustentacao.alerta_sustentacao"
+      warehouse_id: ${var.warehouse_id}
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source:
+          name: ocorrencias
+          display: ocorrencias
+        threshold:
+          value:
+            double_value: 0
+        empty_result_state: OK
+        notification:
+          notify_on_ok: false
+          subscriptions:
+            - user_email: ${workspace.current_user.userName}
+      schedule:
+        # 1 disparo por dia (regra PLT06: até 4), depois da meta e antes da avaliação do DQX Studio às 06:30
+        quartz_cron_schedule: "0 20 6 * * ?"
+        timezone_id: America/Sao_Paulo
+        pause_status: ${var.alerta_status}
