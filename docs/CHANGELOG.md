@@ -17,6 +17,16 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 24/11/2026
 
+### E-mail do autor fora do README do DQX Studio
+- **O que mudou:** em `dqx_studio/README.md`, o caminho do bundle passou a usar `<seu-usuario>` no lugar do e-mail.
+- **Por quê:** pedido do usuário. O repositório é público, e o e-mail não precisa aparecer na documentação (L70).
+- **Onde:** `dqx_studio/README.md`.
+- **Conferência:**
+  - `git grep` confirma que o e-mail saiu da documentação.
+  - Ele continua em 2 arquivos de evidência de `dqx_studio/regras/resultados/`, que pelo AGENTS.md não se editam.
+  - Ele continua também no histórico do Git.
+- **Docs atualizadas:** nenhuma além do README do DQX Studio
+
 ### Spec executável para aplicar o framework a outra base
 - **O que mudou:**
   - [`specs/aplicar-base-bruta/SPEC.md`](../specs/aplicar-base-bruta/SPEC.md) é o contrato que o agente executa. Traz

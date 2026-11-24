@@ -59,7 +59,7 @@ Depois do primeiro deploy, se o app pedir, rode **Verify again** na tela de setu
 ## Limites da Free Edition que importam
 
 Até 3 apps por workspace (para caber o Studio foi apagado o app `dbx-community-rj`; o código dele continua em
-`/Workspace/Users/gustocezar@gmail.com/.bundle/dbx-community-rj/default/files`), 1 SQL warehouse 2X-Small, 1 projeto Lakebase,
+`/Workspace/Users/<seu-usuario>/.bundle/dbx-community-rj/default/files`), 1 SQL warehouse 2X-Small, 1 projeto Lakebase,
 só computação serverless.
 
 ## Remover
