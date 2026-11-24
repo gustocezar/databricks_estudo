@@ -738,10 +738,9 @@ Os outros documentos complementam este:
   - **Matriz por tarefa.** Sintoma e ação na falha e na lentidão, ligados à matriz do playbook (P28).
 
   Junto vão um painel AI/BI gerado por código (página "Sustentação") e um alerta SQL diário, às 06:20 e pausado. A
-  O [manual de sustentação](07_SUSTENTACAO.md) usa essas visões na rotina diária, semanal e mensal, nos runbooks,
-  no RACI e nos indicadores.
   atribuição dos jobs ao projeto vem da FinOps; o custo continua em `uso_jobs_diario`; frescor e timeout continuam na
-  conformidade (USO01, PLT03).
+  conformidade (USO01, PLT03). O [manual de sustentação](07_SUSTENTACAO.md) usa essas visões na rotina diária,
+  semanal e mensal, nos runbooks, no RACI e nos indicadores.
 - **Por quê:** a média diária esconde a tarefa que ficou lenta e mistura backfill com carga de um dia. Sem linha de
   base, não há como dizer o que é "lento". Sem SLA, ninguém sabe se a foto do dia chega antes de quem a usa.
 - **Reaplique quando:** um job diário tem consumidores com hora marcada (avaliação de qualidade, painel, extrato), ou
