@@ -13,7 +13,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 
 1. [README.md](README.md): o mapa do repositório.
 2. [docs/README.md](docs/README.md): a situação de cada bloco e como manter a documentação.
-3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 37 práticas (`P##`), com a origem, como aplicamos e por quê.
+3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 39 práticas (`P##`), com a origem, como aplicamos e por quê.
 4. [docs/03_LICOES_APRENDIDAS.md](docs/03_LICOES_APRENDIDAS.md): as armadilhas (`L##`). Leia antes de mudar código.
 5. [docs/02_PLAYBOOK.md](docs/02_PLAYBOOK.md): o passo a passo, os critérios de saída e a matriz de resiliência.
 6. [docs/CHANGELOG.md](docs/CHANGELOG.md): o que mudou e como foi conferido, do mais recente para o mais antigo.
@@ -26,6 +26,8 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Qual acelerador databricks-solutions usar? | [OPCOES_PARA_LLM.md](referencias/databricks_solutions/OPCOES_PARA_LLM.md) ([opcoes.json](referencias/databricks_solutions/opcoes.json)): aplique as 9 regras de escolha e cite os campos |
 | Como reaplicar em outro case? | Passo 0 do [playbook](docs/02_PLAYBOOK.md) + mapa de gatilhos do [framework](docs/04_FRAMEWORK.md) |
 | Que skill usar, linhagem do estudo, ganho de cada skill; plano de ação para dado ruim; como a qualidade chega à Genie | [docs/05_SKILLS_E_GANHOS.md](docs/05_SKILLS_E_GANHOS.md) |
+| Aplicar o framework a outra base (base bruta de pendências no Databricks), com Copilot ou outro agente | [docs/06_GUIA_BASE_BRUTA.md](docs/06_GUIA_BASE_BRUTA.md), etapas 0 a 7; prompt em `.github/prompts/aplicar-base-bruta.prompt.md` |
+| DQX sem o app (sem privilégio no catálogo) ou com o app | trilha A: [dqx_codigo/](dqx_codigo/README.md); trilha B: [dqx_studio/](dqx_studio/README.md); escolha pela etapa 0 do guia 06 (P38) |
 | Por que foi feito assim? | Framework (`P##`) e [lições](docs/03_LICOES_APRENDIDAS.md) (`L##`); a história na [trilha](docs/01_TRILHA_DE_APRENDIZAGEM.md) |
 | Qual é o estado atual e os números? | Tabela "Situação" de [docs/README.md](docs/README.md), [CHANGELOG](docs/CHANGELOG.md) e [inventário](docs/INVENTARIO.md) |
 | Algo falhou (cota, token, app parado, view sem tags) | Matriz de resiliência do [playbook](docs/02_PLAYBOOK.md) e as lições |
@@ -64,6 +66,8 @@ Não reabra estas decisões sem pedido do dono do projeto.
   [AVALIACAO_OBSERVABILIDADE.md](conformidade/AVALIACAO_OBSERVABILIDADE.md). A conformidade fica em
   `pos_venda.conformidade`.
 - **Custo no Free Edition é a preço de lista (`ListCost`).** O `BilledCost` é 0, porque não há fatura.
+- **DQX em duas trilhas (P38).** No pos_venda roda a trilha B (Studio como app). A trilha A (`dqx_codigo/`, biblioteca
+  num job) é o modelo para quem não pode conceder privilégio no catálogo; não a misture com o Studio na mesma tabela.
 - **Aceleradores se escolhem pelas regras de `OPCOES_PARA_LLM.md`.** O Genie Workbench está adiado, porque ocuparia
   a última vaga de app.
 

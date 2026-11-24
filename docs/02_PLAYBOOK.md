@@ -40,6 +40,7 @@ Responda para cada base (tabela, sistema de origem ou domínio). As respostas es
 | **O que torna o dado inutilizável?** | lista de problemas | vira **regra de erro** (barreira/quarentena); o resto vira **regra de aviso** |
 | **Quem consome?** | diretoria · analista · operação · sistemas | um espaço Genie e um painel por público; API ou Lakebase para sistemas |
 | **Tem regulação ou auditoria?** | não · sim (ex.: SUSEP, LGPD, BACEN) | severidade e aprovação de regras no Studio, histórico de execuções como evidência, linhagem |
+| **Pode conceder privilégio no catálogo a um app?** | sim (dono ou `MANAGE`) · não | sim: DQX Studio como app (M5, trilha B) ou código; não: **DQX como código** (M5, trilha A, `dqx_codigo/`) |
 | **Onde roda?** | Free Edition · workspace pago | Free: 1 warehouse, cota diária, sem Claude no Model Serving, até 3 apps; pago: warehouses separados, ABAC, Data Classification |
 
 ### Perfis prontos
@@ -95,10 +96,22 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
 - **Armadilhas:** chave substituta sequencial quebra a fato histórica quando a dimensão é reescrita; não existe `ALTER
   CONSTRAINT ... RELY`: a PK é removida e declarada de novo, e o `CASCADE` apaga as FKs que apontam para ela (L72).
 
-### M5 · Qualidade: métricas, DQX Studio e janelas
+### M5 · Qualidade: métricas, DQX e janelas
 
 - **Quando usar:** sempre (perfil regulado: obrigatório com aprovação).
-- **Passos:**
+- **Escolha a trilha (P38):** a **A**, DQX como código, não precisa de app nem de privilégio no catálogo; a **B**, DQX
+  Studio como app, precisa conceder `USE CATALOG` e `CREATE SCHEMA` ao service principal do app. As duas usam as
+  mesmas regras, com os mesmos nomes da barreira.
+- **Trilha A · DQX como código:**
+  1. métricas diárias de qualidade na gold, como na trilha B;
+  2. candidatas com `DQProfiler` e `DQGenerator`, revisadas; regras em YAML no repositório, com erro ou aviso;
+  3. job (bundle `dqx_codigo/`) que avalia **todas as linhas** da janela e grava válidos, quarentena e
+     `dq_metricas_regras`;
+  4. painel de qualidade sobre `dq_metricas_regras`; o job vira tarefa no fim da carga.
+  - **Modelo:** [`dqx_codigo/`](../dqx_codigo/README.md).
+  - **Critério de saída:** job SUCCESS; erros do DQX = quarentena da barreira na mesma janela; toda regra aparece nas
+    métricas, mesmo com zero.
+- **Trilha B · DQX Studio como app** (a do pos_venda). **Passos:**
   1. métricas diárias de qualidade na gold (recebidos, aptos, barrados, avisos);
   2. regras do DQX geradas por código, com criticidade erro ou aviso;
   3. views de **janela** sobre uma tabela de controle (`dq.janela_avaliacao`), avaliadas com **todas as linhas**;
@@ -309,6 +322,9 @@ Todos os comandos `databricks` levam `--profile dbx-workshop`.
 
 ## Como adaptar para outra base
 
+Para uma base bruta de pendências já no Databricks, com ou sem agente de código, siga o
+[guia 06](06_GUIA_BASE_BRUTA.md): ele usa estes passos com a ficha, o mapeamento e as duas trilhas do DQX.
+
 1. Preencha o [perfil da base](#passo-0--perfil-da-base) e escolha o perfil pronto mais próximo.
 2. Copie as pastas dos módulos escolhidos e troque os parâmetros:
 
@@ -317,7 +333,8 @@ Todos os comandos `databricks` levam `--profile dbx-workshop`.
 | `carga_diaria/gerar_carga.py` | catálogo, tabelas de origem, colunas de cadastro × colunas que variam, tipos de evento |
 | `carga_diaria/src/pipeline/transformations/` | regras de padronização e de erro (barreira) |
 | `carga_diaria/janela_avaliacao.py` | views de janela por camada |
-| `dqx_studio/regras/definir_regras.py` | regras de erro e aviso por tabela |
+| `dqx_studio/regras/definir_regras.py` | regras de erro e aviso por tabela (trilha B, app) |
+| `dqx_codigo/checks_pendencias.yml` | regras de erro e aviso em YAML (trilha A, código), com as colunas e os domínios da nova base |
 | `governanca/descricoes_colunas.py`, `ontologia.py` | glossário, Pages, Wikis, classificação LGPD, domínio, `DOMINIO_PADRAO` e `RESPONSAVEL` |
 | `governanca/gerar_ontologia_sql.py` | entidades, relações, metric views e descrições (`DESCR`) |
 | `governanca/genie.py` | públicos, instruções, exemplos, perguntas de avaliação |

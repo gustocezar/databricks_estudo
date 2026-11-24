@@ -1,9 +1,9 @@
 # Framework · práticas aplicadas no pos_venda, de onde vieram e por quê
 
-> Documento incremental. Última atualização: **23/11/2026**. Cada prática tem um código (`P##`) que não muda.
+> Documento incremental. Última atualização: **24/11/2026**. Cada prática tem um código (`P##`) que não muda.
 > Fontes conferidas em 22 e 23/11/2026 (todos os links responderam).
 
-Este framework reúne as **37 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 25 da
+Este framework reúne as **39 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 26 da
 [trilha](01_TRILHA_DE_APRENDIZAGEM.md)), cada uma com:
 
 - **Origem:** de onde veio. Pode ser documentação oficial, acelerador da Databricks, Databricks Labs, Microsoft,
@@ -21,6 +21,7 @@ Os outros documentos complementam este:
 | [Lições aprendidas](03_LICOES_APRENDIDAS.md) | as **armadilhas**, com o código `L##` |
 | Este framework | o **porquê de cada escolha** e a fonte de cada uma |
 | [Skills e ganhos](05_SKILLS_E_GANHOS.md) | a **linhagem**: que skill foi consultada em cada prática e o ganho medido |
+| [Guia para outra base](06_GUIA_BASE_BRUTA.md) | o **caminho para reaplicar** numa base bruta, com um agente de código e as duas trilhas do DQX |
 
 ```
  Fundação ─► Dados ─► Qualidade ─► Governança ─► Semântica ─► Consumo ─► Avaliação
@@ -28,6 +29,7 @@ Os outros documentos complementam este:
                                 Operação contínua (P28–P29)
                     Custo e uso · FinOps (P30–P34), sobre o workspace inteiro
               Conformidade e observabilidade (P35–P37), sobre o workspace inteiro
+         Reaplicação em outra base (P38–P39): DQX em duas trilhas e guia para agente
 ```
 
 ---
@@ -68,6 +70,8 @@ Os outros documentos complementam este:
 | Regras de governança que precisam continuar valendo depois da primeira aplicação | P35, P37 |
 | Observabilidade herdada (jobs, alertas, visões) que ninguém revisou | P36 |
 | Views sobre tabelas de sistema ou sobre schemas de outro time | P37 |
+| Sem permissão para conceder privilégio no catálogo a um app, ou sem vaga de app | P38 |
+| Aplicar o framework a outra base com um agente de código (Copilot, Claude Code, Codex) | P39, P38 |
 
 ---
 
@@ -160,7 +164,9 @@ Os outros documentos complementam este:
 - **Por quê:** saldo é uma posição. Somar dias diferentes infla o número, e essa regra atravessa Pages, metric views, Genie,
   painéis e o DAX.
 - **Reaplique quando:** a medida é posição (saldo, estoque, carteira, reserva).
-- **Prova:** paridade 21/21 entre o painel do Databricks e as medidas DAX, que repetem a regra semiaditiva.
+- **Prova:** paridade 21/21 entre o painel do Databricks e as medidas DAX, que repetem a regra semiaditiva (foto de
+  25/12). Na reconferência de 24/11 (foto de 09/01/2027), deu 20/21: o painel somava o início do mês de cada grupo, e
+  grupos novos no meio do mês distorcem essa soma (L86).
 
 ### P08 · Chaves informativas, com `RELY` só nas primárias
 - **Origem:** [Constraints](https://docs.databricks.com/aws/en/tables/constraints) e
@@ -326,7 +332,9 @@ Os outros documentos complementam este:
   - Os painéis, a Genie e o Power BI (pelo schema `bi`) leem as mesmas medidas.
 - **Por quê:** a regra vive num lugar só, e o número bate entre as ferramentas.
 - **Reaplique quando:** mais de um consumidor (painel, Genie, BI externo) usa a mesma métrica.
-- **Prova:** painéis 14/14, Genie 29/29 e paridade Power BI 21/21, com os mesmos números.
+- **Prova:** painéis 14/14, Genie 29/29 e paridade Power BI 21/21, com os mesmos números (22/11). Na reconferência
+  de 24/11, com os dados até 09/01/2027, a Genie deu 28/29 e a paridade 20/21. As duas diferenças vêm dos vazamentos
+  da semana 7 (L86, L87).
 
 ### P19 · Padrões semânticos: fechamento semiaditivo, mês anterior, acumulados e ranking
 - **Origem:** [uc-semantics-patterns](https://github.com/databricks-solutions/uc-semantics-patterns)
@@ -375,7 +383,8 @@ Os outros documentos complementam este:
 - **Por quê:** instruções curtas e específicas resolvem mais que instruções longas. Comparar o resultado inteiro evita
   falso negativo.
 - **Reaplique quando:** há públicos com perguntas diferentes sobre os mesmos dados.
-- **Prova:** 29/29 perguntas de avaliação certas.
+- **Prova:** 29/29 perguntas de avaliação certas (21/11). Em 24/11, com os dados até 09/01/2027, 28/29: a que errou
+  deixou de fora o saldo de produto órfão (L87).
 
 ### P22 · Painéis AI/BI por público, com uma página por fato
 - **Origem:** [AI/BI dashboards](https://docs.databricks.com/aws/en/dashboards/) (Databricks); lição L66.
@@ -401,7 +410,8 @@ Os outros documentos complementam este:
   - O DAX só cuida do que é do motor dele, como o saldo semiaditivo.
   - A comparação entre as ferramentas usa os mesmos números.
 - **Reaplique quando:** a empresa tem outra ferramenta de BI, ou está avaliando uma.
-- **Prova:** 102 arquivos válidos nos esquemas e paridade 21/21. **Não verificado:** abrir no Power BI Desktop.
+- **Prova:** 102 arquivos válidos nos esquemas e paridade 21/21 (foto de 25/12). Na foto de 09/01/2027, 20/21 (L86).
+  **Não verificado:** abrir no Power BI Desktop.
 
 ---
 
@@ -479,7 +489,7 @@ Os outros documentos complementam este:
 - **Por quê:** quem chega depois entende o porquê de cada escolha. Uma mudança só está pronta quando a conferência está
   registrada.
 - **Reaplique quando:** sempre.
-- **Prova:** 26 fases (0 a 25), 85 lições, inventário regenerado a cada mudança.
+- **Prova:** 27 fases (0 a 26), 87 lições, inventário regenerado a cada mudança.
 
 ---
 
@@ -639,6 +649,59 @@ Os outros documentos complementam este:
 
 ---
 
+## Reaplicação em outra base
+
+### P38 · DQX em duas trilhas: biblioteca num job ou Studio como app, escolhidas pela permissão
+- **Origem:**
+  - a [instalação do DQX](https://databrickslabs.github.io/dqx/docs/installation/): a biblioteca dispensa instalação
+    no workspace;
+  - os requisitos do Studio: um service principal com `USE CATALOG` e `CREATE SCHEMA` no catálogo, Lakebase e
+    warehouse;
+  - a instalação no pos_venda (`dqx_studio/README.md`, L02);
+  - o pedido de reaplicar numa base cujo catálogo não é seu.
+- **Como aplicamos:**
+  - **Trilha B, o Studio como app:** é a que roda no pos_venda (P11, P12).
+  - **Trilha A, o DQX como código:** fica em [`dqx_codigo/`](../dqx_codigo/README.md). Lá estão:
+    - as 11 regras de erro da barreira em YAML, com os mesmos nomes, e 3 avisos;
+    - um notebook que separa válidos e quarentena e grava as métricas por regra;
+    - um bundle com o job sob demanda.
+  - **Escolha:** o [guia 06](06_GUIA_BASE_BRUTA.md) escolhe a trilha na etapa 0, pelas permissões.
+- **Por quê:** o app pede privilégios no catálogo que nem todo time pode conceder. Sem uma trilha alternativa, a
+  segunda linha de defesa da qualidade simplesmente não existe.
+- **Reaplique quando:**
+  - você não é dono do catálogo nem tem `MANAGE` nele;
+  - não há vaga de app;
+  - o time quer as regras versionadas em Git.
+- **Prova:**
+  - `databricks bundle validate` passa;
+  - as 11 regras de erro têm o mesmo nome do motivo da barreira;
+  - o aviso de periodicidade pega os valores novos da bronze (`QUINZENAL`, 136; `BIMESTRAL`, 121).
+  - Ainda não foi executado no workspace (24/11).
+
+---
+
+### P39 · Guia executável por agente de código para aplicar em outra base
+- **Origem:**
+  - as [instruções de repositório do GitHub Copilot](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot);
+  - os [arquivos de prompt do VS Code](https://code.visualstudio.com/docs/copilot/customization/prompt-files);
+  - a convenção `AGENTS.md`;
+  - P29 (documentação junto com o código).
+- **Como aplicamos:**
+  - **Guia:** [`06_GUIA_BASE_BRUTA.md`](06_GUIA_BASE_BRUTA.md) tem as etapas 0 a 7. Cada etapa tem módulo, práticas,
+    skill e critério de saída. O guia traz também a ficha da base, o mapeamento para o modelo e a tabela "o que muda
+    quando o cenário é diferente".
+  - **Instruções do Copilot:** `.github/copilot-instructions.md` aponta para o AGENTS.md e para o guia.
+  - **Prompt:** `.github/prompts/aplicar-base-bruta.prompt.md` conduz etapa por etapa. Até a aprovação, só roda leitura.
+- **Por quê:** o que o projeto aprendeu precisa sair do histórico e virar passos que outro agente siga. Assim ele não
+  reinventa o que já foi resolvido e não gasta cota sem pedir.
+- **Reaplique quando:** o framework vai ser aplicado por outra pessoa ou por um agente, em outra base ou workspace.
+- **Prova:**
+  - os links do guia resolvem;
+  - o guia cobre os 12 módulos e as duas trilhas de qualidade.
+  - Ainda não foi testado com o Copilot numa base real (24/11).
+
+---
+
 ## Opções databricks-solutions: qual acelerador usar a seguir
 
 Os 147 repositórios públicos da organização [databricks-solutions](https://github.com/databricks-solutions) estão
@@ -739,6 +802,10 @@ painéis; qual opção databricks-solutions usar no pos_venda?". As regras levam
 - [Configurações de job](https://docs.databricks.com/aws/en/jobs/settings) e a [tabela de sistema de jobs](https://docs.databricks.com/aws/en/admin/system-tables/jobs) (P35)
 - [SQL warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/create) e [alertas SQL](https://docs.databricks.com/aws/en/sql/user/alerts/) (P35, P36)
 - [Query history](https://docs.databricks.com/aws/en/admin/system-tables/query-history) (`query_source.alert_id`) (P36)
+
+**Reaplicação em outra base**
+- DQX: [instalação](https://databrickslabs.github.io/dqx/docs/installation/), [definição de checagens](https://databrickslabs.github.io/dqx/docs/guide/quality_checks_definition/), [aplicação](https://databrickslabs.github.io/dqx/docs/guide/quality_checks_apply/) e o [pacote no PyPI](https://pypi.org/project/databricks-labs-dqx/) (P38)
+- GitHub Copilot: [instruções de repositório](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot) e [arquivos de prompt do VS Code](https://code.visualstudio.com/docs/copilot/customization/prompt-files) (P39)
 
 **Do próprio projeto:** [trilha](01_TRILHA_DE_APRENDIZAGEM.md), [playbook](02_PLAYBOOK.md),
 [lições](03_LICOES_APRENDIDAS.md), [CHANGELOG](CHANGELOG.md) e

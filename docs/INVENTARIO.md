@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 24/11/2026 08:49. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 24/11/2026 09:07. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -11,6 +11,7 @@
 | `carga_diaria` | `janela_avaliacao.py` | Janela de avaliacao do DQX Studio (dominio pos_venda). |
 | `carga_diaria` | `views_preservadas.py` | Cria ou atualiza views do Unity Catalog sem perder a governança. |
 | `conformidade` | `gerar_conformidade.py` | Monitoramento de conformidade dos dados e do workspace no schema pos_venda.conformidade. |
+| `dqx_codigo` | `aplicar_dqx.py` | DQX como código: checagens em tabela, sem app |
 | `dqx_studio/demo` | `resumo_evolucao.py` | Monta a evolucao semana a semana a partir do historico do DQX Studio (execucoes com TODAS as linhas das janelas). |
 | `dqx_studio/painel` | `aplicar_e_testar.py` | Cria as views do painel (views_painel.sql) e testa cada consulta do painel como o AI/BI vai executá-la. |
 | `dqx_studio/painel` | `descricoes_painel.py` | Descrição das colunas das views do painel de qualidade (pos_venda.dq.v_painel_*). |
@@ -47,6 +48,7 @@
 | Bundle | Arquivo |
 |---|---|
 | `pos_venda_carga_diaria` | `carga_diaria/databricks.yml` |
+| `dqx_codigo` | `dqx_codigo/databricks.yml` |
 | `pos_venda_painel_qualidade` | `dqx_studio/painel/databricks.yml` |
 | `pos_venda_medalhao` | `medalhao/databricks.yml` |
 | `pos_venda_paineis_financeiros` | `paineis_financeiros/databricks.yml` |

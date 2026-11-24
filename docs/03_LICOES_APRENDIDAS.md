@@ -1,7 +1,7 @@
 # Lições aprendidas · pos_venda
 
 > Documento incremental. Cada lição tem um código (`L##`) que não muda, para ser citada no playbook, no CHANGELOG e em
-> revisões. Lição nova entra no fim do tema dela, com o próximo número livre. Última atualização: **23/11/2026**.
+> revisões. Lição nova entra no fim do tema dela, com o próximo número livre. Última atualização: **24/11/2026**.
 
 Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra está aplicada.
 
@@ -164,6 +164,12 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   próprio espaço e ignora as do Unity Catalog, que a Genie usa; os itens 11 e 12 exigem uma rodada de otimização do
   Workbench → sem o app o teto é 10/12; trate o item 3 como falso positivo quando o catálogo está descrito, e não
   duplique descrições só para a régua. (`governanca/genie/scanner/TRIAGEM.md`)
+- **L87** Na reconferência de 24/11, com os dados até 09/01/2027, a Genie acertou 28 de 29. A que errou foi "saldo em
+  cobrança externa por produto hoje": a Genie filtrou `Produto IS NOT NULL` e deixou de fora R$ 779,34 de linhas da
+  fato com produto órfão (vazamento da semana 7). O gabarito, sem o filtro, mostra esse saldo numa linha sem produto →
+  dê às chaves órfãs um membro explícito na ontologia (por exemplo, "Produto não identificado"), para que nenhum
+  filtro de nulo esconda dinheiro, e reavalie a Genie depois de toda carga que traga chave órfã.
+  (`governanca/genie.py avaliar`, `governanca/genie/avaliacao.json`)
 
 ## Regras de negócio (BDD)
 
@@ -211,6 +217,13 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L68** Projeto do Power BI gerado por código sem Power BI na máquina: valide os JSON contra os esquemas oficiais da
   Microsoft (versões de meados de 2025, que qualquer Desktop recente abre) e faça um teste negativo para provar que a
   validação pega erro; o que só o Desktop prova (TMDL e DAX executando) fica declarado como não verificado.
+- **L86** Na reconferência de 24/11, com a foto de 09/01/2027, o cartão "Crescimento da carteira no mês" deu
+  R$ 1.403.002,55 no painel e R$ 1.405.736,27 na lógica do Power BI (20 de 21 iguais). O painel agrupa por produto e
+  canal e soma o "Saldo no início do período" de cada grupo. Em janeiro, 17 grupos só apareceram depois do dia 1º
+  (vazamentos da semana 7), e cada um entrou com o saldo do seu primeiro dia. O total certo é o do Power BI: saldo da
+  foto menos o saldo do primeiro dia do mês → medida semiaditiva de início ou fechamento se calcula no total, nunca
+  somando os grupos; e reconfira painel e BI depois de toda carga que traga grupos novos.
+  (`paineis_financeiros/powerbi/gerar_powerbi.py referencia`, `VALORES_DE_REFERENCIA.md`)
 
 ## Avaliação por IA
 

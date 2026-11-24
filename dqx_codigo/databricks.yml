@@ -1,0 +1,49 @@
+# Bundle do DQX como código: um job que aplica checks_pendencias.yml numa tabela e grava válidos, quarentena e
+# métricas por regra. Sem app, sem Lakebase, sem service principal.
+#
+#   databricks bundle validate --profile <perfil>
+#   databricks bundle deploy -t dev --profile <perfil>
+#   databricks bundle run dqx_codigo -t dev --profile <perfil>
+#
+# Sem schedule: roda sob demanda ou como tarefa no fim do job de carga. Sem cluster declarado, roda no serverless
+# (Free Edition e workspaces com serverless). Sem serverless, acrescente um job_cluster com DBR 15.4 ou mais novo.
+bundle:
+  name: dqx_codigo
+
+variables:
+  tabela_entrada:
+    description: "Tabela avaliada (catálogo.schema.tabela)."
+    default: pos_venda.bronze.pagamentos_pendentes_eventos
+  schema_destino:
+    description: "Schema onde ficam válidos, quarentena e métricas. Precisa de CREATE TABLE e MODIFY."
+    default: pos_venda.dqx_codigo
+  filtro:
+    description: "Filtro opcional em SQL, por exemplo a janela de 7 dias. Vazio = todas as linhas."
+    default: ""
+
+resources:
+  jobs:
+    dqx_codigo:
+      name: dqx_codigo_checagens
+      description: >-
+        DQX como código (databricks-labs-dqx): aplica as checagens de checks_pendencias.yml na tabela de entrada e
+        grava <prefixo>_validos, <prefixo>_quarentena e dq_metricas_regras no schema de destino.
+      tags:
+        abordagem: dqx_codigo
+      performance_target: STANDARD
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: aplicar_dqx
+          notebook_task:
+            notebook_path: ./aplicar_dqx.py
+            base_parameters:
+              tabela_entrada: ${var.tabela_entrada}
+              schema_destino: ${var.schema_destino}
+              prefixo: eventos
+              arquivo_checks: checks_pendencias.yml
+              filtro: ${var.filtro}
+
+targets:
+  dev:
+    default: true
+    mode: development

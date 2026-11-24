@@ -1,6 +1,6 @@
 # Trilha de aprendizagem · pos_venda
 
-> Documento incremental. Cada fase nova entra no fim, com a mesma estrutura. Última atualização: **23/11/2026**.
+> Documento incremental. Cada fase nova entra no fim, com a mesma estrutura. Última atualização: **24/11/2026**.
 > Mudanças pontuais vão para o [CHANGELOG](CHANGELOG.md); regras gerais que surgirem viram itens nas
 > [lições aprendidas](03_LICOES_APRENDIDAS.md) e passos no [playbook](02_PLAYBOOK.md).
 
@@ -597,3 +597,40 @@ Ele confere 5 camadas por semana, a quarentena igual à do pipeline e um dia de 
 - Zero numa garantia da arquitetura é prova, não falta de dado (L84).
 - App recém-ligado responde 502 até terminar de subir (L85).
 
+## Fase 26 · Reconferência com os dados novos e guia para outra base
+
+**Objetivo:** reconferir a Genie e o Power BI depois da carga de 26/12 a 09/01. Também preparar o framework para ser
+aplicado, com um agente de código como o Copilot, a uma base bruta de pendências já no Databricks, com a qualidade em
+duas trilhas.
+
+**O que fizemos (24/11/2026):**
+- **Genie.** A avaliação completa (`genie.py avaliar`) rodou de novo, com o gabarito recalculado na hora: 28 de 29.
+- **Power BI.** A paridade (`gerar_powerbi.py referencia`) rodou na foto de 09/01/2027: 20 de 21.
+- **Causa das duas diferenças.** As duas vêm dos vazamentos da semana 7:
+  - o painel somava o início do mês de cada grupo produto × canal, e 17 grupos nasceram depois de 01/01 (L86);
+  - a Genie filtrou produto não nulo e deixou de fora R$ 779,34 de produto órfão (L87).
+- **DQX como código.** O modelo da trilha A ficou em `dqx_codigo/`: as 11 regras de erro da barreira em YAML e 3 avisos,
+  um notebook que separa válidos e quarentena e grava as métricas por regra, e um bundle sob demanda (P38).
+- **Guia para outra base.** O guia `docs/06_GUIA_BASE_BRUTA.md` tem as etapas 0 a 7, a ficha da base, o mapeamento e a
+  escolha da trilha pela permissão. O Copilot recebeu instruções (`.github/copilot-instructions.md`) e um prompt
+  (`.github/prompts/aplicar-base-bruta.prompt.md`) (P39).
+- **Playbook.** O M5 passou a ter as duas trilhas, e o Passo 0 ganhou a pergunta sobre conceder privilégio a um app.
+
+**Onde está:** [06_GUIA_BASE_BRUTA.md](06_GUIA_BASE_BRUTA.md), [dqx_codigo/](../dqx_codigo/README.md),
+`governanca/genie/avaliacao.json` e `paineis_financeiros/powerbi/VALORES_DE_REFERENCIA.md`.
+
+**Resultado:**
+- **Genie.** 28/29; as 3 perguntas de qualidade continuam certas.
+- **Power BI.** 20/21; o total certo de "Crescimento da carteira no mês" é o do Power BI (R$ 1.405.736,27).
+- **DQX como código.** O bundle passa em `databricks bundle validate`; ainda não foi executado.
+- **Guia.** Os links do guia resolvem.
+
+**Como conferir:**
+- `python3 governanca/genie.py avaliar` (gasta cota);
+- `regras/.venv/bin/python paineis_financeiros/powerbi/gerar_powerbi.py referencia`;
+- `databricks bundle validate` em `dqx_codigo/`.
+
+**O que aprendemos:**
+- Medida semiaditiva de início ou fechamento se calcula no total, não somando grupos (L86).
+- Chave órfã precisa de membro explícito, senão um filtro de nulo esconde dinheiro (L87).
+- Reconfira o consumo depois de toda carga que traga grupos ou chaves novas.

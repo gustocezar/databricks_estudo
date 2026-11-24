@@ -58,8 +58,8 @@ foi feita em 24/11 a partir do conteúdo de cada fase.
 | `databricks-serverless` | 3, 5, 16 | P01, P02 | `carga_diaria/databricks.yml`, `dqx_studio/` | jobs e tarefas do Studio sem cluster para administrar no Free Edition |
 | `databricks-dabs` | 2, 3, 6, 11, 20 | P02, P12, P22 | 4 bundles: `medalhao`, `carga_diaria`, `paineis_financeiros`, `dqx_studio/painel` | implantação repetível; o painel mantém o mesmo link a cada deploy |
 | `databricks-unity-catalog` | 8, 14, 15, 17, 22, 23, 24 | P13 a P17, P30, P35, P37 | [`governanca/`](../governanca/README.md), [`finops/`](../finops/README.md), [`conformidade/`](../conformidade/README.md) | 1.977 de 1.977 colunas principais e 682 de 682 legadas descritas; `dado_pessoal` em 380 + 152 colunas; 28 regras de conformidade; US$ 1.229 com dono atribuído |
-| `databricks-metric-views` | 9, 18, 20 | P18, P19, P23 | `governanca/ontologia.py`, `gerar_ontologia_sql.py` | 4 metric views, fonte única para Genie, painéis e Power BI (paridade 21 de 21) |
-| `databricks-genie-agents` | 10, 13 | P21, P24 | `governanca/genie.py`, [triagem](../governanca/genie/avaliacao_boas_praticas/TRIAGEM.md) | 29 de 29 perguntas de avaliação certas (21/11), 3 delas sobre qualidade |
+| `databricks-metric-views` | 9, 18, 20 | P18, P19, P23 | `governanca/ontologia.py`, `gerar_ontologia_sql.py` | 4 metric views, fonte única para Genie, painéis e Power BI (paridade 21 de 21 em 22/11; 20 de 21 em 24/11, L86) |
+| `databricks-genie-agents` | 10, 13 | P21, P24 | `governanca/genie.py`, [triagem](../governanca/genie/avaliacao_boas_praticas/TRIAGEM.md) | 29 de 29 perguntas de avaliação certas (21/11); 28 de 29 com os dados até 09/01 (24/11, L87); as 3 de qualidade certas nas duas |
 | `databricks-aibi-dashboards` | 6, 11, 20 | P12, P22 | [`dqx_studio/painel/`](../dqx_studio/painel/README.md), [`paineis_financeiros/`](../paineis_financeiros/README.md) | painel de qualidade com 8 semanas; 2 painéis financeiros por público, do mesmo gerador, com uma página por fato |
 | `databricks-apps` | 5, 18 | P11, P25 | [`dqx_studio/`](../dqx_studio/README.md), [prontidão](../governanca/ontologia_readiness/RESULTADO.md) | DQX Studio com 194 checagens aprovadas; app de prontidão com nota 94,5 (começou em 81,3) |
 | `databricks-lakebase` | 5, 18 | P11, P25 | projeto `dqx-studio-db` | guarda o estado do Studio e o histórico das notas de prontidão |
@@ -111,6 +111,8 @@ regra voltar a zero ou chegar a 100%.
 | Cadastro ruim: 58 clientes com sexo X, 46 sem nascimento, itens de teste (`VIDA_QA_*`, `PV_QA_*`, `COR_QA_*`) | cadastro | corrigir o cadastro e tirar os itens de teste | as checagens da dimensão zeram |
 | 17 ativos sem `subject_area` (TAG01, crítica) | squad pós-venda | aplicar as tags da política | TAG01 chega a 100% |
 | 22 views quebradas no workspace (USO03, crítica) | dono de cada view | recriar a partir do código ou apagar | USO03 chega a 100% |
+| R$ 779,34 de produto órfão fora da resposta da Genie (L87) | dono da ontologia | membro "Produto não identificado" na metric view | a pergunta por produto soma o saldo total |
+| Início do mês somado por grupo no painel (L86) | dono do painel | calcular o crescimento no total, não por grupo | paridade com o Power BI volta a 21/21 |
 
 A lista completa de governança, com severidade e como corrigir, está na visão
 `pos_venda.conformidade.pendencias`.
@@ -139,15 +141,17 @@ flowchart LR
   barreira, então um evento com erro nunca vira resposta.
 - **A qualidade também é assunto da Genie.** Os dois espaços, do diretor e do analista, têm a `mv_qualidade_dados`.
   O espaço do diretor sugere a pergunta "A qualidade dos dados afetou os números de dezembro?".
-- **Avaliado.** 3 das 29 perguntas de avaliação são sobre qualidade, e as 3 acertaram:
-  - taxa de barrados por semana de dezembro (diretor): 0,8%, 3,1%, 1,5% e 0,01% nas semanas de 30/11, 7/12, 14/12 e
-    21/12;
+- **Avaliado.** 3 das 29 perguntas de avaliação são sobre qualidade, e as 3 acertaram em 21/11 e de novo em 24/11,
+  com os dados até 09/01/2027:
+  - taxa de barrados por semana de dezembro (diretor): 0,8%, 3,1%, 1,5%, 1,2% e 8,4% nas semanas de 30/11, 7/12,
+    14/12, 21/12 e 28/12;
   - eventos com forma de pagamento não cadastrada em dezembro (diretor): 867;
   - eventos barrados em dezembro por motivo da rejeição (analista).
 - **Entende o negócio.** Colunas descritas, nenhum identificador pessoal na ontologia, as mesmas funções de regra da
   carga (P20) e prontidão 94,5 para a Genie Ontology (P25).
-- **Ressalva.** A avaliação é de 21/11, antes da carga de 26/12 a 09/01. Os números de dezembro podem mudar com os
-  dias 26 a 31/12, e reconferir a Genie está nos próximos passos.
+- **Reconferência (24/11).** Com os dados até 09/01/2027, a Genie acertou 28 de 29. A que errou também é efeito de
+  qualidade: ela filtrou produto não nulo e deixou de fora R$ 779,34 de linhas com produto órfão (L87). O plano de ação
+  ganhou um item: dar à chave órfã um membro explícito na ontologia.
 
 ---
 
@@ -175,11 +179,11 @@ Use as skills nesta ordem. Cada uma abre uma camada, e o critério de saída de 
 
   Essas etapas não aparecem no mapa.
 - A ligação entre skill, fase e prática é uma leitura do conteúdo de cada fase, não um registro automático.
-- A Genie e o Power BI foram conferidos antes da última carga de dados.
+- A Genie e o Power BI foram reconferidos em 24/11 com os dados até 09/01/2027: 28/29 e 20/21 (L86, L87).
 
 ## Fontes
 
 - [ai-dev-kit](https://github.com/databricks-solutions/ai-dev-kit) (databricks-solutions), origem das skills.
 - [OPCOES_PARA_LLM.md](../referencias/databricks_solutions/OPCOES_PARA_LLM.md), opção 3: ai-dev-kit.
-- [Framework](04_FRAMEWORK.md) (P##), [trilha](01_TRILHA_DE_APRENDIZAGEM.md) (fases 0 a 25) e
+- [Framework](04_FRAMEWORK.md) (P##), [trilha](01_TRILHA_DE_APRENDIZAGEM.md) (fases 0 a 26) e
   [CHANGELOG](CHANGELOG.md), para os números.

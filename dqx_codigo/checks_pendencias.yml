@@ -1,0 +1,132 @@
+# Checagens DQX (biblioteca databricks-labs-dqx) para eventos de pendências de pagamento.
+#
+# São as 11 regras de erro da barreira do pipeline (carga_diaria/gerar_carga.py, MOTIVO_REJEICAO), com os mesmos
+# nomes, mais 3 avisos. Erro (criticality: error) vai para a quarentena; aviso (warn) entra marcado.
+# Formato: https://databrickslabs.github.io/dqx/docs/guide/quality_checks_definition/
+#
+# Para outra base: troque os nomes das colunas, as listas de valores aceitos e o catálogo das funções de regra
+# (pos_venda.regras). Mantenha o nome de cada regra: ele vira o motivo na quarentena e a linha do painel.
+# Toda expressão é escrita para dar TRUE quando o dado está bom (o DQX registra erro quando dá FALSE). O coalesce
+# repete o comportamento da barreira com valor nulo: true = deixa passar; false = barra.
+
+# ---------------------------------------------------------------- erros (barram o evento)
+- name: pendencia_id_nulo
+  criticality: error
+  check:
+    function: is_not_null
+    arguments:
+      column: pendencia_id
+
+- name: tipo_evento_invalido
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(tipo_evento IN ('NOVA', 'ATUALIZACAO', 'BAIXA'), false)"
+      msg: "tipo_evento nulo ou fora de NOVA, ATUALIZACAO, BAIXA"
+
+- name: status_cobranca_invalido
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(status_cobranca IN ('PENDENTE', 'EM_COBRANCA', 'PROMESSA_PAGAMENTO', 'NEGOCIADO', 'COBRANCA_EXTERNA', 'PAGA'), false)"
+      msg: "status_cobranca nulo ou fora do domínio"
+
+- name: valor_parcela_nao_positivo
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(valor_parcela > 0, false)"
+      msg: "valor_parcela nulo, zero ou negativo"
+
+- name: valor_total_inconsistente
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01, true)"
+      msg: "valor_total_pendente diferente de parcela + multa + juros"
+
+- name: vencimento_nao_anterior_ao_evento
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(data_vencimento < data_extracao, true)"
+      msg: "data_vencimento igual ou depois da data do evento"
+
+- name: atraso_nao_confere_com_as_datas
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(dias_atraso = datediff(data_extracao, data_vencimento), true)"
+      msg: "dias_atraso não confere com as datas"
+
+# As funções de regra são do Unity Catalog (pos_venda.regras). Noutra base, crie as suas (regras/README.md) ou
+# troque por expressões; a computação precisa enxergar o catálogo.
+- name: valores_fora_da_regra
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: >-
+        coalesce((valor_multa <=> pos_venda.regras.valor_multa(valor_parcela))
+        AND (valor_juros <=> pos_venda.regras.valor_juros(valor_parcela, dias_atraso))
+        AND (valor_total_pendente <=> pos_venda.regras.valor_total_pendente(valor_parcela, dias_atraso)), false)
+      msg: "multa, juros ou total fora da regra de cálculo"
+
+- name: baixa_sem_data_ou_valor_pago
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(NOT (tipo_evento = 'BAIXA' AND (data_baixa IS NULL OR valor_pago IS NULL)), true)"
+      msg: "baixa sem data ou sem valor pago"
+
+- name: uf_invalida
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: >-
+        coalesce(upper(trim(cliente_uf)) IN ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
+        'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'), true)
+      msg: "UF do cliente fora das 27 UFs"
+
+- name: cliente_menor_de_idade
+  criticality: error
+  check:
+    function: sql_expression
+    arguments:
+      expression: "coalesce(cliente_idade >= 18, true)"
+      msg: "cliente com menos de 18 anos"
+
+# ---------------------------------------------------------------- avisos (entram marcados)
+- name: email_ausente
+  criticality: warn
+  check:
+    function: is_not_null
+    arguments:
+      column: cliente_email
+
+- name: forma_pagamento_ausente
+  criticality: warn
+  check:
+    function: is_not_null
+    arguments:
+      column: forma_pagamento
+
+- name: periodicidade_fora_do_dominio
+  criticality: warn
+  check:
+    function: is_in_list
+    arguments:
+      column: periodicidade_pagamento
+      allowed:
+        - MENSAL
+        - TRIMESTRAL
+        - SEMESTRAL
+        - ANUAL

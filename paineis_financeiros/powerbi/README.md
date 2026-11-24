@@ -67,6 +67,7 @@ visões. Os esquemas são baixados para `.esquemas/` na primeira vez.
 |---|---|
 | Esquemas oficiais (PBIP, PBIR) | 102 arquivos válidos; o teste negativo (campo faltando, propriedade inventada, medida inexistente) é detectado |
 | Visões `pos_venda.bi` | criadas; 0 chave de fato sem dimensão (produto, canal, forma, calendário) |
+| Paridade na reconferência (24/11) | **20/21** na foto de 09/01/2027. "Crescimento da carteira no mês": painel R$ 1.403.002,55; lógica DAX R$ 1.405.736,27. O painel soma o início do mês de cada grupo produto × canal, e 17 grupos nasceram depois de 01/01; o total certo é o da lógica DAX (L86) |
 | Paridade dos números | **21/21** indicadores iguais ao painel do Databricks (foto de 25/12/2026), calculando em SQL a mesma lógica das medidas DAX |
 | Auditoria Power BI on Databricks (`pba`) | modelo **80/100** (2 achados informativos, 1 falso positivo); lado Databricks **75/100** (limites do warehouse do Free Edition). As regras que dependem de visuais (RD-001, RD-010) e as de preparo de dados não foram avaliadas de fato: ver [auditoria/README.md](auditoria/README.md) |
 | Abrir no Power BI Desktop | **não feito aqui** (não há Windows nesta máquina): a sintaxe TMDL e o DAX só são executados de verdade no Desktop ou no Fabric |

@@ -17,6 +17,46 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 24/11/2026
 
+### Reconferência da Genie e do Power BI; guia para outra base com o Copilot; DQX em duas trilhas
+- **O que mudou:**
+  - **Reconferência com os dados até 09/01/2027:**
+    - a Genie deu 28/29 (era 29/29 em 21/11);
+    - a paridade do Power BI deu 20/21 (era 21/21 na foto de 25/12);
+    - as duas diferenças vêm dos vazamentos da semana 7 e viraram as lições L86 e L87.
+  - **Guia novo:** [`06_GUIA_BASE_BRUTA.md`](06_GUIA_BASE_BRUTA.md) aplica o framework a uma base bruta de pendências
+    no Databricks, com as etapas 0 a 7, a ficha da base, o mapeamento, o que muda por cenário e o prompt para o
+    Copilot.
+  - **Copilot:** `.github/copilot-instructions.md` e o prompt `.github/prompts/aplicar-base-bruta.prompt.md`.
+  - **Trilha A do DQX (como código):** `dqx_codigo/` com as 11 regras de erro da barreira em YAML e 3 avisos, um
+    notebook que separa válidos e quarentena e grava as métricas por regra, e um bundle sob demanda.
+  - **Framework:** P38 (DQX em duas trilhas) e P39 (guia executável por agente); as provas de P07, P18, P21 e P23
+    ganharam a reconferência.
+  - **Outros documentos:**
+    - playbook: M5 com as duas trilhas e o Passo 0 com a pergunta sobre conceder privilégio a um app;
+    - trilha: fase 26;
+    - skills: o plano de ação ganhou dois itens.
+- **Por quê:** pedido do usuário:
+  - reconferir a Genie e o Power BI com os dados novos;
+  - deixar o framework capaz de conduzir o Copilot na aplicação a uma base bruta;
+  - separar o DQX como código do DQX como app, porque o app pede privilégio no catálogo que nem todo time pode
+    conceder.
+- **Onde:** `docs/06_GUIA_BASE_BRUTA.md`, `dqx_codigo/`, `.github/`, `docs/01` a `05`, `README.md`, `AGENTS.md`,
+  `paineis_financeiros/README.md`, `paineis_financeiros/powerbi/README.md`, `governanca/genie/avaliacao.json` (gerado),
+  `governanca/genie/avaliacao_2411.log`, `paineis_financeiros/powerbi/VALORES_DE_REFERENCIA.md` (gerado).
+- **Conferência:**
+  - **Genie:** `genie.py avaliar` → "RESULTADO: 28/29". A que errou ("saldo em cobrança externa por produto hoje")
+    filtrou `Produto IS NOT NULL` e deixou de fora R$ 779,34 numa linha sem produto (L87).
+  - **Power BI:** `gerar_powerbi.py referencia` → 20/21. "Crescimento da carteira no mês" deu R$ 1.403.002,55 no
+    painel e R$ 1.405.736,27 na lógica DAX. Uma consulta em `pos_venda.bi.carteira_diaria` mostrou 17 grupos produto ×
+    canal que começam depois de 01/01, somando R$ 3.070,71 no primeiro dia (L86).
+  - **DQX como código:** `databricks bundle validate` em `dqx_codigo/` → "Validation OK!". O YAML tem 14 checagens (11
+    erros). O aviso de periodicidade pega os valores novos da bronze (`QUINZENAL`, 136; `BIMESTRAL`, 121). O job **não
+    foi executado**.
+  - **Links:** os links relativos dos documentos novos e alterados resolvem. As fontes novas responderam 200 (DQX,
+    PyPI, GitHub Copilot, VS Code).
+- **Docs atualizadas:** framework (P38, P39, provas) · playbook (Passo 0, M5, como adaptar) · lições (L86, L87) ·
+  trilha (fase 26) · `docs/README.md` · README · AGENTS.md · skills e ganhos
+
 ### Mapa de skills, plano de ação e qualidade na Genie (documento 05 e apresentação para o diretor)
 - **O que mudou:**
   - Documento novo [`05_SKILLS_E_GANHOS.md`](05_SKILLS_E_GANHOS.md):
