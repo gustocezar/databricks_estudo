@@ -620,9 +620,12 @@ duas trilhas.
 `governanca/genie/avaliacao.json` e `paineis_financeiros/powerbi/VALORES_DE_REFERENCIA.md`.
 
 **Resultado:**
-- **Genie.** 28/29; as 3 perguntas de qualidade continuam certas.
-- **Power BI.** 20/21; o total certo de "Crescimento da carteira no mês" é o do Power BI (R$ 1.405.736,27).
-- **DQX como código.** O bundle passa em `databricks bundle validate`; ainda não foi executado.
+- **Genie.** 28/29 na reconferência. Com o membro "não identificado" na ontologia (L87), voltou a 29/29.
+- **Power BI.** 20/21 na reconferência. Com o painel lendo início e fechamento nas datas da carteira inteira (L86),
+  voltou a 21/21; o crescimento de janeiro é R$ 1.405.736,27 nos dois.
+- **DQX como código.** O job rodou na janela de 26/12 a 01/01 e deu 3.229 linhas em quarentena, o mesmo número da
+  barreira. As tabelas saem descritas e com a tag de dado pessoal. A primeira execução falhou no `is_in_list` (L88).
+- **Conformidade.** O schema `dqx_codigo` entrou como "apoio": 9.494 verificações, sem pendência nova.
 - **Guia.** Os links do guia resolvem.
 
 **Como conferir:**
@@ -634,3 +637,4 @@ duas trilhas.
 - Medida semiaditiva de início ou fechamento se calcula no total, não somando grupos (L86).
 - Chave órfã precisa de membro explícito, senão um filtro de nulo esconde dinheiro (L87).
 - Reconfira o consumo depois de toda carga que traga grupos ou chaves novas.
+- No DQX, domínio de texto vai em `sql_expression` com `IN` (L88).

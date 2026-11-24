@@ -37,7 +37,7 @@ Todas as colunas têm descrição. O papel de cada schema define quais regras va
 |---|---|
 | principal (fluxo diário) | landing, fonte, bronze, silver, gold, dq, ontologia, regras, bi |
 | legado (primeira versão; só tags de dado pessoal, por decisão) | `*_sql`, `*_ldp` |
-| apoio (monitoramento) | finops, conformidade |
+| apoio (monitoramento) | finops, conformidade, dqx_codigo (DQX como código) |
 | interno (fica fora das regras) | `__materialization_*`, `event_log_*`, que o Lakeflow cria sozinho (L80) |
 
 ## Regras e resultado

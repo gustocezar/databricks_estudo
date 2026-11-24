@@ -259,23 +259,23 @@ dimensions:
     comment: "Aging no dia da foto (00_VENCE_HOJE a 06_ACIMA_120)."
     synonyms: [aging, bucket de atraso, faixa de dias]
   - name: Produto
-    comment: "Nome do produto de seguro de vida (8 produtos, ex.: Vida Completo, Vida Essencial)."
-    expr: produto_nome
+    expr: "COALESCE(produto_nome, 'Produto não identificado')"
+    comment: "Produto não identificado = linha da fato com chave de produto órfã, que não acha a dimensão (L87)."
     synonyms: [plano, produto de vida]
   - name: Categoria do produto
-    comment: "Categoria do produto: DOENCAS_GRAVES, FAMILIAR, PREMIUM, RENDA, RESGATAVEL, TEMPORARIO ou VITALICIO."
-    expr: categoria_produto
+    expr: "COALESCE(categoria_produto, 'Categoria não identificada')"
+    comment: "Categoria não identificada = linha da fato com chave de produto órfã, que não acha a dimensão (L87)."
   - name: Canal de venda
-    comment: "Canal em que a apólice foi vendida: BANCASSURANCE, CORRETOR, DIGITAL ou TELEVENDAS."
-    expr: canal_venda
+    expr: "COALESCE(canal_venda, 'Canal não identificado')"
+    comment: "Canal não identificado = linha da fato com chave de ponto de venda órfã, que não acha a dimensão (L87)."
     synonyms: [canal]
   - name: Regional
-    comment: "Regional comercial do ponto de venda: NORTE, NORDESTE, CENTRO-OESTE, SUDESTE ou SUL."
-    expr: ponto_venda_regional
+    expr: "COALESCE(ponto_venda_regional, 'Regional não identificada')"
+    comment: "Regional não identificada = linha da fato com chave de ponto de venda órfã, que não acha a dimensão (L87)."
     synonyms: [regional comercial]
   - name: UF do ponto de venda
-    comment: "Sigla da UF do ponto de venda (23 UFs com pendências)."
-    expr: ponto_venda_uf
+    expr: "COALESCE(ponto_venda_uf, 'UF não identificada')"
+    comment: "UF não identificada = linha da fato com chave de ponto de venda órfã, que não acha a dimensão (L87)."
   - name: Forma de pagamento
     comment: "Forma de pagamento da parcela: BOLETO, CARTAO_CREDITO, DEBITO_CONTA ou PIX_AUTOMATICO. NAO_CADASTRADA é dado que vazou da barreira de qualidade (dez/2026)."
     expr: forma_pagamento
@@ -488,14 +488,14 @@ dimensions:
     expr: "CAST(DATE_TRUNC('YEAR', data_baixa) AS DATE)"
     synonyms: [ano do pagamento]
   - name: Produto
-    comment: "Nome do produto de seguro de vida (8 produtos, ex.: Vida Completo, Vida Essencial)."
-    expr: produto_nome
+    expr: "COALESCE(produto_nome, 'Produto não identificado')"
+    comment: "Produto não identificado = linha da fato com chave de produto órfã, que não acha a dimensão (L87)."
   - name: Categoria do produto
-    comment: "Categoria do produto: DOENCAS_GRAVES, FAMILIAR, PREMIUM, RENDA, RESGATAVEL, TEMPORARIO ou VITALICIO."
-    expr: categoria_produto
+    expr: "COALESCE(categoria_produto, 'Categoria não identificada')"
+    comment: "Categoria não identificada = linha da fato com chave de produto órfã, que não acha a dimensão (L87)."
   - name: Canal de venda
-    comment: "Canal em que a apólice foi vendida: BANCASSURANCE, CORRETOR, DIGITAL ou TELEVENDAS."
-    expr: canal_venda
+    expr: "COALESCE(canal_venda, 'Canal não identificado')"
+    comment: "Canal não identificado = linha da fato com chave de ponto de venda órfã, que não acha a dimensão (L87)."
   - name: Forma de pagamento
     comment: "Forma de pagamento da parcela: BOLETO, CARTAO_CREDITO, DEBITO_CONTA ou PIX_AUTOMATICO. NAO_CADASTRADA é dado que vazou da barreira de qualidade (dez/2026)."
     expr: forma_pagamento
@@ -637,11 +637,11 @@ dimensions:
     comment: "Dia em que a pendência entrou na carteira (dia seguinte ao vencimento)."
     expr: data_entrada
   - name: Produto
-    comment: "Nome do produto de seguro de vida (8 produtos, ex.: Vida Completo, Vida Essencial)."
-    expr: produto_nome
+    expr: "COALESCE(produto_nome, 'Produto não identificado')"
+    comment: "Produto não identificado = linha da fato com chave de produto órfã, que não acha a dimensão (L87)."
   - name: Canal de venda
-    comment: "Canal em que a apólice foi vendida: BANCASSURANCE, CORRETOR, DIGITAL ou TELEVENDAS."
-    expr: canal_venda
+    expr: "COALESCE(canal_venda, 'Canal não identificado')"
+    comment: "Canal não identificado = linha da fato com chave de ponto de venda órfã, que não acha a dimensão (L87)."
   - name: Forma de pagamento
     comment: "Forma de pagamento da parcela: BOLETO, CARTAO_CREDITO, DEBITO_CONTA ou PIX_AUTOMATICO. NAO_CADASTRADA é dado que vazou da barreira de qualidade (dez/2026)."
     expr: forma_pagamento

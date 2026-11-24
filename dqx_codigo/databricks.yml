@@ -24,12 +24,16 @@ variables:
 resources:
   jobs:
     dqx_codigo:
-      name: dqx_codigo_checagens
+      name: pos_venda_dqx_codigo
       description: >-
         DQX como código (databricks-labs-dqx): aplica as checagens de checks_pendencias.yml na tabela de entrada e
         grava <prefixo>_validos, <prefixo>_quarentena e dq_metricas_regras no schema de destino.
       tags:
+        dominio: pos_venda
         abordagem: dqx_codigo
+        project: pos_venda
+        team: squad-pos-venda
+      timeout_seconds: 3600
       performance_target: STANDARD
       max_concurrent_runs: 1
       tasks:
@@ -46,4 +50,3 @@ resources:
 targets:
   dev:
     default: true
-    mode: development

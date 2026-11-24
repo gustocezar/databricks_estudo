@@ -104,6 +104,10 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   regra. Exemplos: chave única, chave substituta não nula, `dim_data` e a faixa "Vence hoje" → zero nessas regras é
   prova de que a barreira e o recálculo funcionam, não falta de dado. Os exemplos delas ficam na quarentena e na
   bronze. (`dqx_studio/demo/ROTEIRO.md`)
+- **L88** No DQX 0.17.2, a checagem `is_in_list` com valores de texto em `allowed` (`MENSAL`, `TRIMESTRAL`…) falhou com
+  `UNRESOLVED_COLUMN`: a biblioteca leu cada valor como nome de coluna, e o job do DQX como código parou na primeira
+  execução → domínio fechado de texto vai em `sql_expression` com `IN`, com o `coalesce` que define o nulo; e rode o
+  modelo numa janela conhecida antes de ligá-lo na carga. (`dqx_codigo/checks_pendencias.yml`)
 
 ## Governança e metadados
 
@@ -168,8 +172,10 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   cobrança externa por produto hoje": a Genie filtrou `Produto IS NOT NULL` e deixou de fora R$ 779,34 de linhas da
   fato com produto órfão (vazamento da semana 7). O gabarito, sem o filtro, mostra esse saldo numa linha sem produto →
   dê às chaves órfãs um membro explícito na ontologia (por exemplo, "Produto não identificado"), para que nenhum
-  filtro de nulo esconda dinheiro, e reavalie a Genie depois de toda carga que traga chave órfã.
-  (`governanca/genie.py avaliar`, `governanca/genie/avaliacao.json`)
+  filtro de nulo esconda dinheiro, e reavalie a Genie depois de toda carga que traga chave órfã. Corrigido em 24/11:
+  produto, categoria, canal, regional e UF ganharam o membro "não identificado" nas metric views (a gold não mudou, e o
+  DQX Studio continua vendo as órfãs); a Genie voltou a 29/29.
+  (`governanca/gerar_ontologia_sql.py`, `governanca/genie.py avaliar`, `governanca/genie/avaliacao.json`)
 
 ## Regras de negócio (BDD)
 
@@ -223,7 +229,9 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   (vazamentos da semana 7), e cada um entrou com o saldo do seu primeiro dia. O total certo é o do Power BI: saldo da
   foto menos o saldo do primeiro dia do mês → medida semiaditiva de início ou fechamento se calcula no total, nunca
   somando os grupos; e reconfira painel e BI depois de toda carga que traga grupos novos.
-  (`paineis_financeiros/powerbi/gerar_powerbi.py referencia`, `VALORES_DE_REFERENCIA.md`)
+  Corrigido em 24/11: o conjunto de dados lê início, fechamento e mês anterior de cada grupo nas datas da carteira
+  inteira, com zero para o grupo que não existia, e a paridade voltou a 21/21.
+  (`paineis_financeiros/gerar_paineis.py` `ds_carteira_mes`, `powerbi/gerar_powerbi.py referencia`)
 
 ## Avaliação por IA
 

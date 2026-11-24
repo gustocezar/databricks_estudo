@@ -11,8 +11,8 @@ Gerado por `python3 gerar_powerbi.py referencia`. Foto mais recente: **2027-01-0
 | % do saldo acima de 60 dias | 65,16% | 65,16% | sim | |
 | Ticket médio da pendência | R$ 125,22 | R$ 125,22 | sim | |
 | Multa e juros em aberto | R$ 1.713.958,11 | R$ 1.713.958,11 | sim | |
-| Variação mensal do saldo | 3,92% | 3,91% | sim | |
-| Crescimento da carteira no mês | R$ 1.403.002,55 | R$ 1.405.736,27 | **NÃO** | |
+| Variação mensal do saldo | 3,91% | 3,91% | sim | |
+| Crescimento da carteira no mês | R$ 1.405.736,27 | R$ 1.405.736,27 | sim | |
 | Recuperado no ano | R$ 1.812.056,04 | R$ 1.812.056,04 | sim | |
 | Variação mensal do recuperado (último mês completo) | -0,56% | -0,56% | sim | |
 | Valor recuperado | R$ 47.321.709,37 | R$ 47.321.709,37 | sim | |

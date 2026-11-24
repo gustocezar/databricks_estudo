@@ -17,6 +17,44 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 24/11/2026
 
+### Pendências executadas: DQX como código, correções L86 e L87, Genie 29/29 e Power BI 21/21
+- **O que mudou:**
+  - **DQX como código (trilha A):** rodou no workspace. O job passou a se chamar `pos_venda_dqx_codigo`, com tags
+    `project` e `team` e timeout de 1 hora.
+    - O notebook passou a aplicar, a cada execução, as descrições da tabela de entrada e a tag `dado_pessoal` das
+      colunas, além das tags de domínio e LGPD da tabela.
+    - A periodicidade virou `sql_expression` com `IN` (L88).
+    - O schema `pos_venda.dqx_codigo` entrou como "apoio" em `CAMADAS` da conformidade.
+  - **L86 (painel):** `ds_carteira_mes` lê início, fechamento e mês anterior de cada produto × canal nas datas da carteira
+    inteira, com zero para o grupo que não existia. Os dois painéis foram publicados no mesmo link.
+  - **L87 (ontologia):** produto, categoria, canal, regional e UF ganharam o membro "não identificado" nas metric views.
+    A gold não mudou, e o DQX Studio continua vendo as órfãs. A semântica foi reaplicada depois (L31).
+- **Por quê:** pedido do usuário: executar as pendências sem sobrescrever nada do DQX Studio.
+- **Onde:** `dqx_codigo/` (`aplicar_dqx.py`, `checks_pendencias.yml`, `databricks.yml`, `README.md`),
+  `paineis_financeiros/gerar_paineis.py` e `src/*.lvdash.json`, `governanca/gerar_ontologia_sql.py`, `ontologia.sql`,
+  `ontologia_sql.json`, `conformidade/gerar_conformidade.py` e os gerados, `governanca/genie/avaliacao.json`,
+  `governanca/genie/avaliacao_2411b.log`, `paineis_financeiros/powerbi/VALORES_DE_REFERENCIA.md`.
+- **Conferência:**
+  - **DQX como código:**
+    - a primeira execução falhou com `UNRESOLVED_COLUMN` `MENSAL` (L88), e a segunda terminou SUCCESS em cerca de
+      7 min;
+    - na janela de 26/12 a 01/01 (49.972 eventos da bronze), deu 3.229 em quarentena, o mesmo número da barreira, e
+      46.743 válidas;
+    - as 14 regras estão em `dq_metricas_regras`;
+    - as 3 tabelas têm 0 coluna sem descrição e 25 colunas com `dado_pessoal`.
+  - **Power BI:** `gerar_powerbi.py referencia` deu "PARIDADE: 100%". O crescimento de janeiro é R$ 1.405.736,27 nos
+    dois lados, e a variação 3,91%.
+  - **Genie:** `genie.py avaliar` deu "RESULTADO: 29/29". A pergunta por produto agora traz "Produto não identificado",
+    R$ 779,34.
+  - **Ontologia:** `aplicar_sql.py ontologia_sql.json` deu 21/21. `aplicar_semantica.py` publicou 51/51 Wikis.
+  - **Conformidade:**
+    - `aplicar`, `registrar` e `conferir` ok, com 9.494 verificações;
+    - situação igual (13 atendem, 12 em atenção, 3 críticas) e nenhuma pendência nova;
+    - o job novo atende PLT01 e PLT03.
+  - **DQX Studio:** nada mudou no app, no Lakebase `dqx-studio-db` nem em `main.dqx_studio`.
+- **Docs atualizadas:** framework (P07, P18, P21, P23, P29, P38) · lições (L86 e L87 corrigidas, L88) · trilha (fase
+  26) · guia 06 · spec · skills e ganhos · `docs/README.md` · READMEs do DQX como código e dos painéis
+
 ### E-mail do autor fora do repositório (README e evidências do DQX Studio)
 - **O que mudou:** o e-mail do autor virou `<seu-usuario>` em `dqx_studio/README.md` (caminho do bundle) e nos 2
   arquivos de evidência do Studio em `dqx_studio/regras/resultados/`.

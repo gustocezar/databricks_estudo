@@ -48,7 +48,8 @@ AS SELECT * FROM VALUES
     ('silver_ldp', 'silver', 'legado'),
     ('gold_ldp', 'gold', 'legado'),
     ('finops', 'monitoramento', 'apoio'),
-    ('conformidade', 'monitoramento', 'apoio')
+    ('conformidade', 'monitoramento', 'apoio'),
+    ('dqx_codigo', 'qualidade', 'apoio')
   AS t(esquema, camada, papel);
 
 CREATE OR REPLACE VIEW pos_venda.conformidade.config_regras (

@@ -119,14 +119,12 @@
     arguments:
       column: forma_pagamento
 
+# Domínio fechado com sql_expression e IN: na versão 0.17.2, o is_in_list leu os valores de texto de "allowed" como
+# nomes de coluna (UNRESOLVED_COLUMN `MENSAL`). Valor nulo passa, como na barreira.
 - name: periodicidade_fora_do_dominio
   criticality: warn
   check:
-    function: is_in_list
+    function: sql_expression
     arguments:
-      column: periodicidade_pagamento
-      allowed:
-        - MENSAL
-        - TRIMESTRAL
-        - SEMESTRAL
-        - ANUAL
+      expression: "coalesce(periodicidade_pagamento IN ('MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'), true)"
+      msg: "periodicidade fora do domínio (ex.: QUINZENAL, BIMESTRAL)"

@@ -6,15 +6,16 @@ permissão para dar ao app o acesso que ele pede no catálogo, ou não quer mant
 O app é a [trilha B](../dqx_studio/README.md). O [guia para outra base](../docs/06_GUIA_BASE_BRUTA.md) compara as duas
 e diz quando escolher cada uma.
 
-> **Situação (24/11/2026):** é um modelo. Foi conferido contra a documentação do DQX e o bundle passa em
-> `databricks bundle validate`, mas ainda não foi executado neste workspace.
+> **Situação (24/11/2026):** executado neste workspace na janela de 26/12 a 01/01 (49.972 eventos da bronze). Deu 3.229
+> linhas em quarentena, o mesmo número da barreira do pipeline, e 46.743 válidas. As 14 regras estão em
+> `dq_metricas_regras`. O job é `pos_venda_dqx_codigo`, com tags de projeto e time e timeout de 1 hora.
 
 ## O que tem aqui
 
 | Arquivo | O que faz |
 |---|---|
 | `checks_pendencias.yml` | 14 checagens: as 11 regras de erro da barreira do pipeline, com os mesmos nomes, e 3 avisos |
-| `aplicar_dqx.py` | notebook: instala `databricks-labs-dqx==0.17.2`, aplica as checagens, separa válidos e quarentena e grava as métricas por regra |
+| `aplicar_dqx.py` | notebook: instala `databricks-labs-dqx==0.17.2`, aplica as checagens, separa válidos e quarentena, grava as métricas por regra e aplica descrições e tags (copiadas da tabela de entrada) |
 | `databricks.yml` | bundle com o job `dqx_codigo_checagens`, sob demanda e no serverless |
 
 ## Permissões necessárias
@@ -82,6 +83,31 @@ ORDER BY reprovadas DESC;
    Confira as colunas de resultado (`_errors`, `_warnings`) e os números por regra.
 5. **Ponha o job no fim da carga**, como uma tarefa depois da bronze ou da silver.
 
+## Resultado da primeira execução (janela de 26/12 a 01/01)
+
+| Regra | Reprovadas no DQX | Motivo na barreira |
+|---|---|---|
+| valores_fora_da_regra | 1.358 | 335 |
+| atraso_nao_confere_com_as_datas | 721 | 352 |
+| vencimento_nao_anterior_ao_evento | 359 | 344 |
+| uf_invalida | 341 | 320 |
+| valor_parcela_nao_positivo | 331 | 330 |
+| valor_total_inconsistente | 329 | 322 |
+| cliente_menor_de_idade | 323 | 300 |
+| status_cobranca_invalido | 299 | 298 |
+| tipo_evento_invalido | 232 | 230 |
+| baixa_sem_data_ou_valor_pago | 214 | 204 |
+| pendencia_id_nulo | 194 | 194 |
+| **linhas em quarentena** | **3.229** | **3.229** |
+
+O total de linhas bate, e as regras diferem porque contam coisas diferentes:
+- **DQX:** conta toda regra que a linha violou.
+- **Barreira:** guarda só o primeiro motivo, na ordem do `CASE`.
+
+Uma linha com atraso errado, por exemplo, quase sempre tem também multa e juros fora da regra. Dos avisos, o e-mail
+ausente marcou 2.995 linhas. Periodicidade e forma de pagamento deram zero nesta janela, porque os valores novos
+chegaram na semana 7.
+
 ## Cuidados
 
 - **Use todas as linhas da janela, não amostra.** Por amostra de 10 mil linhas, o Studio nunca acusou as órfãs da fato
@@ -89,5 +115,7 @@ ORDER BY reprovadas DESC;
 - **Mesmo nome, mesmas regras nas duas linhas de defesa.** A barreira do pipeline e o DQX usam os mesmos nomes; assim a
   quarentena e o painel batem.
 - **Expressão escrita para dar TRUE quando o dado está bom.** O `coalesce` define o que acontece com valor nulo.
+- **Domínio de texto em `sql_expression` com `IN`.** Na versão 0.17.2, o `is_in_list` leu cada valor de `allowed` como
+  nome de coluna e o job falhou (L88).
 - **Versão fixada.** Atualize a versão de propósito e rode de novo numa janela conhecida. O Studio instalado no
   pos_venda usa DQX 0.17.x.

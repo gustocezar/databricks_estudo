@@ -120,3 +120,4 @@ Cada passo tem critério de pronto conferível e aprovação humana nos pontos q
 | regra em zero confundida com falta de dado | L84 |
 | soma de início ou fechamento por grupo | L86 |
 | filtro de nulo esconde chave órfã na Genie | L87 |
+| `is_in_list` do DQX lê valores de texto como colunas | L88 |

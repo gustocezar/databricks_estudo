@@ -166,7 +166,7 @@ Os outros documentos complementam este:
 - **Reaplique quando:** a medida é posição (saldo, estoque, carteira, reserva).
 - **Prova:** paridade 21/21 entre o painel do Databricks e as medidas DAX, que repetem a regra semiaditiva (foto de
   25/12). Na reconferência de 24/11 (foto de 09/01/2027), deu 20/21: o painel somava o início do mês de cada grupo, e
-  grupos novos no meio do mês distorcem essa soma (L86).
+  grupos novos no meio do mês distorcem essa soma (L86). Corrigido o painel, voltou a 21/21.
 
 ### P08 · Chaves informativas, com `RELY` só nas primárias
 - **Origem:** [Constraints](https://docs.databricks.com/aws/en/tables/constraints) e
@@ -334,7 +334,7 @@ Os outros documentos complementam este:
 - **Reaplique quando:** mais de um consumidor (painel, Genie, BI externo) usa a mesma métrica.
 - **Prova:** painéis 14/14, Genie 29/29 e paridade Power BI 21/21, com os mesmos números (22/11). Na reconferência
   de 24/11, com os dados até 09/01/2027, a Genie deu 28/29 e a paridade 20/21. As duas diferenças vêm dos vazamentos
-  da semana 7 (L86, L87).
+  da semana 7 (L86, L87); corrigidas no mesmo dia, voltaram a 29/29 e 21/21.
 
 ### P19 · Padrões semânticos: fechamento semiaditivo, mês anterior, acumulados e ranking
 - **Origem:** [uc-semantics-patterns](https://github.com/databricks-solutions/uc-semantics-patterns)
@@ -384,7 +384,7 @@ Os outros documentos complementam este:
   falso negativo.
 - **Reaplique quando:** há públicos com perguntas diferentes sobre os mesmos dados.
 - **Prova:** 29/29 perguntas de avaliação certas (21/11). Em 24/11, com os dados até 09/01/2027, 28/29: a que errou
-  deixou de fora o saldo de produto órfão (L87).
+  deixou de fora o saldo de produto órfão (L87). Com o membro "não identificado" na ontologia, voltou a 29/29.
 
 ### P22 · Painéis AI/BI por público, com uma página por fato
 - **Origem:** [AI/BI dashboards](https://docs.databricks.com/aws/en/dashboards/) (Databricks); lição L66.
@@ -410,7 +410,8 @@ Os outros documentos complementam este:
   - O DAX só cuida do que é do motor dele, como o saldo semiaditivo.
   - A comparação entre as ferramentas usa os mesmos números.
 - **Reaplique quando:** a empresa tem outra ferramenta de BI, ou está avaliando uma.
-- **Prova:** 102 arquivos válidos nos esquemas e paridade 21/21 (foto de 25/12). Na foto de 09/01/2027, 20/21 (L86).
+- **Prova:** 102 arquivos válidos nos esquemas e paridade 21/21 (foto de 25/12). Na foto de 09/01/2027, deu 20/21 e
+  voltou a 21/21 depois da correção do painel (L86).
   **Não verificado:** abrir no Power BI Desktop.
 
 ---
@@ -489,7 +490,7 @@ Os outros documentos complementam este:
 - **Por quê:** quem chega depois entende o porquê de cada escolha. Uma mudança só está pronta quando a conferência está
   registrada.
 - **Reaplique quando:** sempre.
-- **Prova:** 27 fases (0 a 26), 87 lições, inventário regenerado a cada mudança.
+- **Prova:** 27 fases (0 a 26), 88 lições, inventário regenerado a cada mudança.
 
 ---
 
@@ -675,8 +676,10 @@ Os outros documentos complementam este:
 - **Prova:**
   - `databricks bundle validate` passa;
   - as 11 regras de erro têm o mesmo nome do motivo da barreira;
-  - o aviso de periodicidade pega os valores novos da bronze (`QUINZENAL`, 136; `BIMESTRAL`, 121).
-  - Ainda não foi executado no workspace (24/11).
+  - executado em 24/11 na janela de 26/12 a 01/01 (49.972 eventos): 3.229 linhas em quarentena, o mesmo número da
+    barreira; 46.743 válidas; as 14 regras em `dq_metricas_regras`, inclusive as que deram zero;
+  - as 3 tabelas novas saem com 100% das colunas descritas e a tag `dado_pessoal` copiada da bronze (25 colunas);
+  - a primeira execução falhou no `is_in_list` (L88).
 
 ---
 

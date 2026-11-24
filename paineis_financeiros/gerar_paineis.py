@@ -76,23 +76,37 @@ DS = {
             "FROM mv_safra_recuperacao GROUP BY ALL"],
         "columns": [{"displayName": "Taxa de recuperação", "description": "Pendências pagas / pendências que entraram",
                      "expression": "SUM(`pagas`) / SUM(`entradas`)"}]},
-    # medidas de fechamento e comparação de períodos das metric views (padrões de databricks-solutions/uc-semantics-patterns).
-    # Grão produto x canal: a soma das fatias é igual ao total da metric view em todos os meses (conferido).
+    # Início, fechamento e mês anterior por produto x canal, lidos nas datas da CARTEIRA INTEIRA (primeira e última foto do
+    # mês, última foto do mês anterior). Um grupo que nasce ou some no meio do mês entra com zero (o saldo semiaditivo
+    # não se soma por grupo com datas diferentes: L86). Assim a soma das fatias é igual ao total em todos os meses.
     "ds_carteira_mes": {
         "displayName": "Fechamento mensal da carteira por produto e canal",
         "queryLines": [
-            "WITH m AS (\n",
-            "  SELECT `Mês de referência` AS mes, `Produto` AS produto, `Canal de venda` AS canal,\n",
-            "         MEASURE(`Saldo no início do período`) AS saldo_inicio, MEASURE(`Saldo de fechamento`) AS saldo_fechamento,\n",
-            "         MEASURE(`Saldo de fechamento do mês anterior`) AS saldo_mes_anterior,\n",
-            "         MEASURE(`Pendências em aberto no fechamento`) AS pendencias_fechamento\n",
+            "WITH d AS (\n",
+            "  SELECT `Data de referência` AS dia, `Mês de referência` AS mes, `Produto` AS produto, `Canal de venda` AS canal,\n",
+            "         MEASURE(`Saldo em aberto`) AS saldo, MEASURE(`Pendências em aberto`) AS pendencias\n",
             "  FROM mv_carteira_em_aberto GROUP BY ALL\n",
+            "), lim AS (\n",
+            "  SELECT mes, MIN(dia) AS ini, MAX(dia) AS fim, LEAD(mes) OVER (ORDER BY mes) AS mes_seguinte FROM d GROUP BY mes\n",
+            "), p AS (\n",
+            "  SELECT l.mes, d.produto, d.canal, d.saldo AS saldo_inicio, CAST(NULL AS DECIMAL(38, 2)) AS saldo_fechamento,\n",
+            "         CAST(NULL AS DECIMAL(38, 2)) AS saldo_mes_anterior, CAST(NULL AS BIGINT) AS pendencias_fechamento\n",
+            "  FROM d JOIN lim l ON d.dia = l.ini\n",
+            "  UNION ALL\n",
+            "  SELECT l.mes, d.produto, d.canal, NULL, d.saldo, NULL, d.pendencias FROM d JOIN lim l ON d.dia = l.fim\n",
+            "  UNION ALL\n",
+            "  SELECT l.mes_seguinte, d.produto, d.canal, NULL, NULL, d.saldo, NULL\n",
+            "  FROM d JOIN lim l ON d.dia = l.fim WHERE l.mes_seguinte IS NOT NULL\n",
+            "), m AS (\n",
+            "  SELECT mes, produto, canal, COALESCE(SUM(saldo_inicio), 0) AS saldo_inicio, COALESCE(SUM(saldo_fechamento), 0) AS saldo_fechamento,\n",
+            "         SUM(saldo_mes_anterior) AS saldo_mes_anterior, COALESCE(SUM(pendencias_fechamento), 0) AS pendencias_fechamento\n",
+            "  FROM p GROUP BY ALL\n",
             ")\n",
             "SELECT m.*, mes = MAX(mes) OVER () AS mes_atual FROM m"],
         "columns": [
             {"displayName": "Variação mensal do saldo", "description": "Fechamento sobre o fechamento do mês anterior (MoM)",
              "expression": "(SUM(`saldo_fechamento`) - SUM(`saldo_mes_anterior`)) / SUM(`saldo_mes_anterior`)"},
-            {"displayName": "Variação do saldo no mês", "description": "Fechamento menos o saldo do primeiro dia do mês",
+            {"displayName": "Variação do saldo no mês", "description": "Fechamento menos o saldo do primeiro dia do mês, ambos na data da carteira inteira",
              "expression": "SUM(`saldo_fechamento`) - SUM(`saldo_inicio`)"}]},
     "ds_recuperacao_mes": {
         "displayName": "Recuperação mês a mês e acumulado no ano por produto, canal e forma",

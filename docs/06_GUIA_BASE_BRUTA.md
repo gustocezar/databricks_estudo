@@ -259,7 +259,8 @@ validação. Numa base real, aplique máscaras ou ABAC **antes** de abrir a Geni
   metric views (P23).
 
 **Reconferir depois de cada carga relevante.** Em 24/11, a reconferência no pos_venda achou uma diferença que só
-aparece com grupos que nascem no meio do mês (L86).
+aparece com grupos que nascem no meio do mês (L86), e outra com chave órfã na Genie (L87). As duas foram corrigidas, e a
+reconferência voltou a 29/29 e 21/21.
 
 **Critério de saída:**
 - a Genie acerta as perguntas de avaliação;
@@ -303,6 +304,8 @@ aparece com grupos que nascem no meio do mês (L86).
 | L74 | o deploy do bundle segue o `.gitignore` da raiz |
 | L84 | regra em zero pode ser garantia da arquitetura; explique, não force exemplo |
 | L86 | início e fechamento somados por grupo divergem do total quando um grupo nasce no meio do mês |
+| L87 | chave órfã precisa de um membro "não identificado" na ontologia, senão um filtro de nulo esconde dinheiro |
+| L88 | no DQX, domínio de texto vai em `sql_expression` com `IN`; o `is_in_list` leu os valores como colunas |
 
 ## Prompt inicial para colar no Copilot
 

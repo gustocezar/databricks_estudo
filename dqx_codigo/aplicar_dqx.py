@@ -99,4 +99,58 @@ metricas = (
     .withColumn("taxa", F.when(F.col("linhas_avaliadas") > 0, F.col("reprovadas") / F.col("linhas_avaliadas")))
 )
 metricas.write.mode("append").saveAsTable(f"{DESTINO}.dq_metricas_regras")
-display(metricas.orderBy(F.desc("reprovadas")))  # noqa: F821
+
+# COMMAND ----------
+
+# Governança junto com o dado (P13, P15, P16): a cada execução, as tabelas recriadas recebem de novo a descrição da
+# entrada coluna a coluna, a tag dado_pessoal das colunas pessoais e as tags de domínio e LGPD da tabela.
+def esc(t):
+    return str(t).replace("\\", "\\\\").replace("'", "\\'")
+
+
+cat, sch, tab = ENTRADA.split(".")
+coment = {r["col_name"]: r["comment"] for r in spark.sql(f"DESCRIBE TABLE {ENTRADA}").collect()  # noqa: F821
+          if r["col_name"] and not r["col_name"].startswith("#") and r["comment"]}
+tags_col = spark.sql(f"""SELECT column_name, tag_name, tag_value FROM {cat}.information_schema.column_tags  -- noqa
+    WHERE schema_name = '{sch}' AND table_name = '{tab}' AND tag_name = 'dado_pessoal'""").collect()  # noqa: F821
+tags_tab = spark.sql(f"""SELECT tag_name, tag_value FROM {cat}.information_schema.table_tags
+    WHERE schema_name = '{sch}' AND table_name = '{tab}'
+      AND tag_name IN ('domain', 'data_owner', 'subject_area', 'contem_dado_pessoal', 'contem_dado_sensivel')""").collect()  # noqa: F821
+EXTRAS = {
+    COL_ERRO: "Regras de erro (criticality error) que a linha violou, uma estrutura por regra: nome, mensagem e colunas.",
+    COL_AVISO: "Regras de aviso (criticality warn) que a linha violou; a linha entra, marcada com cada aviso.",
+    "execucao_id": "Identificador da execução do DQX como código; agrupa as métricas da mesma rodada.",
+    "executado_em": "Data e hora (UTC) em que a execução aplicou as checagens.",
+    "tabela": "Tabela de entrada avaliada, no formato catálogo.schema.tabela.",
+    "regra": "Nome estável da regra; é o mesmo motivo de rejeição da barreira do pipeline.",
+    "criticidade": "Criticidade da regra: error barra a linha, warn deixa entrar marcada.",
+    "linhas_avaliadas": "Quantidade de linhas da janela avaliadas nesta execução.",
+    "reprovadas": "Linhas que violaram a regra nesta execução; zero aparece para mostrar que foi checada.",
+    "taxa": "Reprovadas dividido por linhas avaliadas, entre 0 e 1.",
+}
+DESCR = {
+    f"{PREFIXO}_validos": f"Linhas de {ENTRADA} sem erro nas checagens do DQX como código; avisos na coluna {COL_AVISO}. Gerada por dqx_codigo/aplicar_dqx.py.",
+    f"{PREFIXO}_quarentena": f"Linhas de {ENTRADA} com ao menos um erro nas checagens do DQX como código; cada regra violada em {COL_ERRO}. Gerada por dqx_codigo/aplicar_dqx.py.",
+    "dq_metricas_regras": "Histórico do DQX como código: uma linha por execução e regra, com linhas avaliadas, reprovadas e taxa. Base do painel de qualidade e do plano de ação.",
+}
+spark.sql(f"COMMENT ON SCHEMA {DESTINO} IS 'Resultados do DQX como código (trilha A, sem app): válidos, quarentena e métricas por regra. Gerado por dqx_codigo/aplicar_dqx.py.'")  # noqa: F821
+for nome, descr in DESCR.items():
+    alvo = f"{DESTINO}.{nome}"
+    spark.sql(f"COMMENT ON TABLE {alvo} IS '{esc(descr)}'")  # noqa: F821
+    colunas = spark.table(alvo).columns  # noqa: F821
+    for c in colunas:
+        texto = EXTRAS.get(c) or coment.get(c)
+        if texto:
+            spark.sql(f"ALTER TABLE {alvo} ALTER COLUMN `{c}` COMMENT '{esc(texto)}'")  # noqa: F821
+    if nome != "dq_metricas_regras":
+        for r in tags_col:
+            if r["column_name"] in colunas:
+                spark.sql(f"ALTER TABLE {alvo} ALTER COLUMN `{r['column_name']}` SET TAGS ('dado_pessoal' = '{esc(r['tag_value'])}')")  # noqa: F821
+        if tags_tab:
+            pares = ", ".join(f"'{r['tag_name']}' = '{esc(r['tag_value'])}'" for r in tags_tab)
+            spark.sql(f"ALTER TABLE {alvo} SET TAGS ({pares})")  # noqa: F821
+print("descrições e tags aplicadas em", ", ".join(DESCR))
+
+# COMMAND ----------
+
+display(spark.table(f"{DESTINO}.dq_metricas_regras").where(F.col("execucao_id") == execucao).orderBy(F.desc("reprovadas")))  # noqa: F821

@@ -28,6 +28,6 @@ databricks bundle deploy -t dev --profile dbx-workshop    # atualiza e publica o
 ## Power BI · para avaliação
 
 O mesmo conteúdo (mesmas páginas, títulos e números) em um projeto do Power BI Desktop: [powerbi/README.md](powerbi/README.md).
-Os números foram conferidos contra o painel do Databricks: 21 de 21 indicadores iguais na foto de 25/12/2026 e 20 de 21
-na reconferência de 24/11, na foto de 09/01/2027 (`powerbi/VALORES_DE_REFERENCIA.md`). A diferença está explicada na
-lição L86.
+Os números foram conferidos contra o painel do Databricks: 21 de 21 indicadores iguais na foto de 25/12/2026 e de novo 21 de 21
+na foto de 09/01/2027, depois da correção de 24/11 (`powerbi/VALORES_DE_REFERENCIA.md`). A reconferência tinha dado 20
+de 21; a causa e a correção estão na lição L86.

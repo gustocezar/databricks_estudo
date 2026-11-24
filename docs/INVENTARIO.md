@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 24/11/2026 09:19. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 24/11/2026 11:01. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -64,6 +64,7 @@
 | `conformidade` | 2 | 12 | 1 | — |
 | `default` | 0 | 0 | 0 | — |
 | `dq` | 1 | 15 | 0 | — |
+| `dqx_codigo` | 3 | 0 | 0 | — |
 | `finops` | 0 | 19 | 1 | — |
 | `fonte` | 1 | 0 | 0 | — |
 | `gold` | 17 | 0 | 0 | — |
@@ -97,6 +98,7 @@
 |---|---|---|
 | pos_venda_carga_diaria | `288828593679314` | PAUSED |
 | pos_venda_carga_setup | `539329578539712` | sem agenda |
+| pos_venda_dqx_codigo | `697712606677848` | sem agenda |
 | pos_venda_medalhao_lakeflow_job | `827822094941996` | PAUSED |
 | pos_venda_medalhao_sql | `446390966394300` | PAUSED |
 

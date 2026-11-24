@@ -101,12 +101,25 @@
       "name": "ds_carteira_mes",
       "displayName": "Fechamento mensal da carteira por produto e canal",
       "queryLines": [
-        "WITH m AS (\n",
-        "  SELECT `Mês de referência` AS mes, `Produto` AS produto, `Canal de venda` AS canal,\n",
-        "         MEASURE(`Saldo no início do período`) AS saldo_inicio, MEASURE(`Saldo de fechamento`) AS saldo_fechamento,\n",
-        "         MEASURE(`Saldo de fechamento do mês anterior`) AS saldo_mes_anterior,\n",
-        "         MEASURE(`Pendências em aberto no fechamento`) AS pendencias_fechamento\n",
+        "WITH d AS (\n",
+        "  SELECT `Data de referência` AS dia, `Mês de referência` AS mes, `Produto` AS produto, `Canal de venda` AS canal,\n",
+        "         MEASURE(`Saldo em aberto`) AS saldo, MEASURE(`Pendências em aberto`) AS pendencias\n",
         "  FROM mv_carteira_em_aberto GROUP BY ALL\n",
+        "), lim AS (\n",
+        "  SELECT mes, MIN(dia) AS ini, MAX(dia) AS fim, LEAD(mes) OVER (ORDER BY mes) AS mes_seguinte FROM d GROUP BY mes\n",
+        "), p AS (\n",
+        "  SELECT l.mes, d.produto, d.canal, d.saldo AS saldo_inicio, CAST(NULL AS DECIMAL(38, 2)) AS saldo_fechamento,\n",
+        "         CAST(NULL AS DECIMAL(38, 2)) AS saldo_mes_anterior, CAST(NULL AS BIGINT) AS pendencias_fechamento\n",
+        "  FROM d JOIN lim l ON d.dia = l.ini\n",
+        "  UNION ALL\n",
+        "  SELECT l.mes, d.produto, d.canal, NULL, d.saldo, NULL, d.pendencias FROM d JOIN lim l ON d.dia = l.fim\n",
+        "  UNION ALL\n",
+        "  SELECT l.mes_seguinte, d.produto, d.canal, NULL, NULL, d.saldo, NULL\n",
+        "  FROM d JOIN lim l ON d.dia = l.fim WHERE l.mes_seguinte IS NOT NULL\n",
+        "), m AS (\n",
+        "  SELECT mes, produto, canal, COALESCE(SUM(saldo_inicio), 0) AS saldo_inicio, COALESCE(SUM(saldo_fechamento), 0) AS saldo_fechamento,\n",
+        "         SUM(saldo_mes_anterior) AS saldo_mes_anterior, COALESCE(SUM(pendencias_fechamento), 0) AS pendencias_fechamento\n",
+        "  FROM p GROUP BY ALL\n",
         ")\n",
         "SELECT m.*, mes = MAX(mes) OVER () AS mes_atual FROM m"
       ],
@@ -118,7 +131,7 @@
         },
         {
           "displayName": "Variação do saldo no mês",
-          "description": "Fechamento menos o saldo do primeiro dia do mês",
+          "description": "Fechamento menos o saldo do primeiro dia do mês, ambos na data da carteira inteira",
           "expression": "SUM(`saldo_fechamento`) - SUM(`saldo_inicio`)"
         }
       ]

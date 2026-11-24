@@ -1,54 +1,54 @@
 {
- "conferido_em": "2026-11-23",
+ "conferido_em": "2026-11-24",
  "contagens": {
-  "tabelas_uc": "229",
-  "colunas_uc": "3885",
-  "ativos": "229",
+  "tabelas_uc": "239",
+  "colunas_uc": "4090",
+  "ativos": "239",
   "ativos_internos": "22",
-  "colunas": "3885",
+  "colunas": "4090",
   "colunas_internas": "792",
-  "doc01": "207",
-  "doc03": "3093",
-  "soma_aplicavel": "8992",
-  "achados": "8992",
-  "pendencias": "338",
-  "nao_conformes": "338",
+  "doc01": "217",
+  "doc03": "3298",
+  "soma_aplicavel": "9494",
+  "achados": "9494",
+  "pendencias": "349",
+  "nao_conformes": "349",
   "regras": "28",
   "regras_sem_dados": "0",
   "historico_hoje": "28",
-  "ultima_sonda": "2026-11-23T17:01:27.000Z",
-  "pendencias_mv": "338"
+  "ultima_sonda": "2026-11-24T13:47:52.000Z",
+  "pendencias_mv": "349"
  },
  "checks": [
   {
    "check": "inventário tem todo ativo do workspace",
    "ok": true,
-   "detalhe": "229 = 229"
+   "detalhe": "239 = 239"
   },
   {
    "check": "DOC01 verifica todo ativo não interno",
    "ok": true,
-   "detalhe": "207 = 229 - 22 internos"
+   "detalhe": "217 = 239 - 22 internos"
   },
   {
    "check": "colunas tem toda coluna do pos_venda",
    "ok": true,
-   "detalhe": "3885 = 3885"
+   "detalhe": "4090 = 4090"
   },
   {
    "check": "DOC03 verifica toda coluna não interna",
    "ok": true,
-   "detalhe": "3093 = 3885 - 792 internas"
+   "detalhe": "3298 = 4090 - 792 internas"
   },
   {
    "check": "soma por regra = linhas de achados",
    "ok": true,
-   "detalhe": "8992 = 8992"
+   "detalhe": "9494 = 9494"
   },
   {
    "check": "pendências = achados não conformes",
    "ok": true,
-   "detalhe": "338 = 338 = 338 (metric view)"
+   "detalhe": "349 = 349 = 349 (metric view)"
   },
   {
    "check": "toda regra verificou algum objeto",
@@ -63,46 +63,46 @@
   {
    "check": "sonda das views gravada",
    "ok": true,
-   "detalhe": "2026-11-23T17:01:27.000Z"
+   "detalhe": "2026-11-24T13:47:52.000Z"
   }
  ],
  "regras": [
   {
    "regra_id": "DOC01",
-   "aplicavel": "207",
-   "conformes": "151",
-   "pct_conforme": "72.9",
+   "aplicavel": "217",
+   "conformes": "154",
+   "pct_conforme": "71.0",
    "meta_pct": "100.0",
    "situacao": "crítico"
   },
   {
    "regra_id": "DOC02",
-   "aplicavel": "132",
-   "conformes": "130",
+   "aplicavel": "135",
+   "conformes": "133",
    "pct_conforme": "98.5",
    "meta_pct": "100.0",
    "situacao": "atenção"
   },
   {
    "regra_id": "DOC03",
-   "aplicavel": "3093",
-   "conformes": "3093",
+   "aplicavel": "3298",
+   "conformes": "3298",
    "pct_conforme": "100.0",
    "meta_pct": "100.0",
    "situacao": "atende"
   },
   {
    "regra_id": "DOC04",
-   "aplicavel": "3093",
-   "conformes": "3052",
-   "pct_conforme": "98.7",
+   "aplicavel": "3298",
+   "conformes": "3257",
+   "pct_conforme": "98.8",
    "meta_pct": "100.0",
    "situacao": "atenção"
   },
   {
    "regra_id": "DOC05",
-   "aplicavel": "17",
-   "conformes": "17",
+   "aplicavel": "18",
+   "conformes": "18",
    "pct_conforme": "100.0",
    "meta_pct": "100.0",
    "situacao": "atende"
@@ -133,7 +133,7 @@
   },
   {
    "regra_id": "EST04",
-   "aplicavel": "132",
+   "aplicavel": "135",
    "conformes": "0",
    "pct_conforme": "0.0",
    "meta_pct": "100.0",
@@ -165,8 +165,8 @@
   },
   {
    "regra_id": "LGPD04",
-   "aplicavel": "26",
-   "conformes": "26",
+   "aplicavel": "28",
+   "conformes": "28",
    "pct_conforme": "100.0",
    "meta_pct": "100.0",
    "situacao": "atende"
@@ -181,33 +181,33 @@
   },
   {
    "regra_id": "OTM01",
-   "aplicavel": "42",
-   "conformes": "38",
-   "pct_conforme": "90.5",
+   "aplicavel": "45",
+   "conformes": "40",
+   "pct_conforme": "88.9",
    "meta_pct": "90.0",
-   "situacao": "atende"
+   "situacao": "atenção"
   },
   {
    "regra_id": "PLT01",
-   "aplicavel": "11",
-   "conformes": "6",
-   "pct_conforme": "54.5",
+   "aplicavel": "12",
+   "conformes": "7",
+   "pct_conforme": "58.3",
    "meta_pct": "100.0",
    "situacao": "atenção"
   },
   {
    "regra_id": "PLT02",
-   "aplicavel": "11",
-   "conformes": "10",
-   "pct_conforme": "90.9",
+   "aplicavel": "12",
+   "conformes": "11",
+   "pct_conforme": "91.7",
    "meta_pct": "100.0",
    "situacao": "atenção"
   },
   {
    "regra_id": "PLT03",
-   "aplicavel": "11",
-   "conformes": "1",
-   "pct_conforme": "9.1",
+   "aplicavel": "12",
+   "conformes": "2",
+   "pct_conforme": "16.7",
    "meta_pct": "100.0",
    "situacao": "atenção"
   },
@@ -253,8 +253,8 @@
   },
   {
    "regra_id": "TAG03",
-   "aplicavel": "800",
-   "conformes": "800",
+   "aplicavel": "860",
+   "conformes": "860",
    "pct_conforme": "100.0",
    "meta_pct": "100.0",
    "situacao": "atende"
@@ -270,10 +270,10 @@
   {
    "regra_id": "USO01",
    "aplicavel": "26",
-   "conformes": "23",
-   "pct_conforme": "88.5",
+   "conformes": "26",
+   "pct_conforme": "100.0",
    "meta_pct": "100.0",
-   "situacao": "atenção"
+   "situacao": "atende"
   },
   {
    "regra_id": "USO02",
@@ -285,9 +285,9 @@
   },
   {
    "regra_id": "USO03",
-   "aplicavel": "140",
-   "conformes": "118",
-   "pct_conforme": "84.3",
+   "aplicavel": "147",
+   "conformes": "125",
+   "pct_conforme": "85.0",
    "meta_pct": "100.0",
    "situacao": "crítico"
   }
