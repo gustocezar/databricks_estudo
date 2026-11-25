@@ -9,6 +9,7 @@ resources:
         aidevkit_project: ai-dev-kit
       performance_target: STANDARD
       max_concurrent_runs: 1
+      timeout_seconds: 3600    # 60 min: medalhão da primeira versão, sem histórico recente (PLT03, P40)
       schedule:
         quartz_cron_expression: "0 30 6 * * ?"   # todo dia as 06:30 (30 min depois do job SQL)
         timezone_id: America/Sao_Paulo

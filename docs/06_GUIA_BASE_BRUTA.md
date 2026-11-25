@@ -71,6 +71,8 @@ databricks auth profiles                                   # escolha o perfil do
 databricks current-user me --profile <perfil>
 databricks experimental aitools tools query --profile <perfil> "SHOW GRANTS ON CATALOG <catalogo_da_base>"
 databricks experimental aitools tools query --profile <perfil> "SHOW GRANTS ON SCHEMA <catalogo_da_base>.<schema>"
+# SHOW GRANTS não lista o dono, e o dono pode conceder (L93):
+databricks experimental aitools tools query --profile <perfil> "SELECT catalog_owner = current_user() FROM system.information_schema.catalogs WHERE catalog_name = '<catalogo_da_base>'"
 ```
 
 | Pergunta | Se a resposta é não |

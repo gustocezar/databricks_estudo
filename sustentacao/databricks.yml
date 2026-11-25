@@ -10,7 +10,7 @@ variables:
     default: 5f010b8396e591fb
   alerta_status:
     description: "Agenda do alerta (06:20, 1 disparo por dia). PAUSED = desligado; UNPAUSED = ligado, junto com a agenda da carga."
-    default: PAUSED
+    default: UNPAUSED   # ligado desde 24/11/2026, junto com a agenda da carga
 
 include:
   - resources/*.yml

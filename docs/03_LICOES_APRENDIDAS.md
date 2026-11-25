@@ -66,6 +66,12 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   60 s ou mais e não é explicado por volume. Teste o alerta com 30 dias de histórico antes de ligar.
   (`MIN_EXCESSO_ALERTA_S` em `sustentacao/gerar_sustentacao.py`)
 
+- **L93** No ensaio do spec (24/11), `SHOW GRANTS ON CATALOG` mostrou só os 3 service principals com acesso e não
+  mostrou que o perfil era o **dono** do catálogo e do schema, que pode conceder qualquer privilégio. Pela lista, a
+  escolha da trilha do DQX teria saído errada → antes de decidir se dá para conceder privilégio a um app, consulte o
+  dono em `system.information_schema` (`catalog_owner`, `schema_owner`) e compare com `current_user()`.
+  (`specs/aplicar-base-bruta/modelos/FICHA.md`, etapa 0 do guia 06)
+
 ## Custo e FinOps
 
 - **L76** O framework FinOps que já existia (`finops.observability`) quebrou em 19 de 28 visões: a base

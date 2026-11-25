@@ -13,7 +13,8 @@
   - Verificação: `databricks current-user me --profile <perfil>` retorna o seu usuário.
   - Saída: FICHA § Ambiente. Resultado:
 - [ ] **T0.2** Anotar os grants da base e do destino.
-  - Verificação: `SHOW GRANTS ON CATALOG …` e `SHOW GRANTS ON SCHEMA …` gravados na ficha.
+  - Verificação: `SHOW GRANTS ON CATALOG …` e `SHOW GRANTS ON SCHEMA …` gravados na ficha, mais a consulta do dono
+    (FICHA § Consultas do perfil): `SHOW GRANTS` não lista o dono, e o dono pode conceder (L93).
   - Saída: FICHA § Permissões. Resultado:
 - [ ] **T0.3 · G1** Decidir catálogo, schemas de destino e pasta do código; nunca o schema da base (R1).
   - Verificação: decisão D-001 registrada.
@@ -50,6 +51,7 @@
   - Saída: DECISOES. Resultado:
 - [ ] **T2.3 · G4** Listar as regras de erro e de aviso, com nome estável (P09). Usar como base as 11 de
   `dqx_codigo/checks_pendencias.yml`.
+  - Considere também um aviso de chave repetida (pendência + dia + tipo); o ensaio achou 10.277 na bronze.
   - Verificação: lista no MAPEAMENTO § Regras, cada uma com coluna e expressão.
   - Saída: MAPEAMENTO. Resultado:
 

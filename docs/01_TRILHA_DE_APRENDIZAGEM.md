@@ -697,3 +697,32 @@ Para o painel e o alerta, `databricks bundle validate` em `sustentacao/`.
 - Junte as fatias por `run_id` e tire as tarefas `SKIPPED` da linha de base (L90).
 - O SLA vale para a execução da agenda. Antes de ligar a agenda, olhe a folga projetada (L91).
 - Com a base curta, o alerta precisa de um piso, ou dispara por segundos acima do p95 (L92).
+
+## Fase 28 · Operação ligada: agendas, timeouts, CI e ensaio do spec
+
+**Objetivo:** pôr a operação no ar e fechar as pendências do time. O pedido do dono foi ligar as agendas, pôr timeout
+nos jobs, dar área de negócio aos ativos sem ela, criar o CI dos bundles e ensaiar o spec antes de usá-lo com o
+Copilot.
+
+**O que fizemos (24/11/2026):**
+- **Timeouts.** A carga diária ganhou timeout de 33 min, o valor sugerido pela sustentação (2 × p95). O setup e o
+  medalhão SQL ficaram com 30 min, e o medalhão Lakeflow com 60 min, porque têm pouco histórico (P40, PLT03).
+- **Área de negócio.** Os 17 ativos sem `subject_area` ganharam a tag: as visões do Power BI (`bi`), as visões do
+  painel de qualidade (`dq.v_painel_*`) e os metadados da ontologia. A regra fica em `SUB_SEM_WIKI` de
+  `governanca/ontologia.py` (TAG01).
+- **Agendas ligadas.** A carga roda às 05:00, o DQX Studio avalia às 06:30 (12 tabelas) e o alerta de sustentação
+  dispara às 06:20. O medalhão da primeira versão continua pausado. Para ligar o Studio, foi preciso reabilitar o
+  endpoint do Lakebase e reiniciar o app (L19).
+- **CI.** O `.github/workflows/ci.yml` roda a varredura, a compilação, os YAML e os links em todo push. Com os segredos
+  do Databricks, também valida os bundles e roda os cenários BDD; o deploy é manual.
+- **Ensaio do spec.** As etapas 0 a 2 rodaram só com leitura sobre a bronze, tratada como base nova
+  (`specs/ensaio_pos_venda_bronze/`). O ensaio ajustou o spec: a consulta do dono, as consultas do perfil na ficha, as
+  variantes de grafia no de-para e um aviso de chave repetida (L93).
+
+**Onde está:** `carga_diaria/resources/*.job.yml`, `medalhao/resources/*.job.yml`, `governanca/ontologia.py` e
+`aplicar_semantica.py`, `.github/workflows/ci.yml`, `specs/ensaio_pos_venda_bronze/` e os modelos do spec.
+
+**O que aprendemos:**
+- `SHOW GRANTS` não mostra o dono; consulte `catalog_owner` antes de decidir a trilha do DQX (L93).
+- O Lakebase do Studio volta desabilitado depois de dias parado; reabilite o endpoint antes de ligar a agenda (L19).
+

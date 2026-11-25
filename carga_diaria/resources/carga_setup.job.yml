@@ -8,6 +8,7 @@ resources:
         aidevkit_project: ai-dev-kit
       performance_target: STANDARD
       max_concurrent_runs: 1
+      timeout_seconds: 1800    # 30 min: piso para job sem linha de base (execução única) (PLT03, P40)
       tasks:
         - task_key: setup
           notebook_task:

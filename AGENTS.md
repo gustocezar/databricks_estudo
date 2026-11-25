@@ -58,7 +58,9 @@ Não reabra estas decisões sem pedido do dono do projeto.
 - **Saldo é semiaditivo.** Nunca some saldos de dias diferentes; vale o último dia do contexto.
 - **`RELY` só nas chaves primárias da gold.** As chaves estrangeiras ficam sem `RELY`: a de forma de pagamento tem
   órfãs de propósito (`NAO_CADASTRADA`).
-- **Agendas pausadas.** O job `pos_venda_carga_diaria` e o agendamento do DQX Studio só ligam a pedido.
+- **Agendas ligadas desde 24/11, a pedido do dono.** A carga diária roda às 05:00, o DQX Studio avalia às 06:30 e o
+  alerta de sustentação dispara às 06:20 (meta de término às 06:15). O medalhão da primeira versão continua pausado.
+  Pausar de novo também é decisão do dono (`carga_schedule_status`, `registro_studio.py pausar`, `alerta_status`).
 - **O app `genie-ontology-readiness` não recebe acesso aos catálogos `main` e `workspace`.**
 - **`finops.observability` (o framework FinOps que já existia no workspace) só se lê.** As visões novas ficam em
   `pos_venda.finops`. Não recrie nem corrija as `v_focus_*` sem pedido do dono.
@@ -102,7 +104,11 @@ Logs (`*.log`) e resultados de execução (`dqx_studio/regras/resultados/`) são
 - **Databricks CLI com o perfil `dbx-workshop`** (`--profile dbx-workshop`). O SQL passa por `governanca/sql_util.py`,
   que reconhece a cota esgotada (L01).
 - **Bundles:** `databricks bundle deploy -t dev --profile dbx-workshop` na pasta do bundle. O deploy segue o
-  `.gitignore` (L74).
+  `.gitignore` (L74). Desde 24/11, o padrão da carga e do alerta de sustentação é "ligado" (`UNPAUSED`); para pausar,
+  use `--var="carga_schedule_status=PAUSED"` ou `--var="alerta_status=PAUSED"`.
+- **CI:** `.github/workflows/ci.yml` roda a varredura (L70), compila os scripts, lê os YAML e confere os links em todo
+  push. Com os segredos `DATABRICKS_HOST` e `DATABRICKS_TOKEN`, também valida os bundles e roda os cenários BDD; o
+  deploy é manual (`workflow_dispatch`).
 - **Recriar uma view apaga as tags e a Wiki.** Use `garantir_view` (`carga_diaria/views_preservadas.py`) ou rode
   `governanca/aplicar_semantica.py` depois (L31).
 - **Regra de cálculo:** mude a função e os cenários em `regras/`, rode os cenários e a paridade, e só então troque o

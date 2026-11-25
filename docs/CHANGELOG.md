@@ -17,6 +17,46 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 24/11/2026
 
+### Operação ligada: agendas, timeouts, área de negócio, CI e ensaio do spec
+- **O que mudou:**
+  - **Timeouts (PLT03, P40):**
+    - carga diária com 33 min, o valor sugerido pela sustentação (2 × p95);
+    - setup e medalhão SQL com 30 min, e medalhão Lakeflow com 60 min, porque têm pouco histórico.
+  - **Área de negócio (TAG01):** os 17 ativos sem `subject_area` (`bi.*`, `dq.v_painel_*` e metadados da ontologia)
+    ganharam a tag. A regra fica em `SUB_SEM_WIKI` (`governanca/ontologia.py`), aplicada por `aplicar_semantica.py`.
+  - **Agendas ligadas, a pedido do dono:**
+    - carga às 05:00, Studio às 06:30 (12 tabelas) e alerta de sustentação às 06:20;
+    - o padrão da carga e do alerta nos bundles passou a ser `UNPAUSED`;
+    - o medalhão da primeira versão continua pausado;
+    - para ligar o Studio, o endpoint do Lakebase foi reabilitado e o app reiniciado (L19).
+  - **CI:** `.github/workflows/ci.yml` roda a varredura (L70), a compilação, os YAML e os links. Com os segredos
+    `DATABRICKS_HOST` e `DATABRICKS_TOKEN`, valida os 6 bundles e roda os 36 cenários BDD. O deploy é manual
+    (`workflow_dispatch`, ambiente `dev`).
+  - **Ensaio do spec:** as etapas 0 a 2, só com leitura, sobre a bronze tratada como base nova
+    (`specs/ensaio_pos_venda_bronze/`). O spec ganhou a consulta do dono, as consultas do perfil na ficha, as variantes
+    no de-para e a sugestão de aviso de chave repetida. Lição L93.
+  - **AGENTS.md:** a decisão "agendas pausadas" virou "agendas ligadas desde 24/11", com o comando de CI.
+- **Por quê:** pedido do usuário: executar os próximos passos do time (timeouts e área de negócio, ligar agenda e
+  alerta, CI/CD dos bundles, ensaio do spec).
+- **Onde:** `carga_diaria/databricks.yml` e `resources/*.job.yml`, `medalhao/resources/*.job.yml`,
+  `sustentacao/databricks.yml`, `governanca/ontologia.py`, `governanca/aplicar_semantica.py`,
+  `.github/workflows/ci.yml`, `specs/ensaio_pos_venda_bronze/`, os modelos do spec, `docs/06`, `docs/07`, `docs/01`,
+  `docs/03`, `docs/04`, `docs/README.md`, AGENTS.md e os gerados da conformidade.
+- **Conferência:**
+  - **Jobs:** `databricks jobs list` mostra `pos_venda_carga_diaria` com timeout de 1.980 s e agenda `UNPAUSED`; o
+    setup e o medalhão SQL com 1.800 s; o medalhão Lakeflow com 3.600 s; os medalhões continuam `PAUSED`.
+  - **Studio:** `registro_studio.py ligar` deu "12 tabelas agendadas", com `pausado=False`. O app está RUNNING depois
+    de reabilitar o Lakebase.
+  - **Conformidade:** `aplicar`, `registrar` e `conferir` ok, com 10.013 verificações. Antes eram 13, 12 e 3; agora:
+    - 15 regras atendem, 11 em atenção e 2 críticas;
+    - TAG01 em 100%;
+    - PLT03 com 6 falhas, todas do bundle de observabilidade.
+  - **CI:** a varredura, `compileall`, os YAML e os links rodaram localmente sem achado. Os bundles da carga e da
+    sustentação passam em `bundle validate`.
+  - **Ensaio:** 10 tarefas de E0 a E2 marcadas com resultado (1.718.895 linhas, 236 dias, 10.277 chaves repetidas).
+- **Docs atualizadas:** framework (provas de P02 e P03) · lições (L93) · trilha (fase 28) · guia 06 · spec (modelos)
+  · manual de sustentação · `docs/README.md` · AGENTS.md
+
 ### Manual de sustentação (docs/07) e etapa E8 do spec
 - **O que mudou:**
   - **Manual novo:** [`07_SUSTENTACAO.md`](07_SUSTENTACAO.md) tem 12 partes:

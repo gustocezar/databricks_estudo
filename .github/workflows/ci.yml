@@ -1,0 +1,125 @@
+# CI/CD do pos_venda (P02, P03, P29).
+#
+# - verificacoes: roda em todo push e pull request, sem segredo e sem tocar no Databricks. Faz a varredura de
+#   segredos e e-mails (L70), compila os scripts Python, lê os YAML e confere os links relativos da documentação.
+# - bundles: valida os 6 bundles e roda os 36 cenários BDD das regras de negócio contra o workspace. Só roda quando
+#   os segredos DATABRICKS_HOST e DATABRICKS_TOKEN existem (Settings > Secrets and variables > Actions).
+# - deploy: manual (workflow_dispatch), um bundle por vez, no ambiente "dev" do GitHub. Configure revisores nesse
+#   ambiente para exigir aprovação. Agendas e alertas continuam como as variáveis de cada bundle mandam.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      bundle:
+        description: "Bundle para o deploy (pasta): carga_diaria, medalhao, paineis_financeiros, dqx_studio/painel, dqx_codigo ou sustentacao"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  verificacoes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Varredura de segredos, e-mails e caminhos locais (L70)
+        run: |
+          set -e
+          if git grep -nIE 'dapi[0-9a-f]{20,}|ghp_[A-Za-z0-9]{20,}|/Users/[A-Za-z]|/private/tmp|[A-Za-z0-9._%+-]+@gmail\.com' \
+               -- ':!referencias' ':!dqx_studio/regras/resultados' ':!.github/workflows/ci.yml'; then
+            echo "::error::Achado na varredura: remova antes de enviar."
+            exit 1
+          fi
+      - name: Scripts Python compilam
+        run: python -m compileall -q -x '(\.venv|node_modules|__pycache__)' .
+      - name: YAML legíveis
+        run: |
+          pip install --quiet pyyaml
+          python - <<'EOF'
+          import pathlib, sys, yaml
+          erros = []
+          for p in pathlib.Path(".").rglob("*.yml"):
+              if any(x in p.parts for x in (".venv", "node_modules")):
+                  continue
+              try:
+                  yaml.safe_load(p.read_text(encoding="utf-8"))
+              except Exception as e:  # noqa: BLE001
+                  erros.append(f"{p}: {e}")
+          print("\n".join(erros) or "YAML ok")
+          sys.exit(1 if erros else 0)
+          EOF
+      - name: Links relativos da documentação resolvem
+        run: |
+          python - <<'EOF'
+          import os, pathlib, re, sys
+          ruins = []
+          for p in pathlib.Path(".").rglob("*.md"):
+              if any(x in p.parts for x in (".venv", "node_modules", "referencias", "modelos")):
+                  continue
+              for alvo in re.findall(r"\]\(([^)#\s]+)(?:#[^)]*)?\)", p.read_text(encoding="utf-8")):
+                  if alvo.startswith(("http", "mailto")):
+                      continue
+                  if not os.path.exists(os.path.normpath(os.path.join(p.parent, alvo))):
+                      ruins.append(f"{p}: {alvo}")
+          print("\n".join(ruins) or "links ok")
+          sys.exit(1 if ruins else 0)
+          EOF
+
+  bundles:
+    needs: verificacoes
+    runs-on: ubuntu-latest
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Segredos do Databricks presentes?
+        id: segredos
+        run: |
+          if [ -n "$DATABRICKS_TOKEN" ] && [ -n "$DATABRICKS_HOST" ]; then echo "ok=true" >> "$GITHUB_OUTPUT";
+          else echo "ok=false" >> "$GITHUB_OUTPUT"; echo "::notice::Sem DATABRICKS_HOST/DATABRICKS_TOKEN: validação dos bundles pulada."; fi
+      - uses: databricks/setup-cli@main
+        if: steps.segredos.outputs.ok == 'true'
+      - name: Validar os bundles
+        if: steps.segredos.outputs.ok == 'true'
+        run: |
+          set -e
+          for b in carga_diaria medalhao paineis_financeiros dqx_studio/painel dqx_codigo sustentacao; do
+            echo "== $b"
+            (cd "$b" && databricks bundle validate -t dev)
+          done
+      - uses: actions/setup-python@v5
+        if: steps.segredos.outputs.ok == 'true'
+        with:
+          python-version: "3.12"
+      - name: Cenários BDD das regras de negócio (36, contra as funções do Unity Catalog)
+        if: steps.segredos.outputs.ok == 'true'
+        working-directory: regras
+        run: |
+          pip install --quiet -r requirements.txt
+          behave
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.bundle != ''
+    needs: bundles
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - name: Deploy do bundle escolhido
+        working-directory: ${{ github.event.inputs.bundle }}
+        run: |
+          databricks bundle validate -t dev
+          databricks bundle deploy -t dev

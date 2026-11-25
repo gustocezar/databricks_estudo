@@ -188,6 +188,12 @@ def plano_de_tags(audit, sub_tag):
             t.append(("tables", tab["nome"], "domain", O.DOMINIO_PADRAO))
             t.append(("tables", tab["nome"], "data_owner", O.RESPONSAVEL))
             w = O.W.get(tab["nome"])
+            if not w or not w["sub"]:   # sem Wiki ou sem subdomínio nela: pelo schema ou pela tabela (O.SUB_SEM_WIKI)
+                curto = tab["nome"].split(".", 1)[1]
+                sub = O.SUB_SEM_WIKI_TABELA.get(curto) or O.SUB_SEM_WIKI.get(s["nome"])
+                if sub:
+                    t.append(("tables", tab["nome"], sub_tag[sub], None))
+                    t.append(("tables", tab["nome"], "subject_area", sub))
             if w:
                 if w["sub"]:
                     t.append(("tables", tab["nome"], sub_tag[w["sub"]], None))   # subdomínio

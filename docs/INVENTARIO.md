@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 24/11/2026 16:34. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 24/11/2026 23:03. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -100,7 +100,7 @@
 
 | Job | ID | Agenda |
 |---|---|---|
-| pos_venda_carga_diaria | `288828593679314` | PAUSED |
+| pos_venda_carga_diaria | `288828593679314` | UNPAUSED |
 | pos_venda_carga_setup | `539329578539712` | sem agenda |
 | pos_venda_dqx_codigo | `697712606677848` | sem agenda |
 | pos_venda_medalhao_lakeflow_job | `827822094941996` | PAUSED |
@@ -110,9 +110,9 @@
 
 | App | Estado |
 |---|---|
-| dqx-studio | STOPPED |
+| dqx-studio | ACTIVE |
 | genie-ontology-readiness | STOPPED |
 
 ## Metadados (última auditoria)
 
-Auditoria de 24/11/2026 10:48: 65 tabelas e views nas camadas principais, 1977 de 1977 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.
+Auditoria de 22/11/2026 16:18: 65 tabelas e views nas camadas principais, 1977 de 1977 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.

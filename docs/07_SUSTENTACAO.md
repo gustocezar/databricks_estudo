@@ -6,7 +6,8 @@
 > o módulo é o [M13](02_PLAYBOOK.md#m13--sustentação-tempo-de-execução-linha-de-base-e-sla) e os números vêm de
 > `pos_venda.sustentacao` ([README](../sustentacao/README.md)).
 
-**Provisório:** as agendas estão pausadas (P02), e a linha de base vem de 13 execuções manuais da carga, de 19 a
+**Agendas ligadas em 24/11/2026** (carga 05:00, Studio 06:30, alerta 06:20). **Provisório:** até a linha de base
+acumular execuções da agenda, ela vem de 13 execuções manuais da carga, de 19 a
 23/11, com intervalos de 1 a 184 dias. Toda meta marcada com **(provisório)** vale como ponto de partida. Revise
 depois de 20 execuções da agenda.
 
@@ -27,10 +28,10 @@ depois painéis AI/BI, Genie e Power BI leem a gold, a ontologia, as metric view
 
 | O que | Tipo | Agenda | Dono | Depende de | Se falhar |
 |---|---|---|---|---|---|
-| `pos_venda_carga_diaria` | job (7 tarefas) | 05:00, **pausada** | squad pós-venda | funções `pos_venda.regras`, landing e cadastro em `fonte` | sem foto do dia: painéis, Genie e Studio mostram o dia anterior |
+| `pos_venda_carga_diaria` | job (7 tarefas) | 05:00, **ligada** desde 24/11 | squad pós-venda | funções `pos_venda.regras`, landing e cadastro em `fonte` | sem foto do dia: painéis, Genie e Studio mostram o dia anterior |
 | `pos_venda_carga_silver_lakeflow` | pipeline Lakeflow (serverless) | pela tarefa `silver_lakeflow` | squad pós-venda | bronze | silver parada; dimensões e fato não andam |
 | `dqx-studio` | app (Lakebase `dqx-studio-db`) | ligado pela tarefa `ligar_dqx_studio`; para sozinho após 24 h | squad pós-venda | Lakebase ligado, warehouse | sem avaliação de qualidade do dia |
-| agendamentos do DQX Studio | 12 tabelas no Studio | 06:30, **pausados** | squad pós-venda | app ligado, foto do dia | sem histórico de qualidade do dia |
+| agendamentos do DQX Studio | 12 tabelas no Studio | 06:30, **ligados** desde 24/11 | squad pós-venda | app ligado, foto do dia | sem histórico de qualidade do dia |
 | `dqx-studio-task-runner` | job gerido pelo app | sob demanda (cada execução do Studio) | app `dqx-studio` | warehouse | execução do Studio falha |
 | `pos_venda_dqx_codigo` | job (trilha A, P38) | sob demanda; timeout de 1 h | squad pós-venda | bronze, YAML das checagens | sem métricas por regra da trilha A |
 | `pos_venda_carga_setup` | job | uma vez (cria schemas e cadastro) | squad pós-venda | — | só na reconstrução |
@@ -40,7 +41,7 @@ depois painéis AI/BI, Genie e Power BI leem a gold, a ontologia, as metric view
 | "pos_venda · KPIs financeiros" (Diretoria e Analista) | painéis AI/BI | lê na abertura | squad pós-venda | metric views | números do dia anterior |
 | "pos_venda · Sustentação" | painel AI/BI | lê na abertura | squad pós-venda | `pos_venda.sustentacao` | sem visão de tempo e SLA |
 | Pós-venda · Analista financeiro e Diretor financeiro | espaços Genie | sob demanda | squad pós-venda | metric views e ontologia | respostas com o dia anterior |
-| "pos_venda · Sustentação: SLA ou desvio da carga" | alerta SQL | 06:20, 1 vez por dia, **pausado** | squad pós-venda | `alerta_sustentacao` | ninguém é avisado do atraso |
+| "pos_venda · Sustentação: SLA ou desvio da carga" | alerta SQL | 06:20, 1 vez por dia, **ligado** desde 24/11 | squad pós-venda | `alerta_sustentacao` | ninguém é avisado do atraso |
 | 5 alertas `[Observabilidade]` | alertas SQL (jobs ocultos, L79) | de hora em hora a 1 vez por dia | dono do bundle `observabilidade-framework` | tabelas de sistema | só leitura para o pós-venda |
 
 O inventário vivo dos jobs do projeto é `pos_venda.sustentacao.jobs_monitorados`. A lista completa de objetos fica no

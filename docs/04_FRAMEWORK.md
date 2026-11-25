@@ -103,6 +103,8 @@ Os outros documentos complementam este:
   gasta a cota.
 - **Reaplique quando:** sempre.
 - **Prova:** `databricks bundle validate -t dev` sem erro; o mesmo dia carregado duas vezes não duplica linhas (fase 3).
+  As agendas ficaram pausadas até 24/11, quando o dono pediu para ligar: carga às 05:00 com timeout de 33 min (2 × p95,
+  P40), Studio às 06:30 e alerta de sustentação às 06:20.
 
 ### P03 · Versionar no Git e varrer antes de publicar
 - **Origem:** prática do projeto (L70, L74).
@@ -114,7 +116,9 @@ Os outros documentos complementam este:
   - Um repositório público é uma publicação.
   - O deploy do bundle segue o `.gitignore`: depois que ele entrou, o deploy apagou dois `.pyc` do workspace.
 - **Reaplique quando:** sempre. É pré-requisito para CI/CD (`databricks-dab-examples`).
-- **Prova:** nenhum token nos arquivos enviados; o GitHub tem os mesmos arquivos que o commit local.
+- **Prova:** nenhum token nos arquivos enviados; o GitHub tem os mesmos arquivos que o commit local. Desde 24/11, o
+  CI (`.github/workflows/ci.yml`) repete a varredura, compila os scripts, lê os YAML e confere os links em todo push;
+  com os segredos do Databricks, valida os 6 bundles e roda os 36 cenários BDD.
 
 ---
 

@@ -9,6 +9,7 @@ resources:
         aidevkit_project: ai-dev-kit
       performance_target: STANDARD   # batch diario, sem prazo critico
       max_concurrent_runs: 1
+      timeout_seconds: 1800    # 30 min: piso (sugerido pela sustentação: 11 min) (PLT03, P40)
       schedule:
         quartz_cron_expression: "0 0 6 * * ?"   # todo dia as 06:00
         timezone_id: America/Sao_Paulo

@@ -28,10 +28,10 @@
 
 ## De-para de domínios
 
-| Domínio | Valor na base | Valor canônico |
-|---|---|---|
-| status | | |
-| tipo do evento | | |
+| Domínio | Valor na base | Variantes vistas no perfil | Valor canônico ou decisão |
+|---|---|---|---|
+| status | | | |
+| tipo do evento | | | |
 
 ## Regras (erro e aviso)
 

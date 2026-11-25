@@ -12,6 +12,7 @@ resources:
         aidevkit_project: ai-dev-kit
       performance_target: STANDARD
       max_concurrent_runs: 1
+      timeout_seconds: 1980    # 2 × p95 da carga (sustentacao.ultima_execucao.timeout_sugerido_min = 33) (PLT03, P40)
       parameters:
         - name: data_inicio
           default: "{{job.start_time.iso_date}}"

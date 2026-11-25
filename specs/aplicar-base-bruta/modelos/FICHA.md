@@ -21,7 +21,31 @@
 | schema da base | | |
 | tabela da base | | |
 | catálogo de destino | | |
+| sou dono do catálogo e do schema? (`SHOW GRANTS` não mostra o dono; L93) | sim / não | consulta do dono, abaixo |
 | pode conceder `USE CATALOG` e `CREATE SCHEMA` a um service principal? | sim / não | |
+
+## Consultas do perfil (modelo)
+
+Troque `<tabela>`, `<catalogo>` e `<schema>`. Todas são só leitura.
+
+```sql
+-- dono (decide se você pode conceder privilégios; L93)
+SELECT (SELECT catalog_owner = current_user() FROM system.information_schema.catalogs WHERE catalog_name = '<catalogo>') AS sou_dono_catalogo, (SELECT schema_owner = current_user() FROM system.information_schema.schemata WHERE catalog_name = '<catalogo>' AND schema_name = '<schema>') AS sou_dono_schema;
+-- volume e período
+SELECT count(*) linhas, count(DISTINCT data_extracao) dias, min(data_extracao), max(data_extracao) FROM <tabela>;
+-- linhas por dia
+SELECT min(n), percentile(n, 0.5), max(n) FROM (SELECT data_extracao, count(*) n FROM <tabela> GROUP BY 1);
+-- nulos nas obrigatórias
+SELECT sum(CASE WHEN pendencia_id IS NULL THEN 1 ELSE 0 END) sem_id, sum(CASE WHEN data_vencimento IS NULL THEN 1 ELSE 0 END) sem_venc,
+       sum(CASE WHEN valor_parcela IS NULL THEN 1 ELSE 0 END) sem_valor, sum(CASE WHEN status_cobranca IS NULL THEN 1 ELSE 0 END) sem_status FROM <tabela>;
+-- chave repetida
+SELECT count(*) FROM (SELECT pendencia_id, data_extracao, tipo_evento FROM <tabela> GROUP BY ALL HAVING count(*) > 1);
+-- domínios (repita para tipo, forma e periodicidade)
+SELECT status_cobranca, count(*) FROM <tabela> GROUP BY 1 ORDER BY 2 DESC;
+-- faixas
+SELECT min(data_vencimento), max(data_vencimento), min(valor_parcela), max(valor_parcela),
+       sum(CASE WHEN valor_parcela <= 0 THEN 1 ELSE 0 END), min(dias_atraso), max(dias_atraso) FROM <tabela>;
+```
 
 ## Colunas
 

@@ -794,6 +794,11 @@ TAG_DOMINIO_PADRAO = {
 }
 VALORES_DOMINIO_PADRAO = {"domain": [DOMINIO_PADRAO], "subject_area": list(SUB), "data_owner": [RESPONSAVEL]}
 
+# Subdomínio dos ativos da camada principal sem subdomínio na Wiki (ou sem Wiki): visões de apoio do painel de qualidade (dq),
+# extratos do Power BI (bi) e metadados da ontologia. Sem isso, a regra TAG01 da conformidade acusa subject_area.
+SUB_SEM_WIKI = {"dq": "qualidade", "bi": "cobranca", "ontologia": "cobranca"}
+SUB_SEM_WIKI_TABELA = {"bi.qualidade_diaria": "qualidade", "bi.produto": "carteira", "bi.canal_venda": "carteira"}
+
 
 def categoria_dado_pessoal(coluna):
     """Categoria LGPD da coluna (ou None), pela classificação técnica."""

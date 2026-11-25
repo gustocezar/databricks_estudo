@@ -5,7 +5,7 @@ bundle:
 variables:
   carga_schedule_status:
     description: "Agenda diaria da carga (05:00). PAUSED = desligada (so sob demanda), UNPAUSED = ligada."
-    default: PAUSED
+    default: UNPAUSED   # ligada desde 24/11/2026, a pedido do dono (P02); para pausar: --var="carga_schedule_status=PAUSED"
 
 include:
   - resources/*.yml
