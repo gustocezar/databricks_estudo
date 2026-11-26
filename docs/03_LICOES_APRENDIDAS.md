@@ -72,6 +72,12 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   dono em `system.information_schema` (`catalog_owner`, `schema_owner`) e compare com `current_user()`.
   (`specs/aplicar-base-bruta/modelos/FICHA.md`, etapa 0 do guia 06)
 
+- **L94** Em 26/11, o `registrar` rodou na máquina durante uma queda de rede. Cada `DESCRIBE QUERY` que não chegou ao
+  workspace (DNS, renovação do token OAuth) foi gravado como view que "não responde": 33 views quebradas em vez de 22,
+  e uma foto falsa no histórico da sonda → falha de transporte não é resultado da sonda. O `registrar` agora aborta
+  sem gravar quando alguma chamada falha por rede ou token. A sonda diária roda no job, com `spark.sql`, sem passar
+  pelo CLI. (`cmd_registrar` em `conformidade/gerar_conformidade.py`; `conformidade/src/sonda_diaria.py`)
+
 ## Custo e FinOps
 
 - **L76** O framework FinOps que já existia (`finops.observability`) quebrou em 19 de 28 visões: a base
@@ -141,6 +147,13 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   execução → domínio fechado de texto vai em `sql_expression` com `IN`, com o `coalesce` que define o nulo; e rode o
   modelo numa janela conhecida antes de ligá-lo na carga. (`dqx_codigo/checks_pendencias.yml`)
 
+- **L95** No ensaio de vigência (26/11), o DQX 0.17.2 aceitou duas checagens com o **mesmo nome** e `filter`
+  complementares pela data do dado, e o resultado de cada linha trouxe o `user_metadata` da versão que a julgou. A
+  versão 1 reprovou 105 eventos e a versão 2, 68; as 15 checagens bateram com a mesma conta em SQL → para versionar
+  uma regra no tempo, não troque o nome (ele é o motivo estável, P09): use `filter` pela data do dado e a versão no
+  `user_metadata`. Antes de confiar, rode o modo `ensaio`, que não grava nada, e compare com SQL.
+  (`regras/catalogo/gerar_catalogo.py ensaio`, `dqx_codigo/aplicar_dqx.py`)
+
 ## Governança e metadados
 
 - **L21** `CREATE OR REPLACE TABLE ... AS SELECT` mantém descrições e tags; `CREATE OR REPLACE VIEW` apaga tags, tags de
@@ -171,6 +184,14 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   descrição" e 126 colunas "de dado pessoal sem tag". Todos eram falsos positivos → separe as tabelas internas (papel
   `interno`) antes de contar, porque são do pipeline, não do domínio. Pelo mesmo motivo, confira se a regra por nome
   de coluna não pega nome de métrica ("CPF inválido"). (`conformidade/gerar_conformidade.py`, `INTERNO` e `NAO_PII`)
+
+- **L96** Em 26/11, a regra de frescor (USO01) passou a acusar as 3 tabelas de catálogo da ontologia (`entidades`,
+  `glossario`, `relacoes`), que estavam com `atualizacao=diaria` mas só mudam quando a ontologia muda. Em 24/11 a regra
+  passava só porque elas tinham sido reescritas 2 dias antes, e concluímos cedo demais que não havia o que corrigir →
+  declare `sob_demanda` em toda tabela que não é escrita pela carga, e confira o frescor de novo depois de 2 dias, não
+  no mesmo dia da mudança. Vale também para a otimização (OTM01): o Predictive Optimization não age em tabela sem
+  escrita, e as 2 tabelas novas do catálogo de regras derrubaram a regra para 87,2%. Desde 26/11, a OTM01 não conta as
+  tabelas `sob_demanda`. (`ATUALIZACAO_TABELA` em `governanca/ontologia.py`; OTM01 em `conformidade/gerar_conformidade.py`)
 
 ## Camada semântica (metric views)
 

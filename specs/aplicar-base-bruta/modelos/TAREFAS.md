@@ -49,11 +49,14 @@
 - [ ] **T2.2** Definir a chegada dos dados: eventos ou foto completa. Se for foto, usar Auto CDC a partir de snapshot.
   - Verificação: decisão D-003.
   - Saída: DECISOES. Resultado:
-- [ ] **T2.3 · G4** Listar as regras de erro e de aviso, com nome estável (P09). Usar como base as 11 de
-  `dqx_codigo/checks_pendencias.yml`.
+- [ ] **T2.3 · G4** Listar as regras de erro e de aviso, com nome estável (P09), a partir do
+  [questionário do negócio](../../regras/questionario/QUESTIONARIO_NEGOCIO.md) respondido pela área dona.
+  - Use como base as 14 regras de `regras/catalogo/catalogo_regras.yml`.
   - Considere também um aviso de chave repetida (pendência + dia + tipo); o ensaio achou 10.277 na bronze.
-  - Verificação: lista no MAPEAMENTO § Regras, cada uma com coluna e expressão.
-  - Saída: MAPEAMENTO. Resultado:
+  - Regra que já mudou no passado entra com duas versões e vigência pela data do dado (P41).
+  - Verificação: lista no MAPEAMENTO § Regras e catálogo copiado para a pasta do código, com
+    `gerar_catalogo.py validar` ok.
+  - Saída: MAPEAMENTO e catálogo. Resultado:
 
 ## E3 · Medalhão, barreira e regras de negócio
 
@@ -118,9 +121,15 @@
 
 ### Comum às duas trilhas
 
+- [ ] **T4.8 · G5** Criar o catálogo, a triagem e as visões de retroalimentação (`gerar_catalogo.py aplicar`) e rodar
+  `conferir` e os cenários do catálogo (P41).
+  - Verificação: `conferir` sem falha; cada regra com uma versão por dia da base; falhas da barreira na visão = linhas
+    da quarentena.
+  - Resultado:
+
 - [ ] **T4.9** Montar o plano de ação: cada regra com reprovação ganha dono, ação e critério de pronto
-  ([05](../../docs/05_SKILLS_E_GANHOS.md)).
-  - Verificação: tabela em DECISOES § Plano de ação.
+  ([05](../../docs/05_SKILLS_E_GANHOS.md)). Combinar com o dono o rito semanal de triagem sobre `v_triagem_pendente`.
+  - Verificação: tabela em DECISOES § Plano de ação; dono e dia do rito registrados.
   - Resultado:
 
 ## E5 · Governança e semântica

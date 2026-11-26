@@ -72,6 +72,21 @@ Variáveis opcionais: `DATABRICKS_PROFILE` (padrão `dbx-workshop`), `DATABRICKS
 | DQX Studio (22/11) | regra espelhada nas 3 janelas; execução manual e **agendada** (executor `scheduler`): bronze 60 violações (todas do I03, já barradas), silver 0, fato 0 |
 | Dia novo 25/12 (22/11) | job completo: portão 36/36; 8.559 eventos, 0 na quarentena; silver e gold do dia com **0** divergência das funções; CPF inválido 139 = 139; Studio na janela 19–25/12: bronze 44 (I03 de 19–20/12), silver 0, fato 0 |
 
+## Regras de qualidade com vigência e triagem (P41)
+
+As regras de cálculo ficam aqui, como funções e cenários. As **regras de qualidade** (o que barra ou avisa) ficam no
+[catálogo de regras](catalogo/README.md). Lá cada regra tem versões com vigência pela data do dado, dono, limite
+aceito e triagem. O negócio responde pelo [questionário](questionario/QUESTIONARIO_NEGOCIO.md).
+
+Os cenários do catálogo ficam fora do portão da carga, de propósito: `.venv/bin/behave catalogo/features`.
+
+Uma regra de **cálculo** também pode mudar com o tempo; o cenário "A parcela que vence hoje já tem multa (regra atual)"
+é o candidato. Quando mudar:
+1. a função ganha um parâmetro de data, por exemplo `valor_multa(valor_parcela, data_referencia)`;
+2. a função escolhe a conta pela vigência;
+3. o `.feature` ganha um cenário por versão ("Dado a data de referência 2027-02-01…");
+4. a paridade roda antes da troca (L56).
+
 ## Adicionar uma regra
 
 1. Escreva a função em `FUNCOES` (`funcoes.py`), com descrição da função e de cada parâmetro, e rode `funcoes.py`.

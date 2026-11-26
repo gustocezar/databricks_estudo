@@ -15,6 +15,105 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ---
 
+## 26/11/2026
+
+### Regras com vigência, questionário do negócio e triagem (P41)
+- **O que mudou:**
+  - **Catálogo** (`regras/catalogo/catalogo_regras.yml`).
+    - As 14 regras de qualidade (11 da barreira e 3 avisos) têm versão e vigência pela data do dado, com dono, limite
+      de taxa aceita, motivo, origem e aprovação. Todas estão na versão 1, "desde sempre".
+    - O YAML do DQX como código passou a ser **gerado** do catálogo. Cada versão vira uma checagem com `filter` pela
+      data e a versão no `user_metadata`.
+  - **DQX como código.** O notebook ganhou o modo `ensaio`, que não grava nada e devolve as contagens por regra e
+    versão, e a coluna `versao` em `dq_metricas_regras`, gravada com `mergeSchema`.
+  - **`pos_venda.regras`:**
+    - as tabelas `catalogo_regras` e `triagem_regras`, esta com `CHECK` nas 4 classificações;
+    - a função `versao_vigente(regra, dia)`;
+    - as visões `v_falhas_regras`, `v_triagem_pendente`, `v_mudancas_regras` e `v_retroalimentacao`.
+  - **Questionário do negócio** (`regras/questionario/QUESTIONARIO_NEGOCIO.md`).
+    - Tem 5 blocos, e cada pergunta aponta o campo do catálogo que preenche.
+    - Inclui o rito (semanal, mensal e trimestral) e 7 perguntas em aberto para o dono, tiradas do dado real.
+  - **Ensaio fictício** (`regras/catalogo/ensaio/`): `QUINZENAL` aceita a partir de 05/01/2027.
+  - **Garantias.** O gerador tem 17 testes sem rede e 11 checagens no `conferir`, e há 8 cenários BDD do catálogo
+    fora do portão da carga. O CI roda `testar` e `validar` em todo push e, com segredos, o BDD do catálogo.
+  - **Tags.** `atualizacao=sob_demanda` nas tabelas de catálogo da ontologia e nas tabelas do catálogo de regras
+    (L96); `subject_area=qualidade` no schema `regras`.
+  - **Documentação:** framework P41, lições L95 e L96, fase 29 da trilha, guia 06, spec (E2, T2.3, T4.8 e T4.9),
+    AGENTS.md (decisão e "fonte × gerado"), README do DQX como código e das regras, e doc 05 (plano de ação com
+    ciclo).
+- **Por quê:** pedido do dono. Ele queria questionários para o negócio criar regras de avaliação de qualidade, métricas
+  e observabilidade, e uma retroalimentação que verifique sempre o que dá errado, lembrando que uma regra pode valer só
+  por um período.
+- **Onde:** `regras/catalogo/`, `regras/questionario/`, `dqx_codigo/aplicar_dqx.py`, `dqx_codigo/checks_pendencias.yml`
+  (gerado), `dqx_codigo/ensaio/`, `governanca/ontologia.py`, `governanca/aplicar_semantica.py`,
+  `conformidade/gerar_conformidade.py` (texto da tag `atualizacao`), `.github/workflows/ci.yml` e os objetos de
+  `pos_venda.regras`.
+- **Conferência:**
+  - **Gerador sem rede.** `gerar_catalogo.py testar`: 17 de 17. `validar`: catálogo válido, YAML em dia, ensaio válido.
+    O YAML de produção tem as mesmas 14 checagens de antes, só com o `user_metadata` a mais.
+  - **`gerar_catalogo.py aplicar`:** 10 comandos SUCCEEDED.
+  - **`conferir`:** 11 de 11.
+    - A tabela é igual ao YAML (14 versões).
+    - Há uma versão por regra em cada um dos 236 dias.
+    - Os motivos da quarentena estão todos no catálogo.
+    - As falhas da barreira na visão são as linhas da quarentena (6.712).
+    - As linhas do DQX são válidos mais quarentena (49.972).
+    - `versao_vigente` responde.
+    - As 5 visões e a tabela respondem.
+  - **BDD do catálogo:** `behave catalogo/features` deu 8 de 8 cenários (17 passos). A triagem de teste com
+    classificação inválida foi recusada pelo `CHECK`, e `triagem_regras` continua com 0 linhas.
+  - **Ensaio no DQX:** `bundle run dqx_codigo` com `modo=ensaio`, na janela de 27/12/2026 a 09/01/2027 (101.636
+    eventos). `gerar_catalogo.py ensaio 59410578624066` deu DQX = SQL nas 15 checagens.
+    - Os eventos com erro foram 3.388, igual à quarentena da barreira na janela.
+    - A periodicidade v1 reprovou 105 (`QUINZENAL` 52 + `BIMESTRAL` 53, até 04/01) e a v2 reprovou 68 (só
+      `BIMESTRAL`, de 05/01); as 84 `QUINZENAL` de 05/01 em diante passaram.
+  - **Tags:** `auditar_metadados.py` e depois `aplicar_semantica.py --so-tags`, com 30 tags criadas. Os 6 objetos de
+    `regras` ficaram com `subject_area=qualidade`; as 3 tabelas da ontologia e as 2 do catálogo ficaram com
+    `atualizacao=sob_demanda`.
+  - **Triagem:** `v_triagem_pendente` mostra 69 semanas × regra acima do limite (semanas de 30/11/2026 a 04/01/2027 no
+    dado), em 11 regras da barreira e 12 do DQX. Ainda não há triagem registrada.
+  - **Repositório:** varredura sem achado, 0 link quebrado, `compileall` ok e todos os YAML legíveis.
+- **Docs atualizadas:** framework (P41) · lições (L95, L96) · trilha (fase 29) · guia 06 · spec · AGENTS.md · doc 05
+  · `docs/README.md` · READMEs de `dqx_codigo/`, `regras/` e `regras/catalogo/` · as duas apresentações · o doc do
+  framework
+
+### Rodada de conformidade e primeiros dias da operação ligada
+- **O que mudou:**
+  - **Tags de custo.** Os 4 jobs do pós-venda ganharam as tags `project=pos_venda` e `team=squad-pos-venda` (PLT01,
+    P31).
+  - **Certificação.** As 3 tabelas `dq_*` da gold foram certificadas depois da conferência (EST02).
+  - **Sonda diária.** O job `pos_venda_conformidade_sonda` (bundle novo em `conformidade/`, notebook
+    `src/sonda_diaria.py`, timeout de 20 min) faz o `registrar` às 06:45 com `spark.sql`.
+  - **`registrar` local.** Agora aborta sem gravar quando uma chamada falha por rede ou token (L94). A foto falsa das
+    09:50 (170 linhas, com 11 views boas dadas como quebradas) foi apagada de `sonda_views`.
+  - **CI.** Passa a validar 7 bundles.
+- **Por quê:** pedido do dono, depois da pergunta "qual o próximo passo?".
+- **Onde:** `carga_diaria/resources/*.job.yml`, `medalhao/resources/*.job.yml`, `governanca/ontologia.py`
+  (`CERTIFICADAS`), `conformidade/databricks.yml`, `conformidade/src/sonda_diaria.py`,
+  `conformidade/gerar_conformidade.py`, `.github/workflows/ci.yml`, AGENTS.md, `docs/07_SUSTENTACAO.md`,
+  `docs/04_FRAMEWORK.md` (P37), lição L94 e a fase 28 da trilha.
+- **Conferência:**
+  - **Primeiros dias da operação.**
+    - Carga: 25/11 em 14,9 min e 26/11 em 16,7 min, as duas SUCCESS e dentro do SLA (terminaram às 05:15 e às 05:17).
+    - Studio: 24 de 24 execuções SUCCESS.
+    - Alerta de sustentação: OK. O Lakebase está ACTIVE e o app, RUNNING.
+  - **Jobs.** `databricks jobs list` mostra os 5 jobs do pós-venda com `project` e `team`. O que falta em PLT01 é o
+    job do DQX Studio, que é gerido pelo app.
+  - **Certificação.** Antes de certificar, conferimos as tabelas `dq_*`:
+    - recebidos = bronze (1.718.895);
+    - aptos = silver (1.712.183);
+    - barrados = quarentena = soma por motivo (6.712);
+    - linhas e órfãs da fato na janela = fato (12.280.092 e 8.479).
+  - **Job da sonda.** A primeira execução deu SUCCESS em 7,6 min: 170 views, 148 respondem e 22 quebradas (as mesmas,
+    fora do domínio). O histórico do dia tem 28 regras.
+  - **`conferir` da conformidade, depois das mudanças:** as 9 checagens passaram.
+    - São 10.209 verificações em 268 ativos: **16 regras atendem**, 10 estão em atenção e 2 críticas, ambas fora do
+      domínio (antes eram 15, 11 e 2).
+    - EST02 e USO01 passaram a atender; OTM01 está em 95,2%.
+    - PLT01 tem 1 falha, o job do DQX Studio.
+    - Os ativos sob demanda saíram da OTM01 (L96), e a descrição curta da coluna `tipo` nas 3 visões de regras foi
+      completada (DOC04).
+
 ## 24/11/2026
 
 ### Operação ligada: agendas, timeouts, área de negócio, CI e ensaio do spec

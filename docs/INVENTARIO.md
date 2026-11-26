@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 24/11/2026 23:03. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 26/11/2026 12:02. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -39,6 +39,9 @@
 | `paineis_financeiros` | `gerar_paineis.py` | Gera os painéis AI/BI de KPIs financeiros do Pós-venda a partir das metric views (pos_venda.ontologia.mv_*). |
 | `paineis_financeiros/powerbi/auditoria` | `pba_oauth.py` | Roda o powerbi-analyzer (pba) com um perfil OAuth do Databricks CLI. |
 | `paineis_financeiros/powerbi` | `gerar_powerbi.py` | Opção Power BI dos painéis financeiros do Pós-venda (para comparar com os painéis AI/BI do Databricks). |
+| `regras/catalogo/features` | `environment.py` | Ganchos do behave do catálogo: reaproveita o cliente `uc` de regras/ e confere que o catálogo existe. |
+| `regras/catalogo/features/steps` | `catalogo_steps.py` | Passos do catálogo de regras: frase de negócio → um SELECT no warehouse → conferência. |
+| `regras/catalogo` | `gerar_catalogo.py` | Catálogo de regras com versão e vigência (P41): valida, gera o YAML do DQX e os objetos de triagem, aplica e confere. |
 | `regras/features` | `environment.py` | Ganchos do behave: deixa `uc` importável e confere, antes do primeiro cenário, que as funções existem. |
 | `regras/features/steps` | `regras_steps.py` | Passos dos cenários: traduzem a frase de negócio em uma chamada à função do Unity Catalog e conferem a resposta. |
 | `regras` | `funcoes.py` | Regras de negócio do pós-venda como funções SQL do Unity Catalog (fonte única da regra). |
@@ -49,6 +52,7 @@
 | Bundle | Arquivo |
 |---|---|
 | `pos_venda_carga_diaria` | `carga_diaria/databricks.yml` |
+| `pos_venda_conformidade` | `conformidade/databricks.yml` |
 | `dqx_codigo` | `dqx_codigo/databricks.yml` |
 | `pos_venda_painel_qualidade` | `dqx_studio/painel/databricks.yml` |
 | `pos_venda_medalhao` | `medalhao/databricks.yml` |
@@ -74,7 +78,7 @@
 | `gold_sql` | 14 | 0 | 0 | — |
 | `landing` | 1 | 0 | 0 | — |
 | `ontologia` | 3 | 10 | 4 | — |
-| `regras` | 0 | 0 | 0 | — |
+| `regras` | 2 | 4 | 0 | — |
 | `silver` | 0 | 0 | 0 | STREAMING_TABLE 4 |
 | `silver_ldp` | 0 | 0 | 0 | MATERIALIZED_VIEW 1 |
 | `silver_sql` | 1 | 0 | 0 | — |
@@ -102,6 +106,7 @@
 |---|---|---|
 | pos_venda_carga_diaria | `288828593679314` | UNPAUSED |
 | pos_venda_carga_setup | `539329578539712` | sem agenda |
+| pos_venda_conformidade_sonda | `358374474314446` | UNPAUSED |
 | pos_venda_dqx_codigo | `697712606677848` | sem agenda |
 | pos_venda_medalhao_lakeflow_job | `827822094941996` | PAUSED |
 | pos_venda_medalhao_sql | `446390966394300` | PAUSED |
@@ -110,9 +115,9 @@
 
 | App | Estado |
 |---|---|
-| dqx-studio | ACTIVE |
+| dqx-studio | STOPPED |
 | genie-ontology-readiness | STOPPED |
 
 ## Metadados (última auditoria)
 
-Auditoria de 22/11/2026 16:18: 65 tabelas e views nas camadas principais, 1977 de 1977 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.
+Auditoria de 26/11/2026 11:27: 71 tabelas e views nas camadas principais, 2052 de 2052 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.

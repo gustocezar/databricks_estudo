@@ -726,3 +726,54 @@ Copilot.
 - `SHOW GRANTS` não mostra o dono; consulte `catalog_owner` antes de decidir a trilha do DQX (L93).
 - O Lakebase do Studio volta desabilitado depois de dias parado; reabilite o endpoint antes de ligar a agenda (L19).
 
+**Os dois primeiros dias (26/11/2026):**
+- **A operação rodou sozinha.**
+  - A carga terminou às 05:15 e às 05:17, dentro do SLA das 06:15 e longe do timeout de 33 min.
+  - O Studio rodou 24 avaliações, todas SUCCESS.
+  - O alerta de sustentação ficou em OK.
+- **Rodada de conformidade:**
+  - os 4 jobs do pós-venda ganharam as tags de custo `project` e `team` (PLT01);
+  - as 3 tabelas `dq_*` da gold foram certificadas depois de bater com bronze, silver, quarentena e fato (EST02);
+  - o `registrar` virou o job `pos_venda_conformidade_sonda`, às 06:45, com `spark.sql` num notebook (P37).
+- **Uma queda de rede ensinou L94.** O `registrar` local gravou 11 views boas como quebradas. Agora ele aborta quando a
+  chamada falha, e a foto falsa saiu do histórico.
+- **Frescor da ontologia (L96).** As tabelas de catálogo da ontologia passaram a declarar `atualizacao=sob_demanda`, porque
+  só mudam quando a ontologia muda. Com `diaria`, a regra USO01 as acusava 2 dias depois de cada mudança.
+
+## Fase 29 · Regras com vigência, questionário do negócio e triagem
+
+**Objetivo:** o pedido do dono foi ter questionários para o negócio criar regras de avaliação de qualidade, métricas e
+observabilidade, e uma retroalimentação que verifique sempre o que está dando errado. Isso lembrando que uma regra pode
+valer só por um período, porque em algum momento ela mudou.
+
+**O que fizemos (26/11/2026):**
+- **Catálogo de regras** (`regras/catalogo/catalogo_regras.yml`).
+  - As 14 regras de qualidade têm versão e vigência pela **data do dado**, com dono, limite aceito, motivo, origem e
+    aprovação.
+  - O YAML do DQX como código agora é gerado do catálogo: cada versão vira uma checagem com `filter` pela data e a versão
+    no `user_metadata`.
+- **Objetos em `pos_venda.regras`:**
+  - o catálogo e a triagem (a triagem tem `CHECK` nas 4 classificações);
+  - a função `versao_vigente(regra, dia)`;
+  - as visões `v_falhas_regras`, `v_triagem_pendente`, `v_mudancas_regras` e `v_retroalimentacao`.
+- **Questionário do negócio** (`regras/questionario/QUESTIONARIO_NEGOCIO.md`).
+  - Tem 5 blocos: dado certo, quanto erro é aceitável, perguntas aos números, vigência e retroalimentação.
+  - Cada pergunta aponta o campo do catálogo que preenche.
+  - O fim do questionário lista 7 perguntas em aberto para o dono, tiradas do dado real.
+- **Ensaio de vigência** (fictício: `QUINZENAL` aceita a partir de 05/01/2027).
+  - O DQX rodou em modo `ensaio`, que não grava nada. Na janela de 14 dias, ele bateu com o SQL nas 15 checagens.
+  - A versão 1 reprovou 105 eventos e a versão 2, 68 (L95).
+- **Garantias.**
+  - O gerador tem 17 testes sem rede, e o `conferir` tem 11 checagens no Databricks.
+  - Há 8 cenários BDD do catálogo, fora do portão da carga.
+  - O CI roda os testes do catálogo em todo push.
+
+**Onde está:** `regras/catalogo/`, `regras/questionario/`, `dqx_codigo/aplicar_dqx.py` (modo `ensaio` e coluna
+`versao`) e `dqx_codigo/ensaio/`.
+
+**O que aprendemos:**
+- Para versionar uma regra no tempo, mantenha o nome (o motivo estável) e use `filter` pela data do dado; o DQX aceita
+  duas checagens com o mesmo nome (L95).
+- A regra nova nunca julga o dado antigo: a vigência é pela data do dado, não pela data da execução (P41).
+- Falha sem triagem não melhora nada. A pauta semanal é `v_triagem_pendente`, e o falso positivo alto devolve a regra
+  ao questionário.

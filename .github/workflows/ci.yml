@@ -1,8 +1,9 @@
 # CI/CD do pos_venda (P02, P03, P29).
 #
 # - verificacoes: roda em todo push e pull request, sem segredo e sem tocar no Databricks. Faz a varredura de
-#   segredos e e-mails (L70), compila os scripts Python, lê os YAML e confere os links relativos da documentação.
-# - bundles: valida os 6 bundles e roda os 36 cenários BDD das regras de negócio contra o workspace. Só roda quando
+#   segredos e e-mails (L70), compila os scripts Python, lê os YAML, testa o catálogo de regras (P41) e confere os
+#   links relativos da documentação.
+# - bundles: valida os 7 bundles e roda os 36 cenários BDD das regras de negócio contra o workspace. Só roda quando
 #   os segredos DATABRICKS_HOST e DATABRICKS_TOKEN existem (Settings > Secrets and variables > Actions).
 # - deploy: manual (workflow_dispatch), um bundle por vez, no ambiente "dev" do GitHub. Configure revisores nesse
 #   ambiente para exigir aprovação. Agendas e alertas continuam como as variáveis de cada bundle mandam.
@@ -15,7 +16,7 @@ on:
   workflow_dispatch:
     inputs:
       bundle:
-        description: "Bundle para o deploy (pasta): carga_diaria, medalhao, paineis_financeiros, dqx_studio/painel, dqx_codigo ou sustentacao"
+        description: "Bundle para o deploy (pasta): carga_diaria, medalhao, paineis_financeiros, dqx_studio/painel, dqx_codigo, sustentacao ou conformidade"
         required: false
         default: ""
 
@@ -56,6 +57,10 @@ jobs:
           print("\n".join(erros) or "YAML ok")
           sys.exit(1 if erros else 0)
           EOF
+      - name: Catálogo de regras com vigência (P41, sem rede)
+        run: |
+          python regras/catalogo/gerar_catalogo.py testar
+          python regras/catalogo/gerar_catalogo.py validar
       - name: Links relativos da documentação resolvem
         run: |
           python - <<'EOF'
@@ -92,7 +97,7 @@ jobs:
         if: steps.segredos.outputs.ok == 'true'
         run: |
           set -e
-          for b in carga_diaria medalhao paineis_financeiros dqx_studio/painel dqx_codigo sustentacao; do
+          for b in carga_diaria medalhao paineis_financeiros dqx_studio/painel dqx_codigo sustentacao conformidade; do
             echo "== $b"
             (cd "$b" && databricks bundle validate -t dev)
           done
@@ -106,6 +111,7 @@ jobs:
         run: |
           pip install --quiet -r requirements.txt
           behave
+          behave catalogo/features --no-junit   # catálogo de regras: fora do portão da carga (P41)
 
   deploy:
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.bundle != ''

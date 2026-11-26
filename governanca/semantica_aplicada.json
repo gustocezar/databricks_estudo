@@ -2,10 +2,10 @@
   "tags": {
     "schemas|existente": 9,
     "schemas|atualizada": 18,
-    "tables|atualizada": 423,
-    "tables|existente": 62,
+    "tables|atualizada": 437,
+    "tables|existente": 67,
     "columns|existente": 553,
     "columns|atualizada": 532,
-    "tables|criada": 6
+    "tables|criada": 20
   }
 }

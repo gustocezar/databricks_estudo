@@ -1,9 +1,9 @@
 # Framework · práticas aplicadas no pos_venda, de onde vieram e por quê
 
-> Documento incremental. Última atualização: **24/11/2026**. Cada prática tem um código (`P##`) que não muda.
+> Documento incremental. Última atualização: **26/11/2026**. Cada prática tem um código (`P##`) que não muda.
 > Fontes conferidas em 22 e 23/11/2026 (todos os links responderam).
 
-Este framework reúne as **40 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 27 da
+Este framework reúne as **41 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 29 da
 [trilha](01_TRILHA_DE_APRENDIZAGEM.md)), cada uma com:
 
 - **Origem:** de onde veio. Pode ser documentação oficial, acelerador da Databricks, Databricks Labs, Microsoft,
@@ -75,6 +75,7 @@ Os outros documentos complementam este:
 | Sem permissão para conceder privilégio no catálogo a um app, ou sem vaga de app | P38 |
 | Aplicar o framework a outra base com um agente de código (Copilot, Claude Code, Codex) | P39, P38 |
 | Job diário com consumidor em hora marcada, ou "por que a carga demorou hoje?" | P40, P28 |
+| Regra de qualidade que muda com o tempo, ou o negócio precisa dizer o que é dado certo e triar as falhas | P41, P09, P20 |
 
 ---
 
@@ -118,7 +119,7 @@ Os outros documentos complementam este:
 - **Reaplique quando:** sempre. É pré-requisito para CI/CD (`databricks-dab-examples`).
 - **Prova:** nenhum token nos arquivos enviados; o GitHub tem os mesmos arquivos que o commit local. Desde 24/11, o
   CI (`.github/workflows/ci.yml`) repete a varredura, compila os scripts, lê os YAML e confere os links em todo push;
-  com os segredos do Databricks, valida os 6 bundles e roda os 36 cenários BDD.
+  com os segredos do Databricks, valida os 7 bundles e roda os 36 cenários BDD.
 
 ---
 
@@ -649,11 +650,16 @@ Os outros documentos complementam este:
     `DESCRIBE QUERY`, que analisa a view sem executá-la, e grava `sonda_views`;
   - depois, grava em `historico` a situação de cada regra no dia;
   - `conferir` reprova se alguma regra não verificou nenhum objeto, e confere que as contagens fecham (inventário =
-    `information_schema`; pendências = não conformes = metric view).
+    `information_schema`; pendências = não conformes = metric view);
+  - desde 26/11, o job `pos_venda_conformidade_sonda` faz o `registrar` todo dia às 06:45, num notebook com
+    `spark.sql` (`conformidade/src/sonda_diaria.py`); falha de rede não vira view quebrada (L94).
 - **Por quê:** a view quebrada não avisa ninguém, e sem histórico não se vê a conformidade cair.
 - **Reaplique quando:** há views sobre tabelas de sistema ou sobre schemas de outro time.
-- **Prova:** 140 views sondadas. 22 não respondem, todas pela mesma causa (L76): 19 em `finops.observability` e 3
-  cópias em `workspace.default`.
+- **Prova:**
+  - em 23/11, 140 views sondadas; 22 não respondem, todas pela mesma causa (L76): 19 em `finops.observability` e 3
+    cópias em `workspace.default`;
+  - em 26/11, a primeira execução do job (SUCCESS, 7,6 min) sondou 170 views, com as mesmas 22 quebradas, e gravou as
+    28 regras no histórico.
 
 ---
 
@@ -757,6 +763,56 @@ Os outros documentos complementam este:
   - **Volume:** a duração não acompanha o volume. 184 dias levaram 14,5 min, e 1 dia, cerca de 14 (L89).
   - **Implantação:** o painel está publicado e o alerta está pausado.
   - **Alerta:** com o piso (L92), avisaria 2 casos reais em 30 dias, em vez de ruído.
+
+---
+
+## Regras com vigência e retroalimentação
+
+### P41 · Regra de qualidade com versão e vigência pela data do dado, questionário do negócio e triagem
+- **Origem:**
+  - o pedido do dono: questionários para o negócio criar regras e uma retroalimentação de qualidade, lembrando que
+    regras mudam com o tempo e só valem para certo período;
+  - a [definição de checagens do DQX](https://databrickslabs.github.io/dqx/docs/guide/quality_checks_definition/),
+    que aceita `filter` e `user_metadata` por checagem;
+  - SCD tipo 2, a mesma ideia de vigência da `silver.pendencia_hist`;
+  - P09 (nome estável da regra), P20 (regras em BDD) e L84 (zero também aparece).
+- **Como aplicamos:**
+  - **Catálogo.** [`regras/catalogo/catalogo_regras.yml`](../regras/catalogo/README.md) tem as 14 regras (11 da
+    barreira e 3 avisos). Cada regra tem versões com `vigente_de` (inclusive) e `vigente_ate` (exclusive) pela data
+    do dado, além de dono, limite de taxa aceita, motivo, origem e aprovação.
+  - **DQX.** O YAML do DQX como código passou a ser gerado do catálogo. Cada versão vira uma checagem com o mesmo nome,
+    um `filter` pela data do dado e a versão no `user_metadata`. As métricas do DQX ganharam a coluna `versao`.
+  - **Objetos em `pos_venda.regras`:**
+    - `catalogo_regras` e `triagem_regras`, esta com `CHECK` nas 4 classificações;
+    - a função `versao_vigente(regra, dia)`;
+    - as visões `v_falhas_regras`, `v_triagem_pendente`, `v_mudancas_regras` e `v_retroalimentacao`.
+  - **Questionário.** [`regras/questionario/QUESTIONARIO_NEGOCIO.md`](../regras/questionario/QUESTIONARIO_NEGOCIO.md) tem
+    5 blocos: dado certo, quanto erro é aceitável, perguntas aos números, vigência e retroalimentação. Cada pergunta diz
+    o campo do catálogo que preenche.
+  - **Rito.** Triagem semanal, revisão mensal do falso positivo e questionário a cada trimestre.
+  - **Garantias.** O `validar` recusa buraco ou sobreposição de versões, versão nova sem motivo e regra de erro
+    diferente da barreira. Os 8 cenários BDD do catálogo rodam fora do portão da carga.
+- **Por quê:**
+  - Sem vigência, a regra nova julga o dado antigo: o passado "falha" e o painel dá um salto que ninguém explica.
+  - Sem triagem, a falha vira número e não volta para a regra. Ninguém separa "dado ruim" de "regra errada", e o
+    falso positivo nunca cai.
+- **Reaplique quando:** o negócio muda um domínio aceito, um cálculo ou um limite; ou quando as falhas de qualidade
+  se acumulam sem dono nem decisão.
+- **Prova (26/11/2026):**
+  - **Testes do gerador:** os 17 testes sem rede passam. O YAML de produção tem as mesmas 14 checagens de antes, só
+    com o `user_metadata` a mais.
+  - **`conferir`:** as 11 checagens passam.
+    - A tabela é igual ao YAML (14 versões).
+    - Cada regra tem uma versão em cada um dos 236 dias da base.
+    - As falhas da barreira na visão são as linhas da quarentena (6.712).
+    - As linhas do DQX são válidos mais quarentena (49.972).
+  - **BDD do catálogo:** 8 de 8 cenários.
+  - **Ensaio fictício de vigência:** `QUINZENAL` aceita a partir de 05/01/2027.
+    - Na janela de 14 dias, o DQX bateu com o SQL nas 15 checagens.
+    - A versão 1 reprovou 105 eventos (`QUINZENAL` + `BIMESTRAL` até 04/01).
+    - A versão 2 reprovou 68 (só `BIMESTRAL`, a partir de 05/01).
+    - Os eventos com erro foram 3.388, igual à quarentena da barreira (L95).
+  - **Triagem:** a primeira leitura achou 69 semanas × regra para triar e 7 perguntas em aberto para o dono.
 
 ---
 

@@ -5,6 +5,8 @@ resources:
       description: "Medalhao pos_venda com notebooks SQL (bronze > silver > gold/star schema). Recria as tabelas *_sql a cada execucao."
       tags:
         dominio: pos_venda
+        project: pos_venda        # tags de custo da FinOps (PLT01, P31)
+        team: squad-pos-venda
         abordagem: notebook_sql
         aidevkit_project: ai-dev-kit
       performance_target: STANDARD   # batch diario, sem prazo critico

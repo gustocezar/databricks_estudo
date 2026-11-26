@@ -108,7 +108,7 @@ REGRAS = [
      "Databricks: governed tags; framework P14", L_TAGS,
      "SET TAGS com os valores da política (governanca/aplicar_semantica.py)."),
     ("TAG02", "Tags governadas", "Ativo da camada principal com a tag atualizacao", "ativo", "camada principal", 100, "média",
-     "Prática do projeto: frescor declarado (P16)", L_TAGS, "SET TAGS ('atualizacao' = 'diaria' ou 'carga_unica')."),
+     "Prática do projeto: frescor declarado (P16)", L_TAGS, "SET TAGS ('atualizacao' = 'diaria', 'carga_unica' ou 'sob_demanda')."),
     ("TAG03", "Tags governadas", "Valor de tag governada dentro dos valores da política", "tag", "catálogo pos_venda", 100, "alta",
      "Databricks: governed tags (tag policies)", L_TAGS,
      "Corrigir o valor, ou incluir o novo valor na política (databricks tag-policies)."),
@@ -148,7 +148,7 @@ REGRAS = [
     ("USO03", "Atualização e uso", "View responde (sonda diária com DESCRIBE QUERY)", "view", "todos os catálogos do workspace", 100, "alta",
      "Prática do projeto: view recriada ou fonte apagada quebra em silêncio (P16, P28)", L_COMENT,
      "Recriar a view a partir do código ou apagar a quebrada."),
-    ("OTM01", "Otimização", f"Tabela gerenciada com Predictive Optimization nos últimos {JANELA} dias", "ativo", "tabelas gerenciadas do pos_venda", 90, "baixa",
+    ("OTM01", "Otimização", f"Tabela gerenciada com Predictive Optimization nos últimos {JANELA} dias", "ativo", "tabelas gerenciadas do pos_venda, fora as sob demanda", 90, "baixa",
      "Databricks: Predictive Optimization", L_PO,
      "ALTER CATALOG ou SCHEMA ... ENABLE PREDICTIVE OPTIMIZATION; tabela pequena ou parada pode não precisar."),
     ("PLT01", "Plataforma", "Job com as tags project e team", "job", "jobs do workspace", 100, "média",
@@ -246,7 +246,7 @@ D = {
     "colunas_sem_descricao": "Colunas sem descrição.",
     "tags": "Tags do objeto (chave e valor).",
     "certificacao": "Valor da tag de sistema system.certification_status (certified ou deprecated).",
-    "atualizacao": "Frequência declarada na tag atualizacao (diaria ou carga_unica).",
+    "atualizacao": "Frequência declarada na tag atualizacao (diaria, carga_unica ou sob_demanda).",
     "colunas_dado_pessoal": "Colunas com a tag dado_pessoal.",
     "colunas_sensiveis": "Colunas com dado_pessoal = sensivel.",
     "tem_pk": "Verdadeiro quando o ativo tem chave primária.",
@@ -608,6 +608,7 @@ base AS (
   UNION ALL
   SELECT 'OTM01', 'ativo', catalogo, esquema, ativo, NULL, papel, otimizacoes_30d > 0, concat(otimizacoes_30d, ' operação(ões) em {JANELA} dias')
   FROM a WHERE catalogo = '{DOMINIO}' AND papel <> 'interno' AND tipo = 'MANAGED'
+    AND coalesce(atualizacao, '') <> 'sob_demanda'   -- tabela que só muda sob demanda não recebe operação (L96)
   UNION ALL
   SELECT 'PLT01', 'job', NULL, NULL, nome, NULL, 'plataforma', projeto IS NOT NULL AND time IS NOT NULL,
          concat('project = ', coalesce(projeto, '(sem)'), ', team = ', coalesce(time, '(sem)'))
@@ -857,6 +858,11 @@ WHERE table_type IN ('VIEW', 'METRIC_VIEW', 'MATERIALIZED_VIEW') AND table_catal
         sys.exit("nenhuma view para sondar: confira o acesso ao information_schema")
     with cf.ThreadPoolExecutor(4) as ex:
         res = list(ex.map(sondar, views))
+    # falha de rede ou de token não é view quebrada: aborta sem gravar nada (L94). Em 26/11, uma queda de rede gravou
+    # 11 views boas como "não responde"; o job diário (src/sonda_diaria.py) não passa pelo CLI e não tem esse risco.
+    rede = [f"{v['table_schema']}.{v['table_name']}" for v, ok, erro in res if not ok and erro.startswith("chamada falhou")]
+    if rede:
+        sys.exit(f"sonda abortada sem gravar: {len(rede)} chamadas falharam por rede ou token (ex.: {rede[0]}). Rode de novo.")
     valores = ",\n".join(
         f"(TIMESTAMP '{agora}', '{q(v['table_catalog'])}', '{q(v['table_schema'])}', '{q(v['table_name'])}', '{v['table_type']}', "
         f"{str(ok).lower()}, {'NULL' if ok else repr_sql(erro)})" for v, ok, erro in res)

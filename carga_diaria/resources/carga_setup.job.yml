@@ -5,6 +5,8 @@ resources:
       description: "Rodar uma vez: cria os schemas fonte/bronze/silver/gold e o cadastro de apolices do sistema de origem simulado."
       tags:
         dominio: pos_venda
+        project: pos_venda        # tags de custo da FinOps (PLT01, P31)
+        team: squad-pos-venda
         aidevkit_project: ai-dev-kit
       performance_target: STANDARD
       max_concurrent_runs: 1

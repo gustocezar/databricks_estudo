@@ -201,7 +201,8 @@ def plano_de_tags(audit, sub_tag):
                 t.append(("tables", tab["nome"], "tipo_ativo", w["tipo"]))
                 if w.get("entidade"):
                     t.append(("tables", tab["nome"], "entidade", w["entidade"]))
-            t.append(("tables", tab["nome"], "atualizacao", "diaria" if s["nome"] not in ("landing", "fonte") else "carga_unica"))
+            freq = O.ATUALIZACAO_TABELA.get(tab["nome"].split(".", 1)[1])   # sob_demanda: ontologia e catálogo de regras
+            t.append(("tables", tab["nome"], "atualizacao", freq or ("diaria" if s["nome"] not in ("landing", "fonte") else "carga_unica")))
             if tab["nome"] in O.CERTIFICADAS:
                 t.append(("tables", tab["nome"], "system.certification_status", "certified"))
             t += tags_dado_pessoal(tab)

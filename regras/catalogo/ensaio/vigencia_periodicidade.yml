@@ -1,0 +1,30 @@
+# ENSAIO FICTÍCIO (26/11/2026). Não é decisão do dono e não vale em produção.
+#
+# Simula uma resposta do questionário: "a partir de 05/01/2027 a periodicidade QUINZENAL passa a ser aceita".
+# Serve para provar que o DQX julga cada evento pela versão do dia dele (P41):
+#   - de 02 a 04/01/2027, QUINZENAL e BIMESTRAL são reprovadas pela versão 1;
+#   - de 05 a 08/01/2027, só BIMESTRAL é reprovada, pela versão 2.
+# O gerador junta este arquivo ao catálogo real só para escrever dqx_codigo/ensaio/checks_ensaio_vigencia.yml.
+regras:
+  - regra_id: periodicidade_fora_do_dominio
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: 2027-01-05
+        limite_taxa: null
+        motivo: "aviso original do DQX como código"
+        origem: "dqx_codigo/checks_pendencias.yml"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(periodicidade_pagamento IN ('MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'), true)", "msg": "periodicidade fora do domínio (ex.: QUINZENAL, BIMESTRAL)"}}
+      - versao: 2
+        status: aprovada
+        vigente_de: 2027-01-05
+        vigente_ate: null
+        limite_taxa: null
+        motivo: "ENSAIO: produto com pagamento quinzenal lançado em 05/01/2027"
+        origem: "ensaio de vigência (fictício), questionário pergunta D1"
+        aprovado_por: ensaio
+        aprovado_em: 2026-11-26
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(periodicidade_pagamento IN ('MENSAL', 'QUINZENAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'), true)", "msg": "periodicidade fora do domínio (ex.: BIMESTRAL)"}}

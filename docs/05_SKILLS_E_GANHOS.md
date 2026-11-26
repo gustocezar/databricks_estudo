@@ -109,13 +109,25 @@ regra voltar a zero ou chegar a 100%.
 | 4.165 linhas da fato com forma de pagamento nova (criptomoeda, vale-refeição, transferência internacional) | dono do catálogo | cadastrar o código na dimensão | a regra de chave órfã volta a zero |
 | 2.615 linhas com motivo e 754 com periodicidade fora do domínio | dono do domínio | incluir o valor no domínio ou corrigir na origem | a regra de domínio volta a zero |
 | Cadastro ruim: 58 clientes com sexo X, 46 sem nascimento, itens de teste (`VIDA_QA_*`, `PV_QA_*`, `COR_QA_*`) | cadastro | corrigir o cadastro e tirar os itens de teste | as checagens da dimensão zeram |
-| 17 ativos sem `subject_area` (TAG01, crítica) | squad pós-venda | aplicar as tags da política | TAG01 chega a 100% |
+| 17 ativos sem `subject_area` (TAG01, crítica) | squad pós-venda | aplicar as tags da política | feito em 24/11: TAG01 em 100% |
 | 22 views quebradas no workspace (USO03, crítica) | dono de cada view | recriar a partir do código ou apagar | USO03 chega a 100% |
 | R$ 779,34 de produto órfão fora da resposta da Genie (L87) | dono da ontologia | membro "Produto não identificado" na metric view | feito em 24/11: a Genie voltou a 29/29 |
 | Início do mês somado por grupo no painel (L86) | dono do painel | ler início e fechamento nas datas da carteira inteira | feito em 24/11: a paridade voltou a 21/21 |
 
 A lista completa de governança, com severidade e como corrigir, está na visão
 `pos_venda.conformidade.pendencias`.
+
+**Desde 26/11, o plano de ação tem um ciclo (P41).** A pauta semanal é `pos_venda.regras.v_triagem_pendente`: semanas
+em que uma regra passou do limite aceito e ninguém triou ainda. O dono classifica cada linha em
+`pos_venda.regras.triagem_regras`:
+- `dado_ruim` vira uma linha desta tabela;
+- `regra_errada` volta ao [questionário do negócio](../regras/questionario/QUESTIONARIO_NEGOCIO.md) e vira versão nova
+  no catálogo, com vigência pela data do dado;
+- `fora_da_vigencia` corrige a vigência;
+- `esperado` registra a falha aceita no período.
+
+`v_retroalimentacao` mostra, por regra, quanto falha, quanto falta triar e a taxa de falso positivo. A primeira
+leitura, em 26/11, achou 69 semanas × regra para triar e nenhuma triagem ainda.
 
 **Lição da semana 5.** A origem se corrigiu e os barrados zeraram em 22/12. Mesmo assim, as linhas órfãs da fato
 continuaram enquanto as pendências seguiam abertas. Corrigir só a origem não limpa o que já entrou: o dono do catálogo

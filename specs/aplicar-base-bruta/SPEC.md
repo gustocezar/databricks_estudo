@@ -79,11 +79,11 @@ Cada passo tem critério de pronto conferível e aprovação humana nos pontos q
 |---|---|---|
 | **E0 · Acesso** | perfil e usuário confirmados; grants da base e do destino anotados na ficha; destino e trilha do DQX decididos (G1, G2) | P01, P02, P38 |
 | **E1 · Ficha** | as perguntas da ficha respondidas com números do perfil (contagens, nulos, duplicatas, domínios); perfil pronto (A a E) escolhido (G3) | Passo 0 |
-| **E2 · Mapeamento** | todo conceito do modelo com coluna, derivação ou "não se aplica"; regras de erro e aviso com nome estável (G4) | P05, P09 |
+| **E2 · Mapeamento** | todo conceito do modelo com coluna, derivação ou "não se aplica"; questionário do negócio respondido; regras de erro e aviso no catálogo, com nome estável, versão, vigência e dono, e `gerar_catalogo.py validar` ok (G4) | P05, P09, P41 |
 | **E3 · Medalhão** | cenários de regra 100%; aptos + quarentena = bronze na janela; fato = silver na foto do dia; job SUCCESS com agenda pausada (G5, G6) | P05 a P10, P20 |
 | **E4A · DQX código** | job SUCCESS numa janela conhecida; erros do DQX = quarentena da barreira na mesma janela; toda regra em `dq_metricas_regras`, mesmo com zero | P11, P12, P38 |
 | **E4B · DQX Studio** | pré-requisitos confirmados (G8); `registro_studio.py executar` SUCCESS com nota; reprovados = quarentena da barreira | P11, P12 |
-| **E4 · Plano de ação** | cada regra com reprovação tem dono, ação e critério de pronto | 05 · plano de ação |
+| **E4 · Plano de ação e triagem** | cada regra com reprovação tem dono, ação e critério de pronto; `triagem_regras` e as visões de triagem criadas; rito semanal combinado com o dono | 05 · plano de ação, P41 |
 | **E5 · Governança e semântica** | 100% das colunas descritas e com tags; `dado_pessoal` marcado; ontologia sem identificadores e com membro explícito para chave órfã (L87); metric views com início e fechamento no total (L86) | P13 a P19 |
 | **E6 · Consumo** | Genie com perguntas de avaliação e gabarito em SQL, acerto igual ou acima da meta (G7); painel e BI batendo indicador a indicador | P21 a P26 |
 | **E7 · Operação** | matriz de resiliência preenchida; custo com tag de projeto e time; conformidade rodando com histórico; CHANGELOG com as conferências | P28 a P37 |
@@ -122,3 +122,5 @@ Cada passo tem critério de pronto conferível e aprovação humana nos pontos q
 | soma de início ou fechamento por grupo | L86 |
 | filtro de nulo esconde chave órfã na Genie | L87 |
 | `is_in_list` do DQX lê valores de texto como colunas | L88 |
+| regra nova julgando o dado antigo (salto sem explicação no painel) | P41, L95 |
+| tabela fora da carga diária marcada com `atualizacao=diaria` | L96 |

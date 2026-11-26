@@ -32,6 +32,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Qual é o estado atual e os números? | Tabela "Situação" de [docs/README.md](docs/README.md), [CHANGELOG](docs/CHANGELOG.md) e [inventário](docs/INVENTARIO.md) |
 | Algo falhou ou está lento (cota, token, app parado, view sem tags, carga atrasada) | [docs/07_SUSTENTACAO.md](docs/07_SUSTENTACAO.md) (runbooks), a matriz de resiliência do [playbook](docs/02_PLAYBOOK.md) e as lições |
 | Regra de cálculo (faixa, multa, juros, total, CPF) | [regras/README.md](regras/README.md), `regras/funcoes.py` e os cenários em `regras/features/` |
+| Regra de qualidade (o que barra ou avisa), versão e vigência, o que o negócio aceita, triagem das falhas, falso positivo | [regras/catalogo/README.md](regras/catalogo/README.md), o [questionário do negócio](regras/questionario/QUESTIONARIO_NEGOCIO.md) e as visões de `pos_venda.regras` (`v_falhas_regras`, `v_triagem_pendente`, `v_mudancas_regras`, `v_retroalimentacao`); P41 |
 | Métrica, KPI ou camada semântica | `governanca/ontologia.py` e `governanca/gerar_ontologia_sql.py` (metric views) |
 | Genie | `governanca/genie.py` e [governanca/genie/scanner/TRIAGEM.md](governanca/genie/scanner/TRIAGEM.md) |
 | Power BI | [paineis_financeiros/powerbi/README.md](paineis_financeiros/powerbi/README.md) e a [auditoria](paineis_financeiros/powerbi/auditoria/README.md) |
@@ -59,8 +60,12 @@ Não reabra estas decisões sem pedido do dono do projeto.
 - **`RELY` só nas chaves primárias da gold.** As chaves estrangeiras ficam sem `RELY`: a de forma de pagamento tem
   órfãs de propósito (`NAO_CADASTRADA`).
 - **Agendas ligadas desde 24/11, a pedido do dono.** A carga diária roda às 05:00, o DQX Studio avalia às 06:30 e o
-  alerta de sustentação dispara às 06:20 (meta de término às 06:15). O medalhão da primeira versão continua pausado.
-  Pausar de novo também é decisão do dono (`carga_schedule_status`, `registro_studio.py pausar`, `alerta_status`).
+  alerta de sustentação dispara às 06:20 (meta de término às 06:15). A sonda da conformidade roda às 06:45 (desde
+  26/11). O medalhão da primeira versão continua pausado. Pausar de novo também é decisão do dono
+  (`carga_schedule_status`, `registro_studio.py pausar`, `alerta_status`, `sonda_status`).
+- **Regra de qualidade vale pela data do dado (P41).** Mudou a regra, nasce uma versão nova no catálogo, com vigência,
+  motivo, origem e aprovação do dono. Nunca reescreva nem apague uma versão aprovada: o dado antigo continua sendo
+  julgado por ela. Versão de ensaio é fictícia e fica só em `regras/catalogo/ensaio/`.
 - **O app `genie-ontology-readiness` não recebe acesso aos catálogos `main` e `workspace`.**
 - **`finops.observability` (o framework FinOps que já existia no workspace) só se lê.** As visões novas ficam em
   `pos_venda.finops`. Não recrie nem corrija as `v_focus_*` sem pedido do dono.
@@ -95,6 +100,7 @@ Não edite um arquivo gerado: mude a fonte e gere de novo.
 | `conformidade/conformidade.sql`, `politicas_tags.json`, `alertas.json`, `conferencia.json` e os objetos de `pos_venda.conformidade` | `conformidade/gerar_conformidade.py` (regras em `REGRAS`, papel dos schemas em `CAMADAS`, avaliação em `ACOES`) |
 | `sustentacao/sustentacao.sql`, `sustentacao/src/pos_venda_sustentacao.lvdash.json`, `sustentacao/resources/sustentacao.yml`, `sustentacao/conferencia.json` e as visões de `pos_venda.sustentacao` | `sustentacao/gerar_sustentacao.py` (meta em `SLA`, matriz em `TAREFAS`, parâmetros no topo) |
 | `governanca/auditoria_metadados.json`, `governanca/semantica_aplicada.json`, `governanca/rely/*.json` | `auditar_metadados.py`, `aplicar_semantica.py`, `aplicar_rely.py` |
+| `dqx_codigo/checks_pendencias.yml`, `dqx_codigo/ensaio/checks_ensaio_vigencia.yml`, `regras/catalogo/catalogo_regras.sql` e os objetos de `pos_venda.regras` (fora as funções de cálculo) | `regras/catalogo/gerar_catalogo.py` (regras em `regras/catalogo/catalogo_regras.yml`; ensaio em `regras/catalogo/ensaio/`) |
 
 Logs (`*.log`) e resultados de execução (`dqx_studio/regras/resultados/`) são evidência: não edite, não apague.
 

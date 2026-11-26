@@ -29,15 +29,18 @@ dbutils.widgets.text("schema_destino", "pos_venda.dqx_codigo")                  
 dbutils.widgets.text("prefixo", "eventos")                                              # noqa: F821
 dbutils.widgets.text("arquivo_checks", "checks_pendencias.yml")                         # noqa: F821
 dbutils.widgets.text("filtro", "")                                                      # noqa: F821  ex.: data_extracao >= current_date() - 7
+dbutils.widgets.dropdown("modo", "gravar", ["gravar", "ensaio"])                        # noqa: F821  ensaio: não grava nada
 
 ENTRADA = dbutils.widgets.get("tabela_entrada")   # noqa: F821
 DESTINO = dbutils.widgets.get("schema_destino")   # noqa: F821
 PREFIXO = dbutils.widgets.get("prefixo")          # noqa: F821
 ARQUIVO = dbutils.widgets.get("arquivo_checks")   # noqa: F821
 FILTRO = dbutils.widgets.get("filtro").strip()    # noqa: F821
+MODO = dbutils.widgets.get("modo")                # noqa: F821
 
 # COMMAND ----------
 
+import json
 import os
 import uuid
 from datetime import datetime, timezone
@@ -74,31 +77,52 @@ tem_erro = F.coalesce(F.size(F.col(COL_ERRO)), F.lit(0)) > 0
 validos = avaliado.where(~tem_erro).drop(COL_ERRO)   # aviso entra marcado (coluna de avisos)
 quarentena = avaliado.where(tem_erro)                # erro fica de fora, com o motivo
 
+# COMMAND ----------
+
+# Métricas por regra e versão (P41): a mesma regra pode ter versões com vigências diferentes, cada uma com o seu
+# filtro pela data do dado. A versão vem do user_metadata que regras/catalogo/gerar_catalogo.py escreve no YAML;
+# as linhas avaliadas de cada versão são só as da vigência dela.
+execucao, agora = str(uuid.uuid4()), datetime.now(timezone.utc)
+total = avaliado.count()
+
+
+def violacoes(coluna):  # explode ignora nulo e lista vazia
+    campos = avaliado.schema[coluna].dataType.elementType.fieldNames()
+    versao = F.col("r.user_metadata").getItem("versao") if "user_metadata" in campos else F.lit(None).cast("string")
+    return avaliado.select(F.explode(F.col(coluna)).alias("r")).select(F.col("r.name").alias("regra"), versao.alias("versao"))
+
+
+por_regra = (violacoes(COL_ERRO).unionByName(violacoes(COL_AVISO)).groupBy("regra", "versao")
+             .agg(F.count("*").alias("reprovadas")).withColumnRenamed("regra", "_regra").withColumnRenamed("versao", "_versao"))
+avaliadas_por_filtro = {f: (df.where(f).count() if f else total) for f in {c.get("filter") or "" for c in checks}}
+nomes = spark.createDataFrame(  # noqa: F821  regras sem reprovação também aparecem, com zero
+    [(c.get("name"), (c.get("user_metadata") or {}).get("versao"), c.get("criticality", "error"), c.get("filter") or "",
+      avaliadas_por_filtro[c.get("filter") or ""]) for c in checks],
+    "regra string, versao string, criticidade string, filtro string, avaliadas bigint")
+por_versao = (nomes.join(por_regra, (F.col("regra") == F.col("_regra")) & F.col("versao").eqNullSafe(F.col("_versao")), "left")
+              .withColumn("reprovadas", F.coalesce("reprovadas", F.lit(0))).drop("_regra", "_versao"))
+
+if MODO == "ensaio":   # não grava nada: devolve as contagens para quem chamou (gerar_catalogo.py ensaio)
+    resultado = {"modo": MODO, "tabela": ENTRADA, "filtro": FILTRO, "arquivo_checks": ARQUIVO, "linhas": total,
+                 "linhas_com_erro": quarentena.count(),
+                 "regras": [r.asDict() for r in por_versao.orderBy("regra", "versao").collect()]}
+    print(json.dumps(resultado, ensure_ascii=False, indent=1))
+    dbutils.notebook.exit(json.dumps(resultado, ensure_ascii=False))  # noqa: F821
+
 spark.sql(f"CREATE SCHEMA IF NOT EXISTS {DESTINO}")  # noqa: F821  (pule se o schema já existe e você não pode criar)
 validos.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable(f"{DESTINO}.{PREFIXO}_validos")
 quarentena.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable(f"{DESTINO}.{PREFIXO}_quarentena")
 
-# COMMAND ----------
-
 # Métricas por regra: base do painel de qualidade e do plano de ação (cada regra com dono e critério de pronto)
-execucao, agora = str(uuid.uuid4()), datetime.now(timezone.utc)
-total = avaliado.count()
-def nomes_violados(coluna):  # explode ignora nulo e lista vazia
-    return avaliado.select(F.explode(F.col(coluna)).alias("r")).select(F.col("r.name").alias("regra"))
-
-
-por_regra = nomes_violados(COL_ERRO).unionByName(nomes_violados(COL_AVISO)).groupBy("regra").agg(
-    F.count("*").alias("reprovadas"))
-nomes = spark.createDataFrame(  # noqa: F821  regras sem reprovação também aparecem, com zero
-    [(c.get("name"), c.get("criticality", "error")) for c in checks], "regra string, criticidade string")
-metricas = (
-    nomes.join(por_regra, "regra", "left")
+metricas = (   # versao é coluna nova (26/11): fica no fim, e o append usa mergeSchema
+    por_versao
     .select(F.lit(execucao).alias("execucao_id"), F.lit(agora).alias("executado_em"), F.lit(ENTRADA).alias("tabela"),
-            "regra", "criticidade", F.lit(total).alias("linhas_avaliadas"),
-            F.coalesce("reprovadas", F.lit(0)).alias("reprovadas"))
+            "regra", "criticidade", F.col("avaliadas").alias("linhas_avaliadas"), "reprovadas", "versao")
     .withColumn("taxa", F.when(F.col("linhas_avaliadas") > 0, F.col("reprovadas") / F.col("linhas_avaliadas")))
+    .select("execucao_id", "executado_em", "tabela", "regra", "criticidade", "linhas_avaliadas", "reprovadas", "taxa",
+            "versao")
 )
-metricas.write.mode("append").saveAsTable(f"{DESTINO}.dq_metricas_regras")
+metricas.write.mode("append").option("mergeSchema", "true").saveAsTable(f"{DESTINO}.dq_metricas_regras")
 
 # COMMAND ----------
 
@@ -127,6 +151,7 @@ EXTRAS = {
     "linhas_avaliadas": "Quantidade de linhas da janela avaliadas nesta execução.",
     "reprovadas": "Linhas que violaram a regra nesta execução; zero aparece para mostrar que foi checada.",
     "taxa": "Reprovadas dividido por linhas avaliadas, entre 0 e 1.",
+    "versao": "Versão da regra no catálogo (regras/catalogo); cada versão vale só na sua vigência pela data do dado.",
 }
 DESCR = {
     f"{PREFIXO}_validos": f"Linhas de {ENTRADA} sem erro nas checagens do DQX como código; avisos na coluna {COL_AVISO}. Gerada por dqx_codigo/aplicar_dqx.py.",

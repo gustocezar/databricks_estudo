@@ -1,13 +1,16 @@
-# Checagens DQX (biblioteca databricks-labs-dqx) para eventos de pendências de pagamento.
+# GERADO por regras/catalogo/gerar_catalogo.py a partir de regras/catalogo/catalogo_regras.yml (catalogo_regras.yml).
+# Não edite aqui: edite o catálogo e rode `python3 regras/catalogo/gerar_catalogo.py gerar`.
 #
-# São as 11 regras de erro da barreira do pipeline (carga_diaria/gerar_carga.py, MOTIVO_REJEICAO), com os mesmos
-# nomes, mais 3 avisos. Erro (criticality: error) vai para a quarentena; aviso (warn) entra marcado.
+# Checagens DQX (biblioteca databricks-labs-dqx) para eventos de pendências de pagamento. As 11 regras de erro são as
+# da barreira do pipeline (carga_diaria/gerar_carga.py, MOTIVO_REJEICAO), com os mesmos nomes, mais 3 avisos. Erro
+# (criticality: error) vai para a quarentena; aviso (warn) entra marcado.
 # Formato: https://databrickslabs.github.io/dqx/docs/guide/quality_checks_definition/
 #
-# Para outra base: troque os nomes das colunas, as listas de valores aceitos e o catálogo das funções de regra
-# (pos_venda.regras). Mantenha o nome de cada regra: ele vira o motivo na quarentena e a linha do painel.
-# Toda expressão é escrita para dar TRUE quando o dado está bom (o DQX registra erro quando dá FALSE). O coalesce
-# repete o comportamento da barreira com valor nulo: true = deixa passar; false = barra.
+# Vigência (P41): cada versão de uma regra vale só para o dado da sua vigência, pelo `filter` na data do dado. Duas
+# versões da mesma regra têm o mesmo nome (o motivo estável) e se distinguem pelo user_metadata.versao.
+# Toda expressão dá TRUE quando o dado está bom (o DQX registra erro quando dá FALSE). O coalesce repete o
+# comportamento da barreira com valor nulo: true = deixa passar; false = barra.
+# Domínio fechado com sql_expression e IN: na versão 0.17.2, o is_in_list leu os valores de texto como colunas (L88).
 
 # ---------------------------------------------------------------- erros (barram o evento)
 - name: pendencia_id_nulo
@@ -16,93 +19,168 @@
     function: is_not_null
     arguments:
       column: pendencia_id
+  user_metadata:
+    regra_id: pendencia_id_nulo
+    versao: '1'
+    titulo: Toda pendência tem identificador
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: tipo_evento_invalido
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(tipo_evento IN ('NOVA', 'ATUALIZACAO', 'BAIXA'), false)"
-      msg: "tipo_evento nulo ou fora de NOVA, ATUALIZACAO, BAIXA"
+      expression: coalesce(tipo_evento IN ('NOVA', 'ATUALIZACAO', 'BAIXA'), false)
+      msg: tipo_evento nulo ou fora de NOVA, ATUALIZACAO, BAIXA
+  user_metadata:
+    regra_id: tipo_evento_invalido
+    versao: '1'
+    titulo: O evento é NOVA, ATUALIZACAO ou BAIXA
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: status_cobranca_invalido
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(status_cobranca IN ('PENDENTE', 'EM_COBRANCA', 'PROMESSA_PAGAMENTO', 'NEGOCIADO', 'COBRANCA_EXTERNA', 'PAGA'), false)"
-      msg: "status_cobranca nulo ou fora do domínio"
+      expression: coalesce(status_cobranca IN ('PENDENTE', 'EM_COBRANCA', 'PROMESSA_PAGAMENTO', 'NEGOCIADO', 'COBRANCA_EXTERNA',
+        'PAGA'), false)
+      msg: status_cobranca nulo ou fora do domínio
+  user_metadata:
+    regra_id: status_cobranca_invalido
+    versao: '1'
+    titulo: O status de cobrança é um dos 6 aceitos
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: valor_parcela_nao_positivo
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(valor_parcela > 0, false)"
-      msg: "valor_parcela nulo, zero ou negativo"
+      expression: coalesce(valor_parcela > 0, false)
+      msg: valor_parcela nulo, zero ou negativo
+  user_metadata:
+    regra_id: valor_parcela_nao_positivo
+    versao: '1'
+    titulo: A parcela tem valor maior que zero
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: valor_total_inconsistente
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01, true)"
-      msg: "valor_total_pendente diferente de parcela + multa + juros"
+      expression: coalesce(abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01, true)
+      msg: valor_total_pendente diferente de parcela + multa + juros
+  user_metadata:
+    regra_id: valor_total_inconsistente
+    versao: '1'
+    titulo: O total pendente é parcela + multa + juros informados
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: vencimento_nao_anterior_ao_evento
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(data_vencimento < data_extracao, true)"
-      msg: "data_vencimento igual ou depois da data do evento"
+      expression: coalesce(data_vencimento < data_extracao, true)
+      msg: data_vencimento igual ou depois da data do evento
+  user_metadata:
+    regra_id: vencimento_nao_anterior_ao_evento
+    versao: '1'
+    titulo: O vencimento é anterior à data do evento
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: atraso_nao_confere_com_as_datas
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(dias_atraso = datediff(data_extracao, data_vencimento), true)"
-      msg: "dias_atraso não confere com as datas"
+      expression: coalesce(dias_atraso = datediff(data_extracao, data_vencimento), true)
+      msg: dias_atraso não confere com as datas
+  user_metadata:
+    regra_id: atraso_nao_confere_com_as_datas
+    versao: '1'
+    titulo: Os dias de atraso batem com as datas
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
-# As funções de regra são do Unity Catalog (pos_venda.regras). Noutra base, crie as suas (regras/README.md) ou
-# troque por expressões; a computação precisa enxergar o catálogo.
 - name: valores_fora_da_regra
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: >-
-        coalesce((valor_multa <=> pos_venda.regras.valor_multa(valor_parcela))
-        AND (valor_juros <=> pos_venda.regras.valor_juros(valor_parcela, dias_atraso))
-        AND (valor_total_pendente <=> pos_venda.regras.valor_total_pendente(valor_parcela, dias_atraso)), false)
-      msg: "multa, juros ou total fora da regra de cálculo"
+      expression: coalesce((valor_multa <=> pos_venda.regras.valor_multa(valor_parcela)) AND (valor_juros <=> pos_venda.regras.valor_juros(valor_parcela,
+        dias_atraso)) AND (valor_total_pendente <=> pos_venda.regras.valor_total_pendente(valor_parcela, dias_atraso)),
+        false)
+      msg: multa, juros ou total fora da regra de cálculo
+  user_metadata:
+    regra_id: valores_fora_da_regra
+    versao: '1'
+    titulo: Multa, juros e total seguem a regra de cálculo
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: baixa_sem_data_ou_valor_pago
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(NOT (tipo_evento = 'BAIXA' AND (data_baixa IS NULL OR valor_pago IS NULL)), true)"
-      msg: "baixa sem data ou sem valor pago"
+      expression: coalesce(NOT (tipo_evento = 'BAIXA' AND (data_baixa IS NULL OR valor_pago IS NULL)), true)
+      msg: baixa sem data ou sem valor pago
+  user_metadata:
+    regra_id: baixa_sem_data_ou_valor_pago
+    versao: '1'
+    titulo: Toda baixa tem data e valor pago
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: uf_invalida
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: >-
-        coalesce(upper(trim(cliente_uf)) IN ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
-        'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'), true)
-      msg: "UF do cliente fora das 27 UFs"
+      expression: coalesce(upper(trim(cliente_uf)) IN ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+        'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'), true)
+      msg: UF do cliente fora das 27 UFs
+  user_metadata:
+    regra_id: uf_invalida
+    versao: '1'
+    titulo: A UF do cliente é uma das 27
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: cliente_menor_de_idade
   criticality: error
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(cliente_idade >= 18, true)"
-      msg: "cliente com menos de 18 anos"
+      expression: coalesce(cliente_idade >= 18, true)
+      msg: cliente com menos de 18 anos
+  user_metadata:
+    regra_id: cliente_menor_de_idade
+    versao: '1'
+    titulo: O cliente tem 18 anos ou mais
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
+
 
 # ---------------------------------------------------------------- avisos (entram marcados)
 - name: email_ausente
@@ -111,6 +189,13 @@
     function: is_not_null
     arguments:
       column: cliente_email
+  user_metadata:
+    regra_id: email_ausente
+    versao: '1'
+    titulo: O cliente tem e-mail cadastrado
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
 - name: forma_pagamento_ausente
   criticality: warn
@@ -118,13 +203,26 @@
     function: is_not_null
     arguments:
       column: forma_pagamento
+  user_metadata:
+    regra_id: forma_pagamento_ausente
+    versao: '1'
+    titulo: A pendência tem forma de pagamento
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
 
-# Domínio fechado com sql_expression e IN: na versão 0.17.2, o is_in_list leu os valores de texto de "allowed" como
-# nomes de coluna (UNRESOLVED_COLUMN `MENSAL`). Valor nulo passa, como na barreira.
 - name: periodicidade_fora_do_dominio
   criticality: warn
   check:
     function: sql_expression
     arguments:
-      expression: "coalesce(periodicidade_pagamento IN ('MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'), true)"
-      msg: "periodicidade fora do domínio (ex.: QUINZENAL, BIMESTRAL)"
+      expression: coalesce(periodicidade_pagamento IN ('MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'), true)
+      msg: 'periodicidade fora do domínio (ex.: QUINZENAL, BIMESTRAL)'
+  user_metadata:
+    regra_id: periodicidade_fora_do_dominio
+    versao: '1'
+    titulo: A periodicidade é mensal, trimestral, semestral ou anual
+    dono: financeiro_pos_venda
+    vigente_de: ''
+    vigente_ate: ''
+

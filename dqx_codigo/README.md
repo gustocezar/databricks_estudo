@@ -14,8 +14,9 @@ e diz quando escolher cada uma.
 
 | Arquivo | O que faz |
 |---|---|
-| `checks_pendencias.yml` | 14 checagens: as 11 regras de erro da barreira do pipeline, com os mesmos nomes, e 3 avisos |
-| `aplicar_dqx.py` | notebook: instala `databricks-labs-dqx==0.17.2`, aplica as checagens, separa válidos e quarentena, grava as métricas por regra e aplica descrições e tags (copiadas da tabela de entrada) |
+| `checks_pendencias.yml` | **gerado** do [catálogo de regras](../regras/catalogo/README.md) (não edite à mão): 14 checagens, as 11 regras de erro da barreira do pipeline, com os mesmos nomes, e 3 avisos, cada uma com a versão no `user_metadata` (P41) |
+| `ensaio/checks_ensaio_vigencia.yml` | gerado: o mesmo catálogo com a periodicidade em 2 versões (ensaio fictício de vigência) |
+| `aplicar_dqx.py` | notebook: instala `databricks-labs-dqx==0.17.2`, aplica as checagens, separa válidos e quarentena, grava as métricas por regra e versão e aplica descrições e tags (copiadas da tabela de entrada). Com `modo=ensaio`, não grava nada e devolve as contagens por regra e versão |
 | `databricks.yml` | bundle com o job `dqx_codigo_checagens`, sob demanda e no serverless |
 
 ## Permissões necessárias
@@ -42,13 +43,22 @@ databricks bundle run dqx_codigo -t dev --profile <perfil>
 Sem bundle, importe `aplicar_dqx.py` e `checks_pendencias.yml` para a mesma pasta do workspace, preencha os widgets e
 rode.
 
+**Modo ensaio (26/11/2026).** Ele roda as checagens numa janela, não grava tabela nenhuma e devolve, pela saída do
+notebook, as linhas avaliadas e reprovadas de cada regra e versão. O `gerar_catalogo.py ensaio <run_id>` compara essa
+saída com a mesma conta em SQL. Use-o antes de mudar uma regra ou de ligar o DQX numa base nova.
+
+```bash
+databricks bundle run dqx_codigo -t dev --profile <perfil> \
+  --notebook-params "modo=ensaio,arquivo_checks=ensaio/checks_ensaio_vigencia.yml,filtro=data_extracao BETWEEN DATE'2026-12-27' AND DATE'2027-01-09'"
+```
+
 ## O que sai
 
 | Tabela | Conteúdo | Para quê |
 |---|---|---|
 | `<destino>.<prefixo>_validos` | linhas sem erro; avisos na coluna `_warnings` | entrada da silver |
 | `<destino>.<prefixo>_quarentena` | linhas com erro, com o nome e a mensagem de cada regra em `_errors` | devolver à origem com o motivo |
-| `<destino>.dq_metricas_regras` | por execução e regra: linhas avaliadas, reprovadas, taxa | painel de qualidade e plano de ação |
+| `<destino>.dq_metricas_regras` | por execução, regra e versão: linhas avaliadas (só as da vigência da versão), reprovadas, taxa | painel de qualidade, triagem e plano de ação |
 
 Consulta para o plano de ação (regras com reprovação na última execução):
 
@@ -77,8 +87,10 @@ ORDER BY reprovadas DESC;
 
 2. **Escreva as regras do negócio.** O que torna o dado inutilizável é `error`; o resto é `warn`. As respostas ao
    [Passo 0 do playbook](../docs/02_PLAYBOOK.md#passo-0--perfil-da-base) dizem quais são.
-3. **Troque as colunas e o catálogo das funções** no YAML. Mantenha um nome estável por regra: o nome vira o motivo na
-   quarentena e a linha do painel.
+3. **Escreva as regras no catálogo** ([regras/catalogo](../regras/catalogo/README.md)), não no YAML. Troque as colunas,
+   os domínios e o catálogo das funções. Mantenha um nome estável por regra: o nome vira o motivo na quarentena e a
+   linha do painel. Regra que muda com o tempo ganha versão nova com vigência (P41).
+   Depois rode `python3 regras/catalogo/gerar_catalogo.py gerar`.
 4. **Rode numa janela pequena primeiro** (`filtro`, por exemplo `data_extracao >= date_sub(current_date(), 7)`).
    Confira as colunas de resultado (`_errors`, `_warnings`) e os números por regra.
 5. **Ponha o job no fim da carga**, como uma tarefa depois da bronze ou da silver.

@@ -15,7 +15,7 @@ depois de 20 execuções da agenda.
 
 ## 1 · Catálogo do que roda
 
-**Cadeia diária** (horário de Brasília, quando as agendas forem ligadas):
+**Cadeia diária** (horário de Brasília; agendas ligadas desde 24/11, a sonda desde 26/11):
 
 ```
 05:00 pos_venda_carga_diaria ─► portao_regras ─► gerar_eventos ─► silver_lakeflow (pipeline) ─► gold_dimensoes
@@ -23,6 +23,7 @@ depois de 20 execuções da agenda.
 06:15 meta: carga terminada (SLA)
 06:20 alerta de sustentação (SLA estourado ou desvio)
 06:30 DQX Studio avalia 12 tabelas (agendamentos do Studio)
+06:45 sonda da conformidade (views do workspace e histórico do dia)
 depois painéis AI/BI, Genie e Power BI leem a gold, a ontologia, as metric views e o schema bi
 ```
 
@@ -42,6 +43,7 @@ depois painéis AI/BI, Genie e Power BI leem a gold, a ontologia, as metric view
 | "pos_venda · Sustentação" | painel AI/BI | lê na abertura | squad pós-venda | `pos_venda.sustentacao` | sem visão de tempo e SLA |
 | Pós-venda · Analista financeiro e Diretor financeiro | espaços Genie | sob demanda | squad pós-venda | metric views e ontologia | respostas com o dia anterior |
 | "pos_venda · Sustentação: SLA ou desvio da carga" | alerta SQL | 06:20, 1 vez por dia, **ligado** desde 24/11 | squad pós-venda | `alerta_sustentacao` | ninguém é avisado do atraso |
+| `pos_venda_conformidade_sonda` | job (notebook serverless) | 06:45, **ligada** desde 26/11; timeout de 20 min | squad pós-venda | visões de `pos_venda.conformidade` (criadas pelo `aplicar` local) | sem histórico do dia; USO03 fica com a sonda anterior |
 | 5 alertas `[Observabilidade]` | alertas SQL (jobs ocultos, L79) | de hora em hora a 1 vez por dia | dono do bundle `observabilidade-framework` | tabelas de sistema | só leitura para o pós-venda |
 
 O inventário vivo dos jobs do projeto é `pos_venda.sustentacao.jobs_monitorados`. A lista completa de objetos fica no
@@ -51,12 +53,12 @@ O inventário vivo dos jobs do projeto é `pos_venda.sustentacao.jobs_monitorado
 
 | Meta | Valor | Como medir | Situação |
 |---|---|---|---|
-| Carga terminada | até **06:15** (antes do Studio às 06:30) | `sustentacao.sla_diario` (só a execução da agenda conta, L91) | agenda pausada; folga projetada de 59,0 min **(provisório)** |
+| Carga terminada | até **06:15** (antes do Studio às 06:30) | `sustentacao.sla_diario` (só a execução da agenda conta, L91) | no prazo em 25 e 26/11: a agenda terminou às 05:15 e às 05:17 |
 | Duração da carga | mediana de 14,53 min; p95 de 16,05 min **(provisório)** | `sustentacao.linha_base` (tipo job) | 12 execuções com sucesso |
 | Duração por tarefa | ver a tabela abaixo **(provisório)** | `sustentacao.linha_base` (tipo tarefa) | desvio = acima do p95 ou de 1,5 vez a mediana |
-| Frescor | tabela com `atualizacao=diaria` escrita nos últimos 2 dias | regra USO01 em `conformidade.boas_praticas_dados` | cai enquanto a agenda está pausada |
+| Frescor | tabela com `atualizacao=diaria` escrita nos últimos 2 dias | regra USO01 em `conformidade.boas_praticas_dados` | atende desde que a agenda foi ligada: USO01 sem pendência em 26/11 |
 | Disponibilidade do Studio | app `RUNNING` e "Application startup complete" antes das 06:30 | `databricks apps get dqx-studio`; tarefa `ligar_dqx_studio` | o app para após 24 h no Free Edition |
-| Timeout do job | 2 vezes o p95 (33 min) **(provisório)** | `sustentacao.ultima_execucao.timeout_sugerido_min`; regra PLT03 | hoje o job não tem timeout |
+| Timeout do job | 2 vezes o p95 (33 min) **(provisório)** | `sustentacao.ultima_execucao.timeout_sugerido_min`; regra PLT03 | 33 min no job desde 24/11 |
 
 | Tarefa | Mediana (min) | p95 (min) | Setup normal |
 |---|---|---|---|

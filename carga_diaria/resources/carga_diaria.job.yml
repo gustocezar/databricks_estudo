@@ -8,6 +8,8 @@ resources:
         (padrao = dia da execucao). Para o backfill, informe o intervalo.
       tags:
         dominio: pos_venda
+        project: pos_venda        # tags de custo da FinOps (PLT01, P31)
+        team: squad-pos-venda
         abordagem: carga_diaria
         aidevkit_project: ai-dev-kit
       performance_target: STANDARD

@@ -1,0 +1,252 @@
+# Catálogo das regras de qualidade do pos_venda, com versão e vigência (P41).
+#
+# Fonte única das regras de dado: gerar_catalogo.py escreve daqui o YAML do DQX como código
+# (dqx_codigo/checks_pendencias.yml), a tabela pos_venda.regras.catalogo_regras e as visões de triagem.
+# Edite AQUI, nunca o YAML do DQX.
+#
+# Vigência: a regra vale pela DATA DO DADO (coluna_data), não pela data em que o job roda. O evento de outubro é
+# julgado pela regra de outubro, mesmo que o job rode em dezembro.
+#   vigente_de  inclusive (null = desde sempre)
+#   vigente_ate exclusive (null = sem fim); a versão seguinte começa exatamente onde a anterior termina.
+# Em cada dia, cada regra tem exatamente uma versão aprovada (gerar_catalogo.py validar e o BDD do catálogo conferem).
+#
+# Versão nova: nasce de uma resposta do questionário (regras/questionario/QUESTIONARIO_NEGOCIO.md) ou da triagem
+# (pos_venda.regras.triagem_regras), com status "proposta". Só vira "aprovada" com aprovado_por e aprovado_em; aí
+# a anterior ganha vigente_ate = vigente_de da nova. Nunca apague nem reescreva uma versão aprovada: o dado antigo
+# continua sendo julgado por ela.
+#
+# tipo: erro (barra o evento; vai para a quarentena) | aviso (o evento entra marcado)
+# limite_taxa: taxa de reprovação que o negócio aceita sem abrir ação (0 = qualquer falha pede ação; null = sem limite)
+# check: o formato do DQX (function + arguments); a expressão dá TRUE quando o dado está bom.
+# As 11 regras de erro são as da barreira do pipeline (carga_diaria/gerar_carga.py, MOTIVO_REJEICAO), com os mesmos
+# nomes; a barreira ainda não lê a vigência (veja README.md desta pasta).
+
+padrao:
+  coluna_data: data_extracao        # data do dado que decide a versão
+  dono: financeiro_pos_venda        # mesmo valor da tag governada data_owner
+
+regras:
+
+  - regra_id: pendencia_id_nulo
+    titulo: "Toda pendência tem identificador"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "is_not_null", "arguments": {"column": "pendencia_id"}}
+
+  - regra_id: tipo_evento_invalido
+    titulo: "O evento é NOVA, ATUALIZACAO ou BAIXA"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(tipo_evento IN ('NOVA', 'ATUALIZACAO', 'BAIXA'), false)", "msg": "tipo_evento nulo ou fora de NOVA, ATUALIZACAO, BAIXA"}}
+
+  - regra_id: status_cobranca_invalido
+    titulo: "O status de cobrança é um dos 6 aceitos"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(status_cobranca IN ('PENDENTE', 'EM_COBRANCA', 'PROMESSA_PAGAMENTO', 'NEGOCIADO', 'COBRANCA_EXTERNA', 'PAGA'), false)", "msg": "status_cobranca nulo ou fora do domínio"}}
+
+  - regra_id: valor_parcela_nao_positivo
+    titulo: "A parcela tem valor maior que zero"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(valor_parcela > 0, false)", "msg": "valor_parcela nulo, zero ou negativo"}}
+
+  - regra_id: valor_total_inconsistente
+    titulo: "O total pendente é parcela + multa + juros informados"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(abs(valor_total_pendente - (valor_parcela + valor_multa + valor_juros)) < 0.01, true)", "msg": "valor_total_pendente diferente de parcela + multa + juros"}}
+
+  - regra_id: vencimento_nao_anterior_ao_evento
+    titulo: "O vencimento é anterior à data do evento"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(data_vencimento < data_extracao, true)", "msg": "data_vencimento igual ou depois da data do evento"}}
+
+  - regra_id: atraso_nao_confere_com_as_datas
+    titulo: "Os dias de atraso batem com as datas"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(dias_atraso = datediff(data_extracao, data_vencimento), true)", "msg": "dias_atraso não confere com as datas"}}
+
+  - regra_id: valores_fora_da_regra
+    titulo: "Multa, juros e total seguem a regra de cálculo"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce((valor_multa <=> pos_venda.regras.valor_multa(valor_parcela)) AND (valor_juros <=> pos_venda.regras.valor_juros(valor_parcela, dias_atraso)) AND (valor_total_pendente <=> pos_venda.regras.valor_total_pendente(valor_parcela, dias_atraso)), false)", "msg": "multa, juros ou total fora da regra de cálculo"}}
+
+  - regra_id: baixa_sem_data_ou_valor_pago
+    titulo: "Toda baixa tem data e valor pago"
+    tipo: erro
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(NOT (tipo_evento = 'BAIXA' AND (data_baixa IS NULL OR valor_pago IS NULL)), true)", "msg": "baixa sem data ou sem valor pago"}}
+
+  - regra_id: uf_invalida
+    titulo: "A UF do cliente é uma das 27"
+    tipo: erro
+    area: carteira
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(upper(trim(cliente_uf)) IN ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'), true)", "msg": "UF do cliente fora das 27 UFs"}}
+
+  - regra_id: cliente_menor_de_idade
+    titulo: "O cliente tem 18 anos ou mais"
+    tipo: erro
+    area: carteira
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: 0
+        motivo: "regra original da barreira da silver"
+        origem: "carga_diaria/gerar_carga.py (MOTIVO_REJEICAO)"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(cliente_idade >= 18, true)", "msg": "cliente com menos de 18 anos"}}
+
+  - regra_id: email_ausente
+    titulo: "O cliente tem e-mail cadastrado"
+    tipo: aviso
+    area: carteira
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: null
+        motivo: "aviso original do DQX como código"
+        origem: "dqx_codigo/checks_pendencias.yml"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "is_not_null", "arguments": {"column": "cliente_email"}}
+
+  - regra_id: forma_pagamento_ausente
+    titulo: "A pendência tem forma de pagamento"
+    tipo: aviso
+    area: cobranca
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: null
+        motivo: "aviso original do DQX como código"
+        origem: "dqx_codigo/checks_pendencias.yml"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "is_not_null", "arguments": {"column": "forma_pagamento"}}
+
+  - regra_id: periodicidade_fora_do_dominio
+    titulo: "A periodicidade é mensal, trimestral, semestral ou anual"
+    tipo: aviso
+    area: carteira
+    versoes:
+      - versao: 1
+        status: aprovada
+        vigente_de: null
+        vigente_ate: null
+        limite_taxa: null
+        motivo: "aviso original do DQX como código"
+        origem: "dqx_codigo/checks_pendencias.yml"
+        aprovado_por: dono do projeto
+        aprovado_em: 2026-11-26       # data do registro no catálogo; a regra já rodava antes
+        check: {"function": "sql_expression", "arguments": {"expression": "coalesce(periodicidade_pagamento IN ('MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'), true)", "msg": "periodicidade fora do domínio (ex.: QUINZENAL, BIMESTRAL)"}}

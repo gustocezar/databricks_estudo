@@ -143,7 +143,21 @@ regra de aviso ou "não se aplica".
 - use o Auto CDC a partir de snapshot (skill `databricks-pipelines`) para montar a história;
 - a `BAIXA` é a pendência que sumiu da foto ou que mudou para paga.
 
-**Critério de saída:** tabela de mapeamento aprovada, com a decisão para cada coluna que falta.
+**Regras do negócio (P41).** Antes de escrever qualquer regra, a área dona responde ao
+[questionário do negócio](../regras/questionario/QUESTIONARIO_NEGOCIO.md):
+- o que é dado certo;
+- quanto erro é aceitável;
+- que perguntas faz aos números;
+- desde quando cada regra vale;
+- quem tria as falhas.
+
+Cada resposta vira uma regra no catálogo ([`regras/catalogo/catalogo_regras.yml`](../regras/catalogo/README.md)), com
+versão, vigência pela data do dado, dono e limite. Regra que já mudou no passado entra com duas versões desde o começo.
+
+**Critério de saída:**
+- tabela de mapeamento aprovada, com a decisão para cada coluna que falta;
+- questionário respondido para as regras de erro e de aviso;
+- catálogo válido (`gerar_catalogo.py validar`).
 
 ---
 
@@ -190,8 +204,9 @@ pode vir depois: as regras são as mesmas.
 
 1. **Candidatas.** Perfile uma amostra com `DQProfiler` e `DQGenerator` e revise as sugestões. Comando em
    [`dqx_codigo/README.md`](../dqx_codigo/README.md).
-2. **Regras.** Copie `dqx_codigo/checks_pendencias.yml` e troque as colunas, os domínios e o catálogo das funções de
-   regra.
+2. **Regras.** Escreva as regras no catálogo (copiado de `regras/catalogo/`), não no YAML do DQX. Troque as colunas,
+   os domínios e o catálogo das funções de regra. Depois rode `gerar_catalogo.py gerar`: ele escreve o YAML, e cada
+   versão sai com `filter` pela data do dado (P41).
 3. **Janela.** Defina a janela (por exemplo, os últimos 7 dias) e avalie **todas as linhas** dela, sem amostra (P11).
 4. **Job.** Faça o deploy do bundle `dqx_codigo/` com `tabela_entrada` e `schema_destino` seus. Rode-o numa janela
    conhecida e depois como tarefa no fim da carga.
@@ -233,6 +248,15 @@ Cada regra com reprovação vira uma ação com dono e critério de pronto, como
 
 Corrigir só a origem não limpa o que já entrou na fato. Por isso o catálogo e o cadastro também agem (lição da
 semana 5).
+
+**Triagem e retroalimentação (P41).** Crie `triagem_regras` e as visões com `gerar_catalogo.py aplicar`. Toda semana,
+o dono percorre `v_triagem_pendente` e classifica cada linha:
+- `dado_ruim` vira ação no plano acima;
+- `regra_errada` volta ao questionário e vira versão nova;
+- `fora_da_vigencia` corrige a vigência no catálogo;
+- `esperado` registra a falha aceita no período.
+
+`v_retroalimentacao` mostra a taxa de falso positivo por regra.
 
 ---
 

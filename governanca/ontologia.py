@@ -742,7 +742,10 @@ CAMADA_SCHEMA = {"landing": "landing", "fonte": "fonte", "bronze": "bronze", "si
 CERTIFICADAS = [f"{CAT}.gold.{t}" for t in [
     "fact_pagamento_pendente_snapshot", "dim_cliente", "dim_apolice", "dim_produto", "dim_cobertura", "bridge_apolice_cobertura",
     "dim_corretor", "dim_ponto_venda", "dim_periodicidade", "dim_forma_pagamento", "dim_status_cobranca", "dim_motivo_pendencia",
-    "dim_faixa_atraso", "dim_data"]] + [f"{CAT}.silver.pendencia_atual", f"{CAT}.silver.pendencia_hist", f"{CAT}.silver.pendencia_evento"] + \
+    "dim_faixa_atraso", "dim_data",
+    # métricas de qualidade, certificadas em 26/11 depois da conferência: recebidos = bronze, aptos = silver,
+    # barrados = quarentena (6.712) e órfãs = fato na mesma janela (8.479) (EST02)
+    "dq_qualidade_diaria", "dq_barrados_por_motivo_dia", "dq_fato_orfas_diarias"]] + [f"{CAT}.silver.pendencia_atual", f"{CAT}.silver.pendencia_hist", f"{CAT}.silver.pendencia_evento"] + \
     [f"{CAT}.ontologia.{n}" for n, *_ in _ONT]
 
 # coluna -> tags de classificação (governed tags do Databricks); valem em qualquer tabela/view das camadas principais
@@ -798,6 +801,13 @@ VALORES_DOMINIO_PADRAO = {"domain": [DOMINIO_PADRAO], "subject_area": list(SUB),
 # extratos do Power BI (bi) e metadados da ontologia. Sem isso, a regra TAG01 da conformidade acusa subject_area.
 SUB_SEM_WIKI = {"dq": "qualidade", "bi": "cobranca", "ontologia": "cobranca"}
 SUB_SEM_WIKI_TABELA = {"bi.qualidade_diaria": "qualidade", "bi.produto": "carteira", "bi.canal_venda": "carteira"}
+SUB_SEM_WIKI["regras"] = "qualidade"     # catálogo de regras, triagem e visões de retroalimentação (P41)
+
+# Frequência declarada (tag atualizacao) das tabelas que não são escritas pela carga diária: só mudam quando a ontologia
+# ou o catálogo de regras mudam. Com "diaria", a regra USO01 da conformidade acusaria falta de frescor (26/11).
+ATUALIZACAO_TABELA = {"ontologia.entidades": "sob_demanda", "ontologia.glossario": "sob_demanda",
+                      "ontologia.relacoes": "sob_demanda", "regras.catalogo_regras": "sob_demanda",
+                      "regras.triagem_regras": "sob_demanda"}
 
 
 def categoria_dado_pessoal(coluna):

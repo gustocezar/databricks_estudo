@@ -73,7 +73,7 @@ AS SELECT regra_id, dimensao, regra, objeto, escopo, CAST(meta_pct AS DOUBLE) AS
     ('DOC04', 'Documentação', 'Descrição da coluna com ao menos 15 caracteres', 'coluna', 'catálogo pos_venda', 100, 'baixa', 'Prática do projeto (P13)', 'https://docs.databricks.com/aws/en/comments/', 'Completar a descrição: significado, unidade e origem.'),
     ('DOC05', 'Documentação', 'Schema com descrição', 'schema', 'catálogo pos_venda', 100, 'média', 'Databricks: comentários no Unity Catalog', 'https://docs.databricks.com/aws/en/comments/', 'COMMENT ON SCHEMA.'),
     ('TAG01', 'Tags governadas', 'Ativo da camada principal com domain, data_owner e subject_area', 'ativo', 'camada principal', 100, 'alta', 'Databricks: governed tags; framework P14', 'https://docs.databricks.com/aws/en/admin/governed-tags/', 'SET TAGS com os valores da política (governanca/aplicar_semantica.py).'),
-    ('TAG02', 'Tags governadas', 'Ativo da camada principal com a tag atualizacao', 'ativo', 'camada principal', 100, 'média', 'Prática do projeto: frescor declarado (P16)', 'https://docs.databricks.com/aws/en/admin/governed-tags/', 'SET TAGS (''atualizacao'' = ''diaria'' ou ''carga_unica'').'),
+    ('TAG02', 'Tags governadas', 'Ativo da camada principal com a tag atualizacao', 'ativo', 'camada principal', 100, 'média', 'Prática do projeto: frescor declarado (P16)', 'https://docs.databricks.com/aws/en/admin/governed-tags/', 'SET TAGS (''atualizacao'' = ''diaria'', ''carga_unica'' ou ''sob_demanda'').'),
     ('TAG03', 'Tags governadas', 'Valor de tag governada dentro dos valores da política', 'tag', 'catálogo pos_venda', 100, 'alta', 'Databricks: governed tags (tag policies)', 'https://docs.databricks.com/aws/en/admin/governed-tags/', 'Corrigir o valor, ou incluir o novo valor na política (databricks tag-policies).'),
     ('TAG04', 'Tags governadas', 'Schema da camada principal com as tags domain e camada', 'schema', 'camada principal', 100, 'média', 'Prática do projeto (P14)', 'https://docs.databricks.com/aws/en/admin/governed-tags/', 'ALTER SCHEMA ... SET TAGS (''domain'' = ''pos_venda'', ''camada'' = ...).'),
     ('LGPD01', 'Dados pessoais (LGPD)', 'Coluna com nome de dado pessoal tem a tag dado_pessoal', 'coluna', 'camadas principal e legado', 100, 'alta', 'LGPD, art. 5º, I; framework P15 (mesma regra de governanca/auditar_metadados.py)', 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm', 'SET TAGS (''dado_pessoal'' = identificacao, contato, endereco, perfil ou sensivel).'),
@@ -88,7 +88,7 @@ AS SELECT regra_id, dimensao, regra, objeto, escopo, CAST(meta_pct AS DOUBLE) AS
     ('USO01', 'Atualização e uso', 'Ativo com atualizacao=diaria escrito nos últimos 2 dias', 'ativo', 'tabelas da camada principal', 100, 'média', 'Prática do projeto (P02 agendas pausadas, P28); Databricks: lineage', 'https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage', 'Rodar a carga diária (as agendas ficam pausadas no Free Edition) ou corrigir a tag atualizacao.'),
     ('USO02', 'Atualização e uso', 'Ativo da camada principal lido nos últimos 30 dias', 'ativo', 'camada principal', 90, 'baixa', 'Databricks: lineage nas tabelas de sistema', 'https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage', 'Confirmar se o ativo ainda tem consumidor; sem consumidor, marcar como deprecated.'),
     ('USO03', 'Atualização e uso', 'View responde (sonda diária com DESCRIBE QUERY)', 'view', 'todos os catálogos do workspace', 100, 'alta', 'Prática do projeto: view recriada ou fonte apagada quebra em silêncio (P16, P28)', 'https://docs.databricks.com/aws/en/comments/', 'Recriar a view a partir do código ou apagar a quebrada.'),
-    ('OTM01', 'Otimização', 'Tabela gerenciada com Predictive Optimization nos últimos 30 dias', 'ativo', 'tabelas gerenciadas do pos_venda', 90, 'baixa', 'Databricks: Predictive Optimization', 'https://docs.databricks.com/aws/en/optimizations/predictive-optimization', 'ALTER CATALOG ou SCHEMA ... ENABLE PREDICTIVE OPTIMIZATION; tabela pequena ou parada pode não precisar.'),
+    ('OTM01', 'Otimização', 'Tabela gerenciada com Predictive Optimization nos últimos 30 dias', 'ativo', 'tabelas gerenciadas do pos_venda, fora as sob demanda', 90, 'baixa', 'Databricks: Predictive Optimization', 'https://docs.databricks.com/aws/en/optimizations/predictive-optimization', 'ALTER CATALOG ou SCHEMA ... ENABLE PREDICTIVE OPTIMIZATION; tabela pequena ou parada pode não precisar.'),
     ('PLT01', 'Plataforma', 'Job com as tags project e team', 'job', 'jobs do workspace', 100, 'média', 'Well-Architected, custo CO-03 (P31); bundle observabilidade-framework (policy_compliance_monitoring)', 'https://docs.databricks.com/aws/en/lakehouse-architecture/cost-optimization/best-practices', 'tags no job (no bundle: resources.jobs.<job>.tags).'),
     ('PLT02', 'Plataforma', 'Job com descrição', 'job', 'jobs do workspace', 100, 'baixa', 'Prática do projeto', 'https://docs.databricks.com/aws/en/jobs/settings', 'description no job (no bundle: resources.jobs.<job>.description).'),
     ('PLT03', 'Plataforma', 'Job com timeout definido', 'job', 'jobs do workspace', 100, 'média', 'Databricks: configurações de job (Timeout)', 'https://docs.databricks.com/aws/en/jobs/settings', 'timeout_seconds no job, acima da duração normal.'),
@@ -128,7 +128,7 @@ CREATE OR REPLACE VIEW pos_venda.conformidade.ativos (
   colunas_sem_descricao COMMENT 'Colunas sem descrição.',
   tags COMMENT 'Tags do objeto (chave e valor).',
   certificacao COMMENT 'Valor da tag de sistema system.certification_status (certified ou deprecated).',
-  atualizacao COMMENT 'Frequência declarada na tag atualizacao (diaria ou carga_unica).',
+  atualizacao COMMENT 'Frequência declarada na tag atualizacao (diaria, carga_unica ou sob_demanda).',
   colunas_dado_pessoal COMMENT 'Colunas com a tag dado_pessoal.',
   colunas_sensiveis COMMENT 'Colunas com dado_pessoal = sensivel.',
   tem_pk COMMENT 'Verdadeiro quando o ativo tem chave primária.',
@@ -429,6 +429,7 @@ base AS (
   UNION ALL
   SELECT 'OTM01', 'ativo', catalogo, esquema, ativo, NULL, papel, otimizacoes_30d > 0, concat(otimizacoes_30d, ' operação(ões) em 30 dias')
   FROM a WHERE catalogo = 'pos_venda' AND papel <> 'interno' AND tipo = 'MANAGED'
+    AND coalesce(atualizacao, '') <> 'sob_demanda'   -- tabela que só muda sob demanda não recebe operação (L96)
   UNION ALL
   SELECT 'PLT01', 'job', NULL, NULL, nome, NULL, 'plataforma', projeto IS NOT NULL AND time IS NOT NULL,
          concat('project = ', coalesce(projeto, '(sem)'), ', team = ', coalesce(time, '(sem)'))
