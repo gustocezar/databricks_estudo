@@ -1,6 +1,7 @@
 # Tarefas · <nome da base>
 
-> Copiado de `specs/aplicar-base-bruta/modelos/TAREFAS.md`. Contrato: [SPEC](../aplicar-base-bruta/SPEC.md).
+> Copiado de `specs/aplicar-base-bruta/modelos/TAREFAS.md`. Contrato: [SPEC](../aplicar-base-bruta/SPEC.md). Comandos de
+> cada tarefa, em ordem: [passo a passo](../aplicar-base-bruta/PASSO_A_PASSO.md).
 > Marque `[x]` só depois de rodar a **verificação** e anotar o resultado na linha "Resultado". Tarefa com **G#** para e
 > pede aprovação antes de executar (R2).
 
@@ -80,6 +81,10 @@
   - Verificação: run SUCCESS e portão com 100% dos cenários.
   - Saída: job. Resultado:
 
+- [ ] **T3.7** Conferir e declarar as chaves da gold com RELY (`aplicar_rely.py verificar`, depois `aplicar` e `conferir`).
+  - Verificação: toda PK única e sem nulo; "PK com RELY: N/N". Chave repetida não leva RELY (L100).
+  - Resultado:
+
 ## E4 · Qualidade: siga só a trilha escolhida em T0.4
 
 ### Trilha A · DQX como código
@@ -148,7 +153,26 @@
   - Verificação: cada métrica bate com um SQL de referência.
   - Resultado:
 
+- [ ] **T5.5** Gerar o modelo de entidade e relacionamento da base (`modelo_dados.py gerar` e `conferir`, P42).
+  - Declare em `CHAVES` e `RELACOES` as chaves e os relacionamentos das tabelas sem constraint. Nome de coluna errado
+    para o gerador.
+  - Verificação: `conferir` sem falha:
+    - toda tabela numa base e toda FK no modelo;
+    - chave única nos dados;
+    - linhagem de entrada, ou o script que gera a tabela.
+  - Resultado:
+- [ ] **T5.6** Publicar a Wiki de todo ativo (`aplicar_semantica.py`).
+  - Wiki escrita à mão nas tabelas principais; nas outras, gerada pelo modelo do schema (`WIKI_BASE`).
+  - Verificação: "Wikis publicadas: N/N" com N = todos os ativos; uma Wiki lida pela API traz chave, relacionamentos e
+    linhagem.
+  - Resultado:
+
 ## E6 · Consumo
+
+- [ ] **T6.0** Procurar a marca da empresa antes de qualquer painel ou relatório (`docs/marca/`).
+  - Sem marca, use a paleta do projeto (`marca.json`) e diga isso.
+  - Verificação: as cores dos geradores saem de `marca.json`; paleta nova de séries passa no validador (L97).
+  - Resultado:
 
 - [ ] **T6.1 · G7** Criar os espaços Genie por público, com instruções, exemplos e perguntas de avaliação com gabarito
   (P21). Antes, decidir sobre máscara para dado pessoal real.
@@ -173,8 +197,16 @@
 - [ ] **T7.3** Rodar a conformidade com histórico (P35, P37).
   - Verificação: regras com meta e sonda das views gravando histórico.
   - Resultado:
+- [ ] **T7.5 · G6** (antes do T7.4) Publicar as chaves e ligar o teste diário de unicidade: `modelo_dados.py aplicar` e o
+  deploy do job da sonda, com as tarefas `sonda` e `chaves` (P42, L100).
+  - Verificação: job SUCCESS; `chaves_unicas` com todas as chaves únicas e nenhum erro.
+  - Resultado:
 - [ ] **T7.4 · G9** Ligar as agendas e fazer commit e push, com varredura (R6).
-  - Verificação: varredura limpa; CHANGELOG com as conferências.
+  - Verificação:
+    - varredura limpa;
+    - `gerar_catalogo.py testar` e `validar` ok;
+    - `docs/validar_docs.py` com "documentação ok";
+    - CHANGELOG com as conferências.
   - Resultado:
 
 ## E8 · Sustentação (faça antes do T7.4, que liga as agendas)

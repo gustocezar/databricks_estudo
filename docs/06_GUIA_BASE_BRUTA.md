@@ -18,6 +18,8 @@
    Se o comando não aparecer, cole o [prompt inicial](#prompt-inicial-para-colar-no-copilot) do fim deste guia.
 4. O agente cria `specs/<nome-da-base>/` a partir dos modelos e segue `TAREFAS.md`. Ele para em cada gate (G1 a G9)
    e, no fim de cada etapa, mostra o critério de aceite. Para retomar outro dia, rode o prompt de novo.
+5. Os comandos de cada tarefa, na ordem e com o que esperar, estão no
+   [passo a passo](../specs/aplicar-base-bruta/PASSO_A_PASSO.md).
 
 **Regras para o agente** (as mesmas do [AGENTS.md](../AGENTS.md)):
 - **Peça antes de gastar cota ou mudar o workspace:** rodar job, criar ou recriar objeto, deploy, ligar agenda,
@@ -272,10 +274,19 @@ Quatro passos:
 **Dado real muda uma decisão.** No pos_venda o dado pessoal ficou sem máscara, por ser sintético e por decisão de
 validação. Numa base real, aplique máscaras ou ABAC **antes** de abrir a Genie a mais pessoas.
 
+**Modelo de dados e Wiki para toda base (P42).**
+- `governanca/modelo_dados.py gerar` escreve um diagrama de entidade e relacionamento por base, a partir das PK/FK e
+  da linhagem do Unity Catalog. As chaves e os relacionamentos das tabelas sem constraint entram em `CHAVES` e
+  `RELACOES`.
+- `conferir` testa a unicidade das chaves nos dados.
+- Depois, `aplicar_semantica.py` publica a Wiki de todo ativo, com chave, relacionamentos e linhagem.
+- Chave com RELY só depois de `aplicar_rely.py verificar` (L100).
+
 **Critério de saída:**
 - 100% das colunas descritas e com tags;
 - as metric views respondem às perguntas de negócio da ficha;
-- saldo semiaditivo: nunca soma dias diferentes (P19).
+- saldo semiaditivo: nunca soma dias diferentes (P19);
+- `modelo_dados.py conferir` sem falha e Wiki em todo ativo.
 
 ---
 
@@ -283,8 +294,10 @@ validação. Numa base real, aplique máscaras ou ABAC **antes** de abrir a Geni
 
 - **Genie:** um espaço por público, com instruções curtas, exemplos e perguntas de avaliação com gabarito em SQL
   (P21). Avalie e faça a triagem achado por achado (P24, L41, L71).
+- **Marca primeiro:** antes de qualquer painel ou relatório, procure a marca da empresa em `docs/marca/`. Sem marca, use
+  a paleta do projeto (`marca.json`) e diga isso (L97).
 - **Painéis:** um painel AI/BI por público, com uma página por fato (P22). O Power BI é opcional e lê extratos das
-  metric views (P23).
+  metric views (P23). Dimensão do BI precisa ter chave única (L101).
 
 **Reconferir depois de cada carga relevante.** Em 24/11, a reconferência no pos_venda achou uma diferença que só
 aparece com grupos que nascem no meio do mês (L86), e outra com chave órfã na Genie (L87). As duas foram corrigidas, e a
@@ -303,7 +316,10 @@ reconferência voltou a 29/29 e 21/21.
 - **Conformidade:** 28 regras com meta, origem e como corrigir, e uma sonda diária das views (P35, P37).
 - **Workspace pago:** agendas ligadas, grupos como donos dos ativos (não pessoas) e budget policies.
 
-**Critério de saída:** a conformidade roda com histórico, e cada pendência tem dono.
+**Unicidade diária das chaves.** `modelo_dados.py aplicar` publica as chaves em `conformidade.chaves_declaradas`. A tarefa
+`chaves` do job da sonda testa cada uma todo dia e falha se uma PK do Unity Catalog repetir (L100).
+
+**Critério de saída:** a conformidade roda com histórico, cada pendência tem dono e o teste diário das chaves passa.
 
 ---
 

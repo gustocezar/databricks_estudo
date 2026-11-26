@@ -811,6 +811,11 @@ um pedido do dono: toda base precisa de modelo de entidade e relacionamento, de 
     continua em 100% (L101). O playbook ganhou o catálogo de regras (M5), o modelo ER e as Wikis (M6) e a marca (M8). O doc 05
   ganhou a skill `dataviz`.
 
+- **Spec versão 2 e passo a passo.** O spec ganhou critérios para o modelo ER e as Wikis (E5), a marca (E6) e o teste
+  diário das chaves (E7), além de 5 tarefas novas (agora são 47). Ganhou também o
+  [passo a passo](../specs/aplicar-base-bruta/PASSO_A_PASSO.md), com os comandos de cada tarefa em ordem e o que
+  esperar de cada um.
+
 **Onde está:** `governanca/modelo_dados.py`, `docs/modelo_dados/`, `governanca/aplicar_semantica.py` (`wiki_auto`,
 `secao_modelo`), `governanca/ontologia.py` (`WIKI_BASE`), `docs/validar_docs.py`.
 

@@ -13,12 +13,15 @@ seguindo o contrato [specs/aplicar-base-bruta/SPEC.md](../../specs/aplicar-base-
    - o nome curto da base.
 3. Se `specs/<nome>/` ainda não existe, crie a pasta copiando `specs/aplicar-base-bruta/modelos/*.md`. Se já existe,
    retome da primeira tarefa sem `[x]` em `specs/<nome>/TAREFAS.md`.
-4. Execute **uma tarefa por vez**:
+4. Para saber qual comando rodar em cada tarefa e o que esperar, use o
+   [passo a passo](../../specs/aplicar-base-bruta/PASSO_A_PASSO.md). Não invente comando: se o passo a passo não traz
+   um comando para a tarefa, diga isso.
+5. Execute **uma tarefa por vez**:
    - rode a verificação dela;
    - anote o resultado na linha "Resultado";
    - só então marque `[x]`.
-5. Numa tarefa com **G#**, pare antes de executar. Mostre o que vai fazer e o que já foi decidido, e espere a aprovação.
-6. Ao fim de cada etapa (E0 a E8), mostre o critério de aceite do SPEC § 6 e diga se passou.
+6. Numa tarefa com **G#**, pare antes de executar. Mostre o que vai fazer e o que já foi decidido, e espere a aprovação.
+7. Ao fim de cada etapa (E0 a E8), mostre o critério de aceite do SPEC § 6 e diga se passou.
 
 Regras do SPEC § 5, sempre:
 - não escreva na base bruta (R1);

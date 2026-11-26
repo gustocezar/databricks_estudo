@@ -17,6 +17,32 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 26/11/2026
 
+### Spec versão 2 e passo a passo de implementação
+- **O que mudou:**
+  - **`specs/aplicar-base-bruta/PASSO_A_PASSO.md` (novo).** Traz os comandos de cada tarefa em ordem (E0 a E8 e o
+    fechamento), com o que esperar de cada um e os pontos que pedem aprovação. Os comandos foram tirados das linhas de
+    uso de cada script, sem nada inventado.
+  - **SPEC versão 2:**
+    - critérios de aceite novos em E5 (modelo ER de cada base, Wiki em todo ativo), E6 (marca e dimensões do BI com
+      chave única) e E7 (teste diário das chaves e `validar_docs.py`);
+    - riscos L97, L99, L100 e L101 na tabela de riscos;
+    - o passo a passo citado em "Como começar".
+  - **TAREFAS:** 5 tarefas novas (T3.7 chaves com RELY, T5.5 modelo ER, T5.6 Wiki em todo ativo, T6.0 marca, T7.5
+    teste diário das chaves), e a T7.4 passa a exigir `validar_docs.py`. Agora são 47 tarefas.
+  - **Ligações:** o guia 06 ganhou o passo a passo, o modelo ER e as Wikis (etapa 5), a marca (etapa 6) e as chaves
+    diárias (etapa 7). O prompt do Copilot manda usar o passo a passo e não inventar comando. O AGENTS.md aponta o
+    passo a passo.
+- **Por quê:** pedido do dono. O spec não guiava o Copilot pelas peças desta semana, e os comandos estavam espalhados
+  pelo guia, pelo playbook e pelos READMEs.
+- **Onde:** `specs/aplicar-base-bruta/` (SPEC.md, PASSO_A_PASSO.md, modelos/TAREFAS.md),
+  `docs/06_GUIA_BASE_BRUTA.md`, `.github/prompts/aplicar-base-bruta.prompt.md`, AGENTS.md e a trilha (fase 30).
+- **Conferência:**
+  - os comandos do passo a passo conferem com as linhas de uso de `genie.py`, `gerar_finops.py`,
+    `gerar_sustentacao.py`, `registro_studio.py`, `aplicar_descricoes.py`, `aplicar_sql.py`, `gerar_painel.py`,
+    `gerar_catalogo.py`, `modelo_dados.py` e `aplicar_rely.py`, e com os READMEs dos bundles;
+  - `docs/validar_docs.py` deu "documentação ok" (os links do passo a passo e do SPEC resolvem);
+  - as TAREFAS contam 47 tarefas, contra 42 antes.
+
 ### Unicidade das chaves testada todo dia (P42, L100)
 - **O que mudou:**
   - `governanca/modelo_dados.py aplicar` publica as chaves do modelo de dados em `pos_venda.conformidade.chaves_declaradas`.

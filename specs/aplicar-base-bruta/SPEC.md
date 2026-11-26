@@ -1,8 +1,10 @@
 # SPEC · Aplicar o framework do pos_venda a uma base bruta de pendências
 
-> Versão 1 · 24/11/2026. Este é o **contrato** que um agente de código (o Copilot no VS Code, ou outro) executa.
+> Versão 2 · 26/11/2026 (a versão 1 era de 24/11). Este é o **contrato** que um agente de código (o Copilot no VS
+> Code, ou outro) executa.
 > Para entender o porquê de cada passo, leia o [guia 06](../../docs/06_GUIA_BASE_BRUTA.md). Para executar, siga
-> [TAREFAS.md](modelos/TAREFAS.md) na pasta da sua base.
+> [TAREFAS.md](modelos/TAREFAS.md) na pasta da sua base. Os comandos de cada tarefa, em ordem e com o que esperar, estão
+> no [passo a passo](PASSO_A_PASSO.md).
 
 ## Como começar
 
@@ -10,7 +12,7 @@
    `mkdir -p specs/<nome> && cp specs/aplicar-base-bruta/modelos/*.md specs/<nome>/`. Os links dos modelos valem a partir
    dessa pasta.
 2. Siga `specs/<nome>/TAREFAS.md` de cima para baixo. Cada tarefa tem verificação e saída, e as marcadas com **G** param
-   para aprovação.
+   para aprovação. O comando de cada tarefa está no [passo a passo](PASSO_A_PASSO.md).
 3. No VS Code, o prompt `/aplicar-base-bruta` faz isso por você. Para retomar, rode o prompt de novo: o agente continua
    da primeira tarefa sem `[x]`.
 
@@ -84,9 +86,9 @@ Cada passo tem critério de pronto conferível e aprovação humana nos pontos q
 | **E4A · DQX código** | job SUCCESS numa janela conhecida; erros do DQX = quarentena da barreira na mesma janela; toda regra em `dq_metricas_regras`, mesmo com zero | P11, P12, P38 |
 | **E4B · DQX Studio** | pré-requisitos confirmados (G8); `registro_studio.py executar` SUCCESS com nota; reprovados = quarentena da barreira | P11, P12 |
 | **E4 · Plano de ação e triagem** | cada regra com reprovação tem dono, ação e critério de pronto; `triagem_regras` e as visões de triagem criadas; rito semanal combinado com o dono | 05 · plano de ação, P41 |
-| **E5 · Governança e semântica** | 100% das colunas descritas e com tags; `dado_pessoal` marcado; ontologia sem identificadores e com membro explícito para chave órfã (L87); metric views com início e fechamento no total (L86) | P13 a P19 |
-| **E6 · Consumo** | Genie com perguntas de avaliação e gabarito em SQL, acerto igual ou acima da meta (G7); painel e BI batendo indicador a indicador | P21 a P26 |
-| **E7 · Operação** | matriz de resiliência preenchida; custo com tag de projeto e time; conformidade rodando com histórico; CHANGELOG com as conferências | P28 a P37 |
+| **E5 · Governança e semântica** | 100% das colunas descritas e com tags; `dado_pessoal` marcado; ontologia sem identificadores e com membro explícito para chave órfã (L87); metric views com início e fechamento no total (L86); **modelo de entidade e relacionamento de cada base** (`modelo_dados.py conferir` sem falha: chave única nos dados, toda FK no modelo, linhagem de entrada); **Wiki em todo ativo**, com chave, relacionamentos e linhagem | P13 a P19, P42 |
+| **E6 · Consumo** | marca da empresa procurada em `docs/marca/` antes de qualquer painel, e cores tiradas de `marca.json` (paleta de séries validada); Genie com perguntas de avaliação e gabarito em SQL, acerto igual ou acima da meta (G7); painel e BI batendo indicador a indicador; dimensões do BI com chave única | P21 a P26, L97, L101 |
+| **E7 · Operação** | matriz de resiliência preenchida; custo com tag de projeto e time; conformidade rodando com histórico; **unicidade das chaves testada todo dia** (job da sonda, tarefa `chaves`), com falha se uma PK do Unity Catalog repetir; CHANGELOG com as conferências; `docs/validar_docs.py` sem falha | P28 a P37, P42, L100 |
 | **E8 · Sustentação** (antes de ligar as agendas, T7.4) | execuções por job, tarefa e pipeline batem com as tabelas de sistema; linha de base com mínimo de execuções ou metas marcadas como provisórias; SLA com hora meta e consumidor; alerta pausado com até 4 disparos por dia; manual com runbook por tarefa | P28, P40 |
 
 ## 7 · Pontos de aprovação humana (gates)
@@ -122,5 +124,9 @@ Cada passo tem critério de pronto conferível e aprovação humana nos pontos q
 | soma de início ou fechamento por grupo | L86 |
 | filtro de nulo esconde chave órfã na Genie | L87 |
 | `is_in_list` do DQX lê valores de texto como colunas | L88 |
+| PK com RELY que fica falsa depois de uma carga (número errado, sem erro) | L100 |
+| dimensão do BI com chave repetida (a relação quebra na primeira atualização) | L101 |
+| paleta escolhida no olho, ilegível para daltônicos | L97 |
+| contagens e referências da documentação que envelhecem | L99 |
 | regra nova julgando o dado antigo (salto sem explicação no painel) | P41, L95 |
 | tabela fora da carga diária marcada com `atualizacao=diaria` | L96 |
