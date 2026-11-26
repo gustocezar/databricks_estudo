@@ -286,6 +286,13 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   inteira, com zero para o grupo que não existia, e a paridade voltou a 21/21.
   (`paineis_financeiros/gerar_paineis.py` `ds_carteira_mes`, `powerbi/gerar_powerbi.py referencia`)
 
+- **L97** Em 26/11, ao juntar as cores numa fonte única, rodamos o validador de paleta da skill `dataviz`. A paleta
+  dos painéis e do Power BI, escolhida no olho em 20/11, reprovou: o roxo `#7A5195` e o azul `#2F6B9A` vizinhos
+  tinham ΔE 1,2 para daltônicos (mínimo 8), e havia cor fora da faixa de luminosidade. A da sustentação também
+  reprovou. Eram 5 paletas em 6 lugares, cada uma com o seu "vermelho de erro" → cor de série se valida com script
+  (`validate_palette.js`, no fundo claro e no escuro) antes de usar, e fica num lugar só (`docs/marca/marca.json`).
+  Cor de estado (bom, alerta, crítico) é separada das séries e sempre vai com rótulo. (`docs/marca/`)
+
 ## Avaliação por IA
 
 - **L46** Ferramentas de avaliação contam pilar sem dados como zero, e um app só enxerga o que o service principal dele

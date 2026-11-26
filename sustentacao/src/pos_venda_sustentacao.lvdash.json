@@ -1447,7 +1447,7 @@
  "uiSettings": {
   "theme": {
    "canvasBackgroundColor": {
-    "light": "#FAFAFA",
+    "light": "#F7F8FA",
     "dark": "#1F272D"
    },
    "widgetBackgroundColor": {
@@ -1467,13 +1467,14 @@
     "dark": "#8ACAFF"
    },
    "visualizationColors": [
-    "#0072B2",
-    "#E69F00",
-    "#009E73",
-    "#CC79A7",
-    "#D55E00",
-    "#56B4E9",
-    "#F0E442"
+    "#2a78d6",
+    "#eb6834",
+    "#1baf7a",
+    "#eda100",
+    "#e87ba4",
+    "#008300",
+    "#6250d6",
+    "#e34948"
    ],
    "widgetHeaderAlignment": "LEFT"
   }

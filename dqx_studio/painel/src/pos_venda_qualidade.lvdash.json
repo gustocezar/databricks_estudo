@@ -368,7 +368,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#FFA600"
+                        "hex": "#fab219"
                       }
                     }
                   }
@@ -385,7 +385,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#FF7E5C"
+                        "hex": "#d03b3b"
                       }
                     }
                   }
@@ -402,7 +402,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#7A5195"
+                        "hex": "#6250d6"
                       }
                     }
                   }
@@ -419,7 +419,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#FF7E5C"
+                        "hex": "#d03b3b"
                       }
                     }
                   }
@@ -436,7 +436,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#7A5195"
+                        "hex": "#6250d6"
                       }
                     }
                   }
@@ -453,7 +453,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#FF7E5C"
+                        "hex": "#d03b3b"
                       }
                     }
                   }
@@ -675,7 +675,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#7A5195"
+                        "hex": "#6250d6"
                       }
                     }
                   }
@@ -692,7 +692,7 @@
                     },
                     "color": {
                       "value": {
-                        "hex": "#58B09C"
+                        "hex": "#0ca30c"
                       }
                     }
                   }
@@ -758,8 +758,8 @@
                     "colorRamp": {
                       "mode": "custom-sequential",
                       "colors": {
-                        "start": "#FDF1E0",
-                        "end": "#FF7E5C"
+                        "start": "#cde2fb",
+                        "end": "#104281"
                       }
                     }
                   }
@@ -1059,23 +1059,23 @@
                     "mappings": [
                       {
                         "value": "1 · Bronze (tudo que chegou)",
-                        "color": "#2F6B9A"
+                        "color": "#eb6834"
                       },
                       {
                         "value": "2 · Quarentena (não aptos)",
-                        "color": "#FF7E5C"
+                        "color": "#d03b3b"
                       },
                       {
                         "value": "3 · Silver (eventos aptos)",
-                        "color": "#7A5195"
+                        "color": "#1baf7a"
                       },
                       {
                         "value": "4 · Silver histórica (SCD2)",
-                        "color": "#58B09C"
+                        "color": "#0ca30c"
                       },
                       {
                         "value": "5 · Gold (fato histórica)",
-                        "color": "#003F5C"
+                        "color": "#2a78d6"
                       }
                     ]
                   },
@@ -1149,23 +1149,23 @@
                     "mappings": [
                       {
                         "value": "1 · Bronze (tudo que chegou)",
-                        "color": "#2F6B9A"
+                        "color": "#eb6834"
                       },
                       {
                         "value": "2 · Quarentena (não aptos)",
-                        "color": "#FF7E5C"
+                        "color": "#d03b3b"
                       },
                       {
                         "value": "3 · Silver (eventos aptos)",
-                        "color": "#7A5195"
+                        "color": "#1baf7a"
                       },
                       {
                         "value": "4 · Silver histórica (SCD2)",
-                        "color": "#58B09C"
+                        "color": "#0ca30c"
                       },
                       {
                         "value": "5 · Gold (fato histórica)",
-                        "color": "#003F5C"
+                        "color": "#2a78d6"
                       }
                     ]
                   },
@@ -1239,8 +1239,8 @@
                     "colorRamp": {
                       "mode": "custom-sequential",
                       "colors": {
-                        "start": "#FDF1E0",
-                        "end": "#FF7E5C"
+                        "start": "#cde2fb",
+                        "end": "#104281"
                       }
                     }
                   }
@@ -1354,7 +1354,7 @@
                             "operator": ">"
                           },
                           "backgroundColor": {
-                            "hex": "#FF7E5C"
+                            "hex": "#d03b3b"
                           }
                         }
                       ]
@@ -2133,13 +2133,14 @@
         "dark": "#8ACAFF"
       },
       "visualizationColors": [
-        "#003F5C",
-        "#2F6B9A",
-        "#7A5195",
-        "#BC5090",
-        "#EF5675",
-        "#FFA600",
-        "#58B09C"
+        "#2a78d6",
+        "#eb6834",
+        "#1baf7a",
+        "#eda100",
+        "#e87ba4",
+        "#008300",
+        "#6250d6",
+        "#e34948"
       ],
       "widgetHeaderAlignment": "LEFT"
     }

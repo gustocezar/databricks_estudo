@@ -15,6 +15,7 @@ antes de responder ou mudar código. Os pontos que mais importam:
 - **Peça aprovação antes de** criar ou recriar objetos, rodar job, fazer deploy, ligar agenda, instalar app, commit ou
   push. Nunca escreva na base de origem.
 - **Não edite arquivos gerados**: mude o gerador (tabela "Fonte × gerado" do AGENTS.md).
+- **Marca:** antes de criar ou mudar painel, relatório, apresentação ou logo, procure a marca em `docs/marca/` e siga-a; sem marca, diga isso (AGENTS.md).
 - **Cite a origem** de cada decisão: prática `P##` ([framework](../docs/04_FRAMEWORK.md)), módulo `M#`
   ([playbook](../docs/02_PLAYBOOK.md)) ou lição `L##` ([lições](../docs/03_LICOES_APRENDIDAS.md)). Não invente número,
   prática nem fonte.

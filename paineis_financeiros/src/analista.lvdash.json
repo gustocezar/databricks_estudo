@@ -1255,23 +1255,23 @@
                     "mappings": [
                       {
                         "value": "DEBITO_CONTA",
-                        "color": "#003F5C"
+                        "color": "#2a78d6"
                       },
                       {
                         "value": "CARTAO_CREDITO",
-                        "color": "#7A5195"
+                        "color": "#1baf7a"
                       },
                       {
                         "value": "BOLETO",
-                        "color": "#2F6B9A"
+                        "color": "#eb6834"
                       },
                       {
                         "value": "PIX_AUTOMATICO",
-                        "color": "#58B09C"
+                        "color": "#6250d6"
                       },
                       {
                         "value": "NAO_CADASTRADA",
-                        "color": "#EF5675"
+                        "color": "#d03b3b"
                       }
                     ]
                   },
@@ -2758,13 +2758,14 @@
         "dark": "#8ACAFF"
       },
       "visualizationColors": [
-        "#003F5C",
-        "#2F6B9A",
-        "#7A5195",
-        "#BC5090",
-        "#EF5675",
-        "#FFA600",
-        "#58B09C"
+        "#2a78d6",
+        "#eb6834",
+        "#1baf7a",
+        "#eda100",
+        "#e87ba4",
+        "#008300",
+        "#6250d6",
+        "#e34948"
       ],
       "widgetHeaderAlignment": "LEFT"
     },

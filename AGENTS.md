@@ -100,12 +100,23 @@ Não edite um arquivo gerado: mude a fonte e gere de novo.
 | `conformidade/conformidade.sql`, `politicas_tags.json`, `alertas.json`, `conferencia.json` e os objetos de `pos_venda.conformidade` | `conformidade/gerar_conformidade.py` (regras em `REGRAS`, papel dos schemas em `CAMADAS`, avaliação em `ACOES`) |
 | `sustentacao/sustentacao.sql`, `sustentacao/src/pos_venda_sustentacao.lvdash.json`, `sustentacao/resources/sustentacao.yml`, `sustentacao/conferencia.json` e as visões de `pos_venda.sustentacao` | `sustentacao/gerar_sustentacao.py` (meta em `SLA`, matriz em `TAREFAS`, parâmetros no topo) |
 | `governanca/auditoria_metadados.json`, `governanca/semantica_aplicada.json`, `governanca/rely/*.json` | `auditar_metadados.py`, `aplicar_semantica.py`, `aplicar_rely.py` |
+| cores dos painéis AI/BI, do tema do Power BI (`pos_venda_tema.json`) e do `:root` das apresentações | `docs/marca/marca.json` (lido por `docs/marca/marca.py`); nenhum gerador tem código de cor próprio |
 | `dqx_codigo/checks_pendencias.yml`, `dqx_codigo/ensaio/checks_ensaio_vigencia.yml`, `regras/catalogo/catalogo_regras.sql` e os objetos de `pos_venda.regras` (fora as funções de cálculo) | `regras/catalogo/gerar_catalogo.py` (regras em `regras/catalogo/catalogo_regras.yml`; ensaio em `regras/catalogo/ensaio/`) |
 
 Logs (`*.log`) e resultados de execução (`dqx_studio/regras/resultados/`) são evidência: não edite, não apague.
 
 ## Como trabalhar
 
+- **Marca antes de qualquer coisa visual.** Antes de criar ou mudar painel AI/BI, tema do Power BI, apresentação,
+  gráfico, página ou logo, procure a marca da empresa:
+  1. [docs/marca/](docs/marca/README.md): paleta, regras de uso, logo oficial e `marca.json`;
+  2. os sistemas de design da conta;
+  3. o que o dono anexar.
+
+  Siga a marca e cite de onde veio cada cor. Sem marca, diga isso. Use a paleta do próprio projeto, sem chamá-la de
+  marca, e nunca use logo de empresa real sem o arquivo oficial. Em 26/11/2026 ainda não há marca; as cores do
+  projeto ficam numa fonte única, `docs/marca/marca.json`, onde a marca entra quando chegar. Paleta nova de séries só
+  entra depois do validador (L97).
 - **Ciclo gerar → aplicar → conferir.** Os scripts são idempotentes: rodar de novo não duplica nem quebra.
 - **Databricks CLI com o perfil `dbx-workshop`** (`--profile dbx-workshop`). O SQL passa por `governanca/sql_util.py`,
   que reconhece a cota esgotada (L01).

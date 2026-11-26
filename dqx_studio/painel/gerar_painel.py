@@ -7,15 +7,20 @@ As consultas usam nomes simples de view (pos_venda.dq vem de dataset_catalog / d
 """
 import json
 import pathlib
+import sys
 
 AQUI = pathlib.Path(__file__).resolve().parent
 SAIDA = AQUI / "src" / "pos_venda_qualidade.lvdash.json"
 
 # ---- paleta: azul-marinho > azul > roxo > magenta > rosa > âmbar > verde-água (cores semânticas fixas à parte)
-PALETA = ["#003F5C", "#2F6B9A", "#7A5195", "#BC5090", "#EF5675", "#FFA600", "#58B09C"]
-RUIM, AVISO, BOM = "#FF7E5C", "#FFA600", "#58B09C"
-CAMADAS = {"1 · Bronze (tudo que chegou)": "#2F6B9A", "2 · Quarentena (não aptos)": RUIM,
-           "3 · Silver (eventos aptos)": "#7A5195", "4 · Silver histórica (SCD2)": BOM, "5 · Gold (fato histórica)": "#003F5C"}
+sys.path.insert(0, str(AQUI.parents[1] / "docs" / "marca"))
+import marca as M  # noqa: E402  fonte única das cores (docs/marca/marca.json); ainda não é a marca da empresa
+
+PALETA = M.SERIES
+RUIM, AVISO, BOM = M.CRITICO, M.ALERTA, M.BOM
+DESTAQUE = PALETA[6]   # anotações de vazamento
+CAMADAS = {"1 · Bronze (tudo que chegou)": PALETA[1], "2 · Quarentena (não aptos)": RUIM,
+           "3 · Silver (eventos aptos)": PALETA[2], "4 · Silver histórica (SCD2)": BOM, "5 · Gold (fato histórica)": PALETA[0]}
 
 INT = {"type": "number", "abbreviation": "compact", "decimalPlaces": {"type": "max", "places": 1}}
 PCT = {"type": "number-percent", "decimalPlaces": {"type": "max", "places": 2}}
@@ -105,7 +110,7 @@ def barras_horizontais(nome, ds, categoria, medida, titulo, p, rotulo_medida, de
             "position": p}
 
 
-def mapa_calor(nome, ds, x, y, valor, titulo, p, x_rotulo, y_rotulo, descricao=None, inicio="#FDF1E0", fim=RUIM):
+def mapa_calor(nome, ds, x, y, valor, titulo, p, x_rotulo, y_rotulo, descricao=None, inicio=M.SEQ_INICIO, fim=M.SEQ_FIM):
     enc = {"x": {"fieldName": x["name"], "scale": {"type": "categorical"}, "displayName": x_rotulo},
            "y": {"fieldName": y["name"], "scale": {"type": "categorical"}, "displayName": y_rotulo},
            "color": {"fieldName": valor["name"],
@@ -193,8 +198,8 @@ p1 = [
     grafico("barrados_por_dia", "bar", "ds_diario", DIA, agg("sum", "eventos_barrados"), "Eventos barrados por dia", pos(0, 6, 8, 6),
             x_rotulo="Dia", y_rotulo="Eventos barrados",
             anotacoes=[anotacao("2026-11-27", "Semana 2: só avisos", AVISO), anotacao("2026-12-04", "Semana 3: chegam os erros", RUIM),
-                       anotacao("2026-12-13", "Forma de pagamento nova vaza", "#7A5195"),
-                       anotacao("2026-12-26", "Semana 6: catálogo de erros", RUIM), anotacao("2027-01-01", "Semana 7: vazamentos", "#7A5195"),
+                       anotacao("2026-12-13", "Forma de pagamento nova vaza", DESTAQUE),
+                       anotacao("2026-12-26", "Semana 6: catálogo de erros", RUIM), anotacao("2027-01-01", "Semana 7: vazamentos", DESTAQUE),
                        anotacao("2027-01-09", "09/01: últimos casos", RUIM)],
             descricao="Quantos eventos a barreira de qualidade segurou a cada dia"),
     barras_horizontais("barrados_por_motivo", "ds_barrados", campo("motivo_rejeicao"), agg("sum", "eventos"),
@@ -206,7 +211,7 @@ p1 = [
             descricao="Problemas sinalizados como aviso: entram na silver, com alerta"),
     grafico("orfas_por_dia", "bar", "ds_diario", DIA, agg("sum", "fato_linhas_orfas"), "Fato histórica: linhas com forma de pagamento órfã",
             pos(6, 12, 6, 6), x_rotulo="Dia", y_rotulo="Linhas órfãs na foto do dia",
-            anotacoes=[anotacao("2026-12-13", "Vazamento começa", "#7A5195"), anotacao("2026-12-22", "Último dia na origem", BOM)],
+            anotacoes=[anotacao("2026-12-13", "Vazamento começa", DESTAQUE), anotacao("2026-12-22", "Último dia na origem", BOM)],
             descricao="Dado não cadastrado que passou pela barreira e chegou à gold"),
     mapa_calor("motivo_por_semana", "ds_barrados", campo("semana"), campo("motivo_rejeicao"), agg("sum", "eventos"),
                "Eventos barrados por motivo e semana", pos(0, 18, 12, 6), "Semana", "Motivo da rejeição",
@@ -294,14 +299,7 @@ PAINEL = {
     "datasets": DATASETS,
     "pages": [pagina("visao_geral", "Visão geral", p1), pagina("studio", "DQX Studio · evolução", p2),
               pagina("nao_aptos", "Dados não aptos", p3), pagina("filtros", "Filtros", filtros, "PAGE_TYPE_GLOBAL_FILTERS")],
-    "uiSettings": {"theme": {
-        "canvasBackgroundColor": {"light": "#F7F8FA", "dark": "#1F272D"},
-        "widgetBackgroundColor": {"light": "#FFFFFF", "dark": "#11171C"},
-        "widgetBorderColor": {"light": "#FFFFFF", "dark": "#11171C"},
-        "fontColor": {"light": "#11171C", "dark": "#E8ECF0"},
-        "selectionColor": {"light": "#2272B4", "dark": "#8ACAFF"},
-        "visualizationColors": PALETA,
-        "widgetHeaderAlignment": "LEFT"}},
+    "uiSettings": {"theme": M.tema_aibi()},
 }
 
 

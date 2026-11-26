@@ -548,8 +548,11 @@ def sql(s, exigir=True):
 # ------------------------------------------------------------------------------------------------ painel AI/BI
 PAINEL = AQUI / "src" / "pos_venda_sustentacao.lvdash.json"
 # Okabe-Ito (seguro para daltonismo); cores semânticas fixas à parte
-PALETA = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#D55E00", "#56B4E9", "#F0E442"]
-RUIM, BOM = "#D55E00", "#009E73"
+sys.path.insert(0, str(RAIZ / "docs" / "marca"))
+import marca as M  # noqa: E402  fonte única das cores (docs/marca/marca.json); ainda não é a marca da empresa
+
+PALETA = M.SERIES
+RUIM, BOM = M.CRITICO, M.BOM
 MIN = {"type": "number", "decimalPlaces": {"type": "max", "places": 1}}
 INT = {"type": "number", "abbreviation": "compact", "decimalPlaces": {"type": "max", "places": 1}}
 
@@ -728,10 +731,7 @@ def painel():
     return {
         "datasets": ds,
         "pages": [{"name": "sustentacao", "displayName": "Sustentação", "pageType": "PAGE_TYPE_CANVAS", "layoutVersion": "GRID_V1", "layout": L}],
-        "uiSettings": {"theme": {
-            "canvasBackgroundColor": {"light": "#FAFAFA", "dark": "#1F272D"}, "widgetBackgroundColor": {"light": "#FFFFFF", "dark": "#11171C"},
-            "widgetBorderColor": {"light": "#FFFFFF", "dark": "#11171C"}, "fontColor": {"light": "#11171C", "dark": "#E8ECF0"},
-            "selectionColor": {"light": "#2272B4", "dark": "#8ACAFF"}, "visualizationColors": PALETA, "widgetHeaderAlignment": "LEFT"}},
+        "uiSettings": {"theme": M.tema_aibi()},
     }
 
 

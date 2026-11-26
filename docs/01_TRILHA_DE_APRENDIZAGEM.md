@@ -768,6 +768,12 @@ valer só por um período, porque em algum momento ela mudou.
   - Há 8 cenários BDD do catálogo, fora do portão da carga.
   - O CI roda os testes do catálogo em todo push.
 
+- **Marca e cores.**
+  - Antes de qualquer coisa visual, procure a marca da empresa (`docs/marca/`). Ainda não há marca.
+  - As 5 paletas do projeto viraram uma fonte única, `docs/marca/marca.json`, que os 4 geradores e as 2 apresentações
+    leem.
+  - A paleta de séries nova passou no validador; a antiga reprovou para daltônicos (L97).
+
 **Onde está:** `regras/catalogo/`, `regras/questionario/`, `dqx_codigo/aplicar_dqx.py` (modo `ensaio` e coluna
 `versao`) e `dqx_codigo/ensaio/`.
 

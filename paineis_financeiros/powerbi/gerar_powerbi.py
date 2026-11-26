@@ -427,7 +427,10 @@ U = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition"
 VERSOES = {"report": "3.0.0", "page": "2.0.0", "visualContainer": "2.2.0", "pagesMetadata": "1.0.0", "versionMetadata": "1.0.0"}
 LARGURA, MARGEM, LINHA = 1280, 12, 40
 COL = (LARGURA - 2 * MARGEM) / 12
-PALETA = ["#003F5C", "#2F6B9A", "#7A5195", "#BC5090", "#EF5675", "#FFA600", "#58B09C"]
+sys.path.insert(0, str(AQUI.parents[1] / "docs" / "marca"))
+import marca as M  # noqa: E402  fonte única das cores (docs/marca/marca.json); ainda não é a marca da empresa
+
+PALETA = M.SERIES
 CAMPOS = {t["nome"]: ({c[0] for c in t["colunas"]}, {m[0] for m in t["medidas"]}) for t in TABELAS}
 
 
@@ -702,7 +705,7 @@ def escrever_relatorio(pasta, titulo, paginas, filtros):
     js(base / "definition.pbir", {"$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
                                   "version": "4.0", "datasetReference": {"byPath": {"path": f"../{MODELO}"}}})
     js(d / "version.json", {"$schema": f"{U}/versionMetadata/{VERSOES['versionMetadata']}/schema.json", "version": "2.0.0"})
-    tema = {"name": "pos_venda", "dataColors": PALETA, "background": "#FFFFFF", "foreground": "#11171C", "tableAccent": "#2272B4"}
+    tema = M.tema_powerbi("pos_venda")
     js(base / "StaticResources" / "RegisteredResources" / "pos_venda_tema.json", tema)
     rel = {"$schema": f"{U}/report/{VERSOES['report']}/schema.json",
            "themeCollection": {"customTheme": {"name": "pos_venda_tema.json", "type": "RegisteredResources",

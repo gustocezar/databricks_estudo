@@ -1,15 +1,19 @@
 {
   "name": "pos_venda",
   "dataColors": [
-    "#003F5C",
-    "#2F6B9A",
-    "#7A5195",
-    "#BC5090",
-    "#EF5675",
-    "#FFA600",
-    "#58B09C"
+    "#2a78d6",
+    "#eb6834",
+    "#1baf7a",
+    "#eda100",
+    "#e87ba4",
+    "#008300",
+    "#6250d6",
+    "#e34948"
   ],
   "background": "#FFFFFF",
   "foreground": "#11171C",
-  "tableAccent": "#2272B4"
+  "tableAccent": "#2272B4",
+  "good": "#0ca30c",
+  "neutral": "#fab219",
+  "bad": "#d03b3b"
 }

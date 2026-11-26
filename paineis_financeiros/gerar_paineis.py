@@ -13,12 +13,16 @@ Regras de negócio aplicadas nos datasets:
 """
 import json
 import pathlib
+import sys
 
 AQUI = pathlib.Path(__file__).resolve().parent
 GENIE = {"diretoria": "01f1e477314b1903a4212843cf0dabf1", "analista": "01f1e4772cf610a8baf0c236595c284b"}
 
-PALETA = ["#003F5C", "#2F6B9A", "#7A5195", "#BC5090", "#EF5675", "#FFA600", "#58B09C"]
-RUIM, ALERTA, BOM = "#EF5675", "#FFA600", "#58B09C"
+sys.path.insert(0, str(AQUI.parent / "docs" / "marca"))
+import marca as M  # noqa: E402  fonte única das cores (docs/marca/marca.json); ainda não é a marca da empresa
+
+PALETA = M.SERIES
+RUIM, ALERTA, BOM = M.CRITICO, M.ALERTA, M.BOM
 BRL = {"type": "number-currency", "currencyCode": "BRL", "abbreviation": "compact", "decimalPlaces": {"type": "max", "places": 2}}
 BRL_EXATO = {"type": "number-currency", "currencyCode": "BRL", "decimalPlaces": {"type": "exact", "places": 2}}
 PCT = {"type": "number-percent", "decimalPlaces": {"type": "max", "places": 1}}
@@ -249,7 +253,7 @@ def rot(f, r):
     return f
 
 
-FORMAS = {"DEBITO_CONTA": "#003F5C", "CARTAO_CREDITO": "#7A5195", "BOLETO": "#2F6B9A", "PIX_AUTOMATICO": "#58B09C", "NAO_CADASTRADA": RUIM}
+FORMAS = {"DEBITO_CONTA": PALETA[0], "CARTAO_CREDITO": PALETA[2], "BOLETO": PALETA[1], "PIX_AUTOMATICO": PALETA[6], "NAO_CADASTRADA": RUIM}
 
 # ================================================================================================ textos e peças comuns
 # Os textos não citam datas fixas: a carga diária muda a foto mais recente todo dia.
@@ -475,13 +479,7 @@ def pagina(nome, titulo, layout, tipo="PAGE_TYPE_CANVAS"):
 
 def painel(paginas, datasets, genie):
     return {"datasets": [{"name": d, **DS[d]} for d in datasets], "pages": paginas,
-            "uiSettings": {"theme": {
-                "canvasBackgroundColor": {"light": "#F7F8FA", "dark": "#1F272D"},
-                "widgetBackgroundColor": {"light": "#FFFFFF", "dark": "#11171C"},
-                "widgetBorderColor": {"light": "#FFFFFF", "dark": "#11171C"},
-                "fontColor": {"light": "#11171C", "dark": "#E8ECF0"},
-                "selectionColor": {"light": "#2272B4", "dark": "#8ACAFF"},
-                "visualizationColors": PALETA, "widgetHeaderAlignment": "LEFT"},
+            "uiSettings": {"theme": M.tema_aibi(),
                 "genieSpace": {"isEnabled": True, "overrideId": genie, "enablementMode": "ENABLED"}}}
 
 

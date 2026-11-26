@@ -19,6 +19,7 @@ views, Genie para o financeiro e painéis AI/BI.
 | [Conformidade](../conformidade/README.md) | squad, plataforma e quem audita | se os dados seguem as regras (descrições, tags governadas, LGPD, estrutura, uso, jobs e alertas), com meta, histórico e a [avaliação da observabilidade](../conformidade/AVALIACAO_OBSERVABILIDADE.md) |
 | [Catálogo de regras](../regras/catalogo/README.md) e [questionário do negócio](../regras/questionario/QUESTIONARIO_NEGOCIO.md) | área de negócio dona do dado e quem tria as falhas | as regras de qualidade com versão e vigência pela data do dado, o que o negócio aceita, a triagem semanal e a taxa de falso positivo (P41) |
 | [Sustentação](../sustentacao/README.md) | quem sustenta a carga em produção | tempo de execução por job, tarefa e pipeline, linha de base, desvios, SLA (meta 06:15), volume por execução, matriz por tarefa, painel e alerta |
+| [Marca](marca/README.md) | quem cria painel, relatório, apresentação ou usa a logo | onde fica a marca da empresa (paleta, regras, logo) e as paletas do projeto até ela chegar; procure aqui antes de qualquer coisa visual |
 | [AGENTS.md](../AGENTS.md) | LLMs e agentes de código | ordem de leitura, onde está cada resposta, decisões já tomadas, fonte × gerado e o que registrar a cada mudança |
 | [CHANGELOG](CHANGELOG.md) | todos | o que mudou, quando e como foi conferido |
 | [Inventário](INVENTARIO.md) | todos | retrato atual: scripts, bundles, objetos do catálogo, painéis, Genie, jobs, apps e cobertura de metadados (gerado) |

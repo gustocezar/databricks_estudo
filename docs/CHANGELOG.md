@@ -17,6 +17,61 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 26/11/2026
 
+### Cores numa fonte única (`docs/marca/marca.json`)
+- **O que mudou:**
+  - **Fonte única.** As cores do projeto ficaram num lugar só, `docs/marca/marca.json`, lido por `docs/marca/marca.py`.
+    O arquivo tem:
+    - 8 séries em ordem fixa, no claro e no escuro;
+    - 4 cores de estado;
+    - a rampa azul de magnitude;
+    - o fundo, os cartões, o texto e a seleção dos painéis;
+    - os 14 tokens das apresentações e a tipografia.
+  - **Geradores.** Os 4 (`gerar_paineis.py`, `gerar_painel.py`, `gerar_powerbi.py`, `gerar_sustentacao.py`) perderam
+    a sua `PALETA` e passaram a importar `marca.py`.
+  - **Apresentações.** As 2 têm o `:root` do `deck.css` gerado da fonte. A do framework usava outra variação de
+    azul-marinho e terracota e foi alinhada.
+  - **Status.** Continua "não é a marca da empresa" (`eh_marca_da_empresa: false`), e o README da pasta diz como
+    trocar quando a marca chegar.
+- **Por quê:** pedido do dono, para que a marca, quando chegar, entre num lugar só. A troca da paleta de séries veio da
+  validação (L97): a anterior reprovou para daltônicos.
+- **Onde:** `docs/marca/` (marca.json, marca.py, README), os 4 geradores, os 4 `.lvdash.json` e os 2
+  `pos_venda_tema.json` gerados, AGENTS.md ("Fonte × gerado" e a regra da marca), lição L97, a fase 29 da trilha e as
+  2 apresentações.
+- **Conferência:**
+  - **Validador** `validate_palette.js` da skill `dataviz`:
+    - paleta antiga dos painéis e do Power BI: reprovou (ΔE 1,2 entre roxo e azul vizinhos);
+    - paleta antiga da sustentação: reprovou;
+    - paleta nova: passa em tudo no fundo `#FFFFFF` (com aviso de contraste em 3 cores, coberto por legenda e
+      rótulo) e no `#11171C`.
+  - **Geradores:** os 4 rodaram com a conferência ok (diretoria 47 widgets, analista 38, qualidade 28, sustentação 17;
+    Power BI com 102 arquivos validados nos esquemas oficiais).
+  - **Comparação antes × depois:** nos 4 painéis e no tema do Power BI, ignorando as listas de cor, deu 0 diferença
+    de estrutura. Só as cores mudaram.
+  - **Busca:** nenhum código de cor nos geradores. A única cor fora da fonte é o ícone do domínio no Discover.
+  - **Deploy:** `bundle deploy` de `paineis_financeiros`, `dqx_studio/painel` e `sustentacao`.
+    - `lakeview get` mostra os 4 painéis com `visualizationColors` = a fonte única e fundo `#F7F8FA`.
+    - Os 4 foram republicados às 13:08–13:09.
+  - **Apresentações:** os tokens do `deck.css` são iguais à fonte nas 2, sem cor fora dela. A capa e os slides
+    `regras` e `dqx_semanas` renderizaram sem estouro. Framework na versão 31 e diretor na 24.
+  - **O que não deu para ver:** os painéis no navegador, porque o painel embutido pediu login no Databricks. O Power
+    BI precisa ser aberto no Desktop (Windows).
+
+### Marca antes de qualquer coisa visual
+- **O que mudou:** foi criada a regra de procurar a marca da empresa (paleta, regras de uso e logo) antes de criar ou
+  mudar painel, tema do Power BI, apresentação, gráfico ou logo. Ela está em AGENTS.md e
+  `.github/copilot-instructions.md`, e a pasta `docs/marca/` diz o que pedir e onde pôr.
+- **Por quê:** pedido do dono, para respeitar a forma como a empresa demonstra relatórios e a logo.
+- **Onde:** `docs/marca/README.md`, AGENTS.md (Como trabalhar), `.github/copilot-instructions.md` e `docs/README.md`.
+- **Conferência:**
+  - **Repositório:** a busca por marca, brand, logo, paleta, imagens e temas não achou marca da empresa.
+  - **Conta do Claude:** a listagem de sistemas de design veio vazia. As 2 apresentações declaram
+    `designSystems: []`.
+  - **Paletas em uso (são do projeto, não da empresa):** 4 paletas em 5 lugares.
+    - `PALETA` em `gerar_paineis.py`, `gerar_painel.py` e `gerar_powerbi.py`, a mesma nos três;
+    - outra em `gerar_sustentacao.py`;
+    - o `deck.css` das apresentações.
+  - **Links:** resolvem.
+
 ### Regras com vigência, questionário do negócio e triagem (P41)
 - **O que mudou:**
   - **Catálogo** (`regras/catalogo/catalogo_regras.yml`).

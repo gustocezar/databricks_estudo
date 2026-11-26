@@ -1,0 +1,76 @@
+{
+  "_leia": "Fonte única das cores do projeto (docs/marca/README.md). NÃO é a marca da empresa: quando o manual da marca chegar, troque os valores aqui e regere painéis, tema do Power BI e apresentações.",
+  "eh_marca_da_empresa": false,
+  "fonte": "Paleta de referência validada da skill dataviz (categórica de 8 cores, status e rampa sequencial azul), conferida com validate_palette.js em 26/11/2026 nos fundos dos painéis (#FFFFFF claro, #11171C escuro): todas as checagens passam. Fundos e textos dos painéis e tokens das apresentações: escolhas do projeto de 20 a 23/11/2026.",
+  "logo": null,
+  "series": {
+    "claro": [
+      "#2a78d6",
+      "#eb6834",
+      "#1baf7a",
+      "#eda100",
+      "#e87ba4",
+      "#008300",
+      "#6250d6",
+      "#e34948"
+    ],
+    "escuro": [
+      "#3987e5",
+      "#d95926",
+      "#199e70",
+      "#c98500",
+      "#d55181",
+      "#0ca30c",
+      "#9085e9",
+      "#e66767"
+    ]
+  },
+  "status": {
+    "bom": "#0ca30c",
+    "alerta": "#fab219",
+    "serio": "#ec835a",
+    "critico": "#d03b3b"
+  },
+  "sequencial": {
+    "inicio": "#cde2fb",
+    "fim": "#104281"
+  },
+  "painel": {
+    "fundo": {
+      "light": "#F7F8FA",
+      "dark": "#1F272D"
+    },
+    "cartao": {
+      "light": "#FFFFFF",
+      "dark": "#11171C"
+    },
+    "texto": {
+      "light": "#11171C",
+      "dark": "#E8ECF0"
+    },
+    "selecao": {
+      "light": "#2272B4",
+      "dark": "#8ACAFF"
+    }
+  },
+  "apresentacao": {
+    "dark": "#14213D",
+    "light": "#F6F4EF",
+    "light2": "#ECE7DD",
+    "card": "#FBFAF7",
+    "line": "#D9D3C7",
+    "accent": "#A94A14",
+    "accent-d": "#F2A477",
+    "blue": "#2F6690",
+    "ink": "#14213D",
+    "body": "#3E4A5C",
+    "muted": "#5F6876",
+    "ink-d": "#F6F4EF",
+    "body-d": "#C9D3E3",
+    "neutral": "#9AA3AE"
+  },
+  "tipografia": {
+    "titulo": "Space Grotesk",
+    "corpo": "Inter"
+  }
+}
