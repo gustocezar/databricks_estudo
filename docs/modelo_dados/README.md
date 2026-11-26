@@ -16,7 +16,7 @@
 | [dq](dq.md) | dq | principal | 16 | 12 | 7 |
 | [bi](bi.md) | bi | principal | 8 | 5 | 12 |
 | [dqx_codigo](dqx_codigo.md) | dqx_codigo | apoio | 3 | 3 | 1 |
-| [conformidade](conformidade.md) | conformidade | apoio | 15 | 12 | 9 |
+| [conformidade](conformidade.md) | conformidade | apoio | 17 | 14 | 10 |
 | [finops](finops.md) | finops | apoio | 20 | 11 | 6 |
 | [sustentacao](sustentacao.md) | sustentacao | apoio | 14 | 13 | 9 |
 | [legado](legado.md) | bronze_sql, silver_sql, gold_sql, bronze_ldp, silver_ldp, gold_ldp | legado | 32 | 26 | 26 |

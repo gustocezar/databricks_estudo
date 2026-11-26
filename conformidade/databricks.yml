@@ -19,8 +19,9 @@ resources:
     sonda_conformidade:
       name: pos_venda_conformidade_sonda
       description: >-
-        Sonda diária da conformidade: testa cada view do workspace com DESCRIBE QUERY (regra USO03) e grava a foto do
-        dia de boas_praticas_dados em pos_venda.conformidade.historico (P35, P37).
+        Sonda diária da conformidade: testa cada view do workspace com DESCRIBE QUERY (regra USO03), grava a foto do
+        dia de boas_praticas_dados em pos_venda.conformidade.historico (P35, P37) e testa a unicidade das chaves do
+        modelo de dados em pos_venda.conformidade.chaves_unicas (P42, L100).
       tags:
         dominio: pos_venda
         abordagem: conformidade
@@ -28,7 +29,7 @@ resources:
         team: squad-pos-venda
       performance_target: STANDARD
       max_concurrent_runs: 1
-      timeout_seconds: 1200    # 20 min: piso para job sem linha de base; a sonda leva poucos minutos (PLT03, P40)
+      timeout_seconds: 2400    # 40 min: sonda (~8 min) + unicidade das chaves (P42, L100); ajuste pela linha de base (P40)
       schedule:
         quartz_cron_expression: "0 45 6 * * ?"   # todo dia às 06:45
         timezone_id: America/Sao_Paulo
@@ -37,6 +38,11 @@ resources:
         - task_key: sonda
           notebook_task:
             notebook_path: ./src/sonda_diaria.py
+        - task_key: chaves     # unicidade das chaves do modelo de dados; falha se uma PK do Unity Catalog repetir (L100)
+          depends_on:
+            - task_key: sonda
+          notebook_task:
+            notebook_path: ./src/chaves_diarias.py
 
 targets:
   dev:

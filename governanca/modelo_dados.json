@@ -742,6 +742,65 @@
    "conformidade.config_regras"
   ]
  },
+ "conformidade.chaves_declaradas": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [
+   "tabela"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 6,
+  "comentario": "Chaves declaradas no modelo de dados (P42), publicadas por governanca/modelo_dados.py aplicar. O job pos_venda_conformidade_sonda testa a unicidade de cada uma todo dia (tarefa chaves).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "tabela"
+    ],
+    "colunas_para": [
+     "tabela"
+    ],
+    "de": "conformidade.chaves_unicas",
+    "frase": "teste diário de uma chave declarada",
+    "para": "conformidade.chaves_declaradas",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "conformidade.chaves_unicas": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [
+   "verificado_em",
+   "tabela"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 9,
+  "comentario": "Unicidade diária das chaves declaradas no modelo de dados (P42, L100). Gravada pela tarefa chaves do job pos_venda_conformidade_sonda.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "tabela"
+    ],
+    "colunas_para": [
+     "tabela"
+    ],
+    "de": "conformidade.chaves_unicas",
+    "frase": "teste diário de uma chave declarada",
+    "para": "conformidade.chaves_declaradas",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
  "conformidade.colunas": {
   "alimenta": [
    "conformidade.achados"
@@ -2775,19 +2834,6 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "forma_pagamento_sk"
-    ],
-    "colunas_para": [
-     "forma_pagamento_sk"
-    ],
-    "de": "gold.fact_pagamento_pendente_snapshot",
-    "frase": "forma_pagamento_sk aponta para a dimensão",
-    "para": "gold.dim_forma_pagamento",
-    "tipo": "FK no Unity Catalog"
-   },
-   {
-    "card": "N:1",
-    "colunas_de": [
      "apolice_sk"
     ],
     "colunas_para": [
@@ -2801,14 +2847,14 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "corretor_sk"
+     "forma_pagamento_sk"
     ],
     "colunas_para": [
-     "corretor_sk"
+     "forma_pagamento_sk"
     ],
     "de": "gold.fact_pagamento_pendente_snapshot",
-    "frase": "corretor_sk aponta para a dimensão",
-    "para": "gold.dim_corretor",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold.dim_forma_pagamento",
     "tipo": "FK no Unity Catalog"
    },
    {
@@ -2879,6 +2925,19 @@
    {
     "card": "N:1",
     "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold.dim_corretor",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
      "faixa_atraso_sk"
     ],
     "colunas_para": [
@@ -2931,19 +2990,6 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "motivo_pendencia_sk"
-    ],
-    "colunas_para": [
-     "motivo_pendencia_sk"
-    ],
-    "de": "gold.fact_pagamento_pendente_snapshot",
-    "frase": "motivo_pendencia_sk aponta para a dimensão",
-    "para": "gold.dim_motivo_pendencia",
-    "tipo": "FK no Unity Catalog"
-   },
-   {
-    "card": "N:1",
-    "colunas_de": [
      "produto_sk"
     ],
     "colunas_para": [
@@ -2952,6 +2998,19 @@
     "de": "gold.fact_pagamento_pendente_snapshot",
     "frase": "produto_sk aponta para a dimensão",
     "para": "gold.dim_produto",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold.dim_motivo_pendencia",
     "tipo": "FK no Unity Catalog"
    },
    {
@@ -3411,19 +3470,6 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "forma_pagamento_sk"
-    ],
-    "colunas_para": [
-     "forma_pagamento_sk"
-    ],
-    "de": "gold_ldp.fact_pagamento_pendente",
-    "frase": "forma_pagamento_sk aponta para a dimensão",
-    "para": "gold_ldp.dim_forma_pagamento",
-    "tipo": "lógico (espelho da gold)"
-   },
-   {
-    "card": "N:1",
-    "colunas_de": [
      "apolice_sk"
     ],
     "colunas_para": [
@@ -3437,14 +3483,14 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "corretor_sk"
+     "forma_pagamento_sk"
     ],
     "colunas_para": [
-     "corretor_sk"
+     "forma_pagamento_sk"
     ],
     "de": "gold_ldp.fact_pagamento_pendente",
-    "frase": "corretor_sk aponta para a dimensão",
-    "para": "gold_ldp.dim_corretor",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_forma_pagamento",
     "tipo": "lógico (espelho da gold)"
    },
    {
@@ -3484,6 +3530,19 @@
     "de": "gold_ldp.fact_pagamento_pendente",
     "frase": "data_ultima_tentativa_sk aponta para a dimensão",
     "para": "gold_ldp.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_corretor",
     "tipo": "lógico (espelho da gold)"
    },
    {
@@ -3541,19 +3600,6 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "motivo_pendencia_sk"
-    ],
-    "colunas_para": [
-     "motivo_pendencia_sk"
-    ],
-    "de": "gold_ldp.fact_pagamento_pendente",
-    "frase": "motivo_pendencia_sk aponta para a dimensão",
-    "para": "gold_ldp.dim_motivo_pendencia",
-    "tipo": "lógico (espelho da gold)"
-   },
-   {
-    "card": "N:1",
-    "colunas_de": [
      "produto_sk"
     ],
     "colunas_para": [
@@ -3562,6 +3608,19 @@
     "de": "gold_ldp.fact_pagamento_pendente",
     "frase": "produto_sk aponta para a dimensão",
     "para": "gold_ldp.dim_produto",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_motivo_pendencia",
     "tipo": "lógico (espelho da gold)"
    }
   ],
@@ -3993,19 +4052,6 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "forma_pagamento_sk"
-    ],
-    "colunas_para": [
-     "forma_pagamento_sk"
-    ],
-    "de": "gold_sql.fact_pagamento_pendente",
-    "frase": "forma_pagamento_sk aponta para a dimensão",
-    "para": "gold_sql.dim_forma_pagamento",
-    "tipo": "lógico (espelho da gold)"
-   },
-   {
-    "card": "N:1",
-    "colunas_de": [
      "apolice_sk"
     ],
     "colunas_para": [
@@ -4019,14 +4065,14 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "corretor_sk"
+     "forma_pagamento_sk"
     ],
     "colunas_para": [
-     "corretor_sk"
+     "forma_pagamento_sk"
     ],
     "de": "gold_sql.fact_pagamento_pendente",
-    "frase": "corretor_sk aponta para a dimensão",
-    "para": "gold_sql.dim_corretor",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold_sql.dim_forma_pagamento",
     "tipo": "lógico (espelho da gold)"
    },
    {
@@ -4066,6 +4112,19 @@
     "de": "gold_sql.fact_pagamento_pendente",
     "frase": "data_ultima_tentativa_sk aponta para a dimensão",
     "para": "gold_sql.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold_sql.dim_corretor",
     "tipo": "lógico (espelho da gold)"
    },
    {
@@ -4123,19 +4182,6 @@
    {
     "card": "N:1",
     "colunas_de": [
-     "motivo_pendencia_sk"
-    ],
-    "colunas_para": [
-     "motivo_pendencia_sk"
-    ],
-    "de": "gold_sql.fact_pagamento_pendente",
-    "frase": "motivo_pendencia_sk aponta para a dimensão",
-    "para": "gold_sql.dim_motivo_pendencia",
-    "tipo": "lógico (espelho da gold)"
-   },
-   {
-    "card": "N:1",
-    "colunas_de": [
      "produto_sk"
     ],
     "colunas_para": [
@@ -4144,6 +4190,19 @@
     "de": "gold_sql.fact_pagamento_pendente",
     "frase": "produto_sk aponta para a dimensão",
     "para": "gold_sql.dim_produto",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold_sql.dim_motivo_pendencia",
     "tipo": "lógico (espelho da gold)"
    }
   ],

@@ -43,7 +43,7 @@ depois painéis AI/BI, Genie e Power BI leem a gold, a ontologia, as metric view
 | "pos_venda · Sustentação" | painel AI/BI | lê na abertura | squad pós-venda | `pos_venda.sustentacao` | sem visão de tempo e SLA |
 | Pós-venda · Analista financeiro e Diretor financeiro | espaços Genie | sob demanda | squad pós-venda | metric views e ontologia | respostas com o dia anterior |
 | "pos_venda · Sustentação: SLA ou desvio da carga" | alerta SQL | 06:20, 1 vez por dia, **ligado** desde 24/11 | squad pós-venda | `alerta_sustentacao` | ninguém é avisado do atraso |
-| `pos_venda_conformidade_sonda` | job (notebook serverless) | 06:45, **ligada** desde 26/11; timeout de 20 min | squad pós-venda | visões de `pos_venda.conformidade` (criadas pelo `aplicar` local) | sem histórico do dia; USO03 fica com a sonda anterior |
+| `pos_venda_conformidade_sonda` | job (2 tarefas, serverless): `sonda` e `chaves` | 06:45, **ligada** desde 26/11; timeout de 40 min | squad pós-venda | visões de `pos_venda.conformidade` (criadas pelo `aplicar` local) e `chaves_declaradas` (de `modelo_dados.py aplicar`) | sem histórico do dia; USO03 fica com a sonda anterior; a tarefa `chaves` **falha** quando uma PK do Unity Catalog repete (RELY falso, L100): corrija o grão no gerador e rode `aplicar_rely.py aplicar` |
 | 5 alertas `[Observabilidade]` | alertas SQL (jobs ocultos, L79) | de hora em hora a 1 vez por dia | dono do bundle `observabilidade-framework` | tabelas de sistema | só leitura para o pós-venda |
 
 O inventário vivo dos jobs do projeto é `pos_venda.sustentacao.jobs_monitorados`. A lista completa de objetos fica no

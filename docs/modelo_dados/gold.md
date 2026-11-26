@@ -152,20 +152,20 @@ erDiagram
     string mais_12_colunas "veja a Wiki"
   }
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_ponto_venda : "ponto_venda_sk"
-  gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_forma_pagamento : "forma_pagamento_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_apolice : "apolice_sk"
-  gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_corretor : "corretor_sk"
+  gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_forma_pagamento : "forma_pagamento_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_data : "data_emissao_apolice_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_data : "data_entrada_pendencia_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_data : "data_vencimento_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_data : "data_ultima_tentativa_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_data : "data_referencia_sk"
+  gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_corretor : "corretor_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_faixa_atraso : "faixa_atraso_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_status_cobranca : "status_cobranca_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_cliente : "cliente_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_periodicidade : "periodicidade_sk"
-  gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_motivo_pendencia : "motivo_pendencia_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_produto : "produto_sk"
+  gold__fact_pagamento_pendente_snapshot }o--|| gold__dim_motivo_pendencia : "motivo_pendencia_sk"
   gold__dq_barrados_por_motivo_dia }o--|| regras__catalogo_regras : "motivo_rejeicao"
   gold__dq_fato_orfas_diarias ||--|| gold__dim_data : "dia_sk"
   gold__fact_pagamento_pendente_snapshot }o--|| silver__pendencia_atual : "pendencia_id"
@@ -199,20 +199,20 @@ erDiagram
 | De | Para | Colunas | Cardinalidade | Tipo | O que significa |
 |---|---|---|---|---|---|
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_ponto_venda` | ponto_venda_sk → ponto_venda_sk | N:1 | FK no Unity Catalog | ponto_venda_sk aponta para a dimensão |
-| `gold.fact_pagamento_pendente_snapshot` | `gold.dim_forma_pagamento` | forma_pagamento_sk → forma_pagamento_sk | N:1 | FK no Unity Catalog | forma_pagamento_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_apolice` | apolice_sk → apolice_sk | N:1 | FK no Unity Catalog | apolice_sk aponta para a dimensão |
-| `gold.fact_pagamento_pendente_snapshot` | `gold.dim_corretor` | corretor_sk → corretor_sk | N:1 | FK no Unity Catalog | corretor_sk aponta para a dimensão |
+| `gold.fact_pagamento_pendente_snapshot` | `gold.dim_forma_pagamento` | forma_pagamento_sk → forma_pagamento_sk | N:1 | FK no Unity Catalog | forma_pagamento_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_data` | data_emissao_apolice_sk → data_sk | N:1 | FK no Unity Catalog | data_emissao_apolice_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_data` | data_entrada_pendencia_sk → data_sk | N:1 | FK no Unity Catalog | data_entrada_pendencia_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_data` | data_vencimento_sk → data_sk | N:1 | FK no Unity Catalog | data_vencimento_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_data` | data_ultima_tentativa_sk → data_sk | N:1 | FK no Unity Catalog | data_ultima_tentativa_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_data` | data_referencia_sk → data_sk | N:1 | FK no Unity Catalog | data_referencia_sk aponta para a dimensão |
+| `gold.fact_pagamento_pendente_snapshot` | `gold.dim_corretor` | corretor_sk → corretor_sk | N:1 | FK no Unity Catalog | corretor_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_faixa_atraso` | faixa_atraso_sk → faixa_atraso_sk | N:1 | FK no Unity Catalog | faixa_atraso_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_status_cobranca` | status_cobranca_sk → status_cobranca_sk | N:1 | FK no Unity Catalog | status_cobranca_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_cliente` | cliente_sk → cliente_sk | N:1 | FK no Unity Catalog | cliente_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_periodicidade` | periodicidade_sk → periodicidade_sk | N:1 | FK no Unity Catalog | periodicidade_sk aponta para a dimensão |
-| `gold.fact_pagamento_pendente_snapshot` | `gold.dim_motivo_pendencia` | motivo_pendencia_sk → motivo_pendencia_sk | N:1 | FK no Unity Catalog | motivo_pendencia_sk aponta para a dimensão |
 | `gold.fact_pagamento_pendente_snapshot` | `gold.dim_produto` | produto_sk → produto_sk | N:1 | FK no Unity Catalog | produto_sk aponta para a dimensão |
+| `gold.fact_pagamento_pendente_snapshot` | `gold.dim_motivo_pendencia` | motivo_pendencia_sk → motivo_pendencia_sk | N:1 | FK no Unity Catalog | motivo_pendencia_sk aponta para a dimensão |
 | `gold.dq_barrados_por_motivo_dia` | `regras.catalogo_regras` | motivo_rejeicao → regra_id | N:1 | lógico | barrados por uma regra de erro do catálogo |
 | `gold.dq_fato_orfas_diarias` | `gold.dim_data` | dia_sk → data_sk | 1:1 | lógico | a foto diária de um dia do calendário |
 | `gold.fact_pagamento_pendente_snapshot` | `silver.pendencia_atual` | pendencia_id → pendencia_id | N:1 | lógico | a foto diária vem da pendência da silver |

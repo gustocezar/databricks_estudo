@@ -801,6 +801,9 @@ um pedido do dono: toda base precisa de modelo de entidade e relacionamento, de 
   - O DQX Studio rodou 24 de 24 avaliações em 25 e 26/11.
 - **Documentação.** `docs/validar_docs.py` (no CI) achou contagens velhas e 6 práticas fora do mapa de gatilhos, e tudo
   foi corrigido (L99).
+- **Teste diário das chaves.** A unicidade das chaves virou a tarefa `chaves` do job da sonda, às 06:45. A lista vem de
+  `conformidade.chaves_declaradas` (publicada por `modelo_dados.py aplicar`), e a tarefa falha se uma PK do Unity
+  Catalog repetir. Na primeira execução, 115 de 115 chaves deram únicas.
 - **Dois defeitos reais, achados pelo teste de unicidade das chaves:**
   - a PK com RELY da ponte apólice × cobertura ficou falsa com o produto de teste `VIDA_QA_COB_DUPLICADA`. Passou a ser o
     grão real, com o papel da cobertura, e `aplicar_rely.py conferir` voltou a 14 de 14 (L100);

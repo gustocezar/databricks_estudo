@@ -8,9 +8,8 @@
   "tags": {
     "schemas|existente": 9,
     "schemas|atualizada": 18,
-    "tables|atualizada": 449,
-    "tables|existente": 70,
-    "tables|criada": 5,
+    "tables|atualizada": 453,
+    "tables|existente": 71,
     "columns|existente": 553,
     "columns|atualizada": 532
   },
@@ -147,6 +146,14 @@
     ],
     [
       "pos_venda.conformidade.boas_praticas_dados",
+      "publicada"
+    ],
+    [
+      "pos_venda.conformidade.chaves_declaradas",
+      "publicada"
+    ],
+    [
+      "pos_venda.conformidade.chaves_unicas",
       "publicada"
     ],
     [

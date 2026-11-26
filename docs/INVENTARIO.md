@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 26/11/2026 14:55. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 26/11/2026 15:41. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -68,7 +68,7 @@
 | `bronze` | 1 | 0 | 0 | — |
 | `bronze_ldp` | 0 | 0 | 0 | MATERIALIZED_VIEW 1 |
 | `bronze_sql` | 1 | 0 | 0 | — |
-| `conformidade` | 2 | 12 | 1 | — |
+| `conformidade` | 4 | 12 | 1 | — |
 | `default` | 0 | 0 | 0 | — |
 | `dq` | 1 | 15 | 0 | — |
 | `dqx_codigo` | 3 | 0 | 0 | — |
@@ -121,4 +121,4 @@
 
 ## Metadados (última auditoria)
 
-Auditoria de 26/11/2026 11:27: 71 tabelas e views nas camadas principais, 2052 de 2052 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.
+Auditoria de 26/11/2026 15:36: 71 tabelas e views nas camadas principais, 2052 de 2052 colunas descritas (100%). Detalhe em `governanca/auditar_metadados.py`.

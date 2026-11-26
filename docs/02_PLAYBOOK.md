@@ -159,6 +159,7 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
   - **0 PII sem tag em todos os schemas**, 0 tags não lidas e toda tabela principal com `domain` e `data_owner`;
   - `modelo_dados.py conferir` sem falha: toda tabela numa base, toda FK no modelo, chave lógica única nos dados e
     linhagem de entrada em toda tabela do fluxo;
+  - o teste diário das chaves ligado: `modelo_dados.py aplicar` e a tarefa `chaves` no job da sonda;
   - Wiki publicada em todo ativo.
 - **Armadilhas:** `CREATE OR REPLACE VIEW` apaga tags, tags de coluna e Wiki; tag de coluna de view só pela API.
 

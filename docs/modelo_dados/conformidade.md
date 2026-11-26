@@ -48,6 +48,23 @@ erDiagram
     long aplicavel
     string mais_8_colunas "veja a Wiki"
   }
+  conformidade__chaves_declaradas {
+    string tabela PK
+    string base
+    array colunas
+    string origem_chave
+    string nota
+    boolean testar
+  }
+  conformidade__chaves_unicas {
+    timestamp verificado_em PK
+    string tabela PK,FK
+    array colunas
+    string origem_chave
+    long linhas
+    long distintas
+    string mais_3_colunas "veja a Wiki"
+  }
   conformidade__colunas {
     string esquema PK,FK
     string ativo PK,FK
@@ -146,6 +163,7 @@ erDiagram
   conformidade__sonda_views }o--|| conformidade__ativos : "catalogo+esquema+ativo"
   conformidade__colunas }o--|| conformidade__ativos : "esquema+ativo"
   conformidade__squad_por_schema }o--|| conformidade__config_camadas : "esquema"
+  conformidade__chaves_unicas }o--|| conformidade__chaves_declaradas : "tabela"
   conformidade__ativos }o--o| conformidade__config_camadas : "esquema"
 ```
 
@@ -157,6 +175,8 @@ erDiagram
 | `conformidade.acoes_observabilidade` | view | `acao` (lógica) | 13 | Avaliação das ações de observabilidade que já rodam no workspace (bundle observabilidade-framework e finops.observability): o que fazem, o que se encontrou, ver |
 | `conformidade.ativos` | view | `catalogo`, `esquema`, `ativo` (lógica) | 26 | Inventário de tabelas e views do workspace (menos system e samples) com o que a conformidade mede: descrição, colunas sem descrição, tags, dado pessoal, chave p |
 | `conformidade.boas_praticas_dados` | view | `regra_id` (lógica) | 14 | Uma linha por regra: objetos verificados, conformes, falhas, porcentagem, meta e situação, com origem e como corrigir. Regra sem objeto verificado fica 'sem dad |
+| `conformidade.chaves_declaradas` | managed | `tabela` (lógica) | 6 | Chaves declaradas no modelo de dados (P42), publicadas por governanca/modelo_dados.py aplicar. O job pos_venda_conformidade_sonda testa a unicidade de cada uma  |
+| `conformidade.chaves_unicas` | managed | `verificado_em`, `tabela` (lógica) | 9 | Unicidade diária das chaves declaradas no modelo de dados (P42, L100). Gravada pela tarefa chaves do job pos_venda_conformidade_sonda. |
 | `conformidade.colunas` | view | `esquema`, `ativo`, `coluna` (lógica) | 13 | Colunas do catálogo pos_venda com descrição, tag dado_pessoal, classes da classificação automática (class.*) e se o nome indica dado pessoal. |
 | `conformidade.config_camadas` | view | `esquema` (lógica) | 3 | Papel de cada schema do catálogo pos_venda: principal (fluxo diário), legado (medalhão da primeira versão) ou apoio (monitoramento). Editado em conformidade/ger |
 | `conformidade.config_regras` | view | `regra_id` (lógica) | 10 | Catálogo de regras de conformidade: dimensão, meta, severidade, origem, link da fonte e como corrigir. Editado em conformidade/gerar_conformidade.py. |
@@ -181,6 +201,7 @@ erDiagram
 | `conformidade.sonda_views` | `conformidade.ativos` | catalogo, esquema, ativo → catalogo, esquema, ativo | N:1 | lógico | sonda diária de uma view |
 | `conformidade.colunas` | `conformidade.ativos` | esquema, ativo → esquema, ativo | N:1 | lógico | coluna de um ativo do pos_venda |
 | `conformidade.squad_por_schema` | `conformidade.config_camadas` | esquema → esquema | N:1 | lógico | conformidade de um schema com papel |
+| `conformidade.chaves_unicas` | `conformidade.chaves_declaradas` | tabela → tabela | N:1 | lógico | teste diário de uma chave declarada |
 | `conformidade.ativos` | `conformidade.config_camadas` | esquema → esquema | N:0..1 | lógico | papel do schema (só os do pos_venda) |
 
 ## Linhagem (Unity Catalog, últimos 90 dias)
@@ -191,6 +212,8 @@ erDiagram
 | `conformidade.acoes_observabilidade` | `conformidade.recursos`, `conformidade.sonda_views`, `finops.custo_sql_por_consulta`, `finops.uso_jobs_diario` | — |
 | `conformidade.ativos` | `conformidade.config_camadas` | `conformidade.achados` |
 | `conformidade.boas_praticas_dados` | `conformidade.achados`, `conformidade.config_regras` | `conformidade.historico` |
+| `conformidade.chaves_declaradas` | — | — |
+| `conformidade.chaves_unicas` | — | — |
 | `conformidade.colunas` | `conformidade.config_camadas` | `conformidade.achados` |
 | `conformidade.config_camadas` | — | `conformidade.achados`, `conformidade.ativos`, `conformidade.colunas` |
 | `conformidade.config_regras` | — | `conformidade.achados`, `conformidade.boas_praticas_dados` |

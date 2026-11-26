@@ -17,6 +17,29 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 26/11/2026
 
+### Unicidade das chaves testada todo dia (P42, L100)
+- **O que mudou:**
+  - `governanca/modelo_dados.py aplicar` publica as chaves do modelo de dados em `pos_venda.conformidade.chaves_declaradas`.
+  - A tarefa nova `chaves` (`conformidade/src/chaves_diarias.py`) entra no job `pos_venda_conformidade_sonda`, depois da
+    sonda. Ela testa cada chave nos dados e grava `pos_venda.conformidade.chaves_unicas`.
+  - A tarefa **falha** quando uma PK do Unity Catalog repete (RELY falso); chave lógica repetida fica como aviso.
+  - O timeout do job foi de 20 para 40 min.
+- **Por quê:** pedido do dono, depois da validação. A PK falsa da ponte (L100) passou 3 dias sem ser vista porque o
+  teste só rodava à mão.
+- **Onde:** `governanca/modelo_dados.py`, `conformidade/src/chaves_diarias.py`, `conformidade/databricks.yml`,
+  `conformidade/README.md`, docs 01, 02, 03 (L100), 04 (P42), 07 e AGENTS.md.
+- **Conferência:**
+  - `modelo_dados.py aplicar`: 125 chaves publicadas (115 testadas por dia).
+  - `bundle deploy` da conformidade, com 1 recurso alterado (o job agora tem 2 tarefas).
+  - `bundle run sonda_conformidade`: SUCCESS em 11,1 min (sonda 6,9 e chaves 4,3).
+    - `chaves_unicas`: 115 de 115 chaves únicas (15 PKs do UC, 74 lógicas e 26 espelhos do legado) e 0 erro, com a
+      fato de 34.026.469 linhas.
+  - Com as 2 tabelas novas no modelo:
+    - `modelo_dados.py gerar` deu 157 entidades, 108 relacionamentos e 127 chaves;
+    - `aplicar` publicou 127 chaves (117 testadas por dia);
+    - `aplicar_semantica.py` publicou 157 de 157 Wikis.
+  - `docs/validar_docs.py`: documentação ok.
+
 ### Validação do projeto: modelo de dados (P42), Wikis, apps e documentação
 - **O que mudou:**
   - **Modelo de dados (P42).**

@@ -138,6 +138,12 @@ comando analisa a view sem executá-la. Depois, grava a situação de cada regra
 `spark.sql` porque o CLI não existe dentro do job. Se mudar a sonda, mude `cmd_registrar` também. As visões continuam
 sendo criadas pelo `aplicar` local.
 
+**Unicidade diária das chaves (desde 26/11/2026, P42 e L100).** Depois da sonda, a tarefa `chaves`
+([src/chaves_diarias.py](src/chaves_diarias.py)) testa nos dados cada chave declarada no modelo de dados. A lista fica
+em `chaves_declaradas`, publicada por `governanca/modelo_dados.py aplicar`, e o resultado vai para `chaves_unicas`:
+- **PK do Unity Catalog repetida:** a tarefa falha, porque com RELY o número pode sair errado sem erro nenhum;
+- **chave lógica repetida:** fica registrada como aviso.
+
 ```bash
 cd conformidade && databricks bundle deploy -t dev --profile <perfil>              # cria ou atualiza o job
 databricks bundle run sonda_conformidade -t dev --profile <perfil>                 # roda agora

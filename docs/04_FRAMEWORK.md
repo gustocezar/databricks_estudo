@@ -842,6 +842,9 @@ Os outros documentos complementam este:
     - nos outros ativos, uma Wiki gerada pelo modelo do schema (`WIKI_BASE`), com a descrição do Unity Catalog e o grão
       tirado da chave.
     Toda Wiki ganha as seções "Chave e relacionamentos" e "Linhagem".
+  - **Teste diário.** A tarefa `chaves` do job `pos_venda_conformidade_sonda`, às 06:45, testa nos dados as chaves
+    publicadas em `conformidade.chaves_declaradas` e grava `conformidade.chaves_unicas`. Ela falha quando uma PK do
+    Unity Catalog repete (L100).
   - **Conferência.** `modelo_dados.py conferir` cobra que:
     - toda tabela esteja numa base, toda FK do UC esteja no modelo e toda tabela do fluxo tenha chave;
     - toda tabela do fluxo tenha linhagem de entrada ou o script que a gera;
@@ -858,6 +861,9 @@ Os outros documentos complementam este:
     tabelas da ontologia) estão marcadas com o script que as gera.
   - **Wikis:** 155 de 155 publicadas. Antes eram 51, com 104 ativos sem Wiki: `bi`, `regras`, `conformidade`, `finops`,
     `sustentacao`, `dqx_codigo`, as visões do painel de qualidade e o legado.
+  - **Teste diário:** a primeira execução da tarefa `chaves` (26/11, job com 11,1 min, dos quais 4,3 na tarefa) testou 115 de
+    115 chaves únicas, entre elas as 15 PKs do Unity Catalog e a fato de 34 milhões de linhas. Com as 2 tabelas da própria
+    rotina, o modelo tem 157 entidades, 127 chaves (117 testadas por dia) e 157 de 157 Wikis.
   - **Chave lógica nos dados:** as 115 chaves testadas (15 PKs do Unity Catalog e 100 lógicas) são únicas, depois de corrigir a PK da ponte (L100), a dimensão `bi.produto` (L101) e o grão de 3 chaves lógicas; as 10 tabelas de eventos e janelas que repetem por desenho (duplicata da origem é aviso) estão marcadas como não únicas.
 
 ---

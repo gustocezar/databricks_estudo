@@ -97,7 +97,7 @@ Não edite um arquivo gerado: mude a fonte e gere de novo.
 | `referencias/databricks_solutions/catalogo_databricks_solutions.html` | `montar_pagina.py` (a partir de `pagina.template.html`) |
 | `referencias/databricks_solutions/OPCOES_PARA_LLM.md`, `opcoes.json` | `gerar_opcoes.py` (dados em `catalogo.py`) |
 | `docs/INVENTARIO.md` | `docs/gerar_inventario.py` |
-| `docs/modelo_dados/*.md`, `governanca/modelo_dados.json` | `governanca/modelo_dados.py` (chaves e relacionamentos lógicos em `CHAVES` e `RELACOES`; o resto vem do Unity Catalog) |
+| `docs/modelo_dados/*.md`, `governanca/modelo_dados.json`, `pos_venda.conformidade.chaves_declaradas` | `governanca/modelo_dados.py` (`gerar` e `aplicar`; chaves e relacionamentos lógicos em `CHAVES` e `RELACOES`; o resto vem do Unity Catalog). O teste diário das chaves grava `chaves_unicas` (job da sonda, tarefa `chaves`) |
 | `finops/finops.sql`, `finops/ativos.json`, `finops/conferencia.json` e as visões de `pos_venda.finops` | `finops/gerar_finops.py` (regras de atribuição na lista `REGRAS`) |
 | `conformidade/conformidade.sql`, `politicas_tags.json`, `alertas.json`, `conferencia.json` e os objetos de `pos_venda.conformidade` | `conformidade/gerar_conformidade.py` (regras em `REGRAS`, papel dos schemas em `CAMADAS`, avaliação em `ACOES`) |
 | `sustentacao/sustentacao.sql`, `sustentacao/src/pos_venda_sustentacao.lvdash.json`, `sustentacao/resources/sustentacao.yml`, `sustentacao/conferencia.json` e as visões de `pos_venda.sustentacao` | `sustentacao/gerar_sustentacao.py` (meta em `SLA`, matriz em `TAREFAS`, parâmetros no topo) |

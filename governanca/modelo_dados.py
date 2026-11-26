@@ -2,6 +2,7 @@
 
   python3 governanca/modelo_dados.py gerar     # lê colunas, PK/FK e linhagem; escreve docs/modelo_dados/*.md e modelo_dados.json
   python3 governanca/modelo_dados.py conferir  # toda tabela numa base, toda FK do UC no modelo, chaves e linhagem conferidas
+  python3 governanca/modelo_dados.py aplicar   # publica as chaves em pos_venda.conformidade.chaves_declaradas (lida pelo job diário)
 
 Fontes:
   - PK e FK declaradas no Unity Catalog (information_schema): o star schema da gold e a PK do catálogo de regras;
@@ -71,6 +72,8 @@ CHAVES = {
     "conformidade.historico": (["registrado_em", "regra_id"], None),
     "conformidade.sonda_views": (["sondado_em", "catalogo", "esquema", "ativo"], None),
     "conformidade.boas_praticas_dados": (["regra_id"], None),
+    "conformidade.chaves_declaradas": (["tabela"], None),
+    "conformidade.chaves_unicas": (["verificado_em", "tabela"], None),
     "sustentacao.jobs_monitorados": (["job_id"], None),
     "sustentacao.execucoes_job": (["job_run_id"], None),
     "sustentacao.execucoes_tarefa": (["task_run_id"], None),
@@ -157,6 +160,7 @@ RELACOES = [
     ("conformidade.sonda_views", ["catalogo", "esquema", "ativo"], "conformidade.ativos", ["catalogo", "esquema", "ativo"], "N:1", "sonda diária de uma view"),
     ("conformidade.colunas", ["esquema", "ativo"], "conformidade.ativos", ["esquema", "ativo"], "N:1", "coluna de um ativo do pos_venda"),
     ("conformidade.squad_por_schema", ["esquema"], "conformidade.config_camadas", ["esquema"], "N:1", "conformidade de um schema com papel"),
+    ("conformidade.chaves_unicas", ["tabela"], "conformidade.chaves_declaradas", ["tabela"], "N:1", "teste diário de uma chave declarada"),
     ("sustentacao.execucoes_job", ["job_id"], "sustentacao.jobs_monitorados", ["job_id"], "N:1", "execução de um job monitorado"),
     ("sustentacao.execucoes_tarefa", ["job_run_id"], "sustentacao.execucoes_job", ["job_run_id"], "N:1", "tarefa de uma execução"),
     ("sustentacao.atualizacoes_pipeline", ["task_run_id"], "sustentacao.execucoes_tarefa", ["task_run_id"], "N:1", "update do pipeline disparado por uma tarefa"),
@@ -452,5 +456,41 @@ def cmd_conferir():
         sys.exit(1)
 
 
+def q(s):
+    return str(s).replace("\\", "\\\\").replace("'", "''")
+
+
+def cmd_aplicar():
+    """Publica a lista de chaves para o job diário (conformidade/src/chaves_diarias.py), que testa a unicidade nos dados."""
+    modelo = json.loads(SAIDA_JSON.read_text(encoding="utf-8"))
+    linhas_v = []
+    for n, m in sorted(modelo.items()):
+        if not m["chave"]:
+            continue
+        nota = m.get("chave_nota") or ""
+        testar = "repet" not in nota and "não única" not in nota
+        cols = ", ".join(f"'{q(c)}'" for c in m["chave"])
+        linhas_v.append(f"('{CAT}.{n}', '{m['base']}', array({cols}), '{q(m['chave_origem'])}', "
+                        f"{'NULL' if not nota else repr_txt(nota)}, {str(testar).lower()})")
+    t = f"{CAT}.conformidade.chaves_declaradas"
+    for sql in (f"""CREATE OR REPLACE TABLE {t} (
+  tabela STRING NOT NULL COMMENT 'Tabela ou visão, no formato catálogo.schema.tabela.',
+  base STRING COMMENT 'Base do modelo de dados (docs/modelo_dados): origem, bronze, silver, gold, regras e as demais.',
+  colunas ARRAY<STRING> COMMENT 'Colunas que formam a chave, na ordem do modelo de dados.',
+  origem_chave STRING COMMENT 'PK no Unity Catalog (declarada, algumas com RELY) ou chave lógica do modelo de dados.',
+  nota STRING COMMENT 'Observação da chave, por exemplo por que ela não é única de propósito.',
+  testar BOOLEAN COMMENT 'Verdadeiro quando a chave deve ser única e o job diário testa a unicidade nos dados.'
+) COMMENT 'Chaves declaradas no modelo de dados (P42), publicadas por governanca/modelo_dados.py aplicar. O job pos_venda_conformidade_sonda testa a unicidade de cada uma todo dia (tarefa chaves).'""",
+                f"INSERT INTO {t} VALUES\n" + ",\n".join(linhas_v)):
+        estado, erro, _ = executar(sql)
+        if estado != "SUCCEEDED":
+            raise SystemExit(f"{sql[:80]}... -> {estado}: {erro[:300]}")
+    print(f"{len(linhas_v)} chaves publicadas em {t} ({sum(1 for x in linhas_v if x.endswith('true)'))} testadas por dia)")
+
+
+def repr_txt(s):
+    return f"'{q(s)}'"
+
+
 if __name__ == "__main__":
-    {"gerar": cmd_gerar, "conferir": cmd_conferir}[sys.argv[1] if len(sys.argv) > 1 else "gerar"]()
+    {"gerar": cmd_gerar, "conferir": cmd_conferir, "aplicar": cmd_aplicar}[sys.argv[1] if len(sys.argv) > 1 else "gerar"]()

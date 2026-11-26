@@ -273,31 +273,31 @@ erDiagram
     string mais_95_colunas "veja a Wiki"
   }
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_ponto_venda : "ponto_venda_sk"
-  gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_forma_pagamento : "forma_pagamento_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_apolice : "apolice_sk"
-  gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_corretor : "corretor_sk"
+  gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_forma_pagamento : "forma_pagamento_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_data : "data_emissao_apolice_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_data : "data_vencimento_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_data : "data_ultima_tentativa_sk"
+  gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_corretor : "corretor_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_faixa_atraso : "faixa_atraso_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_status_cobranca : "status_cobranca_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_cliente : "cliente_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_periodicidade : "periodicidade_sk"
-  gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_motivo_pendencia : "motivo_pendencia_sk"
   gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_produto : "produto_sk"
+  gold_sql__fact_pagamento_pendente }o--|| gold_sql__dim_motivo_pendencia : "motivo_pendencia_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_ponto_venda : "ponto_venda_sk"
-  gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_forma_pagamento : "forma_pagamento_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_apolice : "apolice_sk"
-  gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_corretor : "corretor_sk"
+  gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_forma_pagamento : "forma_pagamento_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_data : "data_emissao_apolice_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_data : "data_vencimento_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_data : "data_ultima_tentativa_sk"
+  gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_corretor : "corretor_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_faixa_atraso : "faixa_atraso_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_status_cobranca : "status_cobranca_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_cliente : "cliente_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_periodicidade : "periodicidade_sk"
-  gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_motivo_pendencia : "motivo_pendencia_sk"
   gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_produto : "produto_sk"
+  gold_ldp__fact_pagamento_pendente }o--|| gold_ldp__dim_motivo_pendencia : "motivo_pendencia_sk"
 ```
 
 ## Entidades
@@ -342,31 +342,31 @@ erDiagram
 | De | Para | Colunas | Cardinalidade | Tipo | O que significa |
 |---|---|---|---|---|---|
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_ponto_venda` | ponto_venda_sk → ponto_venda_sk | N:1 | lógico (espelho da gold) | ponto_venda_sk aponta para a dimensão |
-| `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_forma_pagamento` | forma_pagamento_sk → forma_pagamento_sk | N:1 | lógico (espelho da gold) | forma_pagamento_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_apolice` | apolice_sk → apolice_sk | N:1 | lógico (espelho da gold) | apolice_sk aponta para a dimensão |
-| `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_corretor` | corretor_sk → corretor_sk | N:1 | lógico (espelho da gold) | corretor_sk aponta para a dimensão |
+| `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_forma_pagamento` | forma_pagamento_sk → forma_pagamento_sk | N:1 | lógico (espelho da gold) | forma_pagamento_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_data` | data_emissao_apolice_sk → data_sk | N:1 | lógico (espelho da gold) | data_emissao_apolice_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_data` | data_vencimento_sk → data_sk | N:1 | lógico (espelho da gold) | data_vencimento_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_data` | data_ultima_tentativa_sk → data_sk | N:1 | lógico (espelho da gold) | data_ultima_tentativa_sk aponta para a dimensão |
+| `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_corretor` | corretor_sk → corretor_sk | N:1 | lógico (espelho da gold) | corretor_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_faixa_atraso` | faixa_atraso_sk → faixa_atraso_sk | N:1 | lógico (espelho da gold) | faixa_atraso_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_status_cobranca` | status_cobranca_sk → status_cobranca_sk | N:1 | lógico (espelho da gold) | status_cobranca_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_cliente` | cliente_sk → cliente_sk | N:1 | lógico (espelho da gold) | cliente_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_periodicidade` | periodicidade_sk → periodicidade_sk | N:1 | lógico (espelho da gold) | periodicidade_sk aponta para a dimensão |
-| `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_motivo_pendencia` | motivo_pendencia_sk → motivo_pendencia_sk | N:1 | lógico (espelho da gold) | motivo_pendencia_sk aponta para a dimensão |
 | `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_produto` | produto_sk → produto_sk | N:1 | lógico (espelho da gold) | produto_sk aponta para a dimensão |
+| `gold_sql.fact_pagamento_pendente` | `gold_sql.dim_motivo_pendencia` | motivo_pendencia_sk → motivo_pendencia_sk | N:1 | lógico (espelho da gold) | motivo_pendencia_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_ponto_venda` | ponto_venda_sk → ponto_venda_sk | N:1 | lógico (espelho da gold) | ponto_venda_sk aponta para a dimensão |
-| `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_forma_pagamento` | forma_pagamento_sk → forma_pagamento_sk | N:1 | lógico (espelho da gold) | forma_pagamento_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_apolice` | apolice_sk → apolice_sk | N:1 | lógico (espelho da gold) | apolice_sk aponta para a dimensão |
-| `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_corretor` | corretor_sk → corretor_sk | N:1 | lógico (espelho da gold) | corretor_sk aponta para a dimensão |
+| `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_forma_pagamento` | forma_pagamento_sk → forma_pagamento_sk | N:1 | lógico (espelho da gold) | forma_pagamento_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_data` | data_emissao_apolice_sk → data_sk | N:1 | lógico (espelho da gold) | data_emissao_apolice_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_data` | data_vencimento_sk → data_sk | N:1 | lógico (espelho da gold) | data_vencimento_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_data` | data_ultima_tentativa_sk → data_sk | N:1 | lógico (espelho da gold) | data_ultima_tentativa_sk aponta para a dimensão |
+| `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_corretor` | corretor_sk → corretor_sk | N:1 | lógico (espelho da gold) | corretor_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_faixa_atraso` | faixa_atraso_sk → faixa_atraso_sk | N:1 | lógico (espelho da gold) | faixa_atraso_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_status_cobranca` | status_cobranca_sk → status_cobranca_sk | N:1 | lógico (espelho da gold) | status_cobranca_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_cliente` | cliente_sk → cliente_sk | N:1 | lógico (espelho da gold) | cliente_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_periodicidade` | periodicidade_sk → periodicidade_sk | N:1 | lógico (espelho da gold) | periodicidade_sk aponta para a dimensão |
-| `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_motivo_pendencia` | motivo_pendencia_sk → motivo_pendencia_sk | N:1 | lógico (espelho da gold) | motivo_pendencia_sk aponta para a dimensão |
 | `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_produto` | produto_sk → produto_sk | N:1 | lógico (espelho da gold) | produto_sk aponta para a dimensão |
+| `gold_ldp.fact_pagamento_pendente` | `gold_ldp.dim_motivo_pendencia` | motivo_pendencia_sk → motivo_pendencia_sk | N:1 | lógico (espelho da gold) | motivo_pendencia_sk aponta para a dimensão |
 
 ## Linhagem (Unity Catalog, últimos 90 dias)
 

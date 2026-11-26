@@ -126,7 +126,8 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   - Com RELY falso, o otimizador pode eliminar junção e agregação contando com uma unicidade que não existe, e o número
     sai errado sem erro nenhum.
   → A PK passou a ser o grão real (`apolice_sk, cobertura_sk, papel_cobertura`). Chave com RELY se reconfere depois de
-  cada carga grande: `modelo_dados.py conferir` testa a unicidade das PKs do Unity Catalog e das chaves lógicas.
+  cada carga: desde 26/11, a tarefa `chaves` do job diário da sonda testa as 115 chaves e falha se uma PK do Unity
+  Catalog repetir.
   (`governanca/aplicar_rely.py`, `carga_diaria/gerar_carga.py`)
 
 ## Qualidade e DQX Studio
