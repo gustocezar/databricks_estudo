@@ -1,6 +1,6 @@
 # Inventário · pos_venda
 
-> Gerado por `docs/gerar_inventario.py` em 26/11/2026 14:09. Não edite à mão: rode o script de novo.
+> Gerado por `docs/gerar_inventario.py` em 26/11/2026 14:55. Não edite à mão: rode o script de novo.
 
 ## Projeto local
 
@@ -31,6 +31,7 @@
 | `governanca/genie/avaliacao_boas_praticas` | `rodar.py` | Uso: rodar.py <repo> <base> <endpoint> <espaco>:<bench 0/1> [...] |
 | `governanca` | `genie.py` | Espaços Genie do domínio Pós-venda: analista financeiro e diretor financeiro. |
 | `governanca` | `gerar_ontologia_sql.py` | Gera ontologia.sql: a camada de ontologia (pos_venda.ontologia) e as metric views financeiras. |
+| `governanca` | `modelo_dados.py` | Modelo de entidade e relacionamento (ER) e linhagem de cada base do pos_venda, gerado do Unity Catalog. |
 | `governanca` | `ontologia.py` | Ontologia do domínio Pós-venda (seguro de vida): fonte única do conhecimento de negócio. |
 | `governanca/ontologia_readiness` | `avaliar.py` | Avaliação de prontidão para a Genie Ontology (app genie-ontology-readiness v1.5.0), gravada no histórico. |
 | `governanca/ontologia_readiness` | `implantar_app.py` | Implanta o genie-ontology-readiness v1.5.0 com histórico no Lakebase (Autoscaling) do projeto do DQX Studio. |
@@ -116,7 +117,7 @@
 | App | Estado |
 |---|---|
 | dqx-studio | STOPPED |
-| genie-ontology-readiness | STOPPED |
+| genie-ontology-readiness | ACTIVE |
 
 ## Metadados (última auditoria)
 

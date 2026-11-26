@@ -481,7 +481,9 @@ FROM VALUES
   ('AFU', 'Assistencia Funeral', 'ASSISTENCIA')
   AS t(cobertura_codigo, cobertura_nome, grupo_cobertura)""")
 
-dim("bridge_apolice_cobertura", "apolice_sk, cobertura_sk",
+# papel_cobertura entra na PK (26/11): o produto de teste VIDA_QA_COB_DUPLICADA põe a mesma cobertura como principal e
+# adicional, e a PK (apolice_sk, cobertura_sk) com RELY ficou falsa (aplicar_rely.py verificar: 29 duplicadas)
+dim("bridge_apolice_cobertura", "apolice_sk, cobertura_sk, papel_cobertura",
     "Ponte N:N entre apolice e cobertura, com papel (principal/adicional) e capital da cobertura. PK composta.", f"""
 WITH ap AS (
   SELECT numero_apolice, cobertura_principal_codigo, capital_segurado_principal,

@@ -49,10 +49,10 @@ que já está no Databricks.
 | Documento | Responde |
 |---|---|
 | [docs/README.md](docs/README.md) | mapa da documentação e situação de cada bloco |
-| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 27) |
+| [Trilha de aprendizagem](docs/01_TRILHA_DE_APRENDIZAGEM.md) | o que foi feito, em que ordem e por quê (fases 0 a 30) |
 | [Playbook](docs/02_PLAYBOOK.md) | como recriar a estrutura ou aplicá-la a outra base |
 | [Lições aprendidas](docs/03_LICOES_APRENDIDAS.md) | armadilhas reais e a regra que ficou (`L##`) |
-| [Framework](docs/04_FRAMEWORK.md) | as 40 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
+| [Framework](docs/04_FRAMEWORK.md) | as 42 práticas aplicadas: de onde vieram, como aplicamos, por quê e quando reaplicar |
 | [Skills e ganhos](docs/05_SKILLS_E_GANHOS.md) | as skills consultadas, onde entraram, o ganho de cada uma e o plano de ação para os dados ruins |
 | [Guia para outra base](docs/06_GUIA_BASE_BRUTA.md) | como aplicar tudo numa base bruta de pendências no Databricks, com o Copilot, e as duas trilhas do DQX (código ou app) |
 | [Manual de sustentação](docs/07_SUSTENTACAO.md) | o que roda, metas, onde olhar, rotina, runbooks, reprocessamento, deploy, RACI e indicadores |

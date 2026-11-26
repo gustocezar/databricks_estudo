@@ -46,7 +46,11 @@ FROM (SELECT explode(sequence(make_date(year(min(dia)), 1, 1), make_date(year(ma
       FROM {CATALOGO}.gold.dq_qualidade_diaria)"""),
     ("produto", "Produtos de seguro de vida (dimensão do Power BI).",
      [("produto", "Nome do produto."), ("categoria_produto", "Categoria do produto.")],
-     f"SELECT produto_nome AS produto, categoria_produto FROM {CATALOGO}.gold.dim_produto"),
+     # uma linha por produto (26/11): a dim_produto tem vários códigos com o mesmo nome (VID-ESS, VID-ESS-ERR, VIDA_QA_*),
+     # e a dimensão do Power BI precisa de chave única; o membro "Produto não identificado" é o mesmo das metric views (L87)
+     f"""SELECT produto, max(categoria_produto) AS categoria_produto FROM (
+  SELECT coalesce(produto_nome, 'Produto não identificado') AS produto, categoria_produto FROM {CATALOGO}.gold.dim_produto
+  UNION ALL SELECT 'Produto não identificado', CAST(NULL AS STRING)) GROUP BY produto"""),
     ("canal_venda", "Canais de venda (dimensão do Power BI).",
      [("canal_venda", "Canal em que a apólice foi vendida.")],
      f"SELECT DISTINCT canal_venda FROM {CATALOGO}.gold.dim_ponto_venda"),

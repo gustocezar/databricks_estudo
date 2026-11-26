@@ -78,6 +78,12 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   sem gravar quando alguma chamada falha por rede ou token. A sonda diária roda no job, com `spark.sql`, sem passar
   pelo CLI. (`cmd_registrar` em `conformidade/gerar_conformidade.py`; `conformidade/src/sonda_diaria.py`)
 
+- **L98** Em 26/11, o app de prontidão, parado havia dias, foi ligado com `apps start`. Logo depois, o status dizia "App has
+  not been deployed yet", e um `apps deploy` foi recusado por já haver implantação em andamento. Minutos depois, o app
+  estava RUNNING com a última implantação → ao ligar um app parado no Free Edition, espere o `apps start` terminar e
+  confira o status de novo antes de reimplantar; o start refaz a última implantação.
+  (`governanca/ontologia_readiness/RESULTADO.md`)
+
 ## Custo e FinOps
 
 - **L76** O framework FinOps que já existia (`finops.observability`) quebrou em 19 de 28 visões: a base
@@ -111,6 +117,17 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   bronze)`. Bastaria uma linha com `data_extracao` nula na bronze para o `NOT IN` virar NULL e nenhuma carga futura
   inserir nada, sem erro → em `NOT IN` com subconsulta, filtre os nulos (`WHERE data_extracao IS NOT NULL`) ou use
   `NOT EXISTS`. (`carga_diaria/gerar_carga.py`)
+
+- **L100** A validação de 26/11 testou a unicidade de toda chave declarada e achou a PK da ponte
+  `gold.bridge_apolice_cobertura` falsa, **com RELY**: 29 linhas repetidas.
+  - A causa é o produto de teste `VIDA_QA_COB_DUPLICADA`, que põe a mesma cobertura como principal e adicional. Ele
+    chegou com as semanas carregadas em 23/11.
+  - O `aplicar_rely.py verificar` recusaria, mas só roda na hora de aplicar o RELY.
+  - Com RELY falso, o otimizador pode eliminar junção e agregação contando com uma unicidade que não existe, e o número
+    sai errado sem erro nenhum.
+  → A PK passou a ser o grão real (`apolice_sk, cobertura_sk, papel_cobertura`). Chave com RELY se reconfere depois de
+  cada carga grande: `modelo_dados.py conferir` testa a unicidade das PKs do Unity Catalog e das chaves lógicas.
+  (`governanca/aplicar_rely.py`, `carga_diaria/gerar_carga.py`)
 
 ## Qualidade e DQX Studio
 
@@ -293,6 +310,16 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
   (`validate_palette.js`, no fundo claro e no escuro) antes de usar, e fica num lugar só (`docs/marca/marca.json`).
   Cor de estado (bom, alerta, crítico) é separada das séries e sempre vai com rótulo. (`docs/marca/`)
 
+- **L101** A dimensão `bi.produto` do Power BI era `SELECT produto_nome, categoria_produto FROM gold.dim_produto`.
+  - A `dim_produto` tem vários códigos com o mesmo nome (`VID-ESS`, `VID-ESS-ERR`, `VIDA_QA_*`), então havia 21 linhas
+    para 10 produtos, e um nome nulo.
+  - A paridade de valores (21 de 21) não pega isso.
+  - No Power BI, dimensão com chave repetida quebra a relação 1:N na primeira atualização no Desktop, que ainda não
+    rodou.
+  → Dimensão de BI se agrupa pela chave que o relatório usa, com o mesmo membro "não identificado" das metric views
+  (L87), e a chave se testa como única.
+  (`paineis_financeiros/powerbi/gerar_powerbi.py`)
+
 ## Avaliação por IA
 
 - **L46** Ferramentas de avaliação contam pilar sem dados como zero, e um app só enxerga o que o service principal dele
@@ -323,3 +350,11 @@ Formato: **o que aconteceu → regra que fica**. Entre parênteses, onde a regra
 - **L75** A revisão de 22/11 pôs quatro repositórios em "não agora" só no texto, e o guia de opções gerado do
   catálogo os recomendou como candidatos → toda decisão sobre um acelerador vai para o dado de onde as ferramentas
   leem (`s` e `sn` em `catalogo.py`), não só para o documento da revisão. (`referencias/databricks_solutions/gerar_opcoes.py`)
+
+- **L99** A validação de 26/11 achou contagens escritas à mão que envelheceram:
+  - o README dizia "40 práticas" e "fases 0 a 27", e o AGENTS.md também dizia "40 práticas";
+  - o doc 05 dizia "fases 0 a 26", e a prova da P29 dizia "92 lições";
+  - 6 práticas não estavam no mapa de gatilhos.
+  Nenhum leitor percebeu → número que se repete em vários documentos se confere por script (`docs/validar_docs.py`,
+  no CI): o script conta práticas, lições e fases, e confere as referências `P##` e `L##`, os gatilhos, os links e a
+  conferência de cada entrada do CHANGELOG.

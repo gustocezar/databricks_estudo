@@ -1,0 +1,5874 @@
+{
+ "bi.calendario": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [
+   "data"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 4,
+  "comentario": "Calendário contínuo dos anos com dados (dimensão de datas do Power BI).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_referencia"
+    ],
+    "colunas_para": [
+     "data"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo de um dia do calendário",
+    "para": "bi.calendario",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_baixa"
+    ],
+    "colunas_para": [
+     "data"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de um dia",
+    "para": "bi.calendario",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "dia"
+    ],
+    "colunas_para": [
+     "data"
+    ],
+    "de": "bi.qualidade_diaria",
+    "frase": "qualidade de um dia",
+    "para": "bi.calendario",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dq_qualidade_diaria"
+  ]
+ },
+ "bi.canal_venda": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [
+   "canal_venda"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 1,
+  "comentario": "Canais de venda (dimensão do Power BI).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "canal_venda"
+    ],
+    "colunas_para": [
+     "canal_venda"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo do dia de um canal",
+    "para": "bi.canal_venda",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "canal_venda"
+    ],
+    "colunas_para": [
+     "canal_venda"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de um canal",
+    "para": "bi.canal_venda",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "canal_venda"
+    ],
+    "colunas_para": [
+     "canal_venda"
+    ],
+    "de": "bi.safras",
+    "frase": "safra de um canal",
+    "para": "bi.canal_venda",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_ponto_venda"
+  ]
+ },
+ "bi.carteira_diaria": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 13,
+  "comentario": "Carteira em aberto por dia, produto, canal, faixa, status, grupo do motivo e forma, calculada pela metric view mv_carteira_em_aberto. Saldos são SEMIADITIVOS: some dentro de um dia, nunca entre dias.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto"
+    ],
+    "colunas_para": [
+     "produto"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo do dia de um produto",
+    "para": "bi.produto",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "canal_venda"
+    ],
+    "colunas_para": [
+     "canal_venda"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo do dia de um canal",
+    "para": "bi.canal_venda",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_referencia"
+    ],
+    "colunas_para": [
+     "data"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo de um dia do calendário",
+    "para": "bi.calendario",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento"
+    ],
+    "colunas_para": [
+     "forma_pagamento"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo de uma forma de pagamento",
+    "para": "bi.forma_pagamento",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "ontologia.mv_carteira_em_aberto"
+  ]
+ },
+ "bi.forma_pagamento": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [
+   "forma_pagamento"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 2,
+  "comentario": "Formas de pagamento do catálogo e NAO_CADASTRADA (dado que vazou da barreira de qualidade).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento"
+    ],
+    "colunas_para": [
+     "forma_pagamento"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo de uma forma de pagamento",
+    "para": "bi.forma_pagamento",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento"
+    ],
+    "colunas_para": [
+     "forma_pagamento"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de uma forma de pagamento",
+    "para": "bi.forma_pagamento",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento"
+    ],
+    "colunas_para": [
+     "forma_pagamento"
+    ],
+    "de": "bi.safras",
+    "frase": "safra de uma forma de pagamento",
+    "para": "bi.forma_pagamento",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_forma_pagamento"
+  ]
+ },
+ "bi.produto": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [
+   "produto"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 2,
+  "comentario": "Produtos de seguro de vida (dimensão do Power BI).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto"
+    ],
+    "colunas_para": [
+     "produto"
+    ],
+    "de": "bi.carteira_diaria",
+    "frase": "saldo do dia de um produto",
+    "para": "bi.produto",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto"
+    ],
+    "colunas_para": [
+     "produto"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de um produto",
+    "para": "bi.produto",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto"
+    ],
+    "colunas_para": [
+     "produto"
+    ],
+    "de": "bi.safras",
+    "frase": "safra de um produto",
+    "para": "bi.produto",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_produto"
+  ]
+ },
+ "bi.qualidade_diaria": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [
+   "dia"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 9,
+  "comentario": "Qualidade diária dos eventos do sistema de origem, calculada pela metric view mv_qualidade_dados.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "dia"
+    ],
+    "colunas_para": [
+     "data"
+    ],
+    "de": "bi.qualidade_diaria",
+    "frase": "qualidade de um dia",
+    "para": "bi.calendario",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "ontologia.mv_qualidade_dados"
+  ]
+ },
+ "bi.recuperacao_diaria": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 8,
+  "comentario": "Recuperação (baixas) por dia da baixa, produto, canal, forma e faixa de atraso na baixa, calculada pela metric view mv_recuperacao. Aditiva no tempo.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto"
+    ],
+    "colunas_para": [
+     "produto"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de um produto",
+    "para": "bi.produto",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "canal_venda"
+    ],
+    "colunas_para": [
+     "canal_venda"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de um canal",
+    "para": "bi.canal_venda",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_baixa"
+    ],
+    "colunas_para": [
+     "data"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de um dia",
+    "para": "bi.calendario",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento"
+    ],
+    "colunas_para": [
+     "forma_pagamento"
+    ],
+    "de": "bi.recuperacao_diaria",
+    "frase": "recuperação de uma forma de pagamento",
+    "para": "bi.forma_pagamento",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "ontologia.mv_recuperacao"
+  ]
+ },
+ "bi.safras": {
+  "alimenta": [],
+  "base": "bi",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 8,
+  "comentario": "Safras de entrada por produto, canal e forma, calculadas pela metric view mv_safra_recuperacao.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto"
+    ],
+    "colunas_para": [
+     "produto"
+    ],
+    "de": "bi.safras",
+    "frase": "safra de um produto",
+    "para": "bi.produto",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "canal_venda"
+    ],
+    "colunas_para": [
+     "canal_venda"
+    ],
+    "de": "bi.safras",
+    "frase": "safra de um canal",
+    "para": "bi.canal_venda",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento"
+    ],
+    "colunas_para": [
+     "forma_pagamento"
+    ],
+    "de": "bi.safras",
+    "frase": "safra de uma forma de pagamento",
+    "para": "bi.forma_pagamento",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "ontologia.mv_safra_recuperacao"
+  ]
+ },
+ "bronze.pagamentos_pendentes_eventos": {
+  "alimenta": [
+   "dq.janela_avaliacao",
+   "dq.v_bronze_eventos_7d",
+   "dq.v_bronze_eventos_janela",
+   "dqx_codigo.dq_metricas_regras",
+   "dqx_codigo.eventos_quarentena",
+   "dqx_codigo.eventos_validos",
+   "gold.dq_qualidade_diaria",
+   "regras.v_falhas_regras",
+   "silver.pendencia_evento",
+   "silver.pendencia_evento_quarentena",
+   "sustentacao.volume_diario",
+   "sustentacao.volume_execucao"
+  ],
+  "base": "bronze",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "não única: 10.277 repetidas no ensaio de 24/11",
+  "chave_origem": "lógica",
+  "colunas": 97,
+  "comentario": "Bronze: eventos diarios de pendencias de pagamento (seguro de vida) recebidos do sistema de origem. Append-only.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "numero_apolice"
+    ],
+    "colunas_para": [
+     "numero_apolice"
+    ],
+    "de": "bronze.pagamentos_pendentes_eventos",
+    "frase": "o evento é de uma apólice do cadastro",
+    "para": "fonte.apolices",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "de": "dq.v_bronze_eventos_janela",
+    "frase": "janela do bronze",
+    "para": "bronze.pagamentos_pendentes_eventos",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "fonte.apolices"
+  ]
+ },
+ "bronze_ldp.pagamentos_pendentes": {
+  "alimenta": [
+   "silver_ldp.pagamento_pendente"
+  ],
+  "base": "legado",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 95,
+  "comentario": "Bronze: copia fiel da one-table de pagamentos pendentes (seguro de vida) com metadados de ingestao.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "landing.pagamentos_pendentes_one_table"
+  ]
+ },
+ "bronze_sql.pagamentos_pendentes": {
+  "alimenta": [
+   "silver_sql.pagamento_pendente"
+  ],
+  "base": "legado",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 95,
+  "comentario": "Bronze: copia fiel da one-table de pagamentos pendentes (seguro de vida) com metadados de ingestao.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "landing.pagamentos_pendentes_one_table"
+  ]
+ },
+ "conformidade.achados": {
+  "alimenta": [
+   "conformidade.boas_praticas_dados",
+   "conformidade.mv_conformidade",
+   "conformidade.pendencias",
+   "conformidade.plataforma_por_catalogo",
+   "conformidade.squad_por_schema"
+  ],
+  "base": "conformidade",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 13,
+  "comentario": "Uma linha por verificação (objeto × regra): conforme ou não, com o detalhe e como corrigir. Base de pendencias, boas_praticas_dados, squad_por_schema, plataforma_por_catalogo e da metric view mv_conformidade.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.achados",
+    "frase": "cada verificação é de uma regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:0..1",
+    "colunas_de": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "colunas_para": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "de": "conformidade.achados",
+    "frase": "a verificação é sobre um ativo (ou job, warehouse, alerta)",
+    "para": "conformidade.ativos",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.ativos",
+   "conformidade.colunas",
+   "conformidade.config_camadas",
+   "conformidade.config_regras",
+   "conformidade.config_tags_governadas",
+   "conformidade.recursos",
+   "conformidade.sonda_views"
+  ]
+ },
+ "conformidade.acoes_observabilidade": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [
+   "acao"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 13,
+  "comentario": "Avaliação das ações de observabilidade que já rodam no workspace (bundle observabilidade-framework e finops.observability): o que fazem, o que se encontrou, veredito e onde ficaram no framework, com execuções, falhas e custo dos últimos 30 dias e a última sonda das views.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.recursos",
+   "conformidade.sonda_views",
+   "finops.custo_sql_por_consulta",
+   "finops.uso_jobs_diario"
+  ]
+ },
+ "conformidade.ativos": {
+  "alimenta": [
+   "conformidade.achados"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "catalogo",
+   "esquema",
+   "ativo"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 26,
+  "comentario": "Inventário de tabelas e views do workspace (menos system e samples) com o que a conformidade mede: descrição, colunas sem descrição, tags, dado pessoal, chave primária, dono, última escrita e leitura (lineage) e Predictive Optimization. Substitui main.observabilidade_dev.vw_inventario_tabelas.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:0..1",
+    "colunas_de": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "colunas_para": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "de": "conformidade.achados",
+    "frase": "a verificação é sobre um ativo (ou job, warehouse, alerta)",
+    "para": "conformidade.ativos",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "colunas_para": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "de": "conformidade.sonda_views",
+    "frase": "sonda diária de uma view",
+    "para": "conformidade.ativos",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "esquema",
+     "ativo"
+    ],
+    "colunas_para": [
+     "esquema",
+     "ativo"
+    ],
+    "de": "conformidade.colunas",
+    "frase": "coluna de um ativo do pos_venda",
+    "para": "conformidade.ativos",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:0..1",
+    "colunas_de": [
+     "esquema"
+    ],
+    "colunas_para": [
+     "esquema"
+    ],
+    "de": "conformidade.ativos",
+    "frase": "papel do schema (só os do pos_venda)",
+    "para": "conformidade.config_camadas",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.config_camadas"
+  ]
+ },
+ "conformidade.boas_praticas_dados": {
+  "alimenta": [
+   "conformidade.historico"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "regra_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 14,
+  "comentario": "Uma linha por regra: objetos verificados, conformes, falhas, porcentagem, meta e situação, com origem e como corrigir. Regra sem objeto verificado fica 'sem dados', nunca 'atende'.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.boas_praticas_dados",
+    "frase": "situação atual da regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.achados",
+   "conformidade.config_regras"
+  ]
+ },
+ "conformidade.colunas": {
+  "alimenta": [
+   "conformidade.achados"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "esquema",
+   "ativo",
+   "coluna"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 13,
+  "comentario": "Colunas do catálogo pos_venda com descrição, tag dado_pessoal, classes da classificação automática (class.*) e se o nome indica dado pessoal.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "esquema",
+     "ativo"
+    ],
+    "colunas_para": [
+     "esquema",
+     "ativo"
+    ],
+    "de": "conformidade.colunas",
+    "frase": "coluna de um ativo do pos_venda",
+    "para": "conformidade.ativos",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.config_camadas"
+  ]
+ },
+ "conformidade.config_camadas": {
+  "alimenta": [
+   "conformidade.achados",
+   "conformidade.ativos",
+   "conformidade.colunas"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "esquema"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 3,
+  "comentario": "Papel de cada schema do catálogo pos_venda: principal (fluxo diário), legado (medalhão da primeira versão) ou apoio (monitoramento). Editado em conformidade/gerar_conformidade.py.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "esquema"
+    ],
+    "colunas_para": [
+     "esquema"
+    ],
+    "de": "conformidade.squad_por_schema",
+    "frase": "conformidade de um schema com papel",
+    "para": "conformidade.config_camadas",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:0..1",
+    "colunas_de": [
+     "esquema"
+    ],
+    "colunas_para": [
+     "esquema"
+    ],
+    "de": "conformidade.ativos",
+    "frase": "papel do schema (só os do pos_venda)",
+    "para": "conformidade.config_camadas",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "conformidade.config_regras": {
+  "alimenta": [
+   "conformidade.achados",
+   "conformidade.boas_praticas_dados"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "regra_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 10,
+  "comentario": "Catálogo de regras de conformidade: dimensão, meta, severidade, origem, link da fonte e como corrigir. Editado em conformidade/gerar_conformidade.py.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.achados",
+    "frase": "cada verificação é de uma regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.pendencias",
+    "frase": "pendência de uma regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.historico",
+    "frase": "foto diária de uma regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.boas_praticas_dados",
+    "frase": "situação atual da regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "conformidade.config_tags_governadas": {
+  "alimenta": [
+   "conformidade.achados"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "tag"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 3,
+  "comentario": "Tags governadas com valores permitidos (tag policies do workspace), lidas pela API em conformidade/politicas_tags.json.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "conformidade.historico": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [
+   "registrado_em",
+   "regra_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 10,
+  "comentario": "Histórico diário de boas_praticas_dados (uma linha por regra e dia). Gravado por gerar_conformidade.py registrar.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.historico",
+    "frase": "foto diária de uma regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "conformidade.boas_praticas_dados"
+  ]
+ },
+ "conformidade.mv_conformidade": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 12,
+  "comentario": "Conformidade dos dados e do workspace: uma verificação por objeto e regra. Use Conformidade (%) por dimensão, schema ou regra; Pendências conta o que falta corrigir.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "METRIC_VIEW",
+  "vem_de": [
+   "conformidade.achados"
+  ]
+ },
+ "conformidade.pendencias": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 12,
+  "comentario": "Só as verificações que não atendem: a lista de correções, com severidade e como corrigir.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "conformidade.pendencias",
+    "frase": "pendência de uma regra",
+    "para": "conformidade.config_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.achados"
+  ]
+ },
+ "conformidade.plataforma_por_catalogo": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [
+   "catalogo",
+   "dimensao"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 6,
+  "comentario": "Visão da plataforma: conformidade de cada catálogo do workspace e dos recursos (jobs e warehouses) por dimensão.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.achados"
+  ]
+ },
+ "conformidade.recursos": {
+  "alimenta": [
+   "conformidade.achados",
+   "conformidade.acoes_observabilidade"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "recurso_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 13,
+  "comentario": "Jobs e warehouses ativos do workspace (versão mais recente em system.lakeflow.jobs e system.compute.warehouses) com tags, descrição, timeout, agenda e auto-stop. Regras internalizadas do bundle observabilidade-framework.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "conformidade.sonda_views": {
+  "alimenta": [
+   "conformidade.achados",
+   "conformidade.acoes_observabilidade"
+  ],
+  "base": "conformidade",
+  "chave": [
+   "sondado_em",
+   "catalogo",
+   "esquema",
+   "ativo"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 7,
+  "comentario": "Resultado da sonda diária: cada view, metric view e materialized view do workspace testada com DESCRIBE QUERY (analisa sem executar). Gravado por gerar_conformidade.py registrar.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "colunas_para": [
+     "catalogo",
+     "esquema",
+     "ativo"
+    ],
+    "de": "conformidade.sonda_views",
+    "frase": "sonda diária de uma view",
+    "para": "conformidade.ativos",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "conformidade.squad_por_schema": {
+  "alimenta": [],
+  "base": "conformidade",
+  "chave": [
+   "esquema",
+   "dimensao"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 7,
+  "comentario": "Visão do squad: conformidade de cada schema do catálogo pos_venda por dimensão.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "esquema"
+    ],
+    "colunas_para": [
+     "esquema"
+    ],
+    "de": "conformidade.squad_por_schema",
+    "frase": "conformidade de um schema com papel",
+    "para": "conformidade.config_camadas",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "conformidade.achados"
+  ]
+ },
+ "dq.janela_avaliacao": {
+  "alimenta": [
+   "dq._teste_preservacao_v"
+  ],
+  "base": "dq",
+  "chave": [
+   "origem"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 4,
+  "comentario": "Janela de avaliacao do DQX Studio: intervalo de dias que as views pos_venda.dq.v_*_janela expoem.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "dq.v_bronze_eventos_7d": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "janela de 7 dias do bronze; repete como o bronze",
+  "chave_origem": "lógica",
+  "colunas": 97,
+  "comentario": "Bronze: eventos dos ultimos 7 dias carregados (janela usada pelo DQX Studio).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "dq.v_bronze_eventos_janela": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "janela do bronze; repete como o bronze",
+  "chave_origem": "lógica",
+  "colunas": 97,
+  "comentario": "Bronze: todos os eventos recebidos na janela de avaliacao (aptos e nao aptos).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "de": "dq.v_bronze_eventos_janela",
+    "frase": "janela do bronze",
+    "para": "bronze.pagamentos_pendentes_eventos",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "dq.v_fato_snapshot_7d": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "pendencia_id",
+   "data_referencia_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 28,
+  "comentario": "Gold (fato historica): fotos diarias dos ultimos 7 dias.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.fact_pagamento_pendente_snapshot"
+  ]
+ },
+ "dq.v_fato_snapshot_janela": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "pendencia_id",
+   "data_referencia_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 28,
+  "comentario": "Gold (fato historica): fotos diarias da janela de avaliacao.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_referencia_sk"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_referencia_sk"
+    ],
+    "de": "dq.v_fato_snapshot_janela",
+    "frase": "janela da fato",
+    "para": "gold.fact_pagamento_pendente_snapshot",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.fact_pagamento_pendente_snapshot"
+  ]
+ },
+ "dq.v_painel_barrados": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "dia",
+   "motivo_rejeicao",
+   "tipo_evento"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 8,
+  "comentario": "Painel de qualidade: eventos barrados na silver por dia, motivo da rejeição e tipo de evento, com a semana da simulação.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_rejeicao"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "dq.v_painel_barrados",
+    "frase": "barrados por uma regra de erro",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dq_barrados_por_motivo_dia"
+  ]
+ },
+ "dq.v_painel_diario": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "dia"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 19,
+  "comentario": "Painel de qualidade: métricas diárias (recebidos, barrados, avisos) e linhas órfãs da fato, com a semana da simulação.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dq_fato_orfas_diarias",
+   "gold.dq_qualidade_diaria"
+  ]
+ },
+ "dq.v_painel_quarentena": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 26,
+  "comentario": "Painel de qualidade: eventos barrados antes da silver (quarentena), com o motivo e os dados do cliente.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_evento_quarentena"
+  ]
+ },
+ "dq.v_painel_studio_execucoes": {
+  "alimenta": [
+   "dq.v_painel_studio_regras",
+   "dq.v_painel_studio_reprovadas"
+  ],
+  "base": "dq",
+  "chave": [
+   "run_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 13,
+  "comentario": "Painel de qualidade: execuções do DQX Studio com todas as linhas, uma por semana e por camada.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "run_id"
+    ],
+    "colunas_para": [
+     "run_id"
+    ],
+    "de": "dq.v_painel_studio_regras",
+    "frase": "regras de uma execução do Studio",
+    "para": "dq.v_painel_studio_execucoes",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "dq.v_painel_studio_regras": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "run_id",
+   "regra"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 11,
+  "comentario": "Painel de qualidade: regras violadas por semana e camada nas execuções completas do DQX Studio.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "run_id"
+    ],
+    "colunas_para": [
+     "run_id"
+    ],
+    "de": "dq.v_painel_studio_regras",
+    "frase": "regras de uma execução do Studio",
+    "para": "dq.v_painel_studio_execucoes",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "dq.v_painel_studio_execucoes"
+  ]
+ },
+ "dq.v_painel_studio_reprovadas": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 12,
+  "comentario": "Painel de qualidade: linhas que o DQX Studio reprovou (regra de erro) nas execuções completas, com a regra e a mensagem.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "dq.v_painel_studio_execucoes"
+  ]
+ },
+ "dq.v_quarentena_janela": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "não única: a origem reenvia eventos idênticos; duplicata é aviso (dq_qualidade_diaria.eventos_duplicados)",
+  "chave_origem": "lógica",
+  "colunas": 99,
+  "comentario": "Quarentena: eventos NAO aptos barrados antes da silver na janela de avaliacao, com o motivo da rejeicao.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "de": "dq.v_quarentena_janela",
+    "frase": "janela da quarentena",
+    "para": "silver.pendencia_evento_quarentena",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_evento_quarentena"
+  ]
+ },
+ "dq.v_silver_eventos_aptos_janela": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "não única: a origem reenvia eventos idênticos; duplicata é aviso (dq_qualidade_diaria.eventos_duplicados)",
+  "chave_origem": "lógica",
+  "colunas": 103,
+  "comentario": "Silver: eventos que passaram na barreira de qualidade e entraram na silver na janela de avaliacao.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "de": "dq.v_silver_eventos_aptos_janela",
+    "frase": "janela dos eventos aptos",
+    "para": "silver.pendencia_evento",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_evento"
+  ]
+ },
+ "dq.v_silver_hist_janela": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 105,
+  "comentario": "Silver historica (SCD2): versoes iniciadas na janela de avaliacao.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_hist"
+  ]
+ },
+ "dq.v_silver_pendencia_atual_7d": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [
+   "pendencia_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 103,
+  "comentario": "Silver (estado atual): pendencias com evento nos ultimos 7 dias.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "dq.v_silver_pendencia_atual_7d",
+    "frase": "janela da foto atual",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "dq.v_silver_pendencia_hist_7d": {
+  "alimenta": [],
+  "base": "dq",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 105,
+  "comentario": "Silver historica (SCD2): versoes iniciadas nos ultimos 7 dias.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_hist"
+  ]
+ },
+ "dqx_codigo.dq_metricas_regras": {
+  "alimenta": [],
+  "base": "dqx_codigo",
+  "chave": [
+   "execucao_id",
+   "regra"
+  ],
+  "chave_nota": "a coluna versao entra na próxima execução gravada (mergeSchema)",
+  "chave_origem": "lógica",
+  "colunas": 8,
+  "comentario": "Histórico do DQX como código: uma linha por execução e regra, com linhas avaliadas, reprovadas e taxa. Base do painel de qualidade e do plano de ação.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "dqx_codigo.dq_metricas_regras",
+    "frase": "métrica de uma regra do catálogo",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "dqx_codigo.eventos_quarentena": {
+  "alimenta": [
+   "regras.v_falhas_regras"
+  ],
+  "base": "dqx_codigo",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "não única: a origem reenvia eventos idênticos; duplicata é aviso (dq_qualidade_diaria.eventos_duplicados)",
+  "chave_origem": "lógica",
+  "colunas": 99,
+  "comentario": "Linhas de pos_venda.bronze.pagamentos_pendentes_eventos com ao menos um erro nas checagens do DQX como código; cada regra violada em _errors. Gerada por dqx_codigo/aplicar_dqx.py.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "dqx_codigo.eventos_validos": {
+  "alimenta": [
+   "regras.v_falhas_regras"
+  ],
+  "base": "dqx_codigo",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "não única: a origem reenvia eventos idênticos; duplicata é aviso (dq_qualidade_diaria.eventos_duplicados)",
+  "chave_origem": "lógica",
+  "colunas": 98,
+  "comentario": "Linhas de pos_venda.bronze.pagamentos_pendentes_eventos sem erro nas checagens do DQX como código; avisos na coluna _warnings. Gerada por dqx_codigo/aplicar_dqx.py.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "finops.boas_praticas_custo": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [
+   "codigo"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 10,
+  "comentario": "Boas práticas de custo medidas nos últimos 30 dias: pilar de custo do Well-Architected da Databricks (databricks-waf), powerbi-analyzer, dbx-adoption-monitor e FOCUS. Uma linha por prática, com meta e situação.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.focus_custo_uso",
+   "finops.plataforma_custo_diario",
+   "finops.plataforma_warehouses",
+   "finops.uso_genie_diario",
+   "finops.uso_jobs_diario",
+   "finops.uso_paineis_diario"
+  ]
+ },
+ "finops.config_ativos": {
+  "alimenta": [
+   "finops.custo_sql_por_consulta",
+   "finops.focus_custo_uso",
+   "finops.uso_genie_diario",
+   "finops.uso_paineis_diario"
+  ],
+  "base": "finops",
+  "chave": [
+   "id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 3,
+  "comentario": "Nomes de painéis, espaços Genie, projetos Lakebase e alertas SQL (foto da API em 2026-11-23, por `gerar_finops.py ativos`).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "finops.config_atribuicao": {
+  "alimenta": [
+   "finops.custo_sql_por_consulta",
+   "finops.focus_custo_uso",
+   "finops.uso_genie_diario",
+   "finops.uso_jobs_diario",
+   "finops.uso_paineis_diario",
+   "sustentacao.atualizacoes_pipeline",
+   "sustentacao.jobs_monitorados"
+  ],
+  "base": "finops",
+  "chave": [
+   "ordem"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 6,
+  "comentario": "Regras de atribuição de custo e uso a projeto e time (editar em finops/gerar_finops.py, lista REGRAS). A primeira regra que casar vale.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.squad_custo_mensal",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.squad_custo_unitario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.squad_uso_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.custo_por_projeto_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.uso_jobs_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.uso_paineis_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "finops.config_custo": {
+  "alimenta": [
+   "finops.focus_custo_uso"
+  ],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 8,
+  "comentario": "Parâmetros de custo do FinOps: moeda, câmbio, desconto e plano. Lê finops.observability.v_focus_price_config (só leitura).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "finops.custo_por_funcionalidade": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 14,
+  "comentario": "Custo por funcionalidade do Databricks por mês, com a categoria FOCUS, serverless e a participação no mês.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.custo_por_projeto_diario": {
+  "alimenta": [
+   "finops.squad_custo_mensal",
+   "finops.squad_custo_unitario"
+  ],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 9,
+  "comentario": "Custo por dia, projeto, time e funcionalidade. O SQL warehouse entra rateado por consulta; o resto vem direto da base FOCUS. A soma bate com focus_custo_uso.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.custo_por_projeto_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.custo_sql_por_consulta",
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.custo_sql_por_consulta": {
+  "alimenta": [
+   "conformidade.acoes_observabilidade",
+   "finops.custo_por_projeto_diario",
+   "finops.plataforma_warehouses",
+   "finops.uso_consultas_diario"
+  ],
+  "base": "finops",
+  "chave": [
+   "statement_id",
+   "hora"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 15,
+  "comentario": "Custo do SQL warehouse rateado por consulta: o custo de cada hora é dividido pelas consultas da hora, na proporção do tempo de trabalho (padrão do dbx-adoption-monitor). Horas sem consulta ficam como 'Warehouse ocioso'.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.config_ativos",
+   "finops.config_atribuicao",
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.focus_custo_uso": {
+  "alimenta": [
+   "finops.boas_praticas_custo",
+   "finops.custo_por_funcionalidade",
+   "finops.custo_por_projeto_diario",
+   "finops.custo_sql_por_consulta",
+   "finops.mv_finops_custo",
+   "finops.plataforma_atribuicao_mensal",
+   "finops.plataforma_custo_diario",
+   "finops.plataforma_top_recursos",
+   "finops.uso_genie_diario",
+   "finops.uso_jobs_diario"
+  ],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 83,
+  "comentario": "Dataset FOCUS 1.4 Cost and Usage do workspace (system.billing.usage × list_prices), com colunas x_ de funcionalidade, projeto, time e reais. Base de todas as visões de custo. Adaptado de databricks-solutions/cloud-infra-costs.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.config_ativos",
+   "finops.config_atribuicao",
+   "finops.config_custo"
+  ]
+ },
+ "finops.mv_finops_custo": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 18,
+  "comentario": "Custo do workspace no padrão FOCUS 1.4. Use Custo de lista (USD ou BRL) para comparar: no Free Edition o custo faturado é 0. Quantidade consumida mistura unidades (DBU, DSU, GB): filtre a unidade antes de somar.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "METRIC_VIEW",
+  "vem_de": [
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.plataforma_atribuicao_mensal": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 6,
+  "comentario": "Time de plataforma: quanto do custo de cada mês tem dono (tag, regra), é compartilhado ou não tem regra. Mede a prática WAF CO-03-01 (tags para atribuição).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.plataforma_custo_diario": {
+  "alimenta": [
+   "finops.boas_praticas_custo"
+  ],
+  "base": "finops",
+  "chave": [
+   "dia",
+   "funcionalidade"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 7,
+  "comentario": "Time de plataforma: custo diário por funcionalidade, com a média dos 7 dias anteriores e a marcação de anomalia.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.plataforma_top_recursos": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [
+   "posicao"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 11,
+  "comentario": "Time de plataforma: recursos que mais custaram nos últimos 30 dias, com projeto e time. O SQL warehouse aparece como compartilhado; o rateio dele por consulta está em custo_por_projeto_diario.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.plataforma_warehouses": {
+  "alimenta": [
+   "finops.boas_praticas_custo"
+  ],
+  "base": "finops",
+  "chave": [
+   "warehouse_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 12,
+  "comentario": "Time de plataforma: configuração atual de cada SQL warehouse com custo, consultas, fila e ociosidade dos últimos 30 dias (práticas WAF CO-02-02 e powerbi-analyzer SS-005).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.custo_sql_por_consulta"
+  ]
+ },
+ "finops.squad_custo_mensal": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 9,
+  "comentario": "Time de squad: custo mensal de cada projeto por funcionalidade, participação no projeto e variação sobre o mês anterior.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.squad_custo_mensal",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.custo_por_projeto_diario"
+  ]
+ },
+ "finops.squad_custo_unitario": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [
+   "mes",
+   "projeto",
+   "indicador"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 7,
+  "comentario": "Time de squad: custo unitário por mês e projeto (por execução de job, consulta SQL, visualização de painel, pergunta à Genie e dia de app).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.squad_custo_unitario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.custo_por_projeto_diario",
+   "finops.uso_consultas_diario",
+   "finops.uso_genie_diario",
+   "finops.uso_jobs_diario",
+   "finops.uso_paineis_diario"
+  ]
+ },
+ "finops.squad_uso_diario": {
+  "alimenta": [],
+  "base": "finops",
+  "chave": [
+   "dia",
+   "projeto",
+   "indicador"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 5,
+  "comentario": "Time de squad: uso diário dos ativos de cada projeto em formato longo (painéis, Genie por canal, consultas, execuções de job).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.squad_uso_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.uso_consultas_diario",
+   "finops.uso_genie_diario",
+   "finops.uso_jobs_diario",
+   "finops.uso_paineis_diario"
+  ]
+ },
+ "finops.uso_consultas_diario": {
+  "alimenta": [
+   "finops.squad_custo_unitario",
+   "finops.squad_uso_diario"
+  ],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 13,
+  "comentario": "Consultas SQL por dia, origem e projeto: execuções, falhas, duração, fila e custo rateado (a partir de custo_sql_por_consulta).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.custo_sql_por_consulta"
+  ]
+ },
+ "finops.uso_genie_diario": {
+  "alimenta": [
+   "finops.boas_praticas_custo",
+   "finops.squad_custo_unitario",
+   "finops.squad_uso_diario"
+  ],
+  "base": "finops",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 13,
+  "comentario": "Uso da Genie por dia, espaço e canal: perguntas, leituras, aberturas e usuários (audit) com os DBUs e o custo (base FOCUS). Separa pessoas (UI) de automação e avaliações (API), como recomenda o dbx-adoption-monitor.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.config_ativos",
+   "finops.config_atribuicao",
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.uso_jobs_diario": {
+  "alimenta": [
+   "conformidade.acoes_observabilidade",
+   "finops.boas_praticas_custo",
+   "finops.squad_custo_unitario",
+   "finops.squad_uso_diario"
+  ],
+  "base": "finops",
+  "chave": [
+   "dia",
+   "job"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 13,
+  "comentario": "Execuções de job por dia: sucessos, falhas, duração e custo (system.lakeflow.job_run_timeline × base FOCUS), com o custo das execuções com falha.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.uso_jobs_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.config_atribuicao",
+   "finops.focus_custo_uso"
+  ]
+ },
+ "finops.uso_paineis_diario": {
+  "alimenta": [
+   "finops.boas_praticas_custo",
+   "finops.squad_custo_unitario",
+   "finops.squad_uso_diario"
+  ],
+  "base": "finops",
+  "chave": [
+   "dia",
+   "painel_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 10,
+  "comentario": "Uso dos painéis AI/BI por dia (system.access.audit): aberturas da versão publicada e do rascunho, consultas e usuários distintos. Padrão do dbx-adoption-monitor.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:N",
+    "colunas_de": [
+     "projeto"
+    ],
+    "colunas_para": [
+     "projeto"
+    ],
+    "de": "finops.uso_paineis_diario",
+    "frase": "o projeto vem das regras de atribuição",
+    "para": "finops.config_atribuicao",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.config_ativos",
+   "finops.config_atribuicao"
+  ]
+ },
+ "fonte.apolices": {
+  "alimenta": [
+   "bronze.pagamentos_pendentes_eventos"
+  ],
+  "base": "origem",
+  "chave": [
+   "numero_apolice"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 74,
+  "comentario": "Cadastro de apolices do sistema de origem simulado (apolice, cliente, corretor, ponto de venda). Base do gerador diario de pendencias.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "numero_apolice"
+    ],
+    "colunas_para": [
+     "numero_apolice"
+    ],
+    "de": "landing.pagamentos_pendentes_one_table",
+    "frase": "o evento é de uma apólice do cadastro",
+    "para": "fonte.apolices",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "numero_apolice"
+    ],
+    "colunas_para": [
+     "numero_apolice"
+    ],
+    "de": "bronze.pagamentos_pendentes_eventos",
+    "frase": "o evento é de uma apólice do cadastro",
+    "para": "fonte.apolices",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "landing.pagamentos_pendentes_one_table"
+  ]
+ },
+ "gold.bridge_apolice_cobertura": {
+  "alimenta": [
+   "ontologia.apolice_cobertura"
+  ],
+  "base": "gold",
+  "chave": [
+   "apolice_sk",
+   "cobertura_sk",
+   "papel_cobertura"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 4,
+  "comentario": "Ponte N:N entre apolice e cobertura, com papel (principal/adicional) e capital da cobertura. PK composta.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "gold.dim_apolice": {
+  "alimenta": [
+   "ontologia.apolice",
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "apolice_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 22,
+  "comentario": "Dimensao apolice de vida (vigencia, capital, premio, endossos, beneficiarios).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "apolice_sk aponta para a dimensão",
+    "para": "gold.dim_apolice",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "gold.dim_cliente": {
+  "alimenta": [
+   "ontologia.cliente"
+  ],
+  "base": "gold",
+  "chave": [
+   "cliente_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 29,
+  "comentario": "Dimensao cliente (cadastro padronizado). SK = xxhash64(cliente_id).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "cliente_sk aponta para a dimensão",
+    "para": "gold.dim_cliente",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "gold.dim_cobertura": {
+  "alimenta": [
+   "ontologia.apolice_cobertura"
+  ],
+  "base": "gold",
+  "chave": [
+   "cobertura_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 4,
+  "comentario": "Dimensao cobertura (catalogo fixo de coberturas de vida).",
+  "gerada_por": "carga_diaria/gerar_carga.py (dim com catálogo fixo)",
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold.dim_corretor": {
+  "alimenta": [
+   "ontologia.corretor"
+  ],
+  "base": "gold",
+  "chave": [
+   "corretor_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 10,
+  "comentario": "Dimensao corretor, com membro NAO_INFORMADO para vendas sem corretor (digital e televendas).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold.dim_corretor",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "gold.dim_data": {
+  "alimenta": [
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "data_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 14,
+  "comentario": "Dimensao data (calendario 2015-2030). Papeis na fato: referencia, vencimento, emissao, entrada, ultima tentativa.",
+  "gerada_por": "carga_diaria/gerar_carga.py (dim com catálogo fixo)",
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_emissao_apolice_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_emissao_apolice_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_entrada_pendencia_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_entrada_pendencia_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_vencimento_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_vencimento_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_ultima_tentativa_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_ultima_tentativa_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_referencia_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_referencia_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "dia_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.dq_fato_orfas_diarias",
+    "frase": "a foto diária de um dia do calendário",
+    "para": "gold.dim_data",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold.dim_faixa_atraso": {
+  "alimenta": [
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "faixa_atraso_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 6,
+  "comentario": "Dimensao faixa de atraso (catalogo fixo, ordenado).",
+  "gerada_por": "carga_diaria/gerar_carga.py (dim com catálogo fixo)",
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "faixa_atraso_sk"
+    ],
+    "colunas_para": [
+     "faixa_atraso_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "faixa_atraso_sk aponta para a dimensão",
+    "para": "gold.dim_faixa_atraso",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold.dim_forma_pagamento": {
+  "alimenta": [
+   "bi.forma_pagamento",
+   "gold.dq_fato_orfas_diarias",
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "forma_pagamento_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 3,
+  "comentario": "Dimensao forma de pagamento (catalogo fixo).",
+  "gerada_por": "carga_diaria/gerar_carga.py (dim com catálogo fixo)",
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento_sk"
+    ],
+    "colunas_para": [
+     "forma_pagamento_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold.dim_forma_pagamento",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold.dim_motivo_pendencia": {
+  "alimenta": [
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "motivo_pendencia_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 3,
+  "comentario": "Dimensao motivo da pendencia (catalogo fixo, com agrupamento).",
+  "gerada_por": "carga_diaria/gerar_carga.py (dim com catálogo fixo)",
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold.dim_motivo_pendencia",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold.dim_periodicidade": {
+  "alimenta": [
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "periodicidade_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 4,
+  "comentario": "Dimensao periodicidade de pagamento do premio (catalogo fixo).",
+  "gerada_por": "carga_diaria/gerar_carga.py (dim com catálogo fixo)",
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "periodicidade_sk"
+    ],
+    "colunas_para": [
+     "periodicidade_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "periodicidade_sk aponta para a dimensão",
+    "para": "gold.dim_periodicidade",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold.dim_ponto_venda": {
+  "alimenta": [
+   "bi.canal_venda",
+   "ontologia.ponto_venda",
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "ponto_venda_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 8,
+  "comentario": "Dimensao ponto de venda (escritorio, agencia bancaria, plataforma digital, televendas).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "ponto_venda_sk"
+    ],
+    "colunas_para": [
+     "ponto_venda_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "ponto_venda_sk aponta para a dimensão",
+    "para": "gold.dim_ponto_venda",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "gold.dim_produto": {
+  "alimenta": [
+   "bi.produto",
+   "ontologia.posicao_carteira",
+   "ontologia.produto"
+  ],
+  "base": "gold",
+  "chave": [
+   "produto_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 7,
+  "comentario": "Dimensao produto de seguro de vida.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_sk"
+    ],
+    "colunas_para": [
+     "produto_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "produto_sk aponta para a dimensão",
+    "para": "gold.dim_produto",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "gold.dim_status_cobranca": {
+  "alimenta": [
+   "ontologia.posicao_carteira"
+  ],
+  "base": "gold",
+  "chave": [
+   "status_cobranca_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 5,
+  "comentario": "Dimensao status de cobranca (ciclo de vida da pendencia, incluindo PAGA).",
+  "gerada_por": "carga_diaria/gerar_carga.py (dim com catálogo fixo)",
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "status_cobranca_sk"
+    ],
+    "colunas_para": [
+     "status_cobranca_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "status_cobranca_sk aponta para a dimensão",
+    "para": "gold.dim_status_cobranca",
+    "tipo": "FK no Unity Catalog"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold.dq_barrados_por_motivo_dia": {
+  "alimenta": [
+   "dq.v_painel_barrados"
+  ],
+  "base": "gold",
+  "chave": [
+   "dia",
+   "motivo_rejeicao",
+   "tipo_evento"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 6,
+  "comentario": "Eventos barrados na silver (quarentena) por dia, motivo da rejeicao e tipo de evento.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_rejeicao"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "gold.dq_barrados_por_motivo_dia",
+    "frase": "barrados por uma regra de erro do catálogo",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_evento_quarentena"
+  ]
+ },
+ "gold.dq_fato_orfas_diarias": {
+  "alimenta": [
+   "dq.v_painel_diario"
+  ],
+  "base": "gold",
+  "chave": [
+   "dia_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 4,
+  "comentario": "Fato historica: linhas por foto diaria e quantas ficaram sem dimensao de forma de pagamento (dado nao cadastrado que vazou para a gold).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "dia_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.dq_fato_orfas_diarias",
+    "frase": "a foto diária de um dia do calendário",
+    "para": "gold.dim_data",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "gold.dim_forma_pagamento",
+   "gold.fact_pagamento_pendente_snapshot"
+  ]
+ },
+ "gold.dq_qualidade_diaria": {
+  "alimenta": [
+   "bi.calendario",
+   "dq.v_painel_diario",
+   "ontologia.mv_qualidade_dados"
+  ],
+  "base": "gold",
+  "chave": [
+   "dia"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 21,
+  "comentario": "Qualidade diaria do fluxo bronze > silver: recebidos, aptos, barrados e metricas de aviso (valores e percentuais).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos",
+   "silver.pendencia_evento",
+   "silver.pendencia_evento_quarentena"
+  ]
+ },
+ "gold.fact_pagamento_pendente_snapshot": {
+  "alimenta": [
+   "dq.v_fato_snapshot_7d",
+   "dq.v_fato_snapshot_janela",
+   "gold._tmp_paridade_fato_antes",
+   "gold.dq_fato_orfas_diarias",
+   "ontologia.posicao_carteira",
+   "sustentacao.volume_diario",
+   "sustentacao.volume_execucao"
+  ],
+  "base": "gold",
+  "chave": [
+   "data_referencia_sk",
+   "pendencia_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 28,
+  "comentario": "Fato historica (snapshot diario): pendencias de pagamento em aberto por dia. Grao: pendencia x dia.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "ponto_venda_sk"
+    ],
+    "colunas_para": [
+     "ponto_venda_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "ponto_venda_sk aponta para a dimensão",
+    "para": "gold.dim_ponto_venda",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento_sk"
+    ],
+    "colunas_para": [
+     "forma_pagamento_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold.dim_forma_pagamento",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "apolice_sk aponta para a dimensão",
+    "para": "gold.dim_apolice",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold.dim_corretor",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_emissao_apolice_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_emissao_apolice_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_entrada_pendencia_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_entrada_pendencia_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_vencimento_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_vencimento_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_ultima_tentativa_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_ultima_tentativa_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_referencia_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "data_referencia_sk aponta para a dimensão",
+    "para": "gold.dim_data",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "faixa_atraso_sk"
+    ],
+    "colunas_para": [
+     "faixa_atraso_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "faixa_atraso_sk aponta para a dimensão",
+    "para": "gold.dim_faixa_atraso",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "status_cobranca_sk"
+    ],
+    "colunas_para": [
+     "status_cobranca_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "status_cobranca_sk aponta para a dimensão",
+    "para": "gold.dim_status_cobranca",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "cliente_sk aponta para a dimensão",
+    "para": "gold.dim_cliente",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "periodicidade_sk"
+    ],
+    "colunas_para": [
+     "periodicidade_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "periodicidade_sk aponta para a dimensão",
+    "para": "gold.dim_periodicidade",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold.dim_motivo_pendencia",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_sk"
+    ],
+    "colunas_para": [
+     "produto_sk"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "produto_sk aponta para a dimensão",
+    "para": "gold.dim_produto",
+    "tipo": "FK no Unity Catalog"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "a foto diária vem da pendência da silver",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_referencia_sk"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_referencia_sk"
+    ],
+    "de": "dq.v_fato_snapshot_janela",
+    "frase": "janela da fato",
+    "para": "gold.fact_pagamento_pendente_snapshot",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver.pendencia_hist"
+  ]
+ },
+ "gold_ldp.bridge_apolice_cobertura": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "apolice_sk",
+   "cobertura_sk",
+   "papel_cobertura"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Ponte N:N entre apolice e cobertura, com papel (principal/adicional) e capital da cobertura.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_apolice": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "apolice_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 22,
+  "comentario": "Dimensao apolice de vida (vigencia, capital, premio, endossos e beneficiarios).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "apolice_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_apolice",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_cliente": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "cliente_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 29,
+  "comentario": "Dimensao cliente (dados cadastrais padronizados). Chave substituta: xxhash64(cliente_id).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "cliente_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_cliente",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_cobertura": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "cobertura_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Dimensao cobertura (catalogo de coberturas de vida).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": []
+ },
+ "gold_ldp.dim_corretor": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "corretor_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 10,
+  "comentario": "Dimensao corretor, com membro NAO_INFORMADO para vendas sem corretor (canais digital e televendas).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_corretor",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_data": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "data_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 14,
+  "comentario": "Dimensao data (calendario 2015-2030) usada nos papeis: vencimento, emissao, extracao, ultima tentativa.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_emissao_apolice_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "data_emissao_apolice_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_vencimento_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "data_vencimento_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_ultima_tentativa_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "data_ultima_tentativa_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": []
+ },
+ "gold_ldp.dim_faixa_atraso": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "faixa_atraso_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 6,
+  "comentario": "Dimensao faixa de atraso (catalogo fixo, ordenado).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "faixa_atraso_sk"
+    ],
+    "colunas_para": [
+     "faixa_atraso_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "faixa_atraso_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_faixa_atraso",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": []
+ },
+ "gold_ldp.dim_forma_pagamento": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "forma_pagamento_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 3,
+  "comentario": "Dimensao forma de pagamento.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento_sk"
+    ],
+    "colunas_para": [
+     "forma_pagamento_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_forma_pagamento",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_motivo_pendencia": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "motivo_pendencia_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 3,
+  "comentario": "Dimensao motivo da pendencia de pagamento, com agrupamento.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_motivo_pendencia",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_periodicidade": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "periodicidade_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Dimensao periodicidade de pagamento do premio.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "periodicidade_sk"
+    ],
+    "colunas_para": [
+     "periodicidade_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "periodicidade_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_periodicidade",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_ponto_venda": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "ponto_venda_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 8,
+  "comentario": "Dimensao ponto de venda (escritorio de corretor, agencia bancaria, plataforma digital, televendas).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "ponto_venda_sk"
+    ],
+    "colunas_para": [
+     "ponto_venda_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "ponto_venda_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_ponto_venda",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_produto": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "produto_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 7,
+  "comentario": "Dimensao produto de seguro de vida.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_sk"
+    ],
+    "colunas_para": [
+     "produto_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "produto_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_produto",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.dim_status_cobranca": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "status_cobranca_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Dimensao status de cobranca, com a fase da regua de cobranca.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "status_cobranca_sk"
+    ],
+    "colunas_para": [
+     "status_cobranca_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "status_cobranca_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_status_cobranca",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_ldp.fact_pagamento_pendente": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 27,
+  "comentario": "Fato: 1 linha por parcela de apolice pendente de pagamento (foto na data de extracao). Medidas: valores, dias de atraso, tentativas.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "ponto_venda_sk"
+    ],
+    "colunas_para": [
+     "ponto_venda_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "ponto_venda_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_ponto_venda",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento_sk"
+    ],
+    "colunas_para": [
+     "forma_pagamento_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_forma_pagamento",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "apolice_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_apolice",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_corretor",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_emissao_apolice_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "data_emissao_apolice_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_vencimento_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "data_vencimento_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_ultima_tentativa_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "data_ultima_tentativa_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "faixa_atraso_sk"
+    ],
+    "colunas_para": [
+     "faixa_atraso_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "faixa_atraso_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_faixa_atraso",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "status_cobranca_sk"
+    ],
+    "colunas_para": [
+     "status_cobranca_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "status_cobranca_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_status_cobranca",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "cliente_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_cliente",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "periodicidade_sk"
+    ],
+    "colunas_para": [
+     "periodicidade_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "periodicidade_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_periodicidade",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_motivo_pendencia",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_sk"
+    ],
+    "colunas_para": [
+     "produto_sk"
+    ],
+    "de": "gold_ldp.fact_pagamento_pendente",
+    "frase": "produto_sk aponta para a dimensão",
+    "para": "gold_ldp.dim_produto",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "silver_ldp.pagamento_pendente"
+  ]
+ },
+ "gold_sql.bridge_apolice_cobertura": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "apolice_sk",
+   "cobertura_sk",
+   "papel_cobertura"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Ponte N:N entre apolice e cobertura, com papel (principal/adicional) e capital da cobertura.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_apolice": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "apolice_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 22,
+  "comentario": "Dimensao apolice de vida (vigencia, capital, premio, endossos e beneficiarios).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "apolice_sk aponta para a dimensão",
+    "para": "gold_sql.dim_apolice",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_cliente": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "cliente_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 29,
+  "comentario": "Dimensao cliente (dados cadastrais padronizados). Chave substituta: xxhash64(cliente_id).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "cliente_sk aponta para a dimensão",
+    "para": "gold_sql.dim_cliente",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_cobertura": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "cobertura_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Dimensao cobertura (catalogo de coberturas de vida).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold_sql.dim_corretor": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "corretor_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 10,
+  "comentario": "Dimensao corretor, com membro NAO_INFORMADO para vendas sem corretor (canais digital e televendas).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold_sql.dim_corretor",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_data": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "data_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 14,
+  "comentario": "Dimensao data (calendario 2015-2030) usada nos papeis: vencimento, emissao, extracao, ultima tentativa.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_emissao_apolice_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "data_emissao_apolice_sk aponta para a dimensão",
+    "para": "gold_sql.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_vencimento_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "data_vencimento_sk aponta para a dimensão",
+    "para": "gold_sql.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_ultima_tentativa_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "data_ultima_tentativa_sk aponta para a dimensão",
+    "para": "gold_sql.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold_sql.dim_faixa_atraso": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "faixa_atraso_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 6,
+  "comentario": "Dimensao faixa de atraso (catalogo fixo, ordenado).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "faixa_atraso_sk"
+    ],
+    "colunas_para": [
+     "faixa_atraso_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "faixa_atraso_sk aponta para a dimensão",
+    "para": "gold_sql.dim_faixa_atraso",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "gold_sql.dim_forma_pagamento": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "forma_pagamento_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 3,
+  "comentario": "Dimensao forma de pagamento.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento_sk"
+    ],
+    "colunas_para": [
+     "forma_pagamento_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold_sql.dim_forma_pagamento",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_motivo_pendencia": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "motivo_pendencia_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 3,
+  "comentario": "Dimensao motivo da pendencia de pagamento, com agrupamento.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold_sql.dim_motivo_pendencia",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_periodicidade": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "periodicidade_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Dimensao periodicidade de pagamento do premio.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "periodicidade_sk"
+    ],
+    "colunas_para": [
+     "periodicidade_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "periodicidade_sk aponta para a dimensão",
+    "para": "gold_sql.dim_periodicidade",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_ponto_venda": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "ponto_venda_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 8,
+  "comentario": "Dimensao ponto de venda (escritorio de corretor, agencia bancaria, plataforma digital, televendas).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "ponto_venda_sk"
+    ],
+    "colunas_para": [
+     "ponto_venda_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "ponto_venda_sk aponta para a dimensão",
+    "para": "gold_sql.dim_ponto_venda",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_produto": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "produto_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 7,
+  "comentario": "Dimensao produto de seguro de vida.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_sk"
+    ],
+    "colunas_para": [
+     "produto_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "produto_sk aponta para a dimensão",
+    "para": "gold_sql.dim_produto",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.dim_status_cobranca": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [
+   "status_cobranca_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica (espelho da gold)",
+  "colunas": 4,
+  "comentario": "Dimensao status de cobranca, com a fase da regua de cobranca.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "status_cobranca_sk"
+    ],
+    "colunas_para": [
+     "status_cobranca_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "status_cobranca_sk aponta para a dimensão",
+    "para": "gold_sql.dim_status_cobranca",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "gold_sql.fact_pagamento_pendente": {
+  "alimenta": [],
+  "base": "legado",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 27,
+  "comentario": "Fato: 1 linha por parcela de apolice pendente de pagamento (foto na data de extracao). Medidas: valores, dias de atraso, tentativas.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "ponto_venda_sk"
+    ],
+    "colunas_para": [
+     "ponto_venda_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "ponto_venda_sk aponta para a dimensão",
+    "para": "gold_sql.dim_ponto_venda",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "forma_pagamento_sk"
+    ],
+    "colunas_para": [
+     "forma_pagamento_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "forma_pagamento_sk aponta para a dimensão",
+    "para": "gold_sql.dim_forma_pagamento",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "apolice_sk aponta para a dimensão",
+    "para": "gold_sql.dim_apolice",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "corretor_sk"
+    ],
+    "colunas_para": [
+     "corretor_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "corretor_sk aponta para a dimensão",
+    "para": "gold_sql.dim_corretor",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_emissao_apolice_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "data_emissao_apolice_sk aponta para a dimensão",
+    "para": "gold_sql.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_vencimento_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "data_vencimento_sk aponta para a dimensão",
+    "para": "gold_sql.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "data_ultima_tentativa_sk"
+    ],
+    "colunas_para": [
+     "data_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "data_ultima_tentativa_sk aponta para a dimensão",
+    "para": "gold_sql.dim_data",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "faixa_atraso_sk"
+    ],
+    "colunas_para": [
+     "faixa_atraso_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "faixa_atraso_sk aponta para a dimensão",
+    "para": "gold_sql.dim_faixa_atraso",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "status_cobranca_sk"
+    ],
+    "colunas_para": [
+     "status_cobranca_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "status_cobranca_sk aponta para a dimensão",
+    "para": "gold_sql.dim_status_cobranca",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "cliente_sk aponta para a dimensão",
+    "para": "gold_sql.dim_cliente",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "periodicidade_sk"
+    ],
+    "colunas_para": [
+     "periodicidade_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "periodicidade_sk aponta para a dimensão",
+    "para": "gold_sql.dim_periodicidade",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_pendencia_sk"
+    ],
+    "colunas_para": [
+     "motivo_pendencia_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "motivo_pendencia_sk aponta para a dimensão",
+    "para": "gold_sql.dim_motivo_pendencia",
+    "tipo": "lógico (espelho da gold)"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_sk"
+    ],
+    "colunas_para": [
+     "produto_sk"
+    ],
+    "de": "gold_sql.fact_pagamento_pendente",
+    "frase": "produto_sk aponta para a dimensão",
+    "para": "gold_sql.dim_produto",
+    "tipo": "lógico (espelho da gold)"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "silver_sql.pagamento_pendente"
+  ]
+ },
+ "landing.pagamentos_pendentes_one_table": {
+  "alimenta": [
+   "bronze_ldp.pagamentos_pendentes",
+   "bronze_sql.pagamentos_pendentes",
+   "fonte.apolices"
+  ],
+  "base": "origem",
+  "chave": [
+   "pendencia_id",
+   "data_extracao"
+  ],
+  "chave_nota": "foto diária da origem; pode repetir",
+  "chave_origem": "lógica",
+  "colunas": 91,
+  "comentario": "One table sintetica de pagamentos pendentes de seguro de vida (dominio pos_venda). Grao: 1 parcela pendente por linha. Gerada com dbldatagen; contem defeitos de qualidade propositais quando injetar_defeitos=true.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "numero_apolice"
+    ],
+    "colunas_para": [
+     "numero_apolice"
+    ],
+    "de": "landing.pagamentos_pendentes_one_table",
+    "frase": "o evento é de uma apólice do cadastro",
+    "para": "fonte.apolices",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "landing._stg_apolices"
+  ]
+ },
+ "ontologia.apolice": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "apolice_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 15,
+  "comentario": "Entidade Apólice de seguro de vida (contrato): status, vigência, capital, prêmio, coberturas e endossos.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "ontologia.apolice_cobertura",
+    "frase": "coberturas da apólice",
+    "para": "ontologia.apolice",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "ontologia.posicao_carteira",
+    "frase": "a posição é de uma apólice",
+    "para": "ontologia.apolice",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "numero_apolice"
+    ],
+    "colunas_para": [
+     "numero_apolice"
+    ],
+    "de": "ontologia.pagamento",
+    "frase": "o pagamento é de uma apólice",
+    "para": "ontologia.apolice",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_apolice"
+  ]
+ },
+ "ontologia.apolice_cobertura": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "apolice_sk",
+   "cobertura_sk",
+   "papel_cobertura"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 6,
+  "comentario": "Relação Apólice tem Cobertura (N:N), com papel PRINCIPAL/ADICIONAL e capital.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "ontologia.apolice_cobertura",
+    "frase": "coberturas da apólice",
+    "para": "ontologia.apolice",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.bridge_apolice_cobertura",
+   "gold.dim_cobertura"
+  ]
+ },
+ "ontologia.cliente": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "cliente_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 5,
+  "comentario": "Entidade Cliente (segurado pagador), sem identificadores pessoais: use cliente_sk para ligar.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "ontologia.posicao_carteira",
+    "frase": "a posição é de um cliente",
+    "para": "ontologia.cliente",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_cliente"
+  ]
+ },
+ "ontologia.corretor": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "corretor_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 7,
+  "comentario": "Entidade Corretor (sem nome e documento): SUSEP, regional, comissão e status. NAO_INFORMADO = venda sem corretor.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_corretor"
+  ]
+ },
+ "ontologia.entidades": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "entidade"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 5,
+  "comentario": "Catálogo das entidades da ontologia do Pós-venda.",
+  "gerada_por": "governanca/gerar_ontologia_sql.py (conceitos de governanca/ontologia.py)",
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "ontologia.evento_cobranca": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 9,
+  "comentario": "Entidade Evento de cobrança (NOVA, ATUALIZACAO, BAIXA) apto, deduplicado por pendência, dia e tipo.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "ontologia.evento_cobranca",
+    "frase": "NOVA, ATUALIZACAO e BAIXA da pendência",
+    "para": "ontologia.pendencia",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_evento"
+  ]
+ },
+ "ontologia.glossario": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "termo"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 4,
+  "comentario": "Glossário do Pós-venda: mesmo conteúdo das Pages do Discover (domínio Pós-venda).",
+  "gerada_por": "governanca/gerar_ontologia_sql.py (conceitos de governanca/ontologia.py)",
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "ontologia.mv_carteira_em_aberto": {
+  "alimenta": [
+   "bi.carteira_diaria"
+  ],
+  "base": "ontologia",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 38,
+  "comentario": "Carteira de pendências em aberto por dia (foto diária). O saldo é SEMIADITIVO: filtre UMA data de referência (ou a foto mais recente / fim de mês) ou agrupe por data; nunca some saldos de dias diferentes.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "METRIC_VIEW",
+  "vem_de": [
+   "ontologia.posicao_carteira"
+  ]
+ },
+ "ontologia.mv_qualidade_dados": {
+  "alimenta": [
+   "bi.qualidade_diaria"
+  ],
+  "base": "ontologia",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 15,
+  "comentario": "Qualidade diária dos dados que chegam do sistema de origem: recebidos, barrados e avisos.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "METRIC_VIEW",
+  "vem_de": [
+   "gold.dq_qualidade_diaria"
+  ]
+ },
+ "ontologia.mv_recuperacao": {
+  "alimenta": [
+   "bi.recuperacao_diaria"
+  ],
+  "base": "ontologia",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 20,
+  "comentario": "Pagamentos (baixas) das pendências: valor recuperado por data da baixa. Aditivo no tempo.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "METRIC_VIEW",
+  "vem_de": [
+   "ontologia.pagamento"
+  ]
+ },
+ "ontologia.mv_safra_recuperacao": {
+  "alimenta": [
+   "bi.safras"
+  ],
+  "base": "ontologia",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 14,
+  "comentario": "Safras de entrada das pendências e quanto delas já foi pago. Compare safras de mesma idade (safras recentes tiveram menos tempo).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "METRIC_VIEW",
+  "vem_de": [
+   "ontologia.pendencia"
+  ]
+ },
+ "ontologia.pagamento": {
+  "alimenta": [
+   "ontologia.mv_recuperacao",
+   "ontologia.mv_teste_padroes"
+  ],
+  "base": "ontologia",
+  "chave": [
+   "pendencia_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 16,
+  "comentario": "Entidade Pagamento (baixa): 1 linha por pendência paga, eventos BAIXA deduplicados. Base do valor recuperado.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "0..1:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "ontologia.pagamento",
+    "frase": "nem toda pendência é paga",
+    "para": "ontologia.pendencia",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "numero_apolice"
+    ],
+    "colunas_para": [
+     "numero_apolice"
+    ],
+    "de": "ontologia.pagamento",
+    "frase": "o pagamento é de uma apólice",
+    "para": "ontologia.apolice",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_evento"
+  ]
+ },
+ "ontologia.pendencia": {
+  "alimenta": [
+   "ontologia.mv_safra_recuperacao"
+  ],
+  "base": "ontologia",
+  "chave": [
+   "pendencia_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 20,
+  "comentario": "Entidade Pendência (1 linha por pendência, estado atual): entrada, status, baixa e safra. Base da taxa de recuperação.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "ontologia.posicao_carteira",
+    "frase": "uma linha por dia enquanto a pendência está aberta",
+    "para": "ontologia.pendencia",
+    "tipo": "lógico"
+   },
+   {
+    "card": "0..1:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "ontologia.pagamento",
+    "frase": "nem toda pendência é paga",
+    "para": "ontologia.pendencia",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "ontologia.evento_cobranca",
+    "frase": "NOVA, ATUALIZACAO e BAIXA da pendência",
+    "para": "ontologia.pendencia",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_codigo"
+    ],
+    "colunas_para": [
+     "produto_codigo"
+    ],
+    "de": "ontologia.pendencia",
+    "frase": "a pendência é de um produto",
+    "para": "ontologia.produto",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "silver.pendencia_atual"
+  ]
+ },
+ "ontologia.ponto_venda": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "ponto_venda_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 8,
+  "comentario": "Entidade Ponto de venda e canal de venda.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_ponto_venda"
+  ]
+ },
+ "ontologia.posicao_carteira": {
+  "alimenta": [
+   "ontologia.mv_carteira_em_aberto",
+   "ontologia.mv_teste_padroes"
+  ],
+  "base": "ontologia",
+  "chave": [
+   "data_referencia",
+   "pendencia_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 29,
+  "comentario": "Posição diária da carteira em aberto (fato snapshot com rótulos legíveis). SALDO É SEMIADITIVO: some só dentro de um mesmo dia.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "apolice_sk"
+    ],
+    "colunas_para": [
+     "apolice_sk"
+    ],
+    "de": "ontologia.posicao_carteira",
+    "frase": "a posição é de uma apólice",
+    "para": "ontologia.apolice",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "cliente_sk"
+    ],
+    "colunas_para": [
+     "cliente_sk"
+    ],
+    "de": "ontologia.posicao_carteira",
+    "frase": "a posição é de um cliente",
+    "para": "ontologia.cliente",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "ontologia.posicao_carteira",
+    "frase": "uma linha por dia enquanto a pendência está aberta",
+    "para": "ontologia.pendencia",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_apolice",
+   "gold.dim_data",
+   "gold.dim_faixa_atraso",
+   "gold.dim_forma_pagamento",
+   "gold.dim_motivo_pendencia",
+   "gold.dim_periodicidade",
+   "gold.dim_ponto_venda",
+   "gold.dim_produto",
+   "gold.dim_status_cobranca",
+   "gold.fact_pagamento_pendente_snapshot"
+  ]
+ },
+ "ontologia.produto": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "produto_sk"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 5,
+  "comentario": "Entidade Produto de seguro de vida (8 produtos) e cobertura principal.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "produto_codigo"
+    ],
+    "colunas_para": [
+     "produto_codigo"
+    ],
+    "de": "ontologia.pendencia",
+    "frase": "a pendência é de um produto",
+    "para": "ontologia.produto",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "gold.dim_produto"
+  ]
+ },
+ "ontologia.relacoes": {
+  "alimenta": [],
+  "base": "ontologia",
+  "chave": [
+   "sujeito",
+   "predicado",
+   "objeto"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 6,
+  "comentario": "Relações entre as entidades do Pós-venda (triplas sujeito-predicado-objeto).",
+  "gerada_por": "governanca/gerar_ontologia_sql.py (conceitos de governanca/ontologia.py)",
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "regras.catalogo_regras": {
+  "alimenta": [
+   "regras.v_falhas_regras",
+   "regras.v_mudancas_regras",
+   "regras.v_retroalimentacao"
+  ],
+  "base": "regras",
+  "chave": [
+   "regra_id",
+   "versao"
+  ],
+  "chave_nota": null,
+  "chave_origem": "PK no Unity Catalog",
+  "colunas": 17,
+  "comentario": "Catálogo das regras de qualidade do pos_venda, com versão e vigência pela data do dado (P41). Gerado por regras/catalogo/gerar_catalogo.py a partir de catalogo_regras.yml; não edite aqui.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_rejeicao"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "gold.dq_barrados_por_motivo_dia",
+    "frase": "barrados por uma regra de erro do catálogo",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "regras.triagem_regras",
+    "frase": "a triagem classifica as falhas de uma regra (e versão)",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id",
+     "versao"
+    ],
+    "colunas_para": [
+     "regra_id",
+     "versao"
+    ],
+    "de": "regras.v_falhas_regras",
+    "frase": "falhas do dia pela versão vigente",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id",
+     "versao"
+    ],
+    "colunas_para": [
+     "regra_id",
+     "versao"
+    ],
+    "de": "regras.v_triagem_pendente",
+    "frase": "semana a triar de uma versão",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "regra_id",
+     "versao"
+    ],
+    "colunas_para": [
+     "regra_id",
+     "versao"
+    ],
+    "de": "regras.v_mudancas_regras",
+    "frase": "versão que começou a valer",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:N",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "regras.v_retroalimentacao",
+    "frase": "indicadores da regra em todas as versões",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_rejeicao"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "silver.pendencia_evento_quarentena",
+    "frase": "o motivo de rejeição é uma regra de erro do catálogo",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "dqx_codigo.dq_metricas_regras",
+    "frase": "métrica de uma regra do catálogo",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_rejeicao"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "dq.v_painel_barrados",
+    "frase": "barrados por uma regra de erro",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "regras.triagem_regras": {
+  "alimenta": [
+   "regras.v_retroalimentacao"
+  ],
+  "base": "regras",
+  "chave": [
+   "triagem_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 10,
+  "comentario": "Triagem das falhas de regra: cada semana com falha recebe uma classificação e uma ação. Fecha o ciclo de retroalimentação (P41): regra errada vira versão nova; dado ruim vira ação no plano.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "regras.triagem_regras",
+    "frase": "a triagem classifica as falhas de uma regra (e versão)",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "MANAGED",
+  "vem_de": []
+ },
+ "regras.v_falhas_regras": {
+  "alimenta": [
+   "regras.v_retroalimentacao",
+   "regras.v_triagem_pendente"
+  ],
+  "base": "regras",
+  "chave": [
+   "dia",
+   "fonte",
+   "regra_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 12,
+  "comentario": "Falhas por dia, fonte, regra e versão vigente (P41). Na barreira, cada evento barrado conta só no primeiro motivo; no DQX, em todas as regras que violou. Base da triagem e da retroalimentação.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id",
+     "versao"
+    ],
+    "colunas_para": [
+     "regra_id",
+     "versao"
+    ],
+    "de": "regras.v_falhas_regras",
+    "frase": "falhas do dia pela versão vigente",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos",
+   "dqx_codigo.eventos_quarentena",
+   "dqx_codigo.eventos_validos",
+   "regras.catalogo_regras",
+   "silver.pendencia_evento_quarentena"
+  ]
+ },
+ "regras.v_mudancas_regras": {
+  "alimenta": [],
+  "base": "regras",
+  "chave": [
+   "regra_id",
+   "versao"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 8,
+  "comentario": "Mudanças de regra no tempo (P41): uma linha por versão com início de vigência. Os painéis marcam essas datas para explicar saltos na taxa de reprovação.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "regra_id",
+     "versao"
+    ],
+    "colunas_para": [
+     "regra_id",
+     "versao"
+    ],
+    "de": "regras.v_mudancas_regras",
+    "frase": "versão que começou a valer",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "regras.catalogo_regras"
+  ]
+ },
+ "regras.v_retroalimentacao": {
+  "alimenta": [],
+  "base": "regras",
+  "chave": [
+   "regra_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 16,
+  "comentario": "Indicadores da retroalimentação por regra (P41): quanto falha, quanto falta triar, o que a triagem concluiu e a taxa de falso positivo. Uma regra com falso positivo alto volta para o questionário.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:N",
+    "colunas_de": [
+     "regra_id"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "regras.v_retroalimentacao",
+    "frase": "indicadores da regra em todas as versões",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "regras.catalogo_regras",
+   "regras.triagem_regras",
+   "regras.v_falhas_regras",
+   "regras.v_triagem_pendente"
+  ]
+ },
+ "regras.v_triagem_pendente": {
+  "alimenta": [
+   "regras.v_retroalimentacao"
+  ],
+  "base": "regras",
+  "chave": [
+   "semana",
+   "fonte",
+   "regra_id",
+   "versao"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 12,
+  "comentario": "O que falta triar (P41): semanas em que a regra passou do limite aceito e nenhuma triagem cobre o período. Cada linha pede uma classificação em triagem_regras.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "regra_id",
+     "versao"
+    ],
+    "colunas_para": [
+     "regra_id",
+     "versao"
+    ],
+    "de": "regras.v_triagem_pendente",
+    "frase": "semana a triar de uma versão",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "regras.v_falhas_regras"
+  ]
+ },
+ "silver.pendencia_atual": {
+  "alimenta": [
+   "dq.v_silver_pendencia_atual_7d",
+   "gold.bridge_apolice_cobertura",
+   "gold.dim_apolice",
+   "gold.dim_cliente",
+   "gold.dim_corretor",
+   "gold.dim_ponto_venda",
+   "gold.dim_produto",
+   "ontologia.pendencia"
+  ],
+  "base": "silver",
+  "chave": [
+   "pendencia_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 103,
+  "comentario": "Silver estado atual: 1 linha por pendencia_id com o ultimo estado conhecido (SCD1). Base das dimensoes da gold.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "silver.pendencia_evento",
+    "frase": "os eventos aptos formam a foto atual da pendência",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "silver.pendencia_hist",
+    "frase": "cada versão SCD2 é de uma pendência",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:0..1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "silver.pendencia_evento_quarentena",
+    "frase": "evento barrado; a pendência pode nem existir na silver",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "gold.fact_pagamento_pendente_snapshot",
+    "frase": "a foto diária vem da pendência da silver",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "dq.v_silver_pendencia_atual_7d",
+    "frase": "janela da foto atual",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "STREAMING_TABLE",
+  "vem_de": [
+   "silver.pendencia_evento"
+  ]
+ },
+ "silver.pendencia_evento": {
+  "alimenta": [
+   "dq.v_silver_eventos_aptos_janela",
+   "gold.dq_qualidade_diaria",
+   "ontologia.evento_cobranca",
+   "ontologia.pagamento",
+   "silver.pendencia_atual",
+   "silver.pendencia_hist"
+  ],
+  "base": "silver",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "não única: a origem reenvia eventos idênticos; duplicata é aviso (dq_qualidade_diaria.eventos_duplicados)",
+  "chave_origem": "lógica",
+  "colunas": 103,
+  "comentario": "Silver: todos os eventos de pendencia recebidos (append), com CPF/RG/telefone/CEP/UF padronizados e flags de qualidade (dq_*).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "silver.pendencia_evento",
+    "frase": "os eventos aptos formam a foto atual da pendência",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "de": "dq.v_silver_eventos_aptos_janela",
+    "frase": "janela dos eventos aptos",
+    "para": "silver.pendencia_evento",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "STREAMING_TABLE",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "silver.pendencia_evento_quarentena": {
+  "alimenta": [
+   "dq.v_painel_quarentena",
+   "dq.v_quarentena_janela",
+   "gold.dq_barrados_por_motivo_dia",
+   "gold.dq_qualidade_diaria",
+   "regras.v_falhas_regras"
+  ],
+  "base": "silver",
+  "chave": [
+   "pendencia_id",
+   "data_extracao",
+   "tipo_evento"
+  ],
+  "chave_nota": "não única: a origem reenvia eventos idênticos; duplicata é aviso (dq_qualidade_diaria.eventos_duplicados); o motivo está em motivo_rejeicao",
+  "chave_origem": "lógica",
+  "colunas": 99,
+  "comentario": "Quarentena: eventos do bronze que violaram uma regra de erro e foram barrados antes da silver. Guarda a linha original e o motivo da rejeicao.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:0..1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "silver.pendencia_evento_quarentena",
+    "frase": "evento barrado; a pendência pode nem existir na silver",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "motivo_rejeicao"
+    ],
+    "colunas_para": [
+     "regra_id"
+    ],
+    "de": "silver.pendencia_evento_quarentena",
+    "frase": "o motivo de rejeição é uma regra de erro do catálogo",
+    "para": "regras.catalogo_regras",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "colunas_para": [
+     "pendencia_id",
+     "data_extracao",
+     "tipo_evento"
+    ],
+    "de": "dq.v_quarentena_janela",
+    "frase": "janela da quarentena",
+    "para": "silver.pendencia_evento_quarentena",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "STREAMING_TABLE",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos"
+  ]
+ },
+ "silver.pendencia_hist": {
+  "alimenta": [
+   "dq.v_silver_hist_janela",
+   "dq.v_silver_pendencia_hist_7d",
+   "gold.fact_pagamento_pendente_snapshot"
+  ],
+  "base": "silver",
+  "chave": [
+   "pendencia_id",
+   "__START_AT"
+  ],
+  "chave_nota": "SCD tipo 2: uma linha por versão",
+  "chave_origem": "lógica",
+  "colunas": 105,
+  "comentario": "Silver historica (SCD2): uma linha por versao da pendencia. Uma nova versao nasce quando o status de cobranca muda ou a parcela e paga. __START_AT/__END_AT = vigencia [inicio, fim).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "pendencia_id"
+    ],
+    "colunas_para": [
+     "pendencia_id"
+    ],
+    "de": "silver.pendencia_hist",
+    "frase": "cada versão SCD2 é de uma pendência",
+    "para": "silver.pendencia_atual",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "STREAMING_TABLE",
+  "vem_de": [
+   "silver.pendencia_evento"
+  ]
+ },
+ "silver_ldp.pagamento_pendente": {
+  "alimenta": [
+   "gold_ldp.bridge_apolice_cobertura",
+   "gold_ldp.dim_apolice",
+   "gold_ldp.dim_cliente",
+   "gold_ldp.dim_corretor",
+   "gold_ldp.dim_forma_pagamento",
+   "gold_ldp.dim_motivo_pendencia",
+   "gold_ldp.dim_periodicidade",
+   "gold_ldp.dim_ponto_venda",
+   "gold_ldp.dim_produto",
+   "gold_ldp.dim_status_cobranca",
+   "gold_ldp.fact_pagamento_pendente"
+  ],
+  "base": "legado",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 101,
+  "comentario": "Silver: 1 linha por pendencia_id, sem duplicatas, com CPF/RG/telefone/CEP/UF padronizados e flags de qualidade (dq_*).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MATERIALIZED_VIEW",
+  "vem_de": [
+   "bronze_ldp.pagamentos_pendentes"
+  ]
+ },
+ "silver_sql.pagamento_pendente": {
+  "alimenta": [
+   "gold_sql.bridge_apolice_cobertura",
+   "gold_sql.dim_apolice",
+   "gold_sql.dim_cliente",
+   "gold_sql.dim_corretor",
+   "gold_sql.dim_forma_pagamento",
+   "gold_sql.dim_motivo_pendencia",
+   "gold_sql.dim_periodicidade",
+   "gold_sql.dim_ponto_venda",
+   "gold_sql.dim_produto",
+   "gold_sql.dim_status_cobranca",
+   "gold_sql.fact_pagamento_pendente"
+  ],
+  "base": "legado",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 101,
+  "comentario": "Silver: 1 linha por pendencia_id, sem duplicatas, com CPF/RG/telefone/CEP/UF padronizados e flags de qualidade (dq_*).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "MANAGED",
+  "vem_de": [
+   "bronze_sql.pagamentos_pendentes"
+  ]
+ },
+ "sustentacao.alerta_sustentacao": {
+  "alimenta": [],
+  "base": "sustentacao",
+  "chave": [],
+  "chave_nota": null,
+  "chave_origem": null,
+  "colunas": 6,
+  "comentario": "O que o alerta SQL diário avisa: SLA estourado hoje e desvios da carga diária nas últimas 24 horas que passaram do limite por 60 s ou mais sem ser volume, com a ação da matriz por tarefa. Vazia = nada a fazer.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.desvios",
+   "sustentacao.matriz_tarefas",
+   "sustentacao.sla_diario"
+  ]
+ },
+ "sustentacao.atualizacoes_pipeline": {
+  "alimenta": [
+   "sustentacao.desvios",
+   "sustentacao.linha_base"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "update_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 21,
+  "comentario": "Uma linha por atualização (update) dos pipelines Lakeflow do projeto: duração, espera antes do update, resultado e a tarefa do job que disparou (system.lakeflow.pipeline_update_timeline).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "task_run_id"
+    ],
+    "colunas_para": [
+     "task_run_id"
+    ],
+    "de": "sustentacao.atualizacoes_pipeline",
+    "frase": "update do pipeline disparado por uma tarefa",
+    "para": "sustentacao.execucoes_tarefa",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.config_atribuicao",
+   "sustentacao.execucoes_tarefa"
+  ]
+ },
+ "sustentacao.config_sla": {
+  "alimenta": [
+   "sustentacao.jobs_monitorados"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "job"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 3,
+  "comentario": "Jobs com hora meta (SLA): a execução da agenda precisa terminar até esta hora, no horário de Brasília.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "job"
+    ],
+    "colunas_para": [
+     "job"
+    ],
+    "de": "sustentacao.config_sla",
+    "frase": "meta de horário de um job",
+    "para": "sustentacao.jobs_monitorados",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "sustentacao.config_sustentacao": {
+  "alimenta": [],
+  "base": "sustentacao",
+  "chave": [
+   "projeto"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 10,
+  "comentario": "Parâmetros da sustentação: fuso, tamanho da linha de base, critério de desvio, janela do alerta e calendário do SLA.",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": []
+ },
+ "sustentacao.desvios": {
+  "alimenta": [
+   "sustentacao.alerta_sustentacao"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "job_run_id",
+   "tarefa"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 22,
+  "comentario": "Execuções com sucesso acima do normal: duração acima do p95 ou de 1.5 vez a mediana das 20 execuções anteriores (mínimo de 5), com o excesso e a causa provável.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.desvios",
+    "frase": "desvio numa execução",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.atualizacoes_pipeline",
+   "sustentacao.execucoes_job",
+   "sustentacao.execucoes_tarefa",
+   "sustentacao.volume_execucao"
+  ]
+ },
+ "sustentacao.execucoes_job": {
+  "alimenta": [
+   "sustentacao.desvios",
+   "sustentacao.execucoes_tarefa",
+   "sustentacao.linha_base",
+   "sustentacao.sla_diario",
+   "sustentacao.ultima_execucao",
+   "sustentacao.volume_execucao"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "job_run_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 22,
+  "comentario": "Uma linha por execução de job do projeto: início e fim (UTC e horário de Brasília), duração, fila, setup, resultado, gatilho e o intervalo carregado (system.lakeflow.job_run_timeline).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_id"
+    ],
+    "colunas_para": [
+     "job_id"
+    ],
+    "de": "sustentacao.execucoes_job",
+    "frase": "execução de um job monitorado",
+    "para": "sustentacao.jobs_monitorados",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.execucoes_tarefa",
+    "frase": "tarefa de uma execução",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.desvios",
+    "frase": "desvio numa execução",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.volume_execucao",
+    "frase": "volume de uma execução",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.ultima_execucao",
+    "frase": "última execução de cada job",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.jobs_monitorados"
+  ]
+ },
+ "sustentacao.execucoes_tarefa": {
+  "alimenta": [
+   "sustentacao.atualizacoes_pipeline",
+   "sustentacao.desvios",
+   "sustentacao.linha_base",
+   "sustentacao.matriz_tarefas"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "task_run_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 24,
+  "comentario": "Uma linha por execução de tarefa dos jobs do projeto: início, fim, duração, setup, execução, resultado e tentativas (system.lakeflow.job_task_run_timeline).",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.execucoes_tarefa",
+    "frase": "tarefa de uma execução",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "task_run_id"
+    ],
+    "colunas_para": [
+     "task_run_id"
+    ],
+    "de": "sustentacao.atualizacoes_pipeline",
+    "frase": "update do pipeline disparado por uma tarefa",
+    "para": "sustentacao.execucoes_tarefa",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.execucoes_job"
+  ]
+ },
+ "sustentacao.jobs_monitorados": {
+  "alimenta": [
+   "sustentacao.execucoes_job",
+   "sustentacao.sla_diario",
+   "sustentacao.ultima_execucao"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "job_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 11,
+  "comentario": "Jobs do projeto pos_venda (atribuição da FinOps), com a agenda, o timeout e a hora meta do SLA.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_id"
+    ],
+    "colunas_para": [
+     "job_id"
+    ],
+    "de": "sustentacao.execucoes_job",
+    "frase": "execução de um job monitorado",
+    "para": "sustentacao.jobs_monitorados",
+    "tipo": "lógico"
+   },
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_id"
+    ],
+    "colunas_para": [
+     "job_id"
+    ],
+    "de": "sustentacao.sla_diario",
+    "frase": "SLA diário de um job",
+    "para": "sustentacao.jobs_monitorados",
+    "tipo": "lógico"
+   },
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "job"
+    ],
+    "colunas_para": [
+     "job"
+    ],
+    "de": "sustentacao.config_sla",
+    "frase": "meta de horário de um job",
+    "para": "sustentacao.jobs_monitorados",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "finops.config_atribuicao",
+   "sustentacao.config_sla"
+  ]
+ },
+ "sustentacao.linha_base": {
+  "alimenta": [
+   "sustentacao.matriz_tarefas",
+   "sustentacao.ultima_execucao"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "job",
+   "tarefa"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 17,
+  "comentario": "Linha de base de duração por job, tarefa e pipeline: mediana e p95 das últimas 20 execuções com sucesso, o limite de desvio e o timeout sugerido. Com menos de 5 execuções a base não vale.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "tarefa"
+    ],
+    "colunas_para": [
+     "tarefa"
+    ],
+    "de": "sustentacao.linha_base",
+    "frase": "linha de base da tarefa e o que fazer",
+    "para": "sustentacao.matriz_tarefas",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.atualizacoes_pipeline",
+   "sustentacao.execucoes_job",
+   "sustentacao.execucoes_tarefa"
+  ]
+ },
+ "sustentacao.matriz_tarefas": {
+  "alimenta": [
+   "sustentacao.alerta_sustentacao"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "tarefa"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 15,
+  "comentario": "Matriz de resiliência por tarefa da carga diária (P28): o que a tarefa faz, sintoma e ação na falha e na lentidão, com a linha de base e a última execução.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "tarefa"
+    ],
+    "colunas_para": [
+     "tarefa"
+    ],
+    "de": "sustentacao.linha_base",
+    "frase": "linha de base da tarefa e o que fazer",
+    "para": "sustentacao.matriz_tarefas",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.execucoes_tarefa",
+   "sustentacao.linha_base"
+  ]
+ },
+ "sustentacao.sla_diario": {
+  "alimenta": [
+   "sustentacao.alerta_sustentacao"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "dia",
+   "job_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 14,
+  "comentario": "SLA dos jobs com hora meta, dia a dia (últimos 30 dias, horário de Brasília): execuções da agenda e manuais, fim, atraso e situação. Só a execução da agenda conta para o SLA.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "N:1",
+    "colunas_de": [
+     "job_id"
+    ],
+    "colunas_para": [
+     "job_id"
+    ],
+    "de": "sustentacao.sla_diario",
+    "frase": "SLA diário de um job",
+    "para": "sustentacao.jobs_monitorados",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.execucoes_job",
+   "sustentacao.jobs_monitorados"
+  ]
+ },
+ "sustentacao.ultima_execucao": {
+  "alimenta": [],
+  "base": "sustentacao",
+  "chave": [
+   "job_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 21,
+  "comentario": "Última execução de cada job do projeto, comparada com a linha de base, com o atraso sobre a meta (se veio da agenda), a folga projetada até a meta e o timeout sugerido.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.ultima_execucao",
+    "frase": "última execução de cada job",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "sustentacao.execucoes_job",
+   "sustentacao.jobs_monitorados",
+   "sustentacao.linha_base"
+  ]
+ },
+ "sustentacao.volume_diario": {
+  "alimenta": [],
+  "base": "sustentacao",
+  "chave": [
+   "dia"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 3,
+  "comentario": "Volume por dia: eventos do bronze por data_extracao e linhas da fato histórica por foto (data_referencia_sk).",
+  "gerada_por": null,
+  "relacoes": [],
+  "tipo": "VIEW",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos",
+   "gold.fact_pagamento_pendente_snapshot"
+  ]
+ },
+ "sustentacao.volume_execucao": {
+  "alimenta": [
+   "sustentacao.desvios"
+  ],
+  "base": "sustentacao",
+  "chave": [
+   "job_run_id"
+  ],
+  "chave_nota": null,
+  "chave_origem": "lógica",
+  "colunas": 20,
+  "comentario": "Volume de cada execução da carga diária: dias do intervalo, eventos gravados no bronze e linhas gravadas na fato, com a duração. Separa lentidão de aumento de volume.",
+  "gerada_por": null,
+  "relacoes": [
+   {
+    "card": "1:1",
+    "colunas_de": [
+     "job_run_id"
+    ],
+    "colunas_para": [
+     "job_run_id"
+    ],
+    "de": "sustentacao.volume_execucao",
+    "frase": "volume de uma execução",
+    "para": "sustentacao.execucoes_job",
+    "tipo": "lógico"
+   }
+  ],
+  "tipo": "VIEW",
+  "vem_de": [
+   "bronze.pagamentos_pendentes_eventos",
+   "gold.fact_pagamento_pendente_snapshot",
+   "sustentacao.execucoes_job"
+  ]
+ }
+}

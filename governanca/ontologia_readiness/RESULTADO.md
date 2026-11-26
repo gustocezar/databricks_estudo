@@ -15,7 +15,7 @@ Ferramenta: [databricks-solutions/genie-ontology-readiness](https://github.com/d
 | `python3 avaliar.py comparar <id1> <id2>` | nota por pilar entre duas avaliações do histórico |
 | `python3 implantar_app.py` | (re)implanta o app v1.5.0 com o Lakebase (idempotente) |
 
-**Nota atual: 92,7 (Optimized, "Ontology-ready").**
+**Nota atual: 94,7 (Optimized, "Ontology-ready"), reavaliada em 26/11/2026** (histórico id 5; `avaliacao_pos_venda_5.json`).
 
 ## Instalação e acessos
 
@@ -47,6 +47,25 @@ Avaliação id 3 (depois das tags de dado pessoal nos legados): **92,7**, igual 
 pessoal; só a contagem de tabelas com governed tag foi de 57 para 65.
 
 Pilares sem dados contam como zero: por isso a nota só do app é tão menor.
+
+**Depois da operação ligada (23 e 26/11).** A avaliação id 4 (23/11) deu 94,5 e a id 5 (26/11), 94,7. Entre as duas, só os
+metadados subiram (94,5 → 95,1), com as tags de área de negócio, a certificação das tabelas `dq_*`, o catálogo de regras
+e as Wikis. Os outros pilares ficaram iguais:
+
+| Pilar | id 4 (23/11) | id 5 (26/11) |
+|---|---|---|
+| Unity Catalog | 100 | 100 |
+| Metadados | 94,5 | 95,1 |
+| Relações e modelagem | 100 | 100 |
+| Métricas | 84 | 84 |
+| Agentes Genie | 100 | 100 |
+| Domínios e responsáveis | 92 | 92 |
+| Adoção | 95 | 95 |
+| **Geral** | **94,5** | **94,7** |
+
+O pilar mais baixo continua sendo **Métricas (84)**, que cresce com a quantidade de metric views. Em 26/11, o app estava
+parado e sem implantação ativa; ao ligar, ele voltou com a última implantação (v1.5.0) e respondeu. Comando:
+`python3 avaliar.py comparar 4 5`.
 
 ## Como o pilar de domínios pontua (v1.5.0)
 

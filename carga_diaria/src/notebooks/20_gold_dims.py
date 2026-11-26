@@ -56,7 +56,7 @@ FROM VALUES
   ('AFU', 'Assistencia Funeral', 'ASSISTENCIA')
   AS t(cobertura_codigo, cobertura_nome, grupo_cobertura)
 """),
-    ('bridge_apolice_cobertura', 'apolice_sk, cobertura_sk', 'Ponte N:N entre apolice e cobertura, com papel (principal/adicional) e capital da cobertura. PK composta.', """
+    ('bridge_apolice_cobertura', 'apolice_sk, cobertura_sk, papel_cobertura', 'Ponte N:N entre apolice e cobertura, com papel (principal/adicional) e capital da cobertura. PK composta.', """
 WITH ap AS (
   SELECT numero_apolice, cobertura_principal_codigo, capital_segurado_principal,
          possui_ipta, possui_ifpd, possui_doencas_graves, possui_dit, possui_assistencia_funeral

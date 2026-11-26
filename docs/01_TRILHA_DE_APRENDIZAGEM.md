@@ -783,3 +783,37 @@ valer só por um período, porque em algum momento ela mudou.
 - A regra nova nunca julga o dado antigo: a vigência é pela data do dado, não pela data da execução (P41).
 - Falha sem triagem não melhora nada. A pauta semanal é `v_triagem_pendente`, e o falso positivo alto devolve a regra
   ao questionário.
+
+## Fase 30 · Validação do projeto: modelo de dados, Wikis, apps e documentação
+
+**Objetivo:** validar o projeto inteiro (código, dados, documentação, apresentações, linhagem, framework e playbook), com
+um pedido do dono: toda base precisa de modelo de entidade e relacionamento, de Wiki e de tudo o que for necessário.
+
+**O que fizemos (26/11/2026):**
+- **Modelo de dados (P42).**
+  - `governanca/modelo_dados.py` gera `docs/modelo_dados/`, com um diagrama ER por base, a partir das PK/FK e da
+    linhagem do Unity Catalog, mais as chaves e os relacionamentos lógicos das bases sem constraint.
+  - Resultado: 155 entidades em 13 bases, 107 relacionamentos e 125 entidades com chave.
+- **Wikis.** De 51 para 155 de 155 ativos, todas com chave, relacionamentos e linhagem.
+- **Apps.**
+  - O de prontidão estava parado e sem implantação ativa (L98). Religado, foi reavaliado e deu 94,7, contra 94,5 em
+    23/11; só os metadados subiram.
+  - O DQX Studio rodou 24 de 24 avaliações em 25 e 26/11.
+- **Documentação.** `docs/validar_docs.py` (no CI) achou contagens velhas e 6 práticas fora do mapa de gatilhos, e tudo
+  foi corrigido (L99).
+- **Dois defeitos reais, achados pelo teste de unicidade das chaves:**
+  - a PK com RELY da ponte apólice × cobertura ficou falsa com o produto de teste `VIDA_QA_COB_DUPLICADA`. Passou a ser o
+    grão real, com o papel da cobertura, e `aplicar_rely.py conferir` voltou a 14 de 14 (L100);
+  - a dimensão `bi.produto` do Power BI repetia produtos e tinha nome nulo. Agora tem 10 produtos únicos, e a paridade
+    continua em 100% (L101). O playbook ganhou o catálogo de regras (M5), o modelo ER e as Wikis (M6) e a marca (M8). O doc 05
+  ganhou a skill `dataviz`.
+
+**Onde está:** `governanca/modelo_dados.py`, `docs/modelo_dados/`, `governanca/aplicar_semantica.py` (`wiki_auto`,
+`secao_modelo`), `governanca/ontologia.py` (`WIKI_BASE`), `docs/validar_docs.py`.
+
+**O que aprendemos:**
+- Modelo de dados desenhado à mão envelhece. Gerado do catálogo, com chave lógica conferida nos dados, ele acompanha o
+  dado (P42).
+- Número repetido em vários documentos se confere por script (L99).
+- App parado no Free Edition volta com a última implantação; espere o start terminar (L98).
+- Chave declarada com RELY se reconfere depois de carga grande, e dimensão de BI se testa como única (L100, L101).

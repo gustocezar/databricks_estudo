@@ -34,7 +34,8 @@ SAIDA = pathlib.Path(__file__).resolve().parent / "rely"
 
 # tabela -> colunas da chave primária (as mesmas de carga_diaria/gerar_carga.py)
 PKS = {
-    "bridge_apolice_cobertura": ["apolice_sk", "cobertura_sk"], "dim_apolice": ["apolice_sk"], "dim_cliente": ["cliente_sk"],
+    # papel_cobertura no grão da ponte desde 26/11: VIDA_QA_COB_DUPLICADA põe a mesma cobertura como principal e adicional
+    "bridge_apolice_cobertura": ["apolice_sk", "cobertura_sk", "papel_cobertura"], "dim_apolice": ["apolice_sk"], "dim_cliente": ["cliente_sk"],
     "dim_cobertura": ["cobertura_sk"], "dim_corretor": ["corretor_sk"], "dim_data": ["data_sk"],
     "dim_faixa_atraso": ["faixa_atraso_sk"], "dim_forma_pagamento": ["forma_pagamento_sk"],
     "dim_motivo_pendencia": ["motivo_pendencia_sk"], "dim_periodicidade": ["periodicidade_sk"],
@@ -70,9 +71,15 @@ def sql(s):
 
 def estado_pk(tabela):
     """(tem PK, tem RELY) lidos do SHOW CREATE TABLE (o information_schema não expõe RELY)."""
+    return estado_pk_colunas(tabela)[:2]
+
+
+def estado_pk_colunas(tabela):
+    """(tem PK, tem RELY, colunas da PK declarada)."""
     txt = sql(f"SHOW CREATE TABLE {GOLD}.{tabela}")[0]["createtab_stmt"]
-    m = re.search(rf"CONSTRAINT `pk_{tabela}` PRIMARY KEY \([^)]*\)( RELY)?", txt)
-    return bool(m), bool(m and m.group(1))
+    m = re.search(rf"CONSTRAINT `pk_{tabela}` PRIMARY KEY \(([^)]*)\)( RELY)?", txt)
+    cols = [c.strip(" `") for c in m.group(1).split(",")] if m else []
+    return bool(m), bool(m and m.group(2)), cols
 
 
 def fks_existentes():
@@ -124,12 +131,16 @@ def aplicar():
     if verificar():
         sys.exit("há chave duplicada ou nula: RELY não aplicado")
     for t, cols in PKS.items():
-        tem_pk, tem_rely = estado_pk(t)
-        if tem_rely:
+        tem_pk, tem_rely, atuais = estado_pk_colunas(t)
+        if tem_rely and atuais == cols:
             print(f"já tinha RELY  {t}")
             continue
         if tem_pk:
+            # DROP ... CASCADE remove as FKs que apontam para esta PK; o laço de FKS abaixo as recria
             sql(f"ALTER TABLE {GOLD}.{t} DROP PRIMARY KEY CASCADE")
+            print(f"PK refeita     {t}: {atuais} -> {cols}" if atuais != cols else f"PK sem RELY   {t}")
+        for c in cols:   # coluna de PK precisa ser NOT NULL
+            sql(f"ALTER TABLE {GOLD}.{t} ALTER COLUMN {c} SET NOT NULL")
         sql(f"ALTER TABLE {GOLD}.{t} ADD CONSTRAINT pk_{t} PRIMARY KEY ({', '.join(cols)}) RELY")
         print(f"RELY aplicado  {t}")
     existentes = fks_existentes()

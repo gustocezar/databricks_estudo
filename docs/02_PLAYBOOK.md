@@ -121,6 +121,12 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
 - **Modelo:** `carga_diaria/janela_avaliacao.py`, `dqx_studio/regras/` (`definir_regras.py`, `registro_studio.py`, `rodar_ciclos.py`).
 - **Critério de saída:** `registro_studio.py executar` com todas as execuções SUCCESS e nota calculada; quarentena do pipeline = reprovados no Studio.
 - **Armadilhas:** dry run com amostra lê as primeiras N linhas; `skip_duplicates` funde severidades; regras antigas na mesma tabela travam o Registro.
+- **Regras que mudam com o tempo (P41):**
+  - as regras de erro e de aviso nascem do [questionário do negócio](../regras/questionario/QUESTIONARIO_NEGOCIO.md) e
+    ficam no [catálogo](../regras/catalogo/README.md), com versão e vigência pela data do dado;
+  - o YAML do DQX é gerado do catálogo;
+  - a triagem semanal (`v_triagem_pendente`) decide se a falha é dado ruim ou regra errada;
+  - rode o modo `ensaio` antes de mudar uma regra.
 
 ### M6 · Governança
 
@@ -141,8 +147,19 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
   7. **domínio e responsável em chaves padrão**, além da tag do Discover: `domain`, `subject_area` (subdomínio) e
      `data_owner` (papel responsável), como governed tags com valores permitidos (`DOMINIO_PADRAO`, `RESPONSAVEL` em
      `ontologia.py`). Ferramentas de avaliação e catálogos externos só leem essas chaves.
-- **Critério de saída:** auditoria com 100% de descrição nas camadas principais, **0 PII sem tag em todos os schemas**,
-  0 tags não lidas e toda tabela principal com `domain` e `data_owner`.
+  8. **modelo de entidade e relacionamento e Wiki para toda base (P42):**
+     - `governanca/modelo_dados.py gerar` lê do Unity Catalog as colunas, as PK/FK e a linhagem;
+     - ele junta as chaves e os relacionamentos lógicos das bases sem constraint e escreve `docs/modelo_dados/`, com um
+       diagrama por base;
+     - `aplicar_semantica.py` publica a Wiki de **todo** ativo: escrita à mão onde existe (`W`), gerada por modelo de
+       schema (`WIKI_BASE`) nas outras;
+     - toda Wiki ganha a chave, os relacionamentos e a linhagem.
+- **Critério de saída:**
+  - auditoria com 100% de descrição nas camadas principais;
+  - **0 PII sem tag em todos os schemas**, 0 tags não lidas e toda tabela principal com `domain` e `data_owner`;
+  - `modelo_dados.py conferir` sem falha: toda tabela numa base, toda FK no modelo, chave lógica única nos dados e
+    linhagem de entrada em toda tabela do fluxo;
+  - Wiki publicada em todo ativo.
 - **Armadilhas:** `CREATE OR REPLACE VIEW` apaga tags, tags de coluna e Wiki; tag de coluna de view só pela API.
 
 ### M7 · Camada semântica: ontologia e metric views
@@ -165,6 +182,9 @@ Cada módulo: **quando usar**, **passos**, **modelo no pos_venda** (para copiar)
   1. **Genie** por público: instruções < 2.000 caracteres (desambiguação, período, regra semiaditiva, privacidade), exemplos de SQL, perguntas de avaliação vindas das Pages; validar todo SQL antes de publicar.
   2. **Painéis** gerados por código sobre as metric views, com conferência da estrutura e teste de cada dataset; **uma página por fato** em cada público (diretoria abre numa visão executiva); KPI com comparação; link para a Genie do público.
   3. **Outra ferramenta de BI (ex.: Power BI)**, quando pedirem para avaliar: visões agregadas em `bi` **a partir das mesmas metric views** + projeto PBIP gerado por código (modelo TMDL, relatórios PBIR com as mesmas páginas), validado contra os esquemas oficiais e com paridade de números contra o painel.
+- **Marca:** antes de qualquer painel, relatório ou apresentação, procure a marca da empresa em
+  [docs/marca/](marca/README.md). As cores do projeto saem de `docs/marca/marca.json`, e paleta nova de séries só entra
+  depois do validador (L97).
 - **Modelo:** `governanca/genie.py`, `paineis_financeiros/gerar_paineis.py`, `paineis_financeiros/powerbi/gerar_powerbi.py`.
 - **Critério de saída:** `genie.py avaliar` com 100%; todos os datasets dos painéis SUCCEEDED; `gerar_powerbi.py` com conferência ok e `referencia` com paridade 100%.
 - **Armadilhas:** gabarito desatualizado reprova resposta certa; mês incompleto distorce variação de fluxo (compare só meses completos); texto de painel ou instrução com data fixa ("foto de 24/12") envelhece com a carga diária: diga "foto mais recente"; no Power BI o saldo semiaditivo precisa de medida com último dia do contexto (não `SUM`).

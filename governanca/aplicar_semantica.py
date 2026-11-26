@@ -264,20 +264,63 @@ def corpo_wiki(nome, w, colunas_pii):
 Domínio **Pós-venda**{(' · subdomínio **' + O.SUB[w['sub']]['nome'] + '**') if w['sub'] else ''} · dados sintéticos para demonstração."""
 
 
+def secao_modelo(nome, modelo):
+    """Chave, relacionamentos e linhagem do ativo, de governanca/modelo_dados.json (gerado por modelo_dados.py)."""
+    m = modelo.get(nome)
+    if not m:
+        return ""
+    curto = lambda t: t if not t.startswith(f"{O.CAT}.") else t[len(O.CAT) + 1:]
+    eu = curto(nome)
+    if m["chave"]:
+        chave = ", ".join(f"`{c}`" for c in m["chave"]) + f" ({m['chave_origem']}{'; ' + m['chave_nota'] if m.get('chave_nota') else ''})"
+    else:
+        chave = "sem chave única: visão agregada ou métrica"
+    rel = []
+    for r in m["relacoes"]:
+        outro, sentido = (r["para"], "→") if r["de"] == eu else (r["de"], "←")
+        rel.append(f"- {sentido} `{outro}` por {', '.join(r['colunas_de'] if sentido == '→' else r['colunas_para'])} "
+                   f"({r['card']}, {r['tipo']}): {r['frase']}")
+    vem = ", ".join(f"`{x}`" for x in m["vem_de"]) or (f"gerada no código ({m['gerada_por']})" if m.get("gerada_por") else "—")
+    vai = ", ".join(f"`{x}`" for x in m["alimenta"][:10]) or "—"
+    return (f"\n\n## Chave e relacionamentos\nChave: {chave}.\n" + ("\n".join(rel) + "\n" if rel else "Sem relacionamento declarado.\n")
+            + f"Modelo completo da base **{m['base']}**: `docs/modelo_dados/{m['base']}.md` no repositório.\n"
+            + f"\n## Linhagem (Unity Catalog)\n- **Vem de:** {vem}\n- **Alimenta:** {vai}{' …' if len(m['alimenta']) > 10 else ''}\n")
+
+
+def wiki_auto(t, modelo):
+    """Wiki para o ativo sem Wiki escrita à mão: modelo do schema (O.WIKI_BASE) + descrição do Unity Catalog + grão."""
+    schema = t["nome"].split(".")[1]
+    base = O.WIKI_BASE.get(schema, O.WIKI_BASE_PADRAO)
+    m = modelo.get(t["nome"], {})
+    grao = (f"Uma linha por {', '.join(m['chave'])}." if m.get("chave") else "Visão agregada ou métrica, sem chave única.")
+    ordem = f" ORDER BY {', '.join(m['chave'])}" if m.get("chave") else ""
+    descr = (t.get("comentario") or base["proposito"]).strip()
+    return dict(sub=base["sub"], descricao=descr, proposito=f"{descr} {base['proposito']}", grao=grao,
+                atualizacao=base["atualizacao"], qualidade=base["qualidade"], pode=base["pode"], nao_pode=base["nao_pode"],
+                exemplo=f"SELECT * FROM {t['nome']}{ordem} LIMIT 20", pages=[], tipo=None)
+
+
 def aplicar_wikis(audit):
     pii = {t["nome"]: [c["nome"] for c in t["colunas"] if c["nome"] in O.CLASSIFICACAO]
            for s in audit["schemas"] for t in s["tabelas"]}
-    existentes = set(pii)
+    arq = AQUI / "modelo_dados.json"
+    modelo = {f"{O.CAT}.{k}": v for k, v in json.loads(arq.read_text(encoding="utf-8")).items()} if arq.exists() else {}
+    alvos = {}
+    for s in audit["schemas"]:
+        for t in s["tabelas"]:
+            curto = t["nome"].split(".")[-1]
+            if curto.startswith("__materialization_") or curto.startswith("event_log_"):
+                continue      # tabelas internas do Lakeflow (L80)
+            alvos[t["nome"]] = O.W.get(t["nome"]) or wiki_auto(t, modelo)
 
     def um(nome, w):
-        if nome not in existentes:
-            return nome, "tabela não existe (pulada)"
-        corpo = {"body": corpo_wiki(nome, w, pii.get(nome, [])), "description": w["descricao"][:1000], "state": "PUBLISHED"}
+        corpo = {"body": corpo_wiki(nome, w, pii.get(nome, [])) + secao_modelo(nome, modelo),
+                 "description": w["descricao"][:1000], "state": "PUBLISHED"}
         st, r = api("PATCH", f"/api/2.0/knowledge/tables/{nome}/page", corpo, {"update_mask": "body,description,state"})
         return nome, "publicada" if st == 200 else f"erro {st} {json.dumps(r)[:200]}"
 
     with cf.ThreadPoolExecutor(6) as ex:
-        return list(ex.map(lambda kv: um(*kv), O.W.items()))
+        return list(ex.map(lambda kv: um(*kv), alvos.items()))
 
 
 # ---------------------------------------------------------------------------------------------------- principal

@@ -13,7 +13,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 
 1. [README.md](README.md): o mapa do repositório.
 2. [docs/README.md](docs/README.md): a situação de cada bloco e como manter a documentação.
-3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 40 práticas (`P##`), com a origem, como aplicamos e por quê.
+3. [docs/04_FRAMEWORK.md](docs/04_FRAMEWORK.md): as 42 práticas (`P##`), com a origem, como aplicamos e por quê.
 4. [docs/03_LICOES_APRENDIDAS.md](docs/03_LICOES_APRENDIDAS.md): as armadilhas (`L##`). Leia antes de mudar código.
 5. [docs/02_PLAYBOOK.md](docs/02_PLAYBOOK.md): o passo a passo, os critérios de saída e a matriz de resiliência.
 6. [docs/CHANGELOG.md](docs/CHANGELOG.md): o que mudou e como foi conferido, do mais recente para o mais antigo.
@@ -33,6 +33,7 @@ espaços Genie e o projeto Power BI, e aplicam no workspace pelo CLI e por bundl
 | Algo falhou ou está lento (cota, token, app parado, view sem tags, carga atrasada) | [docs/07_SUSTENTACAO.md](docs/07_SUSTENTACAO.md) (runbooks), a matriz de resiliência do [playbook](docs/02_PLAYBOOK.md) e as lições |
 | Regra de cálculo (faixa, multa, juros, total, CPF) | [regras/README.md](regras/README.md), `regras/funcoes.py` e os cenários em `regras/features/` |
 | Regra de qualidade (o que barra ou avisa), versão e vigência, o que o negócio aceita, triagem das falhas, falso positivo | [regras/catalogo/README.md](regras/catalogo/README.md), o [questionário do negócio](regras/questionario/QUESTIONARIO_NEGOCIO.md) e as visões de `pos_venda.regras` (`v_falhas_regras`, `v_triagem_pendente`, `v_mudancas_regras`, `v_retroalimentacao`); P41 |
+| Modelo de dados: entidades, chaves, relacionamentos e linhagem de cada base; o que diz a Wiki de um ativo | [docs/modelo_dados/](docs/modelo_dados/README.md) (um documento e um diagrama por base), gerado por `governanca/modelo_dados.py`; P42 |
 | Métrica, KPI ou camada semântica | `governanca/ontologia.py` e `governanca/gerar_ontologia_sql.py` (metric views) |
 | Genie | `governanca/genie.py` e [governanca/genie/scanner/TRIAGEM.md](governanca/genie/scanner/TRIAGEM.md) |
 | Power BI | [paineis_financeiros/powerbi/README.md](paineis_financeiros/powerbi/README.md) e a [auditoria](paineis_financeiros/powerbi/auditoria/README.md) |
@@ -96,6 +97,7 @@ Não edite um arquivo gerado: mude a fonte e gere de novo.
 | `referencias/databricks_solutions/catalogo_databricks_solutions.html` | `montar_pagina.py` (a partir de `pagina.template.html`) |
 | `referencias/databricks_solutions/OPCOES_PARA_LLM.md`, `opcoes.json` | `gerar_opcoes.py` (dados em `catalogo.py`) |
 | `docs/INVENTARIO.md` | `docs/gerar_inventario.py` |
+| `docs/modelo_dados/*.md`, `governanca/modelo_dados.json` | `governanca/modelo_dados.py` (chaves e relacionamentos lógicos em `CHAVES` e `RELACOES`; o resto vem do Unity Catalog) |
 | `finops/finops.sql`, `finops/ativos.json`, `finops/conferencia.json` e as visões de `pos_venda.finops` | `finops/gerar_finops.py` (regras de atribuição na lista `REGRAS`) |
 | `conformidade/conformidade.sql`, `politicas_tags.json`, `alertas.json`, `conferencia.json` e os objetos de `pos_venda.conformidade` | `conformidade/gerar_conformidade.py` (regras em `REGRAS`, papel dos schemas em `CAMADAS`, avaliação em `ACOES`) |
 | `sustentacao/sustentacao.sql`, `sustentacao/src/pos_venda_sustentacao.lvdash.json`, `sustentacao/resources/sustentacao.yml`, `sustentacao/conferencia.json` e as visões de `pos_venda.sustentacao` | `sustentacao/gerar_sustentacao.py` (meta em `SLA`, matriz em `TAREFAS`, parâmetros no topo) |

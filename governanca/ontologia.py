@@ -803,6 +803,55 @@ SUB_SEM_WIKI = {"dq": "qualidade", "bi": "cobranca", "ontologia": "cobranca"}
 SUB_SEM_WIKI_TABELA = {"bi.qualidade_diaria": "qualidade", "bi.produto": "carteira", "bi.canal_venda": "carteira"}
 SUB_SEM_WIKI["regras"] = "qualidade"     # catálogo de regras, triagem e visões de retroalimentação (P41)
 
+# Wiki gerada para os ativos sem Wiki escrita à mão (W): um modelo por schema. A Wiki ganha a chave, os relacionamentos e a
+# linhagem de governanca/modelo_dados.json. Pedido do dono (26/11): toda base com modelo ER e Wiki.
+_LEGADO = dict(sub=None, proposito="Primeira versão do medalhão (notebooks SQL ou Lakeflow), mantida para comparação com a versão atual.",
+               atualizacao="Não é atualizada pela carga diária: a agenda do medalhão legado fica pausada.",
+               qualidade="Só as tags de dado pessoal são mantidas aqui, por decisão do projeto; descrições vêm da origem.",
+               pode="Comparar números com a versão atual (pos_venda.bronze, silver e gold).",
+               nao_pode="Usar em painel, Genie ou relatório: use pos_venda.gold e pos_venda.ontologia.")
+WIKI_BASE = {
+    "bi": dict(sub="cobranca", proposito="Extrato para o Power BI, lido pelo modelo semântico dos relatórios Diretoria e Negócio.",
+               atualizacao="Visão sobre a gold e a ontologia: reflete a carga diária das 05:00.",
+               qualidade="Paridade com o painel do Databricks conferida indicador a indicador (P23).",
+               pode="Ler pelo Power BI ou consultar para conferir um número do relatório.",
+               nao_pode="Somar saldos de dias diferentes; usar como fonte de outra transformação."),
+    "dq": dict(sub="qualidade", proposito="Janela de avaliação do DQX Studio ou visão do painel de qualidade.",
+               atualizacao="Visão sobre bronze, silver, gold e resultados do Studio: acompanha a carga das 05:00 e a avaliação das 06:30.",
+               qualidade="As consultas do painel são testadas pelo gerador antes do deploy (P12).",
+               pode="Ler no painel 'pos_venda · Qualidade de dados' ou usar como janela no Studio.",
+               nao_pode="Recriar com CREATE OR REPLACE sem devolver as tags e a Wiki (L31)."),
+    "regras": dict(sub="qualidade", proposito="Regras de qualidade com versão e vigência pela data do dado, triagem e retroalimentação (P41).",
+                   atualizacao="Catálogo e triagem: sob demanda (gerar_catalogo.py aplicar e o rito semanal). Visões: acompanham a barreira diária.",
+                   qualidade="gerar_catalogo.py conferir (11 checagens) e 8 cenários BDD do catálogo.",
+                   pode="Triar falhas, ver quando uma regra mudou e medir o falso positivo.",
+                   nao_pode="Editar o catálogo na tabela: a fonte é regras/catalogo/catalogo_regras.yml."),
+    "dqx_codigo": dict(sub="qualidade", proposito="Resultado do DQX como código (trilha A): válidos, quarentena e métricas por regra.",
+                       atualizacao="Gravado a cada execução gravada do job pos_venda_dqx_codigo (sob demanda).",
+                       qualidade="Erros do DQX = quarentena da barreira na mesma janela (ensaio de 26/11/2026).",
+                       pode="Comparar com a barreira e alimentar a triagem das regras.",
+                       nao_pode="Tratar como dado do dia: cobre só a janela da última execução gravada."),
+    "conformidade": dict(sub=None, proposito="Conformidade dos dados e do workspace: regras, achados, histórico e sonda das views (P35 a P37).",
+                         atualizacao="Visões sobre information_schema e tabelas de sistema; histórico e sonda gravados às 06:45 pelo job pos_venda_conformidade_sonda.",
+                         qualidade="gerar_conformidade.py conferir (9 checagens).",
+                         pode="Acompanhar pendências, tendência e o que corrigir primeiro.",
+                         nao_pode="Editar à mão: tudo é gerado por conformidade/gerar_conformidade.py."),
+    "finops": dict(sub=None, proposito="Custo e uso no padrão FOCUS, por projeto, funcionalidade e squad (P30 a P34).",
+                   atualizacao="Visões sobre as tabelas de sistema de billing e uso: atualizam a cada consulta.",
+                   qualidade="finops/gerar_finops.py conferir.",
+                   pode="Ver quanto custa cada funcionalidade e de quem é o custo.",
+                   nao_pode="Tomar preço de lista como valor faturado sem conferir config_custo."),
+    "sustentacao": dict(sub=None, proposito="Tempo de execução por job, tarefa e pipeline, linha de base, desvios, SLA e volume (P40).",
+                        atualizacao="Visões sobre system.lakeflow: atualizam a cada consulta.",
+                        qualidade="gerar_sustentacao.py conferir (13 checagens).",
+                        pode="Responder por que a carga demorou e se o SLA das 06:15 foi cumprido.",
+                        nao_pode="Tratar a linha de base com poucas execuções como meta definitiva."),
+    **{s: _LEGADO for s in ("bronze_sql", "silver_sql", "gold_sql", "bronze_ldp", "silver_ldp", "gold_ldp")},
+}
+WIKI_BASE_PADRAO = dict(sub=None, proposito="Ativo do domínio pós-venda.", atualizacao="Veja a linhagem abaixo.",
+                        qualidade="Descrição e tags conferidas pela conformidade.", pode="Consultar para análise.",
+                        nao_pode="Expor dados pessoais.")
+
 # Frequência declarada (tag atualizacao) das tabelas que não são escritas pela carga diária: só mudam quando a ontologia
 # ou o catálogo de regras mudam. Com "diaria", a regra USO01 da conformidade acusaria falta de frescor (26/11).
 ATUALIZACAO_TABELA = {"ontologia.entidades": "sob_demanda", "ontologia.glossario": "sob_demanda",

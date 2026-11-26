@@ -17,6 +17,65 @@ Registro incremental de mudanças, do mais recente para o mais antigo. Toda muda
 
 ## 26/11/2026
 
+### Validação do projeto: modelo de dados (P42), Wikis, apps e documentação
+- **O que mudou:**
+  - **Modelo de dados (P42).**
+    - `governanca/modelo_dados.py` gera `docs/modelo_dados/` (um documento e um diagrama ER por base, mais o mapa de
+      linhagem entre as bases) e `governanca/modelo_dados.json`.
+    - As fontes são as colunas, as PK e FK e a linhagem do Unity Catalog, as chaves e os relacionamentos lógicos
+      declarados no gerador e os relacionamentos de negócio da ontologia.
+  - **Wikis para todo ativo.** `aplicar_semantica.py` publica a Wiki escrita à mão onde existe e gera as outras pelo
+    modelo do schema (`WIKI_BASE` em `ontologia.py`). Toda Wiki ganha as seções "Chave e relacionamentos" e "Linhagem".
+  - **App de prontidão.** Estava parado e sem implantação ativa. Foi religado e reavaliado (histórico id 5), e o
+    `RESULTADO.md` foi atualizado.
+  - **`docs/validar_docs.py`** (novo, no CI) confere:
+    - as contagens de práticas, lições e fases;
+    - as referências `P##` e `L##`, o mapa de gatilhos, os links e a conferência do CHANGELOG.
+    Os problemas que ele achou foram corrigidos:
+    - contagens velhas no README, no AGENTS.md, no doc 05 e na prova da P29;
+    - 5 práticas fora do mapa de gatilhos.
+  - **Playbook.** M5 ganhou o catálogo de regras e a triagem (P41), M6 o modelo ER e as Wikis (P42) e M8 a marca.
+  - **Doc 05.** Ganhou a skill `dataviz` e a fase 29 na skill do Unity Catalog.
+  - **Defeito 1 (L100).** A PK com RELY de `gold.bridge_apolice_cobertura` estava falsa: o produto de teste
+    `VIDA_QA_COB_DUPLICADA` põe a mesma cobertura como principal e adicional, e havia 29 linhas repetidas.
+    - A PK passou a ser `(apolice_sk, cobertura_sk, papel_cobertura)`, em `gerar_carga.py` (notebook regerado e bundle
+      implantado) e em `aplicar_rely.py`.
+    - O `aplicar_rely.py aplicar` agora refaz a PK quando as colunas mudam.
+  - **Defeito 2 (L101).** A dimensão `bi.produto` do Power BI repetia produtos (21 linhas para 10 nomes, um deles nulo).
+    Passou a agrupar por produto, com o membro "Produto não identificado" das metric views.
+  - **Apresentações.** O framework ganhou o slide P42. As contagens agora são 42 práticas, 31 fases e 101 lições, e a
+    prontidão está em 94,7 nas 2 apresentações.
+- **Por quê:** pedido do dono. Ele queria validar o projeto inteiro, e toda base precisa de modelo de entidade e
+  relacionamento, de Wiki e de tudo o que for necessário.
+- **Onde:** `governanca/modelo_dados.py`, `docs/modelo_dados/`, `governanca/aplicar_semantica.py`,
+  `governanca/ontologia.py`, `docs/validar_docs.py`, `.github/workflows/ci.yml`,
+  `governanca/ontologia_readiness/`, docs 01 (fase 30), 02, 03 (L98 a L101), 04 (P42 e mapa), 05, AGENTS.md, README.md e
+  `docs/README.md`.
+- **Conferência:**
+  - **`modelo_dados.py conferir`:**
+    - 155 entidades em 13 bases e 107 relacionamentos; o modelo gravado bate com o Unity Catalog;
+    - as 15 FKs do UC estão no modelo;
+    - toda tabela do fluxo tem chave;
+    - toda tabela do fluxo tem linhagem de entrada, ou o script que a gera (7 dimensões e 3 tabelas da ontologia);
+    - unicidade das chaves lógicas: as 115 chaves testadas (15 PKs do Unity Catalog e 100 lógicas) são únicas, depois de corrigir a PK da ponte (L100), a dimensão `bi.produto` (L101) e o grão de 3 chaves lógicas; as 10 tabelas de eventos e janelas que repetem por desenho (duplicata da origem é aviso) estão marcadas como não únicas..
+  - **`aplicar_semantica.py`:** "Wikis publicadas: 155/155". Lidas de volta pela API, a Wiki de
+    `sustentacao.execucoes_tarefa` (gerada) e a de `gold.dim_cliente` (escrita à mão) trazem a chave, os
+    relacionamentos e a linhagem.
+  - **Prontidão:** `avaliar.py rodar pos_venda_5` deu 94,7 (Optimized). `comparar 4 5` mostra que só os metadados
+    mudaram (94,5 → 95,1).
+  - **DQX Studio:** 24 de 24 avaliações SUCCESS em 25 e 26/11. Está parado agora, e a carga das 05:00 o religa.
+  - **`docs/validar_docs.py`:** 11 de 11 checagens (42 práticas, 101 lições, 31 fases).
+  - **Defeito 1:**
+    - `aplicar_rely.py verificar` deu 13 de 14 antes (ponte com 425.857 linhas e 425.828 distintas) e 14 de 14 depois;
+    - `aplicar` registrou "PK refeita: [apolice_sk, cobertura_sk] -> [apolice_sk, cobertura_sk, papel_cobertura]" e
+      "RELY aplicado";
+    - `conferir` deu "PK com RELY: 14/14 · FK na fato: 15/15 · FK com RELY: 0".
+  - **Defeito 2:**
+    - `bi.produto` ficou com 10 linhas, 10 produtos distintos e 0 nulo;
+    - `gerar_powerbi.py` deu conferência ok, com 102 arquivos validados nos esquemas oficiais;
+    - `gerar_powerbi.py referencia` deu PARIDADE 100%.
+  - **Apresentações:** o slide novo e os que mudaram renderizam sem estouro.
+
 ### Cores numa fonte única (`docs/marca/marca.json`)
 - **O que mudou:**
   - **Fonte única.** As cores do projeto ficaram num lugar só, `docs/marca/marca.json`, lido por `docs/marca/marca.py`.

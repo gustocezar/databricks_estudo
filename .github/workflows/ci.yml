@@ -61,6 +61,8 @@ jobs:
         run: |
           python regras/catalogo/gerar_catalogo.py testar
           python regras/catalogo/gerar_catalogo.py validar
+      - name: Documentação consistente (contagens, P## e L##, gatilhos, CHANGELOG)
+        run: python docs/validar_docs.py
       - name: Links relativos da documentação resolvem
         run: |
           python - <<'EOF'

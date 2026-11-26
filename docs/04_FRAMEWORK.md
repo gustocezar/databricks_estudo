@@ -3,7 +3,7 @@
 > Documento incremental. Última atualização: **26/11/2026**. Cada prática tem um código (`P##`) que não muda.
 > Fontes conferidas em 22 e 23/11/2026 (todos os links responderam).
 
-Este framework reúne as **41 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 29 da
+Este framework reúne as **42 práticas** aplicadas no domínio pós-venda de seguro de vida (fases 0 a 30 da
 [trilha](01_TRILHA_DE_APRENDIZAGEM.md)), cada uma com:
 
 - **Origem:** de onde veio. Pode ser documentação oficial, acelerador da Databricks, Databricks Labs, Microsoft,
@@ -76,6 +76,12 @@ Os outros documentos complementam este:
 | Aplicar o framework a outra base com um agente de código (Copilot, Claude Code, Codex) | P39, P38 |
 | Job diário com consumidor em hora marcada, ou "por que a carga demorou hoje?" | P40, P28 |
 | Regra de qualidade que muda com o tempo, ou o negócio precisa dizer o que é dado certo e triar as falhas | P41, P09, P20 |
+| Dados em várias camadas que precisam de chave, relacionamento e histórico claros | P05, P07 |
+| Ativos que precisam ser achados e entendidos no Discover (domínio, Pages, Wikis) | P14, P13, P42 |
+| Base nova, ou alguém precisa do modelo de dados, das chaves e da linhagem de uma tabela | P42, P05 |
+| Públicos diferentes (diretoria e analista) lendo os mesmos números | P22, P23 |
+| Escolher um acelerador databricks-solutions para a próxima fase | P27 |
+| Projeto longo, com várias pessoas ou agentes mexendo | P29, P03 |
 
 ---
 
@@ -498,7 +504,7 @@ Os outros documentos complementam este:
 - **Por quê:** quem chega depois entende o porquê de cada escolha. Uma mudança só está pronta quando a conferência está
   registrada.
 - **Reaplique quando:** sempre.
-- **Prova:** 28 fases (0 a 27), 92 lições, inventário regenerado a cada mudança.
+- **Prova:** 31 fases (0 a 30), 101 lições e o inventário regenerado a cada mudança; `docs/validar_docs.py` confere essas contagens, as referências e os links em todo push.
 
 ---
 
@@ -813,6 +819,46 @@ Os outros documentos complementam este:
     - A versão 2 reprovou 68 (só `BIMESTRAL`, a partir de 05/01).
     - Os eventos com erro foram 3.388, igual à quarentena da barreira (L95).
   - **Triagem:** a primeira leitura achou 69 semanas × regra para triar e 7 perguntas em aberto para o dono.
+
+---
+
+### P42 · Toda base com modelo de entidade e relacionamento e Wiki, gerados do Unity Catalog
+- **Origem:**
+  - o pedido do dono (26/11): toda base precisa de modelo de entidade e relacionamento, de Wiki e de tudo o que for
+    necessário para ser entendida;
+  - as [constraints informativas](https://docs.databricks.com/aws/en/tables/constraints) (PK e FK) e a
+    [linhagem](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage) do Unity Catalog;
+  - P05 (star schema), P13 e P14 (descrições, Pages e Wikis) e P17 (relacionamentos da ontologia).
+- **Como aplicamos:**
+  - **Modelo de dados.** [`governanca/modelo_dados.py`](../governanca/modelo_dados.py) lê do Unity Catalog as colunas, as
+    PK e FK declaradas e a linhagem de tabela para tabela (`system.access.table_lineage`, 90 dias).
+    - Para as bases sem constraint, junta as chaves lógicas (`CHAVES`), os relacionamentos lógicos (`RELACOES`) e os
+      relacionamentos de negócio da ontologia (`ontologia.relacoes`).
+    - Escreve [`docs/modelo_dados/`](modelo_dados/README.md): um documento por base, com o diagrama ER em Mermaid, as
+      entidades e chaves, os relacionamentos e a linhagem, mais o mapa de linhagem entre as bases.
+    - Nome de coluna errado em `CHAVES` ou `RELACOES` para o gerador.
+  - **Wiki para todo ativo.** `aplicar_semantica.py` publica:
+    - a Wiki escrita à mão onde existe (`W` em `ontologia.py`);
+    - nos outros ativos, uma Wiki gerada pelo modelo do schema (`WIKI_BASE`), com a descrição do Unity Catalog e o grão
+      tirado da chave.
+    Toda Wiki ganha as seções "Chave e relacionamentos" e "Linhagem".
+  - **Conferência.** `modelo_dados.py conferir` cobra que:
+    - toda tabela esteja numa base, toda FK do UC esteja no modelo e toda tabela do fluxo tenha chave;
+    - toda tabela do fluxo tenha linhagem de entrada ou o script que a gera;
+    - toda chave lógica seja única nos dados.
+- **Por quê:** sem modelo e sem Wiki, quem chega não sabe o grão de uma tabela, com o que ela se liga nem de onde vem.
+  Um diagrama desenhado à mão envelhece no primeiro `ALTER TABLE`; gerado do catálogo, ele acompanha o dado.
+- **Reaplique quando:** uma base nova entra no catálogo, ou quando alguém precisa entender uma tabela sem perguntar ao
+  time.
+- **Prova (26/11/2026):**
+  - **Modelo:** 155 entidades em 13 bases e 107 relacionamentos.
+    - 15 relacionamentos são FKs do UC (o star schema da gold); os outros são lógicos ou espelhos da gold no legado.
+    - 125 entidades têm chave. As 30 sem chave são metric views e visões agregadas sem grão único.
+  - **Linhagem:** 200 ligações de tabela para tabela. As 10 tabelas sem origem (7 dimensões de catálogo fixo e 3
+    tabelas da ontologia) estão marcadas com o script que as gera.
+  - **Wikis:** 155 de 155 publicadas. Antes eram 51, com 104 ativos sem Wiki: `bi`, `regras`, `conformidade`, `finops`,
+    `sustentacao`, `dqx_codigo`, as visões do painel de qualidade e o legado.
+  - **Chave lógica nos dados:** as 115 chaves testadas (15 PKs do Unity Catalog e 100 lógicas) são únicas, depois de corrigir a PK da ponte (L100), a dimensão `bi.produto` (L101) e o grão de 3 chaves lógicas; as 10 tabelas de eventos e janelas que repetem por desenho (duplicata da origem é aviso) estão marcadas como não únicas.
 
 ---
 
